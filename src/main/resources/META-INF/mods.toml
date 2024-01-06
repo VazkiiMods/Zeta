@@ -1,0 +1,25 @@
+modLoader="javafml"
+loaderVersion="${loader_version_range}"
+issueTrackerURL="https://github.com/Vazkii/Zeta"
+license="https://github.com/Vazkii/Zeta/blob/master/LICENSE.md"
+
+[[mods]]
+modId="zeta"
+displayName="Zeta"
+version="${mod_version}"
+authors="Vazkii
+description='''A Lib'''
+
+[[dependencies.zeta]]
+   modId="forge"
+   mandatory=true
+   versionRange="${forge_version_range}"
+   ordering="NONE"
+   side="BOTH"
+
+[[dependencies.zeta]]
+   modId="minecraft"
+   mandatory=true
+   versionRange="${minecraft_version_range}"
+   ordering="NONE"
+   side="BOTH"
