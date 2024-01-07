@@ -7,7 +7,7 @@ license="https://github.com/Vazkii/Zeta/blob/master/LICENSE.md"
 modId="zeta"
 displayName="Zeta"
 version="${mod_version}"
-authors="Vazkii
+authors="Vazkii"
 description='''A Lib'''
 
 [[dependencies.zeta]]
