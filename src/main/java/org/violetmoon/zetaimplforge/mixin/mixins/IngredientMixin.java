@@ -1,4 +1,4 @@
-package org.violetmoon.zetaimplforge.mixin;
+package org.violetmoon.zetaimplforge.mixin.mixins;
 
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.common.crafting.IIngredientSerializer;

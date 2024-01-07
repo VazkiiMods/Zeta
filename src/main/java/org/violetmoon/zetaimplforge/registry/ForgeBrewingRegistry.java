@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
-import org.violetmoon.quark.mixin.mixins.accessor.AccessorPotionBrewing;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.load.ZCommonSetup;
 import org.violetmoon.zeta.registry.BrewingRegistry;
 import org.violetmoon.zetaimplforge.ForgeZeta;
+import org.violetmoon.zetaimplforge.mixin.mixins.AccessorPotionBrewing;
 
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionBrewing;
@@ -22,7 +22,7 @@ public class ForgeBrewingRegistry extends BrewingRegistry {
 
 	private record DelayedPotion(Potion input, Supplier<Ingredient> reagentSupplier, Potion output) {
 		void register() {
-			AccessorPotionBrewing.quark$getPotionMixes().add(new PotionBrewing.Mix<>(ForgeRegistries.POTIONS, input, reagentSupplier.get(), output));
+			AccessorPotionBrewing.zeta$getPotionMixes().add(new PotionBrewing.Mix<>(ForgeRegistries.POTIONS, input, reagentSupplier.get(), output));
 		}
 	}
 	private List<DelayedPotion> delayedPotions = new ArrayList<>();

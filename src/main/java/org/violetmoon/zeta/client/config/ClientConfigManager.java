@@ -3,14 +3,11 @@ package org.violetmoon.zeta.client.config;
 import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
-import org.violetmoon.quark.base.config.type.inputtable.ConvulsionMatrixConfig;
-import org.violetmoon.quark.base.config.type.inputtable.RGBColorConfig;
 import org.violetmoon.zeta.client.config.definition.BooleanClientDefinition;
 import org.violetmoon.zeta.client.config.definition.ClientDefinitionExt;
-import org.violetmoon.zeta.client.config.definition.ConvulsionMatrixClientDefinition;
 import org.violetmoon.zeta.client.config.definition.DoubleClientDefinition;
+import org.violetmoon.zeta.client.config.definition.IConfigDefinitionProvider;
 import org.violetmoon.zeta.client.config.definition.IntegerClientDefinition;
-import org.violetmoon.zeta.client.config.definition.RGBClientDefinition;
 import org.violetmoon.zeta.client.config.definition.SectionClientDefinition;
 import org.violetmoon.zeta.client.config.definition.StringClientDefinition;
 import org.violetmoon.zeta.client.config.definition.StringListClientDefinition;
@@ -25,11 +22,9 @@ public class ClientConfigManager {
 		// "hint" is a sort-of gesture at this sort of api, but it should be easier for consumers to set, and there should
 		// be a way of defining hint -> clientdefinition relationships besides hardcoding them
 
-		if(def.hint instanceof RGBColorConfig)
-			return (ClientDefinitionExt<D>) new RGBClientDefinition((SectionDefinition) def);
-		else if(def.hint instanceof ConvulsionMatrixConfig convulsion)
-			return (ClientDefinitionExt<D>) new ConvulsionMatrixClientDefinition(convulsion, (SectionDefinition) def);
-
+		if(def.hint instanceof IConfigDefinitionProvider)
+			return (ClientDefinitionExt<D>) ((IConfigDefinitionProvider) def.hint).getClientConfigDefinition((SectionDefinition) def);
+		
 		if(def instanceof SectionDefinition)
 			return (ClientDefinitionExt<D>) new SectionClientDefinition();
 		else if(def instanceof ValueDefinition<?> val) {
@@ -46,6 +41,6 @@ public class ClientConfigManager {
 		}
 
 		//This cast is unsound, but Default never actually uses its argument, so it's fineeeeee, right
-		return (ClientDefinitionExt<D>) new ClientDefinitionExt.Default();
+		throw new IllegalArgumentException(def + " is not a legal config value");
 	}
 }

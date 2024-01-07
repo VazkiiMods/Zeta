@@ -1,5 +1,18 @@
 package org.violetmoon.zeta.event.play.loading;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.violetmoon.zeta.config.ConfigFlagManager;
+import org.violetmoon.zeta.config.ConfigObjectMapper;
+import org.violetmoon.zeta.event.bus.IZetaPlayEvent;
+import org.violetmoon.zeta.module.ZetaModule;
+import org.violetmoon.zeta.util.Hint;
+import org.violetmoon.zeta.util.RegistryUtil;
+
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -7,19 +20,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
-import org.violetmoon.quark.base.Quark;
-import org.violetmoon.quark.base.config.ConfigFlagManager;
-import org.violetmoon.zeta.config.ConfigObjectMapper;
-import org.violetmoon.zeta.event.bus.IZetaPlayEvent;
-import org.violetmoon.zeta.module.ZetaModule;
-import org.violetmoon.zeta.util.Hint;
-import org.violetmoon.zeta.util.RegistryUtil;
-
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public interface ZGatherHints extends IZetaPlayEvent {
 
@@ -32,8 +32,8 @@ public interface ZGatherHints extends IZetaPlayEvent {
 		String ns = res.getNamespace();
 		String path = res.getPath();
 
-		//TODO ZETA: quark hardcoding
-		if(ns.equals(Quark.MOD_ID))
+		//TODO ZETA: quark hardcoding, needs to go
+		if(ns.equals("quark"))
 			ns = "";
 		else ns += ".";
 

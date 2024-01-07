@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.violetmoon.quark.base.handler.GeneralConfig;
 import org.violetmoon.zeta.Zeta;
+import org.violetmoon.zeta.config.ZetaGeneralConfig;
 import org.violetmoon.zeta.event.bus.PlayEvent;
 import org.violetmoon.zeta.event.play.ZItemTooltip;
 
@@ -32,7 +32,7 @@ public class RequiredModTooltipHandler {
 	}
 
 	public List<ItemStack> disabledItems() {
-		if(!GeneralConfig.hideDisabledContent)
+		if(!ZetaGeneralConfig.hideDisabledContent)
 			return new ArrayList<>();
 		
 		return items.entrySet().stream()

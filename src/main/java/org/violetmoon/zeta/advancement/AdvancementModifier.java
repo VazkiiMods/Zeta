@@ -5,6 +5,7 @@ import java.util.function.BooleanSupplier;
 import org.jetbrains.annotations.Nullable;
 
 import org.violetmoon.zeta.api.IAdvancementModifier;
+import org.violetmoon.zeta.config.ZetaGeneralConfig;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.util.BooleanSuppliers;
 
@@ -25,7 +26,7 @@ public abstract class AdvancementModifier implements IAdvancementModifier {
 
 	@Override
 	public boolean isActive() {
-		return (module == null || module.enabled) && cond.getAsBoolean();
+		return (module == null || module.enabled) && cond.getAsBoolean() && ZetaGeneralConfig.enableAdvancementModification;
 	}
 
 }

@@ -1,4 +1,15 @@
-package org.violetmoon.zetaimplforge.mixin.self;
+package org.violetmoon.zetaimplforge.mixin.mixins.self;
+
+import java.util.Map;
+import java.util.function.Consumer;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.spongepowered.asm.mixin.Mixin;
+import org.violetmoon.zeta.item.ZetaArmorItem;
+import org.violetmoon.zeta.item.ZetaBlockItem;
+import org.violetmoon.zeta.item.ZetaItem;
+import org.violetmoon.zeta.item.ext.IZetaItemExtensions;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionResult;
@@ -16,24 +27,12 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraftforge.common.ToolAction;
 import net.minecraftforge.common.ToolActions;
 import net.minecraftforge.common.extensions.IForgeItem;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.spongepowered.asm.mixin.Mixin;
-import org.violetmoon.quark.addons.oddities.item.BackpackItem;
-import org.violetmoon.zeta.item.ZetaArmorItem;
-import org.violetmoon.zeta.item.ZetaBlockItem;
-import org.violetmoon.zeta.item.ZetaItem;
-import org.violetmoon.zeta.item.ext.IZetaItemExtensions;
-
-import java.util.Map;
-import java.util.function.Consumer;
 
 // Forge can't actually mixin to interfaces, so we fake it by just... mixing in to everyone inheriting the interface.
 @Mixin({
 	ZetaArmorItem.class,
 	ZetaBlockItem.class,
 	ZetaItem.class,
-	BackpackItem.class
 })
 public class IZetaItemMixin_FAKE implements IForgeItem, IZetaItemExtensions {
 	@Override

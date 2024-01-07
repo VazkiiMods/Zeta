@@ -32,8 +32,8 @@ import org.violetmoon.zeta.client.event.play.*;
 import org.violetmoon.zeta.util.mixinevent.MixinFireEventUtilClient;
 import org.violetmoon.zetaimplforge.client.event.load.*;
 import org.violetmoon.zetaimplforge.client.event.play.*;
-import org.violetmoon.zetaimplforge.mixin.client.AccessorBlockColors;
-import org.violetmoon.zetaimplforge.mixin.client.AccessorItemColors;
+import org.violetmoon.zetaimplforge.mixin.mixins.client.AccessorBlockColors;
+import org.violetmoon.zetaimplforge.mixin.mixins.client.AccessorItemColors;
 
 public class ForgeZetaClient extends ZetaClient {
 	public ForgeZetaClient(Zeta z) {

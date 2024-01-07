@@ -1,4 +1,32 @@
-package org.violetmoon.zetaimplforge.mixin.self;
+package org.violetmoon.zetaimplforge.mixin.mixins.self;
+
+import java.util.Locale;
+
+import org.jetbrains.annotations.Nullable;
+import org.spongepowered.asm.mixin.Mixin;
+import org.violetmoon.zeta.block.ZetaBlock;
+import org.violetmoon.zeta.block.ZetaBlockWrapper;
+import org.violetmoon.zeta.block.ZetaBushBlock;
+import org.violetmoon.zeta.block.ZetaButtonBlock;
+import org.violetmoon.zeta.block.ZetaCeilingHangingSignBlock;
+import org.violetmoon.zeta.block.ZetaDoorBlock;
+import org.violetmoon.zeta.block.ZetaFenceBlock;
+import org.violetmoon.zeta.block.ZetaFenceGateBlock;
+import org.violetmoon.zeta.block.ZetaInheritedPaneBlock;
+import org.violetmoon.zeta.block.ZetaLeavesBlock;
+import org.violetmoon.zeta.block.ZetaPaneBlock;
+import org.violetmoon.zeta.block.ZetaPillarBlock;
+import org.violetmoon.zeta.block.ZetaPressurePlateBlock;
+import org.violetmoon.zeta.block.ZetaSaplingBlock;
+import org.violetmoon.zeta.block.ZetaSlabBlock;
+import org.violetmoon.zeta.block.ZetaStairsBlock;
+import org.violetmoon.zeta.block.ZetaStandingSignBlock;
+import org.violetmoon.zeta.block.ZetaTrapdoorBlock;
+import org.violetmoon.zeta.block.ZetaVineBlock;
+import org.violetmoon.zeta.block.ZetaWallBlock;
+import org.violetmoon.zeta.block.ZetaWallHangingSignBlock;
+import org.violetmoon.zeta.block.ZetaWallSignBlock;
+import org.violetmoon.zeta.block.ext.IZetaBlockExtensions;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -14,29 +42,9 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.ToolAction;
 import net.minecraftforge.common.extensions.IForgeBlock;
-import org.jetbrains.annotations.Nullable;
-import org.spongepowered.asm.mixin.Mixin;
-import org.violetmoon.quark.addons.oddities.block.MatrixEnchantingTableBlock;
-import org.violetmoon.quark.content.automation.block.IronRodBlock;
-import org.violetmoon.quark.content.building.block.*;
-import org.violetmoon.quark.content.world.block.HugeGlowShroomBlock;
-import org.violetmoon.zeta.block.*;
-import org.violetmoon.zeta.block.ext.IZetaBlockExtensions;
-
-import java.util.Locale;
 
 // Forge can't actually mixin to interfaces, so we fake it by just... mixing in to everyone inheriting the interface.
 @Mixin({
-	HedgeBlock.class,
-	HugeGlowShroomBlock.class,
-	IronRodBlock.class,
-	MatrixEnchantingTableBlock.class,
-	QuarkVerticalSlabBlock.class,
-	VariantChestBlock.class,
-	VariantFurnaceBlock.class,
-	VariantLadderBlock.class,
-	VariantTrappedChestBlock.class,
-	VerticalSlabBlock.class,
 	ZetaBlock.class,
 	ZetaBlockWrapper.class,
 	ZetaBushBlock.class,

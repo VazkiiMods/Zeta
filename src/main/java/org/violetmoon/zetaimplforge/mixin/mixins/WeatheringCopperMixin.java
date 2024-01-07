@@ -1,10 +1,11 @@
-package org.violetmoon.zetaimplforge.mixin;
+package org.violetmoon.zetaimplforge.mixin.mixins;
 
-import net.minecraft.world.level.block.WeatheringCopper;
 import org.spongepowered.asm.mixin.Mixin;
-import org.violetmoon.quark.mixin.delegates.WeatheringCopperDelegate;
 import org.violetmoon.zeta.mixin.plugin.DelegateInterfaceMixin;
 import org.violetmoon.zeta.mixin.plugin.DelegateReturnValueModifier;
+import org.violetmoon.zetaimplforge.mixin.delegate.WeatheringCopperDelegate;
+
+import net.minecraft.world.level.block.WeatheringCopper;
 
 @Mixin(WeatheringCopper.class)
 @DelegateInterfaceMixin(delegate = WeatheringCopperDelegate.class, methods = {

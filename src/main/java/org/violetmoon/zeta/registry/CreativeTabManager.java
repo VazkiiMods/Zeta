@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.violetmoon.quark.base.Quark;
+import org.violetmoon.zeta.Zeta;
 import org.violetmoon.zeta.module.IDisableable;
 
 import com.google.common.collect.HashMultimap;
@@ -197,7 +197,7 @@ public class CreativeTabManager {
 		ItemLike target = map.get(firstSet);
 		
 		if(log)
-			Quark.LOG.warn("Creative tab loop found when adding {} next to {}", firstSetItem, target);
+			Zeta.GLOBAL_LOG.warn("Creative tab loop found when adding {} next to {}", firstSetItem, target);
 		
 		map.remove(firstSet);
 		

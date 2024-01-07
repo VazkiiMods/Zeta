@@ -1,4 +1,4 @@
-package org.violetmoon.zetaimplforge.mixin.client;
+package org.violetmoon.zetaimplforge.mixin.mixins.client;
 
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;

@@ -9,7 +9,6 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 import org.jetbrains.annotations.Nullable;
-import org.violetmoon.quark.base.handler.GeneralConfig;
 import org.violetmoon.zeta.Zeta;
 import org.violetmoon.zeta.event.play.loading.ZGatherAdditionalFlags;
 import org.violetmoon.zeta.module.ZetaCategory;
@@ -117,7 +116,7 @@ public class ConfigManager {
 		//Its Janky !
 		databindings.add(0, i -> {
 			categoryEnabledOptions.forEach((category, option) -> setCategoryEnabled(category, i.get(option)));
-			ignoreAntiOverlapOptions.forEach((module, option) -> module.ignoreAntiOverlap = !GeneralConfig.useAntiOverlap || i.get(option));
+			ignoreAntiOverlapOptions.forEach((module, option) -> module.ignoreAntiOverlap = !ZetaGeneralConfig.useAntiOverlap || i.get(option));
 			moduleEnabledOptions.forEach((module, option) -> {
 				setModuleEnabled(module, i.get(option));
 				cfm.putModuleFlag(module);

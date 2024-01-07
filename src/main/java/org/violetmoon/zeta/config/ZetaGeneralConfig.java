@@ -34,6 +34,12 @@ public class ZetaGeneralConfig {
 
 	@Config(description = "For JEI info purposes, add any items here to specifically disable their JEI info from Zeta. Note that Zeta already only shows info that's relevant to which features are enabled")
 	public static List<String> suppressedInfo = Lists.newArrayList();
+
+	@Config(description = "Set to false to stop Zeta from adding mod items to multi-requirement vanilla advancements")
+	public static boolean enableAdvancementModification = true;
+	
+	@Config(description = "Set to false to stop Zeta mods from adding their own advancements")
+	public static boolean enableModdedAdvancements = true;
 	
 	private ZetaGeneralConfig() {
 		// NO-OP
@@ -41,8 +47,8 @@ public class ZetaGeneralConfig {
 
 	@LoadEvent
 	public static void configChanged(ZConfigChanged e) {
-		ZetaPistonStructureResolver.GlobalSettings.requestEnabled(Zeta.MOD_ID, usePistonLogicRepl);
-		ZetaPistonStructureResolver.GlobalSettings.requestPushLimit(Zeta.MOD_ID, pistonPushLimit);
+		ZetaPistonStructureResolver.GlobalSettings.requestEnabled(Zeta.ZETA_ID, usePistonLogicRepl);
+		ZetaPistonStructureResolver.GlobalSettings.requestPushLimit(Zeta.ZETA_ID, pistonPushLimit);
 	}
 	
 }

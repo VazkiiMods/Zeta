@@ -38,16 +38,14 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.fml.common.Mod;
 
 /**
  * do not touch forge OR quark from this package, it will later be split off
  */
-@Mod(Zeta.MOD_ID)
 public abstract class Zeta {
 	
-	public static final String MOD_ID = "zeta";
-	public static final Logger GLOBAL_LOG = LogManager.getLogger(MOD_ID);
+	public static final String ZETA_ID = "zeta";
+	public static final Logger GLOBAL_LOG = LogManager.getLogger(ZETA_ID);
 
 	public Zeta(String modid, Logger log, ZetaSide side) {
 		this.log = log;
@@ -55,7 +53,7 @@ public abstract class Zeta {
 		this.modid = modid;
 		this.side = side;
 		this.loadBus = new ZetaEventBus<>(this, LoadEvent.class, IZetaLoadEvent.class, log);
-		this.playBus = new ZetaEventBus<>(this, PlayEvent.class, IZetaPlayEvent.class, null);
+		this.playBus = new ZetaEventBus<>(this, PlayEvent.class, IZetaPlayEvent.class, null);	
 
 		this.modules = createModuleManager();
 		this.registry = createRegistry();
@@ -115,9 +113,16 @@ public abstract class Zeta {
 	//network (which isn't set in the constructor b/c it has a user-specified protocol version TODO this isnt good api design, imo)
 	public ZetaNetworkHandler network;
 
-	public void loadModules(Iterable<ZetaCategory> categories, ModuleFinder finder, Object rootPojo) {
-		modules.initCategories(categories);
-		modules.load(finder);
+	/**
+	 * @param categories List of module categories in this mod, if null, will not load Modules but still load general config
+	 * @param finder Module finder instance to locate the modules this Zeta will load, if null, will not load Modules but still load general config
+	 * @param rootPojo General config object root
+	 */
+	public void loadModules(@Nullable Iterable<ZetaCategory> categories, @Nullable ModuleFinder finder, Object rootPojo) {
+		if(categories != null && finder != null) {
+			modules.initCategories(categories);
+			modules.load(finder);
+		}
 
 		//The reason why there's a circular dependency between configManager and configInternals:
 		// - ConfigManager determines the shape and layout of the config file

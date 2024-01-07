@@ -1,4 +1,4 @@
-package org.violetmoon.zetaimplforge.mixin.client;
+package org.violetmoon.zetaimplforge.mixin.mixins.client;
 
 import net.minecraft.client.renderer.GameRenderer;
 import org.spongepowered.asm.mixin.Mixin;

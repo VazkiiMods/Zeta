@@ -4,6 +4,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Function;
 
+import org.jetbrains.annotations.Nullable;
+import org.violetmoon.zeta.Zeta;
+import org.violetmoon.zeta.block.IZetaBlock;
+import org.violetmoon.zeta.block.ZetaSlabBlock;
+import org.violetmoon.zeta.block.ZetaStairsBlock;
+import org.violetmoon.zeta.block.ZetaWallBlock;
+
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -13,14 +20,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FlowerPotBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.PushReaction;
-
-import org.jetbrains.annotations.Nullable;
-import org.violetmoon.quark.base.Quark;
-import org.violetmoon.zeta.block.ZetaSlabBlock;
-import org.violetmoon.zeta.block.ZetaStairsBlock;
-import org.violetmoon.zeta.block.ZetaWallBlock;
-import org.violetmoon.zeta.Zeta;
-import org.violetmoon.zeta.block.IZetaBlock;
 
 //another kinda-weird formerly singleton class
 public class VariantRegistry {
@@ -69,13 +68,13 @@ public class VariantRegistry {
 		props = propertiesFunc.apply(props);
 
 		FlowerPotBlock potted = new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, () -> block, props);
-		Quark.ZETA.renderLayerRegistry.put(potted, RenderLayerRegistry.Layer.CUTOUT);
-		ResourceLocation resLoc = Quark.ZETA.registry.getRegistryName(block, BuiltInRegistries.BLOCK);
+		zeta.renderLayerRegistry.put(potted, RenderLayerRegistry.Layer.CUTOUT);
+		ResourceLocation resLoc = zeta.registry.getRegistryName(block, BuiltInRegistries.BLOCK);
 		if (resLoc == null)
 			resLoc = new ResourceLocation("missingno");
 
-		Quark.ZETA.registry.registerBlock(potted, "potted_" + name, false);
-		Quark.ZETA.pottedPlantRegistry.addPot(resLoc, potted);
+		zeta.registry.registerBlock(potted, "potted_" + name, false);
+		zeta.pottedPlantRegistry.addPot(resLoc, potted);
 
 		return potted;
 	}

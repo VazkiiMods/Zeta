@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.violetmoon.quark.base.handler.GeneralConfig;
 import org.violetmoon.zeta.Zeta;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.load.ZRegister;
@@ -40,7 +39,7 @@ public final class ConfigFlagManager {
 		//TODO: make these Quark-independent
 		ext.registerConditionSerializer(new FlagCondition.Serializer(this, new ResourceLocation(zeta.modid, "flag")));
 		//Especially this one, which requires quark advancement config option :/
-		ext.registerConditionSerializer(new FlagCondition.Serializer(this, new ResourceLocation(zeta.modid, "advancement_flag"), () -> GeneralConfig.enableQuarkAdvancements));
+		ext.registerConditionSerializer(new FlagCondition.Serializer(this, new ResourceLocation(zeta.modid, "advancement_flag"), () -> ZetaGeneralConfig.enableModdedAdvancements));
 
 		FlagLootCondition.FlagSerializer flagSerializer = new FlagLootCondition.FlagSerializer(this);
 		Registry.register(BuiltInRegistries.LOOT_CONDITION_TYPE, new ResourceLocation(zeta.modid, "flag"), flagSerializer.selfType);

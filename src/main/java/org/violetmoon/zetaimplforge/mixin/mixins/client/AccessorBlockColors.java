@@ -1,4 +1,4 @@
-package org.violetmoon.zetaimplforge.mixin.client;
+package org.violetmoon.zetaimplforge.mixin.mixins.client;
 
 import java.util.Map;
 
