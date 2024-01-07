@@ -218,9 +218,7 @@ publishing {
                 classifier 'sources'
             }
 
-            artifact jarJar {
-                classifier ''
-            }
+            jarJar.component(it)
         }
     }
 
