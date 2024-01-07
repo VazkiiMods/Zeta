@@ -93,10 +93,11 @@ repositories {
 dependencies {
     minecraft "net.minecraftforge:forge:${config.mc_version}-${deps.forge}"
 
-    implementation(annotationProcessor("com.github.llamalad7.mixinextras:mixinextras-common:0.2.0-beta.9"))
-    implementation(jarJar("com.github.llamalad7.mixinextras:mixinextras-forge:0.2.0-beta.9")) {
-        jarJar.ranged(it, "[0.2.0-beta.9,)")
+    compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.3.2"))
+    implementation(jarJar("io.github.llamalad7:mixinextras-forge:0.3.2")) {
+        jarJar.ranged(it, "[0.3.2,)")
     }
+
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 }
 
