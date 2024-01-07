@@ -8,7 +8,7 @@
   "mixins": [
     "IngredientMixin",
     "WeatheringCopperMixin",
-    "AccessorPotionBrewing"
+    "AccessorPotionBrewing",
     "self.IZetaBlockMixin_FAKE",
     "self.IZetaItemMixin_FAKE"
   ],
