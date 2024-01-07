@@ -7,7 +7,7 @@ license="https://github.com/VazkiiMods/Zeta/blob/master/LICENSE.md"
 modId="zeta"
 displayName="Zeta"
 version="${file.jarVersion}"
-authors="Vazkii, quat, iThundxr, siuol, wiresegal, MehVahdJukaar"
+authors="Vazkii, quat, IThundxr, siuol, wiresegal, MehVahdJukaar"
 description='''A fully featured Library designed around loading highly configurable, agile developed. modular mods'''
 
 [[dependencies.zeta]]
