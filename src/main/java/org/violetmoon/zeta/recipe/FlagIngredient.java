@@ -1,19 +1,19 @@
 package org.violetmoon.zeta.recipe;
 
+import java.util.stream.Stream;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.violetmoon.zeta.Zeta;
+import org.violetmoon.zeta.config.ConfigFlagManager;
+
 import com.google.gson.JsonObject;
+
 import it.unimi.dsi.fastutil.ints.IntList;
 import it.unimi.dsi.fastutil.ints.IntLists;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import org.violetmoon.quark.base.config.ConfigFlagManager;
-import org.violetmoon.zeta.Zeta;
-
-import java.util.stream.Stream;
 
 /**
  * @author WireSegal

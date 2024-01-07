@@ -2,15 +2,9 @@ package org.violetmoon.zeta;
 
 import java.util.function.Supplier;
 
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.fml.common.Mod;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
-import org.violetmoon.zeta.registry.VariantRegistry;
 import org.violetmoon.zeta.advancement.AdvancementModifierRegistry;
 import org.violetmoon.zeta.block.ext.BlockExtensionFactory;
 import org.violetmoon.zeta.capability.ZetaCapabilityManager;
@@ -32,6 +26,7 @@ import org.violetmoon.zeta.registry.CraftingExtensionsRegistry;
 import org.violetmoon.zeta.registry.DyeablesRegistry;
 import org.violetmoon.zeta.registry.PottedPlantRegistry;
 import org.violetmoon.zeta.registry.RenderLayerRegistry;
+import org.violetmoon.zeta.registry.VariantRegistry;
 import org.violetmoon.zeta.registry.ZetaRegistry;
 import org.violetmoon.zeta.util.NameChanger;
 import org.violetmoon.zeta.util.RaytracingUtil;
@@ -39,12 +34,20 @@ import org.violetmoon.zeta.util.RegistryUtil;
 import org.violetmoon.zeta.util.RequiredModTooltipHandler;
 import org.violetmoon.zeta.util.ZetaSide;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.fml.common.Mod;
+
 /**
  * do not touch forge OR quark from this package, it will later be split off
  */
-@Mod("zeta")
+@Mod(Zeta.MOD_ID)
 public abstract class Zeta {
-	public static final Logger GLOBAL_LOG = LogManager.getLogger("zeta");
+	
+	public static final String MOD_ID = "zeta";
+	public static final Logger GLOBAL_LOG = LogManager.getLogger(MOD_ID);
 
 	public Zeta(String modid, Logger log, ZetaSide side) {
 		this.log = log;
