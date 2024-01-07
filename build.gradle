@@ -187,6 +187,7 @@ tasks.jarJar.configure {
 artifacts {
     archives sourcesJar
     archives deobfJar
+    archives jarJar
 }
 
 publish.dependsOn(project.tasks.getByName("assemble"))
