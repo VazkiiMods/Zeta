@@ -1,25 +1,18 @@
 modLoader="javafml"
-loaderVersion="${loader_version_range}"
+loaderVersion="[41,)"
 issueTrackerURL="https://github.com/VazkiiMods/Zeta"
-license="https://github.com/Vazkii/VazkiiMods-/blob/master/LICENSE.md"
+license="https://github.com/VazkiiMods/Zeta/blob/master/LICENSE.md"
 
 [[mods]]
 modId="zeta"
 displayName="Zeta"
-version="${mod_version}"
+version="${file.jarVersion}"
 authors="Vazkii, quat, iThundxr, siuol, wiresegal, MehVahdJukaar"
 description='''A fully featured Library designed around loading highly configurable, agile developed. modular mods'''
 
 [[dependencies.zeta]]
-   modId="forge"
-   mandatory=true
-   versionRange="${forge_version_range}"
-   ordering="NONE"
-   side="BOTH"
-
-[[dependencies.zeta]]
-   modId="minecraft"
-   mandatory=true
-   versionRange="${minecraft_version_range}"
-   ordering="NONE"
-   side="BOTH"
+    modId="forge"
+    mandatory=true
+    versionRange="[43.0.8,)"
+    ordering="AFTER"
+    side="BOTH"
