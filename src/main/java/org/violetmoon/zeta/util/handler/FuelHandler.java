@@ -43,8 +43,8 @@ public class FuelHandler {
 		if (regname.contains("crimson") || regname.contains("warped"))
 			return; //do nothing if block is crimson or warped, since they aren't flammable. #3549
 		if (block instanceof ICustomWoodFuelValue fuelBlock)
-			fuelBlock.getBurnTimeInTicksWhenWooden();
-		if (block instanceof SlabBlock)
+			addFuel(block, fuelBlock.getBurnTimeInTicksWhenWooden());
+		else if (block instanceof SlabBlock)
 			addFuel(block, 150);
 		else
 			addFuel(block, 300);
