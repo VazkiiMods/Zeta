@@ -41,6 +41,12 @@ public class ZetaGeneralConfig {
 	@Config(description = "Set to false to stop Zeta mods from adding their own advancements")
 	public static boolean enableModdedAdvancements = true;
 	
+	@Config(description = "Set to true to enable a system that debugs Zeta mod worldgen features. This should ONLY be used if you're asked to by a dev.")
+	public static boolean enableWorldgenWatchdog = false;
+	
+	@Config(description = "Set to true to make the Zeta big worldgen features generate as spheres rather than unique shapes. It's faster, but won't look as cool")
+	public static boolean useFastWorldgen = false;
+	
 	private ZetaGeneralConfig() {
 		// NO-OP
 	}	

@@ -9,10 +9,10 @@ import net.minecraft.world.level.block.grower.AbstractTreeGrower;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 
 // All the vanilla TreeGrowers just hardcode ResourceKeys anyway.
-public class PassthruTreeGrower extends AbstractTreeGrower {
+public class PassthroughTreeGrower extends AbstractTreeGrower {
 	protected final ResourceKey<ConfiguredFeature<?, ?>> key;
 
-	public PassthruTreeGrower(ResourceKey<ConfiguredFeature<?, ?>> key) {
+	public PassthroughTreeGrower(ResourceKey<ConfiguredFeature<?, ?>> key) {
 		this.key = key;
 	}
 

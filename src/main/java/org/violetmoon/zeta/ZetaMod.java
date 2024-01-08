@@ -5,6 +5,8 @@ import org.violetmoon.zeta.network.ZetaModInternalNetwork;
 import org.violetmoon.zeta.util.handler.FuelHandler;
 import org.violetmoon.zeta.util.handler.RecipeCrawlHandler;
 import org.violetmoon.zeta.util.handler.ToolInteractionHandler;
+import org.violetmoon.zeta.world.EntitySpawnHandler;
+import org.violetmoon.zeta.world.WorldGenHandler;
 
 public class ZetaMod {
 
@@ -20,7 +22,9 @@ public class ZetaMod {
 		
 		ZETA.loadBus.subscribe(FuelHandler.class)
 		.subscribe(RecipeCrawlHandler.class)
-		.subscribe(ToolInteractionHandler.class);
+		.subscribe(ToolInteractionHandler.class)
+		.subscribe(EntitySpawnHandler.class)
+		.subscribe(WorldGenHandler.class);
 		
 		ZETA.playBus.subscribe(FuelHandler.class)
 		.subscribe(RecipeCrawlHandler.class)
