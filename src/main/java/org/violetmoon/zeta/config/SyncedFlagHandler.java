@@ -8,9 +8,9 @@ import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.stream.Collectors;
 
-import org.violetmoon.zeta.ZetaMod;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.load.ZConfigChanged;
+import org.violetmoon.zeta.mod.ZetaMod;
 import org.violetmoon.zeta.network.message.S2CUpdateFlag;
 
 import net.minecraft.client.Minecraft;

@@ -2,7 +2,7 @@ package org.violetmoon.zeta.network;
 
 import java.util.BitSet;
 
-import org.violetmoon.zeta.ZetaMod;
+import org.violetmoon.zeta.mod.ZetaMod;
 import org.violetmoon.zeta.network.message.C2SLoginFlag;
 import org.violetmoon.zeta.network.message.C2SUpdateFlag;
 import org.violetmoon.zeta.network.message.S2CLoginFlag;

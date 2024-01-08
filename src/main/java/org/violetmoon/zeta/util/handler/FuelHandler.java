@@ -1,17 +1,17 @@
 package org.violetmoon.zeta.util.handler;
 
-import static org.violetmoon.zeta.ZetaMod.ZETA;
+import static org.violetmoon.zeta.mod.ZetaMod.ZETA;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
 import org.violetmoon.zeta.Zeta;
-import org.violetmoon.zeta.ZetaMod;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.bus.PlayEvent;
 import org.violetmoon.zeta.event.load.ZLoadComplete;
 import org.violetmoon.zeta.event.play.ZFurnaceFuelBurnTime;
+import org.violetmoon.zeta.mod.ZetaMod;
 import org.violetmoon.zeta.util.BlockUtils;
 
 import net.minecraft.core.registries.BuiltInRegistries;

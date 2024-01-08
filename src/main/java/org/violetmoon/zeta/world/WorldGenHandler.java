@@ -12,10 +12,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-import org.violetmoon.zeta.ZetaMod;
 import org.violetmoon.zeta.config.ZetaGeneralConfig;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.load.ZRegister;
+import org.violetmoon.zeta.mod.ZetaMod;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.world.generator.Generator;
 

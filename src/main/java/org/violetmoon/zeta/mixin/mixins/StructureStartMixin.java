@@ -1,4 +1,4 @@
-package org.violetmoon.zetaimplforge.mixin.mixins;
+package org.violetmoon.zeta.mixin.mixins;
 
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
