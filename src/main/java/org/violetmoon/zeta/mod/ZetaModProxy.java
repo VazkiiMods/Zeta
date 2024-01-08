@@ -12,14 +12,12 @@ public class ZetaModProxy {
 
 	public void registerEvents(Zeta zeta) {
 		zeta.loadBus
-			.subscribe(FuelHandler.class)
 			.subscribe(RecipeCrawlHandler.class)
 			.subscribe(ToolInteractionHandler.class)
 			.subscribe(EntitySpawnHandler.class)
 			.subscribe(WorldGenHandler.class);
 		
 		zeta.playBus
-			.subscribe(FuelHandler.class)
 			.subscribe(RecipeCrawlHandler.class)
 			.subscribe(ToolInteractionHandler.class)
 			.subscribe(SyncedFlagHandler.class);
@@ -27,7 +25,7 @@ public class ZetaModProxy {
 	
 	// Cast up obj to ZetaClient on the client proxy
 	public void setClientZeta(Object obj) { 
-		
+		// NO-OP
 	}
 	
 }

@@ -11,7 +11,6 @@ import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.bus.PlayEvent;
 import org.violetmoon.zeta.event.load.ZLoadComplete;
 import org.violetmoon.zeta.event.play.ZFurnaceFuelBurnTime;
-import org.violetmoon.zeta.mod.ZetaMod;
 import org.violetmoon.zeta.util.BlockUtils;
 
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -22,24 +21,29 @@ import net.minecraft.world.level.block.SlabBlock;
 
 public class FuelHandler {
 
-	private static final Map<Item, Integer> fuelValues = new HashMap<>();
-
-	public static void addFuel(Item item, int fuel) {
+	private final Map<Item, Integer> fuelValues = new HashMap<>();
+	private final Zeta zeta;
+	
+	public FuelHandler(Zeta zeta) {
+		this.zeta = zeta;
+	}
+	
+	public void addFuel(Item item, int fuel) {
 		if(fuel > 0 && item != null && !fuelValues.containsKey(item))
 			fuelValues.put(item, fuel);
 	}
 
-	public static void addFuel(Block block, int fuel) {
+	public void addFuel(Block block, int fuel) {
 		addFuel(block.asItem(), fuel);
 	}
 
-	public static void addWood(Block block) {
+	public void addWood(Block block) {
 		String regname = Objects.toString(ZETA.registry.getRegistryName(block, BuiltInRegistries.BLOCK));
 
 		if (regname.contains("crimson") || regname.contains("warped"))
 			return; //do nothing if block is crimson or warped, since they aren't flammable. #3549
 		if (block instanceof ICustomWoodFuelValue fuelBlock)
-			fuelBlock.getTicks();
+			fuelBlock.getBurnTimeInTicksWhenWooden();
 		if (block instanceof SlabBlock)
 			addFuel(block, 150);
 		else
@@ -47,22 +51,22 @@ public class FuelHandler {
 	}
 
 	@LoadEvent
-	public static void addAllWoods(ZLoadComplete event) {
+	public void addAllWoods(ZLoadComplete event) {
 		for(Block block : BuiltInRegistries.BLOCK) {
-			ResourceLocation regname = ZetaMod.ZETA.registry.getRegistryName(block, BuiltInRegistries.BLOCK);
-			if(block != null && regname.getNamespace().equals(Zeta.ZETA_ID) && BlockUtils.isWoodBased(block.defaultBlockState()))
+			ResourceLocation regname = zeta.registry.getRegistryName(block, BuiltInRegistries.BLOCK);
+			if(block != null && regname.getNamespace().equals(zeta.modid) && BlockUtils.isWoodBased(block.defaultBlockState()))
 				addWood(block);
 		}
 	}
 
 	@PlayEvent
-	public static void getFuel(ZFurnaceFuelBurnTime event) {
+	public void getFuel(ZFurnaceFuelBurnTime event) {
 		Item item = event.getItemStack().getItem();
 		if(fuelValues.containsKey(item))
 			event.setBurnTime(fuelValues.get(item));
 	}
 
-	public interface ICustomWoodFuelValue {
-		int getTicks();
+	public static interface ICustomWoodFuelValue {
+		int getBurnTimeInTicksWhenWooden();
 	}
 }

@@ -32,6 +32,7 @@ import org.violetmoon.zeta.util.NameChanger;
 import org.violetmoon.zeta.util.RaytracingUtil;
 import org.violetmoon.zeta.util.RegistryUtil;
 import org.violetmoon.zeta.util.ZetaSide;
+import org.violetmoon.zeta.util.handler.FuelHandler;
 import org.violetmoon.zeta.util.handler.RequiredModTooltipHandler;
 import org.violetmoon.zeta.util.zetalist.IZeta;
 import org.violetmoon.zeta.util.zetalist.ZetaList;
@@ -73,6 +74,7 @@ public abstract class Zeta implements IZeta {
 
 		this.raytracingUtil = createRaytracingUtil();
 		this.nameChanger = createNameChanger();
+		this.fuel = createFuelHandler();
 		
 		this.entitySpawn = createEntitySpawnHandler();
 
@@ -80,7 +82,10 @@ public abstract class Zeta implements IZeta {
 			.subscribe(dyeables)
 			.subscribe(brewingRegistry)
 			.subscribe(advancementModifierRegistry)
+			.subscribe(fuel)
 			.subscribe(entitySpawn);
+		
+		playBus.subscribe(fuel);
 		
 		ZetaList.INSTANCE.register(this);
 	}
@@ -113,6 +118,7 @@ public abstract class Zeta implements IZeta {
 	//misc :tada:
 	public final RaytracingUtil raytracingUtil;
 	public final NameChanger nameChanger;
+	public final FuelHandler fuel;
 
 	//config (which isn't set in the constructor b/c module loading has to happen first)
 	public ConfigManager configManager;
@@ -184,6 +190,9 @@ public abstract class Zeta implements IZeta {
 	public abstract RaytracingUtil createRaytracingUtil();
 	public NameChanger createNameChanger() {
 		return new NameChanger();
+	}
+	public FuelHandler createFuelHandler() {
+		return new FuelHandler(this);
 	}
 	public EntitySpawnHandler createEntitySpawnHandler() {
 		return new EntitySpawnHandler(this);
