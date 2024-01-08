@@ -1,18 +1,19 @@
 package org.violetmoon.zeta.item;
 
+import java.util.function.BooleanSupplier;
+import java.util.function.Supplier;
+
+import org.jetbrains.annotations.Nullable;
+import org.violetmoon.zeta.module.ZetaModule;
+import org.violetmoon.zeta.registry.CreativeTabManager;
+import org.violetmoon.zeta.util.BooleanSuppliers;
+
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.MobBucketItem;
 import net.minecraft.world.level.material.Fluid;
-import org.jetbrains.annotations.Nullable;
-import org.violetmoon.zeta.module.ZetaModule;
-import org.violetmoon.zeta.registry.CreativeTabManager;
-import org.violetmoon.zeta.util.BooleanSuppliers;
-
-import java.util.function.BooleanSupplier;
-import java.util.function.Supplier;
 
 public class ZetaMobBucketItem extends MobBucketItem implements IZetaItem {
 

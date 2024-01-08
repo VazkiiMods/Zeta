@@ -1,10 +1,10 @@
 package org.violetmoon.zeta.network.message;
 
+import java.util.BitSet;
+
 import org.violetmoon.zeta.config.SyncedFlagHandler;
 import org.violetmoon.zeta.network.IZetaNetworkEventContext;
 import org.violetmoon.zeta.network.ZetaHandshakeMessage;
-
-import java.util.BitSet;
 
 public class C2SLoginFlag extends ZetaHandshakeMessage {
 

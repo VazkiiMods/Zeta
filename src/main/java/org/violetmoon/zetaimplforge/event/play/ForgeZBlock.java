@@ -1,6 +1,5 @@
 package org.violetmoon.zetaimplforge.event.play;
 
-import net.minecraftforge.common.ToolAction;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.zeta.event.play.ZBlock;
 
@@ -8,6 +7,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.ToolAction;
 import net.minecraftforge.event.level.BlockEvent;
 
 public class ForgeZBlock implements ZBlock {

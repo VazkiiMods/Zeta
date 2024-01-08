@@ -1,15 +1,17 @@
 package org.violetmoon.zeta.client.config.widget;
 
+import org.jetbrains.annotations.NotNull;
+import org.violetmoon.zeta.client.ZetaClient;
+import org.violetmoon.zeta.config.ChangeSet;
+import org.violetmoon.zeta.config.ValueDefinition;
+
 import com.mojang.blaze3d.systems.RenderSystem;
+
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import org.jetbrains.annotations.NotNull;
-import org.violetmoon.zeta.client.ZetaClient;
-import org.violetmoon.zeta.config.ChangeSet;
-import org.violetmoon.zeta.config.ValueDefinition;
 
 public class CheckboxButton extends Button {
 	//checked:   u0 v0  to u16 v16

@@ -1,10 +1,15 @@
 package org.violetmoon.zeta.advancement;
 
+import org.jetbrains.annotations.NotNull;
+
 import com.google.gson.JsonObject;
-import net.minecraft.advancements.critereon.*;
+
+import net.minecraft.advancements.critereon.AbstractCriterionTriggerInstance;
+import net.minecraft.advancements.critereon.ContextAwarePredicate;
+import net.minecraft.advancements.critereon.DeserializationContext;
+import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import org.jetbrains.annotations.NotNull;
 
 public class ManualTrigger extends SimpleCriterionTrigger<ManualTrigger.Instance> {
 

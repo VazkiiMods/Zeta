@@ -1,13 +1,14 @@
 package org.violetmoon.zeta.client.event.load;
 
+import java.util.Map;
+
+import org.violetmoon.zeta.event.bus.IZetaLoadEvent;
+
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.model.geometry.IGeometryLoader;
-import org.violetmoon.zeta.event.bus.IZetaLoadEvent;
-
-import java.util.Map;
 
 public interface ZModel extends IZetaLoadEvent {
     interface ModifyBakingResult extends ZModel {

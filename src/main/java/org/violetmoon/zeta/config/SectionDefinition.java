@@ -5,9 +5,10 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
-import com.google.common.collect.Iterables;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import com.google.common.collect.Iterables;
 
 public class SectionDefinition extends Definition {
 	public final @NotNull Map<String, SectionDefinition> subsections;

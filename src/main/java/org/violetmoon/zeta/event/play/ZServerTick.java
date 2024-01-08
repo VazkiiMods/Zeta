@@ -1,7 +1,8 @@
 package org.violetmoon.zeta.event.play;
 
-import net.minecraft.server.MinecraftServer;
 import org.violetmoon.zeta.event.bus.IZetaPlayEvent;
+
+import net.minecraft.server.MinecraftServer;
 
 public interface ZServerTick extends IZetaPlayEvent {
     MinecraftServer getServer();

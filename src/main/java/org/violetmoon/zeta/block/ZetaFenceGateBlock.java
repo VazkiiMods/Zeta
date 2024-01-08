@@ -2,13 +2,13 @@ package org.violetmoon.zeta.block;
 
 import java.util.function.BooleanSupplier;
 
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.world.level.block.state.properties.WoodType;
 import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.world.level.block.FenceGateBlock;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.util.BooleanSuppliers;
+
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.level.block.FenceGateBlock;
+import net.minecraft.world.level.block.state.properties.WoodType;
 
 /**
  * @author WireSegal

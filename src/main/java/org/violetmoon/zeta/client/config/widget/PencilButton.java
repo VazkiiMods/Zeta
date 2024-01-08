@@ -1,13 +1,15 @@
 package org.violetmoon.zeta.client.config.widget;
 
+import org.jetbrains.annotations.NotNull;
+import org.violetmoon.zeta.client.ZetaClient;
+
 import com.mojang.blaze3d.systems.RenderSystem;
+
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import org.jetbrains.annotations.NotNull;
-import org.violetmoon.zeta.client.ZetaClient;
 
 public class PencilButton extends Button {
 

@@ -1,14 +1,14 @@
 package org.violetmoon.zeta.config;
 
-import com.google.gson.JsonObject;
-
-import net.minecraft.resources.ResourceLocation;
+import java.util.function.BooleanSupplier;
 
 import org.violetmoon.zeta.recipe.IZetaCondition;
 import org.violetmoon.zeta.recipe.IZetaConditionSerializer;
 import org.violetmoon.zeta.util.BooleanSuppliers;
 
-import java.util.function.BooleanSupplier;
+import com.google.gson.JsonObject;
+
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * @author WireSegal

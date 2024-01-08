@@ -4,13 +4,13 @@ import java.util.function.BooleanSupplier;
 
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.zeta.module.ZetaModule;
+import org.violetmoon.zeta.util.BooleanSuppliers;
 
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.SignItem;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import org.violetmoon.zeta.util.BooleanSuppliers;
 
 public class ZetaSignItem extends SignItem implements IZetaItem {
 

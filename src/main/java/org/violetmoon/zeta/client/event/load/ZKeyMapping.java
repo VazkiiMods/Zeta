@@ -2,13 +2,15 @@ package org.violetmoon.zeta.client.event.load;
 
 import java.util.function.Predicate;
 
-import com.mojang.blaze3d.platform.InputConstants;
-import net.minecraft.client.KeyMapping;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.zeta.client.key.PredicatedKeyBinding;
 import org.violetmoon.zeta.client.key.SortedKeyBinding;
 import org.violetmoon.zeta.client.key.SortedPredicatedKeyBinding;
 import org.violetmoon.zeta.event.bus.IZetaLoadEvent;
+
+import com.mojang.blaze3d.platform.InputConstants;
+
+import net.minecraft.client.KeyMapping;
 
 public interface ZKeyMapping extends IZetaLoadEvent {
 	KeyMapping register(KeyMapping key);

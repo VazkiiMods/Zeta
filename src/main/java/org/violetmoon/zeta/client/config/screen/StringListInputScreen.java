@@ -1,5 +1,16 @@
 package org.violetmoon.zeta.client.config.screen;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.IntStream;
+
+import org.jetbrains.annotations.NotNull;
+import org.violetmoon.zeta.client.ZetaClient;
+import org.violetmoon.zeta.client.config.widget.ScrollableWidgetList;
+import org.violetmoon.zeta.config.ChangeSet;
+import org.violetmoon.zeta.config.ValueDefinition;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -8,16 +19,6 @@ import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import org.jetbrains.annotations.NotNull;
-import org.violetmoon.zeta.client.ZetaClient;
-import org.violetmoon.zeta.client.config.widget.ScrollableWidgetList;
-import org.violetmoon.zeta.config.ChangeSet;
-import org.violetmoon.zeta.config.ValueDefinition;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.IntStream;
 
 public class StringListInputScreen extends AbstractInputScreen<List<String>> {
 	protected ScrollableWidgetList<StringListInputScreen, Entry> list;

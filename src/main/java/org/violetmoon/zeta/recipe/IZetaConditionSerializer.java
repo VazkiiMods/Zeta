@@ -1,6 +1,7 @@
 package org.violetmoon.zeta.recipe;
 
 import com.google.gson.JsonObject;
+
 import net.minecraft.resources.ResourceLocation;
 
 // Copy of Forge IConditionSerializer

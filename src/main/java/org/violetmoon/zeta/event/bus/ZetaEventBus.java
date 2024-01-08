@@ -12,11 +12,12 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-import com.google.common.base.Preconditions;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.zeta.Zeta;
+
+import com.google.common.base.Preconditions;
 
 /**
  * A polymorphic event bus. Events can be fired under one of their supertypes, allowing a sort of API/impl split of events.

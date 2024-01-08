@@ -3,19 +3,20 @@ package org.violetmoon.zeta.recipe;
 import java.util.List;
 import java.util.function.Supplier;
 
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.world.item.crafting.CraftingBookCategory;
-import net.minecraft.world.item.crafting.SimpleCraftingRecipeSerializer;
 import org.violetmoon.zeta.registry.DyeablesRegistry;
 
 import com.google.common.collect.Lists;
+
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.SimpleCraftingRecipeSerializer;
 import net.minecraft.world.level.Level;
 
 // copy of ArmorDyeRecipe

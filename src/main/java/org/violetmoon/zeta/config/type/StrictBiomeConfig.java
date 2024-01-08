@@ -1,13 +1,13 @@
 package org.violetmoon.zeta.config.type;
 
-import net.minecraft.core.Holder;
-import net.minecraft.world.level.biome.Biome;
-
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.violetmoon.zeta.config.Config;
+
+import net.minecraft.core.Holder;
+import net.minecraft.world.level.biome.Biome;
 
 public class StrictBiomeConfig implements IBiomeConfig, IConfigType {
 

@@ -3,6 +3,11 @@ package org.violetmoon.zetaimplforge.capability;
 import java.util.IdentityHashMap;
 import java.util.Map;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.violetmoon.zeta.capability.ZetaCapability;
+import org.violetmoon.zeta.capability.ZetaCapabilityManager;
+
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -12,10 +17,6 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.violetmoon.zeta.capability.ZetaCapability;
-import org.violetmoon.zeta.capability.ZetaCapabilityManager;
 
 public class ForgeCapabilityManager implements ZetaCapabilityManager {
 	protected Map<ZetaCapability<?>, Capability<?>> toForge = new IdentityHashMap<>();

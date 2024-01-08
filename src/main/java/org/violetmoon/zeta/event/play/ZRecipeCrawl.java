@@ -2,7 +2,10 @@ package org.violetmoon.zeta.event.play;
 
 import java.util.Collection;
 
+import org.violetmoon.zeta.event.bus.IZetaPlayEvent;
+
 import com.google.common.collect.Multimap;
+
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
@@ -14,7 +17,6 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.item.crafting.ShapelessRecipe;
-import org.violetmoon.zeta.event.bus.IZetaPlayEvent;
 
 public abstract class ZRecipeCrawl implements IZetaPlayEvent {
 

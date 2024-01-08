@@ -1,13 +1,14 @@
 package org.violetmoon.zeta.block;
 
-import net.minecraft.world.level.block.WallHangingSignBlock;
-import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.block.state.properties.WoodType;
+import java.util.function.BooleanSupplier;
+
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.util.BooleanSuppliers;
 
-import java.util.function.BooleanSupplier;
+import net.minecraft.world.level.block.WallHangingSignBlock;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.properties.WoodType;
 
 public class ZetaWallHangingSignBlock extends WallHangingSignBlock implements IZetaBlock {
     private final @Nullable ZetaModule module;

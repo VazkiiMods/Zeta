@@ -2,14 +2,14 @@ package org.violetmoon.zeta.block;
 
 import java.util.function.BooleanSupplier;
 
-import net.minecraft.world.level.block.state.properties.BlockSetType;
 import org.jetbrains.annotations.Nullable;
+import org.violetmoon.zeta.module.ZetaModule;
+import org.violetmoon.zeta.util.BooleanSuppliers;
 
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.PressurePlateBlock;
-import org.violetmoon.zeta.module.ZetaModule;
-import org.violetmoon.zeta.util.BooleanSuppliers;
+import net.minecraft.world.level.block.state.properties.BlockSetType;
 
 /**
  * @author WireSegal

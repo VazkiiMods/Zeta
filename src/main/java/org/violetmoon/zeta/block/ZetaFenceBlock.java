@@ -3,12 +3,12 @@ package org.violetmoon.zeta.block;
 import java.util.function.BooleanSupplier;
 
 import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.world.item.CreativeModeTabs;
-import net.minecraft.world.level.block.FenceBlock;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.registry.CreativeTabManager;
 import org.violetmoon.zeta.util.BooleanSuppliers;
+
+import net.minecraft.world.item.CreativeModeTabs;
+import net.minecraft.world.level.block.FenceBlock;
 
 public class ZetaFenceBlock extends FenceBlock implements IZetaBlock {
 

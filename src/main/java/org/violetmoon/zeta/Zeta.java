@@ -31,8 +31,9 @@ import org.violetmoon.zeta.registry.ZetaRegistry;
 import org.violetmoon.zeta.util.NameChanger;
 import org.violetmoon.zeta.util.RaytracingUtil;
 import org.violetmoon.zeta.util.RegistryUtil;
-import org.violetmoon.zeta.util.RequiredModTooltipHandler;
 import org.violetmoon.zeta.util.ZetaSide;
+import org.violetmoon.zeta.util.handler.RequiredModTooltipHandler;
+import org.violetmoon.zeta.util.zetalist.IZeta;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
@@ -42,7 +43,7 @@ import net.minecraft.world.phys.BlockHitResult;
 /**
  * do not touch forge OR quark from this package, it will later be split off
  */
-public abstract class Zeta {
+public abstract class Zeta implements IZeta {
 	
 	public static final String ZETA_ID = "zeta";
 	public static final Logger GLOBAL_LOG = LogManager.getLogger(ZETA_ID);
@@ -185,4 +186,9 @@ public abstract class Zeta {
 
 	// Let's Jump
 	public abstract void start();
+	
+	@Override
+	public Zeta asZeta() {
+		return this;
+	}
 }

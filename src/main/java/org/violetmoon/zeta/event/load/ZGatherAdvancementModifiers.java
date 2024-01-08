@@ -3,6 +3,10 @@ package org.violetmoon.zeta.event.load;
 import java.util.Set;
 import java.util.function.BooleanSupplier;
 
+import org.violetmoon.zeta.api.IAdvancementModifier;
+import org.violetmoon.zeta.api.IAdvancementModifierDelegate;
+import org.violetmoon.zeta.event.bus.IZetaLoadEvent;
+
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.EntityType;
@@ -10,9 +14,6 @@ import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
-import org.violetmoon.zeta.api.IAdvancementModifier;
-import org.violetmoon.zeta.api.IAdvancementModifierDelegate;
-import org.violetmoon.zeta.event.bus.IZetaLoadEvent;
 
 public interface ZGatherAdvancementModifiers extends IZetaLoadEvent {
 	void register(IAdvancementModifier modifier);

@@ -2,11 +2,12 @@ package org.violetmoon.zeta.module;
 
 import java.util.function.Supplier;
 
+import org.jetbrains.annotations.Nullable;
+import org.violetmoon.zeta.Zeta;
+
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import org.jetbrains.annotations.Nullable;
-import org.violetmoon.zeta.Zeta;
 
 /**
  * @see org.violetmoon.zeta.module.ZetaModuleManager for a good way to obtain these

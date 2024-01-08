@@ -1,8 +1,9 @@
 package org.violetmoon.zetaimplforge.util;
 
+import org.violetmoon.zeta.util.RaytracingUtil;
+
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.common.ForgeMod;
-import org.violetmoon.zeta.util.RaytracingUtil;
 
 public class ForgeRaytracingUtil extends RaytracingUtil {
 	@Override

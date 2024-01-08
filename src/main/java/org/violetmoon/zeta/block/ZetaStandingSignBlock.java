@@ -3,11 +3,11 @@ package org.violetmoon.zeta.block;
 import java.util.function.BooleanSupplier;
 
 import org.jetbrains.annotations.Nullable;
+import org.violetmoon.zeta.module.ZetaModule;
+import org.violetmoon.zeta.util.BooleanSuppliers;
 
 import net.minecraft.world.level.block.StandingSignBlock;
 import net.minecraft.world.level.block.state.properties.WoodType;
-import org.violetmoon.zeta.module.ZetaModule;
-import org.violetmoon.zeta.util.BooleanSuppliers;
 
 public class ZetaStandingSignBlock extends StandingSignBlock implements IZetaBlock {
 

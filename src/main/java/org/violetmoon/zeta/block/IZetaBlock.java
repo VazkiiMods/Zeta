@@ -1,5 +1,9 @@
 package org.violetmoon.zeta.block;
 
+import org.violetmoon.zeta.block.ext.IZetaBlockExtensions;
+import org.violetmoon.zeta.module.IDisableable;
+import org.violetmoon.zeta.registry.CreativeTabManager;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -12,9 +16,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import org.violetmoon.zeta.block.ext.IZetaBlockExtensions;
-import org.violetmoon.zeta.module.IDisableable;
-import org.violetmoon.zeta.registry.CreativeTabManager;
 
 /**
  * @author WireSegal

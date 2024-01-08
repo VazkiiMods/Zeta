@@ -1,10 +1,11 @@
 package org.violetmoon.zeta.util.handler;
 
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.SlabBlock;
+import static org.violetmoon.zeta.ZetaMod.ZETA;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+
 import org.violetmoon.zeta.Zeta;
 import org.violetmoon.zeta.ZetaMod;
 import org.violetmoon.zeta.event.bus.LoadEvent;
@@ -13,11 +14,11 @@ import org.violetmoon.zeta.event.load.ZLoadComplete;
 import org.violetmoon.zeta.event.play.ZFurnaceFuelBurnTime;
 import org.violetmoon.zeta.util.BlockUtils;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-
-import static org.violetmoon.zeta.ZetaMod.ZETA;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SlabBlock;
 
 public class FuelHandler {
 

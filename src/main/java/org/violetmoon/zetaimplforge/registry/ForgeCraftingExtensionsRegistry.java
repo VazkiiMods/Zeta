@@ -9,6 +9,7 @@ import org.violetmoon.zeta.recipe.IZetaIngredientSerializer;
 import org.violetmoon.zeta.registry.CraftingExtensionsRegistry;
 
 import com.google.gson.JsonObject;
+
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Ingredient;

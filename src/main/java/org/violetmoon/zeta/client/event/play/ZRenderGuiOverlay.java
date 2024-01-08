@@ -1,8 +1,10 @@
 package org.violetmoon.zeta.client.event.play;
 
-import com.mojang.blaze3d.platform.Window;
-import net.minecraft.client.gui.GuiGraphics;
 import org.violetmoon.zeta.event.bus.IZetaPlayEvent;
+
+import com.mojang.blaze3d.platform.Window;
+
+import net.minecraft.client.gui.GuiGraphics;
 
 public interface ZRenderGuiOverlay extends IZetaPlayEvent {
 	Window getWindow();

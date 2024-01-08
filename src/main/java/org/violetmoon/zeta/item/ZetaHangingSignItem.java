@@ -1,16 +1,17 @@
 package org.violetmoon.zeta.item;
 
-import net.minecraft.world.item.CreativeModeTabs;
-import net.minecraft.world.item.HangingSignItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.Block;
+import java.util.function.BooleanSupplier;
+
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.registry.CreativeTabManager;
 import org.violetmoon.zeta.util.BooleanSuppliers;
 
-import java.util.function.BooleanSupplier;
+import net.minecraft.world.item.CreativeModeTabs;
+import net.minecraft.world.item.HangingSignItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
 
 public class ZetaHangingSignItem extends HangingSignItem implements IZetaItem {
     private final @Nullable ZetaModule module;

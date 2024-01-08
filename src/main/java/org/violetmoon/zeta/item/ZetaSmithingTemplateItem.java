@@ -1,16 +1,17 @@
 package org.violetmoon.zeta.item;
 
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.SmithingTemplateItem;
+import java.util.List;
+import java.util.function.BooleanSupplier;
+
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.zeta.item.ext.IZetaItemExtensions;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.util.BooleanSuppliers;
 
-import java.util.List;
-import java.util.function.BooleanSupplier;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.SmithingTemplateItem;
 
 public class ZetaSmithingTemplateItem extends SmithingTemplateItem implements IZetaItem, IZetaItemExtensions {
 	

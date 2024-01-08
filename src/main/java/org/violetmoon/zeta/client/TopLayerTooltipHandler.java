@@ -1,20 +1,22 @@
 package org.violetmoon.zeta.client;
 
-import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexSorting;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.Component;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.joml.Matrix4f;
 import org.violetmoon.zeta.client.event.play.ZRenderTick;
 import org.violetmoon.zeta.event.bus.PlayEvent;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import com.mojang.blaze3d.platform.Window;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexSorting;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
 
 @Deprecated // Very hacky for what it does.
 public class TopLayerTooltipHandler {

@@ -1,8 +1,9 @@
 package org.violetmoon.zeta.item;
 
+import org.violetmoon.zeta.item.ext.IZetaItemExtensions;
+
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.level.block.Block;
-import org.violetmoon.zeta.item.ext.IZetaItemExtensions;
 
 //JANKY SHIT FOR MIXIN TARGETS
 public class ZetaBlockItem extends BlockItem implements IZetaItemExtensions {

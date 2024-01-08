@@ -2,12 +2,13 @@ package org.violetmoon.zetaimplforge.network;
 
 import java.util.concurrent.CompletableFuture;
 
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.network.NetworkEvent;
-import net.minecraftforge.network.simple.SimpleChannel;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.zeta.network.IZetaNetworkEventContext;
 import org.violetmoon.zeta.network.ZetaHandshakeMessage;
+
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.network.simple.SimpleChannel;
 
 public class ForgeNetworkEventContextImpl implements IZetaNetworkEventContext {
 	private final NetworkEvent.Context ctx;

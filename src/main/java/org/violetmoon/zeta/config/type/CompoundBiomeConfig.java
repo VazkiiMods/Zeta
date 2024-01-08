@@ -1,12 +1,12 @@
 package org.violetmoon.zeta.config.type;
 
-import net.minecraft.core.Holder;
-import net.minecraft.tags.TagKey;
-import net.minecraft.world.level.biome.Biome;
-
 import org.violetmoon.zeta.config.Config;
 import org.violetmoon.zeta.config.ConfigFlagManager;
 import org.violetmoon.zeta.module.ZetaModule;
+
+import net.minecraft.core.Holder;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.level.biome.Biome;
 
 public class CompoundBiomeConfig implements IBiomeConfig, IConfigType {
 

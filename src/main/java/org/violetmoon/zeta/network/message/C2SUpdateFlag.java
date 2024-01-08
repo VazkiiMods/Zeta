@@ -1,11 +1,11 @@
 package org.violetmoon.zeta.network.message;
 
+import java.io.Serial;
+import java.util.BitSet;
+
 import org.violetmoon.zeta.config.SyncedFlagHandler;
 import org.violetmoon.zeta.network.IZetaMessage;
 import org.violetmoon.zeta.network.IZetaNetworkEventContext;
-
-import java.io.Serial;
-import java.util.BitSet;
 
 public class C2SUpdateFlag implements IZetaMessage {
 

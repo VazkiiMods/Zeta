@@ -1,8 +1,9 @@
 package org.violetmoon.zetaimplforge.event.play;
 
+import org.violetmoon.zeta.event.play.ZServerTick;
+
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.event.TickEvent;
-import org.violetmoon.zeta.event.play.ZServerTick;
 
 public class ForgeZServerTick implements ZServerTick {
     private final TickEvent.ServerTickEvent e;

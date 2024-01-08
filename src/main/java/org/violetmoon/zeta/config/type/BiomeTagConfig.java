@@ -1,18 +1,18 @@
 package org.violetmoon.zeta.config.type;
 
-import net.minecraft.core.Holder;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.TagKey;
-import net.minecraft.world.level.biome.Biome;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.violetmoon.zeta.config.Config;
 import org.violetmoon.zeta.config.ConfigFlagManager;
 import org.violetmoon.zeta.module.ZetaModule;
 
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.level.biome.Biome;
 
 public class BiomeTagConfig implements IBiomeConfig, IConfigType {
 

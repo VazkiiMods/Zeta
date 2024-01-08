@@ -7,6 +7,7 @@ import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.registry.IZetaBlockColorProvider;
 import org.violetmoon.zeta.registry.IZetaItemColorProvider;
 import org.violetmoon.zeta.registry.VariantRegistry;
+import org.violetmoon.zeta.util.BooleanSuppliers;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -17,7 +18,6 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import org.violetmoon.zeta.util.BooleanSuppliers;
 
 public class ZetaStairsBlock extends StairBlock implements IZetaBlock, IZetaBlockColorProvider {
 

@@ -3,9 +3,10 @@ package org.violetmoon.zeta.config;
 import java.util.List;
 import java.util.function.Predicate;
 
-import com.google.common.base.Preconditions;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import com.google.common.base.Preconditions;
 
 public class ValueDefinition<T> extends Definition {
 	public final @NotNull T defaultValue;

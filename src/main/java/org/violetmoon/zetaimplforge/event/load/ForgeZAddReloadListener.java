@@ -1,8 +1,8 @@
 package org.violetmoon.zetaimplforge.event.load;
 
-import net.minecraft.core.RegistryAccess;
 import org.violetmoon.zeta.event.load.ZAddReloadListener;
 
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.server.ReloadableServerResources;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraftforge.event.AddReloadListenerEvent;

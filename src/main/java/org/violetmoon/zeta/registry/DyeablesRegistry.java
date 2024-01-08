@@ -1,5 +1,16 @@
 package org.violetmoon.zeta.registry;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.BooleanSupplier;
+
+import org.violetmoon.zeta.event.bus.LoadEvent;
+import org.violetmoon.zeta.event.load.ZRegister;
+import org.violetmoon.zeta.module.ZetaModule;
+import org.violetmoon.zeta.recipe.ZetaDyeRecipe;
+import org.violetmoon.zeta.util.BooleanSuppliers;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.cauldron.CauldronInteraction;
 import net.minecraft.core.registries.Registries;
@@ -15,17 +26,6 @@ import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.LayeredCauldronBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import org.violetmoon.zeta.event.bus.LoadEvent;
-import org.violetmoon.zeta.event.load.ZRegister;
-import org.violetmoon.zeta.module.ZetaModule;
-import org.violetmoon.zeta.recipe.ZetaDyeRecipe;
-import org.violetmoon.zeta.util.BooleanSuppliers;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.function.BooleanSupplier;
-import java.util.function.Supplier;
 
 /**
  * @see org.violetmoon.zeta.client.ClientRegistryExtension

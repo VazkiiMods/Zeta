@@ -1,12 +1,12 @@
 package org.violetmoon.zeta.block;
 
-import net.minecraft.world.level.block.state.properties.BlockSetType;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.violetmoon.zeta.module.ZetaModule;
 
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
-import org.jetbrains.annotations.Nullable;
-import org.violetmoon.zeta.module.ZetaModule;
+import net.minecraft.world.level.block.state.properties.BlockSetType;
 
 public class ZetaWoodenButtonBlock extends ZetaButtonBlock {
 

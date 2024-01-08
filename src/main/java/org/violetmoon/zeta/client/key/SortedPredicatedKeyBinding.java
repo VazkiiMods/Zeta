@@ -1,9 +1,9 @@
 package org.violetmoon.zeta.client.key;
 
+import java.util.function.Predicate;
+
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.InputConstants.Type;
-
-import java.util.function.Predicate;
 
 public class SortedPredicatedKeyBinding extends SortedKeyBinding {
 	private final Predicate<InputConstants.Key> allowed;

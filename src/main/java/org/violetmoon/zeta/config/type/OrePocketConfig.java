@@ -1,11 +1,11 @@
 package org.violetmoon.zeta.config.type;
 
-import net.minecraft.core.BlockPos;
-import net.minecraft.util.RandomSource;
-
 import java.util.function.Consumer;
 
 import org.violetmoon.zeta.config.Config;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.RandomSource;
 
 public class OrePocketConfig implements IConfigType {
 

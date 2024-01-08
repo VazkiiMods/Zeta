@@ -1,6 +1,29 @@
 package org.violetmoon.zeta.util.handler;
 
-import com.google.common.collect.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
+import java.util.function.Consumer;
+
+import org.jetbrains.annotations.Nullable;
+import org.violetmoon.zeta.Zeta;
+import org.violetmoon.zeta.event.bus.IZetaPlayEvent;
+import org.violetmoon.zeta.event.bus.LoadEvent;
+import org.violetmoon.zeta.event.bus.PlayEvent;
+import org.violetmoon.zeta.event.load.ZAddReloadListener;
+import org.violetmoon.zeta.event.load.ZTagsUpdated;
+import org.violetmoon.zeta.event.play.ZRecipeCrawl;
+import org.violetmoon.zeta.event.play.ZServerTick;
+import org.violetmoon.zeta.util.RegistryUtil;
+import org.violetmoon.zeta.util.zetalist.ZetaList;
+
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Sets;
+import com.google.common.collect.Streams;
+
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -9,23 +32,13 @@ import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.*;
-import org.jetbrains.annotations.Nullable;
-import org.violetmoon.zeta.Zeta;
-import org.violetmoon.zeta.ZetaMod;
-import org.violetmoon.zeta.event.bus.LoadEvent;
-import org.violetmoon.zeta.event.bus.PlayEvent;
-import org.violetmoon.zeta.event.load.ZAddReloadListener;
-import org.violetmoon.zeta.event.load.ZTagsUpdated;
-import org.violetmoon.zeta.event.play.ZRecipeCrawl;
-import org.violetmoon.zeta.event.play.ZServerTick;
-import org.violetmoon.zeta.util.RegistryUtil;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
-import java.util.function.Consumer;
+import net.minecraft.world.item.crafting.AbstractCookingRecipe;
+import net.minecraft.world.item.crafting.CustomRecipe;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.item.crafting.ShapedRecipe;
+import net.minecraft.world.item.crafting.ShapelessRecipe;
 
 public class RecipeCrawlHandler {
 
@@ -60,13 +73,17 @@ public class RecipeCrawlHandler {
 
 	private static void clear() {
 		mayCrawl = false;
-		ZetaMod.ZETA.playBus.fire(new ZRecipeCrawl.Reset());
+		fire(new ZRecipeCrawl.Reset());
+	}
+	
+	private static void fire(IZetaPlayEvent event) {
+		ZetaList.INSTANCE.fireEvent(event);
 	}
 
 	@SuppressWarnings("ConstantValue") // some nullchecks on stuff that is ostensibly non-null, but you never know with mods
 	private static void load(RecipeManager manager, RegistryAccess access) {
 		if(!manager.getRecipes().isEmpty()) {
-			ZetaMod.ZETA.playBus.fire(new ZRecipeCrawl.Starting());
+			fire(new ZRecipeCrawl.Starting());
 
 			recipesToLazyDigest.clear();
 			recipeDigestion.clear();
@@ -94,7 +111,7 @@ public class RecipeCrawlHandler {
 						event = new ZRecipeCrawl.Visit.Misc(recipe, access);
 
 					recipesToLazyDigest.add(recipe);
-					ZetaMod.ZETA.playBus.fire(event);
+					fire(event);
 				} catch (Exception e) {
 					if(recipe == null)
 						Zeta.GLOBAL_LOG.error("Encountered null recipe in RecipeManager.getRecipes. This is not good");
@@ -123,7 +140,7 @@ public class RecipeCrawlHandler {
 					digest(recipe, tick.getServer().registryAccess());
 
 				recipesToLazyDigest.clear();
-				ZetaMod.ZETA.playBus.fire(new ZRecipeCrawl.Digest(recipeDigestion, backwardsDigestion));
+				fire(new ZRecipeCrawl.Digest(recipeDigestion, backwardsDigestion));
 			}
 		}
 	}

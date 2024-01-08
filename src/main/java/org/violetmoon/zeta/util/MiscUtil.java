@@ -1,10 +1,16 @@
-package org.violetmoon.zeta.util.handler;
+package org.violetmoon.zeta.util;
+
+import java.util.LinkedHashSet;
+import java.util.Set;
+
+import org.jetbrains.annotations.NotNull;
+import org.violetmoon.zeta.Zeta;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import net.minecraft.Util;
+
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.resources.language.I18n;
@@ -31,7 +37,6 @@ import net.minecraft.world.entity.ai.goal.WrappedGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LightLayer;
@@ -51,17 +56,8 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
-import org.jetbrains.annotations.NotNull;
-import org.violetmoon.zeta.Zeta;
-import org.violetmoon.zeta.util.BlockUtils;
-
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
 
 public class MiscUtil {
-
-	public static final ResourceLocation GENERAL_ICONS = new ResourceLocation(Zeta.ZETA_ID, "textures/gui/general_icons.png");
 
 	public static final Direction[] HORIZONTALS = new Direction[] {
 			Direction.NORTH,
@@ -205,50 +201,4 @@ public class MiscUtil {
 		return p;
 	}
 
-	public static class Client {
-		private static int progress;
-
-		private static final int BASIC_GUI_TEXT_COLOR = 0x404040;
-
-		public static int getGuiTextColor(String name) {
-			return getGuiTextColor(name, BASIC_GUI_TEXT_COLOR);
-		}
-
-		public static int getGuiTextColor(String name, int base) {
-			int ret = base;
-
-			String hex = I18n.get("zeta.gui.color." + name);
-			if(hex.matches("#[A-F0-9]{6}"))
-				ret = Integer.valueOf(hex.substring(1), 16);
-			return ret;
-		}
-
-		public static void drawChatBubble(GuiGraphics guiGraphics, int x, int y, Font font, String text, float alpha, boolean extendRight) {
-			PoseStack matrix = guiGraphics.pose();
-
-			matrix.pushPose();
-			matrix.translate(0, 0, 200);
-			int w = font.width(text);
-			int left = x - (extendRight ? 0 : w);
-			int top = y - 8;
-
-			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, alpha);
-
-			if(extendRight) {
-				guiGraphics.blit(MiscUtil.GENERAL_ICONS, left, top, 227, 9, 6, 17, 256, 256);
-				for(int i = 0; i < w; i++)
-					guiGraphics.blit(MiscUtil.GENERAL_ICONS, left + i + 6, top, 232, 9, 1, 17, 256, 256);
-				guiGraphics.blit(MiscUtil.GENERAL_ICONS, left + w + 5, top, 236, 9, 5, 17, 256, 256);
-			} else {
-				guiGraphics.blit(MiscUtil.GENERAL_ICONS, left, top, 242, 9, 5, 17, 256, 256);
-				for(int i = 0; i < w; i++)
-					guiGraphics.blit(MiscUtil.GENERAL_ICONS, left + i + 5, top, 248, 9, 1, 17, 256, 256);
-				guiGraphics.blit(MiscUtil.GENERAL_ICONS, left + w + 5, top, 250, 9, 6, 17, 256, 256);
-			}
-
-			int alphaInt = (int) (256F * alpha) << 24;
-			guiGraphics.drawString(font, text, left + 5, top + 3, alphaInt, false);
-			matrix.popPose();
-		}
-	}
 }

@@ -1,5 +1,14 @@
 package org.violetmoon.zeta.client;
 
+import org.jetbrains.annotations.Nullable;
+import org.violetmoon.zeta.Zeta;
+import org.violetmoon.zeta.client.config.ClientConfigManager;
+import org.violetmoon.zeta.event.bus.IZetaLoadEvent;
+import org.violetmoon.zeta.event.bus.IZetaPlayEvent;
+import org.violetmoon.zeta.event.bus.ZetaEventBus;
+import org.violetmoon.zeta.network.IZetaMessage;
+import org.violetmoon.zeta.util.zetalist.IZeta;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.color.block.BlockColors;
@@ -11,15 +20,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
-import org.jetbrains.annotations.Nullable;
-import org.violetmoon.zeta.Zeta;
-import org.violetmoon.zeta.client.config.ClientConfigManager;
-import org.violetmoon.zeta.event.bus.IZetaLoadEvent;
-import org.violetmoon.zeta.event.bus.IZetaPlayEvent;
-import org.violetmoon.zeta.event.bus.ZetaEventBus;
-import org.violetmoon.zeta.network.IZetaMessage;
 
-public abstract class ZetaClient {
+public abstract class ZetaClient implements IZeta {
 	public ZetaClient(Zeta zeta) {
 		this.zeta = zeta;
 		this.loadBus = zeta.loadBus;
@@ -82,4 +84,9 @@ public abstract class ZetaClient {
 	public abstract @Nullable RegistryAccess hackilyGetCurrentClientLevelRegistryAccess();
 
 	public abstract void start();
+	
+	@Override
+	public Zeta asZeta() {
+		return zeta;
+	}
 }

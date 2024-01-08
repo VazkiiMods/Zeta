@@ -6,17 +6,17 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
 
+import org.jetbrains.annotations.Nullable;
+import org.violetmoon.zeta.Zeta;
+import org.violetmoon.zeta.block.IZetaBlock;
+
 import net.minecraft.core.Holder;
-import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
-import org.jetbrains.annotations.Nullable;
-import org.violetmoon.zeta.Zeta;
-import org.violetmoon.zeta.block.IZetaBlock;
 
 public class RegistryUtil {
 	

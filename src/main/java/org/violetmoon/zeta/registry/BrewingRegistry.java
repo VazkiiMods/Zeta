@@ -1,6 +1,14 @@
 package org.violetmoon.zeta.registry;
 
+import java.util.Map;
+import java.util.function.Supplier;
+
+import org.jetbrains.annotations.Nullable;
+import org.violetmoon.zeta.Zeta;
+import org.violetmoon.zeta.recipe.FlagIngredient;
+
 import com.google.common.collect.Maps;
+
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
@@ -10,12 +18,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.crafting.Ingredient;
-import org.violetmoon.zeta.Zeta;
-import org.violetmoon.zeta.recipe.FlagIngredient;
-
-import org.jetbrains.annotations.Nullable;
-import java.util.Map;
-import java.util.function.Supplier;
 
 /**
  * @author WireSegal

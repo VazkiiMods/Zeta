@@ -1,13 +1,13 @@
 package org.violetmoon.zeta.network.message;
 
+import java.util.BitSet;
+import java.util.Collections;
+import java.util.List;
+
 import org.apache.commons.lang3.tuple.Pair;
 import org.violetmoon.zeta.config.SyncedFlagHandler;
 import org.violetmoon.zeta.network.IZetaNetworkEventContext;
 import org.violetmoon.zeta.network.ZetaHandshakeMessage;
-
-import java.util.BitSet;
-import java.util.Collections;
-import java.util.List;
 
 public class S2CLoginFlag extends ZetaHandshakeMessage {
 

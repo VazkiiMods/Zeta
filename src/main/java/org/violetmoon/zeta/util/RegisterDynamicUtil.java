@@ -3,11 +3,12 @@ package org.violetmoon.zeta.util;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.violetmoon.zeta.Zeta;
+
 import net.minecraft.core.Registry;
 import net.minecraft.core.WritableRegistry;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceKey;
-import org.violetmoon.zeta.Zeta;
 
 /**
  * Weird supporting code for RegistryDataLoaderMixin. Mixing into RegistryDataLoader

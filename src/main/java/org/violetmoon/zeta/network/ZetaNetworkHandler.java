@@ -3,12 +3,13 @@ package org.violetmoon.zeta.network;
 import java.util.List;
 import java.util.function.Function;
 
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ServerPlayer;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.zeta.Zeta;
+
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerPlayer;
 
 public abstract class ZetaNetworkHandler {
 	public ZetaMessageSerializer serializer = new ZetaMessageSerializer();

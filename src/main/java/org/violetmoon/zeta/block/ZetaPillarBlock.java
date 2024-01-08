@@ -3,10 +3,10 @@ package org.violetmoon.zeta.block;
 import java.util.function.BooleanSupplier;
 
 import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.world.level.block.RotatedPillarBlock;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.util.BooleanSuppliers;
+
+import net.minecraft.world.level.block.RotatedPillarBlock;
 
 public class ZetaPillarBlock extends RotatedPillarBlock implements IZetaBlock {
 

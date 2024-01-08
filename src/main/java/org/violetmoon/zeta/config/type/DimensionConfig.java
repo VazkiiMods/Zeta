@@ -1,14 +1,14 @@
 package org.violetmoon.zeta.config.type;
 
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
-
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.violetmoon.zeta.config.Config;
+
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 
 public class DimensionConfig implements IConfigType {
 

@@ -1,16 +1,17 @@
 package org.violetmoon.zeta.item;
 
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.item.CreativeModeTabs;
-import net.minecraftforge.common.ForgeSpawnEggItem;
+import java.util.function.BooleanSupplier;
+import java.util.function.Supplier;
+
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.registry.CreativeTabManager;
 import org.violetmoon.zeta.util.BooleanSuppliers;
 
-import java.util.function.BooleanSupplier;
-import java.util.function.Supplier;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.item.CreativeModeTabs;
+import net.minecraftforge.common.ForgeSpawnEggItem;
 
 public class ZetaSpawnEggItem extends ForgeSpawnEggItem implements IZetaItem {
 

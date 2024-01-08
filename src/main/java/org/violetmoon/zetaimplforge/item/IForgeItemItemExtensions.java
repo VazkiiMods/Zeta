@@ -3,6 +3,10 @@ package org.violetmoon.zetaimplforge.item;
 import java.util.Map;
 import java.util.function.Consumer;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.violetmoon.zeta.item.ext.IZetaItemExtensions;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -17,9 +21,6 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.LevelReader;
 import net.minecraftforge.common.ToolActions;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.violetmoon.zeta.item.ext.IZetaItemExtensions;
 
 public class IForgeItemItemExtensions implements IZetaItemExtensions {
 	public static final IForgeItemItemExtensions INSTANCE = new IForgeItemItemExtensions();

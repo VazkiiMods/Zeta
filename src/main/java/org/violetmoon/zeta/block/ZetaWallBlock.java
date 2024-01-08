@@ -7,6 +7,7 @@ import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.registry.IZetaBlockColorProvider;
 import org.violetmoon.zeta.registry.IZetaItemColorProvider;
 import org.violetmoon.zeta.registry.VariantRegistry;
+import org.violetmoon.zeta.util.BooleanSuppliers;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
@@ -15,7 +16,6 @@ import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.WallBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import org.violetmoon.zeta.util.BooleanSuppliers;
 
 public class ZetaWallBlock extends WallBlock implements IZetaBlock, IZetaBlockColorProvider {
 

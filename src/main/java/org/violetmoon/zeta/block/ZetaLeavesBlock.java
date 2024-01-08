@@ -1,5 +1,12 @@
 package org.violetmoon.zeta.block;
 
+import java.util.function.BooleanSupplier;
+
+import org.jetbrains.annotations.Nullable;
+import org.violetmoon.zeta.module.ZetaModule;
+import org.violetmoon.zeta.registry.RenderLayerRegistry;
+import org.violetmoon.zeta.util.BooleanSuppliers;
+
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -7,13 +14,6 @@ import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
-import org.violetmoon.zeta.module.ZetaModule;
-import org.violetmoon.zeta.registry.RenderLayerRegistry;
-
-import org.jetbrains.annotations.Nullable;
-import org.violetmoon.zeta.util.BooleanSuppliers;
-
-import java.util.function.BooleanSupplier;
 
 public class ZetaLeavesBlock extends LeavesBlock implements IZetaBlock {
 	

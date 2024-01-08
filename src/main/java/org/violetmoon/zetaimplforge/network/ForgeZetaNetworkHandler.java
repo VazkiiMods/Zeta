@@ -5,6 +5,14 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import org.apache.commons.lang3.tuple.Pair;
+import org.jetbrains.annotations.Nullable;
+import org.violetmoon.zeta.network.IZetaMessage;
+import org.violetmoon.zeta.network.ZetaHandshakeMessage;
+import org.violetmoon.zeta.network.ZetaNetworkDirection;
+import org.violetmoon.zeta.network.ZetaNetworkHandler;
+import org.violetmoon.zetaimplforge.ForgeZeta;
+
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -13,13 +21,6 @@ import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
-import org.apache.commons.lang3.tuple.Pair;
-import org.jetbrains.annotations.Nullable;
-import org.violetmoon.zeta.network.IZetaMessage;
-import org.violetmoon.zeta.network.ZetaHandshakeMessage;
-import org.violetmoon.zeta.network.ZetaNetworkDirection;
-import org.violetmoon.zeta.network.ZetaNetworkHandler;
-import org.violetmoon.zetaimplforge.ForgeZeta;
 
 public class ForgeZetaNetworkHandler extends ZetaNetworkHandler {
 	protected final SimpleChannel channel;

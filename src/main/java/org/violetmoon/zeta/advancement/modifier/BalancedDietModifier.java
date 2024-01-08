@@ -1,18 +1,20 @@
 package org.violetmoon.zeta.advancement.modifier;
 
+import java.util.Set;
+
+import org.violetmoon.zeta.advancement.AdvancementModifier;
+import org.violetmoon.zeta.api.IMutableAdvancement;
+import org.violetmoon.zeta.module.ZetaModule;
+
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;
+
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.ConsumeItemTrigger;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.ItemLike;
-import org.violetmoon.zeta.advancement.AdvancementModifier;
-import org.violetmoon.zeta.api.IMutableAdvancement;
-import org.violetmoon.zeta.module.ZetaModule;
-
-import java.util.Set;
 
 public class BalancedDietModifier extends AdvancementModifier {
 

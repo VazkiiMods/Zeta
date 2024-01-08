@@ -1,9 +1,9 @@
 package org.violetmoon.zeta.block.ext;
 
+import java.util.Optional;
+
 import net.minecraft.world.level.block.WeatheringCopper;
 import net.minecraft.world.level.block.state.BlockState;
-
-import java.util.Optional;
 
 public interface CustomWeatheringCopper extends WeatheringCopper {
 	default BlockState getFirst(BlockState state) {

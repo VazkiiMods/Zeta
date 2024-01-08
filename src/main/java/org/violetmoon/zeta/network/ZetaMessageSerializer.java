@@ -11,6 +11,8 @@ import java.util.UUID;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
+import org.apache.commons.lang3.tuple.Pair;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -18,7 +20,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.BlockHitResult;
-import org.apache.commons.lang3.tuple.Pair;
 
 @SuppressWarnings({ "unchecked", "rawtypes", "unused" })
 public final class ZetaMessageSerializer {

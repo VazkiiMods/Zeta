@@ -2,11 +2,12 @@ package org.violetmoon.zeta.item;
 
 import java.util.function.BooleanSupplier;
 
-import net.minecraft.world.item.DoubleHighBlockItem;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.zeta.block.IZetaBlock;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.util.BooleanSuppliers;
+
+import net.minecraft.world.item.DoubleHighBlockItem;
 
 public class ZetaDoubleHighBlockItem extends DoubleHighBlockItem implements IZetaItem {
 
