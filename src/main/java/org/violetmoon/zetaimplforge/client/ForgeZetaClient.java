@@ -95,7 +95,6 @@ import net.minecraftforge.server.ServerLifecycleHooks;
 public class ForgeZetaClient extends ZetaClient {
 	public ForgeZetaClient(Zeta z) {
 		super(z);
-		ZetaClientList.signup(this);
 	}
 
 	@Override

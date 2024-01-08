@@ -8,7 +8,10 @@
     "AccessorLootTable",
     "AccessorPistonStructureResolver",
     "PistonBaseBlockMixin",
-    "RegistryDataLoaderMixin"
+    "RegistryDataLoaderMixin",
+    "StructurePieceMixin",
+    "StructureStartMixin",
+    "StructureTemplateMixin"
   ],
   "client": [
   ],

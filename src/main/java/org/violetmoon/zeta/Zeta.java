@@ -34,6 +34,7 @@ import org.violetmoon.zeta.util.RegistryUtil;
 import org.violetmoon.zeta.util.ZetaSide;
 import org.violetmoon.zeta.util.handler.RequiredModTooltipHandler;
 import org.violetmoon.zeta.util.zetalist.IZeta;
+import org.violetmoon.zeta.util.zetalist.ZetaList;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
@@ -76,6 +77,8 @@ public abstract class Zeta implements IZeta {
 			.subscribe(dyeables)
 			.subscribe(brewingRegistry)
 			.subscribe(advancementModifierRegistry);
+		
+		ZetaList.INSTANCE.register(this);
 	}
 
 	//core

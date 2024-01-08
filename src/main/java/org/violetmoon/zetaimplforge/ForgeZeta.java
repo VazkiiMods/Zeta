@@ -171,7 +171,6 @@ import net.minecraftforge.registries.RegisterEvent;
 public class ForgeZeta extends Zeta {
 	public ForgeZeta(String modid, Logger log) {
 		super(modid, log, ZetaSide.fromClient(FMLEnvironment.dist.isClient()));
-		ZetaList.signup(this);
 	}
 
 	@Override

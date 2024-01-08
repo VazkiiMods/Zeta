@@ -15,7 +15,7 @@ public class ZetaList<T extends IZeta> {
 
     protected ZetaList() { }
     
-    public void signup(T z) {
+    public void register(T z) {
         knownZetas.add(z);
     }
 

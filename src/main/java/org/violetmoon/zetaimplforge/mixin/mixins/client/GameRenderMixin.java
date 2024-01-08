@@ -14,6 +14,6 @@ import net.minecraft.client.renderer.GameRenderer;
 public class GameRenderMixin {
     @Inject(method = "render", at = @At(target = "Lnet/minecraft/util/profiling/ProfilerFiller;popPush(Ljava/lang/String;)V", value = "INVOKE", shift = At.Shift.AFTER))
     private void quark$renderEvent(float v, long l, boolean b, CallbackInfo ci) {
-        ZetaClientList.fireEvent(new ForgeZEarlyRender(), ZEarlyRender.class);
+        ZetaClientList.INSTANCE.fireEvent(new ForgeZEarlyRender(), ZEarlyRender.class);
     }
 }

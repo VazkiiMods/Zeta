@@ -8,6 +8,7 @@ import org.violetmoon.zeta.event.bus.IZetaPlayEvent;
 import org.violetmoon.zeta.event.bus.ZetaEventBus;
 import org.violetmoon.zeta.network.IZetaMessage;
 import org.violetmoon.zeta.util.zetalist.IZeta;
+import org.violetmoon.zeta.util.zetalist.ZetaClientList;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColor;
@@ -36,6 +37,8 @@ public abstract class ZetaClient implements IZeta {
 
 		playBus.subscribe(ticker);
 		playBus.subscribe(topLayerTooltipHandler);
+		
+		ZetaClientList.INSTANCE.register(this);
 	}
 
 	public final Zeta zeta;
