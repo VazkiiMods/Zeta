@@ -34,4 +34,8 @@ public class ZetaList<T extends IZeta> {
     public <E extends IZetaLoadEvent> void fireEvent(E event, Class<E> eventClass) {
         knownZetas.forEach(z -> z.asZeta().loadBus.fire(event, eventClass));
     }
+    
+    public Iterable<T> getZetas() {
+    	return knownZetas;
+    }
 }

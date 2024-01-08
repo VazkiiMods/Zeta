@@ -14,11 +14,10 @@ import net.minecraftforge.common.world.ModifiableBiomeInfo;
 
 public class ZetaSpawnModifier {
 
-
-	public static void modifyBiome(Holder<Biome> biome, ModifiableBiomeInfo.BiomeInfo.Builder biomeInfoBuilder) {
+	public static void modifyBiome(Holder<Biome> biome, EntitySpawnHandler handler, ModifiableBiomeInfo.BiomeInfo.Builder biomeInfoBuilder) {
 		MobSpawnSettingsBuilder builder = biomeInfoBuilder.getMobSpawnSettings();
 
-		for(TrackedSpawnConfig c : EntitySpawnHandler.trackedSpawnConfigs) {
+		for(TrackedSpawnConfig c : handler.trackedSpawnConfigs) {
 			List<MobSpawnSettings.SpawnerData> l = builder.getSpawner(c.classification);
 			if(!c.secondary)
 				l.removeIf(e -> e.type.equals(c.entityType));

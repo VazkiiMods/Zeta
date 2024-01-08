@@ -3,6 +3,7 @@ package org.violetmoon.zetaimplforge.world;
 import java.util.List;
 
 import org.violetmoon.zeta.Zeta;
+import org.violetmoon.zeta.util.zetalist.ZetaList;
 import org.violetmoon.zeta.world.WorldGenHandler;
 
 import com.mojang.serialization.Codec;
@@ -30,7 +31,9 @@ public class ZetaBiomeModifier implements BiomeModifier {
 	public void modify(Holder<Biome> biome, Phase phase, BiomeInfo.Builder builder) {
 		if(phase == Phase.ADD) {
 			modifyBiome(biome, builder);
-			ZetaSpawnModifier.modifyBiome(biome, builder);
+			
+			for(Zeta zeta : ZetaList.INSTANCE.getZetas())
+				ZetaSpawnModifier.modifyBiome(biome, zeta.entitySpawn, builder);
 		}
 	}
 

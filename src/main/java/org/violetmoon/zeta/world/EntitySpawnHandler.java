@@ -24,7 +24,7 @@ import net.minecraft.world.level.levelgen.Heightmap;
 
 public class EntitySpawnHandler {
 
-	private List<TrackedSpawnConfig> trackedSpawnConfigs = new LinkedList<>();
+	public List<TrackedSpawnConfig> trackedSpawnConfigs = new LinkedList<>();
 	private final Zeta zeta;
 	
 	public EntitySpawnHandler(Zeta zeta) {
