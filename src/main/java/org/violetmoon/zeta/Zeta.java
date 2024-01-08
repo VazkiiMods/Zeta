@@ -35,6 +35,7 @@ import org.violetmoon.zeta.util.ZetaSide;
 import org.violetmoon.zeta.util.handler.RequiredModTooltipHandler;
 import org.violetmoon.zeta.util.zetalist.IZeta;
 import org.violetmoon.zeta.util.zetalist.ZetaList;
+import org.violetmoon.zeta.world.EntitySpawnHandler;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
@@ -72,11 +73,14 @@ public abstract class Zeta implements IZeta {
 
 		this.raytracingUtil = createRaytracingUtil();
 		this.nameChanger = createNameChanger();
+		
+		this.entitySpawn = createEntitySpawnHandler();
 
 		loadBus.subscribe(craftingExtensions)
 			.subscribe(dyeables)
 			.subscribe(brewingRegistry)
-			.subscribe(advancementModifierRegistry);
+			.subscribe(advancementModifierRegistry)
+			.subscribe(entitySpawn);
 		
 		ZetaList.INSTANCE.register(this);
 	}
@@ -116,6 +120,9 @@ public abstract class Zeta implements IZeta {
 
 	//network (which isn't set in the constructor b/c it has a user-specified protocol version TODO this isnt good api design, imo)
 	public ZetaNetworkHandler network;
+	
+	// worldgen
+	public EntitySpawnHandler entitySpawn;
 
 	/**
 	 * @param categories List of module categories in this mod, if null, will not load Modules but still load general config
@@ -177,6 +184,9 @@ public abstract class Zeta implements IZeta {
 	public abstract RaytracingUtil createRaytracingUtil();
 	public NameChanger createNameChanger() {
 		return new NameChanger();
+	}
+	public EntitySpawnHandler createEntitySpawnHandler() {
+		return new EntitySpawnHandler(this);
 	}
 
 	public abstract ZetaNetworkHandler createNetworkHandler(int protocolVersion);

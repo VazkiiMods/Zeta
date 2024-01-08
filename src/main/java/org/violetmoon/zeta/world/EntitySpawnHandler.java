@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.BooleanSupplier;
 
+import org.violetmoon.zeta.Zeta;
 import org.violetmoon.zeta.config.type.EntitySpawnConfig;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.load.ZConfigChanged;
@@ -23,30 +24,35 @@ import net.minecraft.world.level.levelgen.Heightmap;
 
 public class EntitySpawnHandler {
 
-	public static final List<TrackedSpawnConfig> trackedSpawnConfigs = new LinkedList<>();
+	private List<TrackedSpawnConfig> trackedSpawnConfigs = new LinkedList<>();
+	private final Zeta zeta;
+	
+	public EntitySpawnHandler(Zeta zeta) {
+		this.zeta = zeta;
+	}
 
-	public static <T extends Mob> void registerSpawn(EntityType<T> entityType, MobCategory classification, Type placementType, Heightmap.Types heightMapType, SpawnPredicate<T> placementPredicate, EntitySpawnConfig config) {
+	public <T extends Mob> void registerSpawn(EntityType<T> entityType, MobCategory classification, Type placementType, Heightmap.Types heightMapType, SpawnPredicate<T> placementPredicate, EntitySpawnConfig config) {
 		SpawnPlacements.register(entityType, placementType, heightMapType, placementPredicate);
 
 		track(entityType, classification, config, false);
 	}
 
-	public static <T extends Mob> void track(EntityType<T> entityType, MobCategory classification, EntitySpawnConfig config, boolean secondary) {
+	public <T extends Mob> void track(EntityType<T> entityType, MobCategory classification, EntitySpawnConfig config, boolean secondary) {
 		trackedSpawnConfigs.add(new TrackedSpawnConfig(entityType, classification, config, secondary));
 	}
 
-	public static void addEgg(ZetaModule module, EntityType<? extends Mob> entityType, int color1, int color2, EntitySpawnConfig config) {
+	public void addEgg(ZetaModule module, EntityType<? extends Mob> entityType, int color1, int color2, EntitySpawnConfig config) {
 		addEgg(entityType, color1, color2, module, config::isEnabled);
 	}
 
-	public static void addEgg(EntityType<? extends Mob> entityType, int color1, int color2, ZetaModule module, BooleanSupplier enabledSupplier) {
-		new ZetaSpawnEggItem(() -> entityType, color1, color2, module.zeta.registry.getRegistryName(entityType, BuiltInRegistries.ENTITY_TYPE) + "_spawn_egg", module,
+	public void addEgg(EntityType<? extends Mob> entityType, int color1, int color2, ZetaModule module, BooleanSupplier enabledSupplier) {
+		new ZetaSpawnEggItem(() -> entityType, color1, color2, zeta.registry.getRegistryName(entityType, BuiltInRegistries.ENTITY_TYPE) + "_spawn_egg", module,
 				new Item.Properties())
 				.setCondition(enabledSupplier);
 	}
 
 	@LoadEvent
-	public static void refresh(ZConfigChanged event) {
+	public void refresh(ZConfigChanged event) {
 		for(TrackedSpawnConfig c : trackedSpawnConfigs)
 			c.refresh();
 	}
