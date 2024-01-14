@@ -7,10 +7,6 @@ import net.minecraftforge.fml.loading.FMLPaths;
 import java.nio.file.Path;
 
 public class Utils {
-    public static boolean isModLoaded(String id) {
-        return ModList.get().isLoaded(id);
-    }
-
     public static Path configDir() {
         return FMLPaths.CONFIGDIR.get();
     }
