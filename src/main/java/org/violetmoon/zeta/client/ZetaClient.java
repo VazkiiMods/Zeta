@@ -33,10 +33,11 @@ public abstract class ZetaClient implements IZeta {
 		this.topLayerTooltipHandler = createTopLayerTooltipHandler();
 		this.clientRegistryExtension = createClientRegistryExtension();
 
-		loadBus.subscribe(clientRegistryExtension);
+		loadBus.subscribe(clientRegistryExtension)
+			.subscribe(clientConfigManager);
 
-		playBus.subscribe(ticker);
-		playBus.subscribe(topLayerTooltipHandler);
+		playBus.subscribe(ticker)
+			.subscribe(topLayerTooltipHandler);
 		
 		ZetaClientList.INSTANCE.register(this);
 	}
@@ -57,7 +58,7 @@ public abstract class ZetaClient implements IZeta {
 	}
 
 	public ClientConfigManager createClientConfigManager() {
-		return new ClientConfigManager();
+		return new ClientConfigManager(this);
 	}
 
 	public TopLayerTooltipHandler createTopLayerTooltipHandler() {

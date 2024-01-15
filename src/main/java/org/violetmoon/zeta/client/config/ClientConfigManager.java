@@ -3,6 +3,7 @@ package org.violetmoon.zeta.client.config;
 import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
+import org.violetmoon.zeta.client.ZetaClient;
 import org.violetmoon.zeta.client.config.definition.BooleanClientDefinition;
 import org.violetmoon.zeta.client.config.definition.ClientDefinitionExt;
 import org.violetmoon.zeta.client.config.definition.DoubleClientDefinition;
@@ -14,8 +15,20 @@ import org.violetmoon.zeta.client.config.definition.StringListClientDefinition;
 import org.violetmoon.zeta.config.Definition;
 import org.violetmoon.zeta.config.SectionDefinition;
 import org.violetmoon.zeta.config.ValueDefinition;
+import org.violetmoon.zeta.event.bus.LoadEvent;
+import org.violetmoon.zeta.event.load.ZConfigChanged;
+import org.violetmoon.zeta.network.message.C2SUpdateFlag;
+
+import net.minecraft.client.Minecraft;
 
 public class ClientConfigManager {
+	
+	final ZetaClient zc;
+	
+	public ClientConfigManager(ZetaClient zc) {
+		this.zc = zc;
+	}
+	
 	@SuppressWarnings("unchecked")
 	public <D extends Definition> @NotNull ClientDefinitionExt<D> getExt(D def) {
 		//TODO: make this expandable, a registry or something, and allow overriding client definitions per-config-value
@@ -43,4 +56,11 @@ public class ClientConfigManager {
 		//This cast is unsound, but Default never actually uses its argument, so it's fineeeeee, right
 		throw new IllegalArgumentException(def + " is not a legal config value");
 	}
+	
+	@LoadEvent
+	public void configChanged(ZConfigChanged event) {
+		if(Minecraft.getInstance().getConnection() != null)
+			zc.sendToServer(C2SUpdateFlag.createPacket());
+	}
+	
 }
