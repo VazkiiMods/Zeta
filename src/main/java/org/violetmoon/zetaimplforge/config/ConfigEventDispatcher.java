@@ -27,6 +27,11 @@ public class ConfigEventDispatcher {
 		}
 	}
 	
+	public static void dispatchAllInitialLoads() {
+		for(Zeta z : ZetaList.INSTANCE.getZetas())
+			handleConfigChange(z);
+	}
+	
 	private static void handleConfigChange(Zeta z) {
 		z.configManager.onReload();
 		z.loadBus.fire(new ZConfigChanged());
