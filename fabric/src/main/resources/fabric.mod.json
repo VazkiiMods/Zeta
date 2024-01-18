@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "zeta",
+  "version": "${version}",
+
+  "name": "Zeta",
+  "description": "Zeta",
+  "authors": [],
+  "contact": {},
+
+  "license": "MIT",
+  "icon": "icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "org.violetmoon.zeta.fabric.ZetaFabric"
+    ]
+  },
+  "mixins": [
+    "zeta.mixins.json",
+    "zeta-common.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.15.6",
+    "minecraft": ">=1.20.1"
+  }
+}

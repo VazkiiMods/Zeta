@@ -1,0 +1,239 @@
+buildscript {
+    repositories {
+        maven { url = 'https://maven.minecraftforge.net' }
+        maven { url = 'https://repo.spongepowered.org/maven' }
+        mavenCentral()
+    }
+    dependencies {
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1+', changing: true
+        classpath group: 'org.spongepowered', name: 'mixingradle', version: '0.7-SNAPSHOT'
+    }
+}
+
+plugins {
+    id 'com.diffplug.spotless' version '6.22.0'
+}
+
+apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'org.spongepowered.mixin'
+apply plugin: 'eclipse'
+apply plugin: 'maven-publish'
+apply plugin: 'pmd'
+
+jarJar.enable()
+
+ext.configFile = file('build.properties')
+ext.depsFile = file('dependencies.properties')
+ext.config = parseConfig(configFile)
+ext.deps = parseConfig(depsFile)
+
+version = "${config.version}-${config.build_number}"
+group = "org.violetmoon.${config.mod_id}" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = config.mod_name
+
+compileJava.options.compilerArgs << "-Xlint:all,-classfile,-processing,-deprecation"
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
+
+if (System.getenv('BUILD_NUMBER') != null) {
+    version += "." + System.getenv('BUILD_NUMBER')
+}
+
+minecraft {
+    mappings channel: "${config.mapping_channel}", version: "${config.mapping_version}"
+    // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
+
+    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+
+    // Default run configurations.
+    // These can be tweaked, removed, or duplicated as needed.
+    runs {
+        configureEach {
+            property "mixin.debug.export", "true"
+            mods {
+                zeta {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        client {
+            workingDirectory project.file('run')
+        }
+
+        server {
+            workingDirectory project.file('runServer')
+        }
+    }
+}
+
+mixin {
+    add sourceSets.main, 'zeta.mixins.refmap.json'
+    config 'zeta.mixins.json'
+    config 'zeta_forge.mixins.json'
+}
+
+repositories {
+    maven {
+        name "cursemaven"
+        url "https://www.cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
+    }
+
+    maven {
+        name "jitpack"
+        url "https://jitpack.io"
+    }
+
+}
+
+dependencies {
+    minecraft "net.minecraftforge:forge:${config.mc_version}-${deps.forge}"
+
+    compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.3.2"))
+    implementation(jarJar("io.github.llamalad7:mixinextras-forge:0.3.2")) {
+        jarJar.ranged(it, "[0.3.2,)")
+    }
+
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+}
+
+spotless {
+    enforceCheck = false // workaround around jenkins having wrong line endings in some files
+    java {
+        target project.fileTree(dir: 'src/main/java/org/violetmoon/zeta', include: '**/*.java')
+        //indentWithTabs()
+        eclipse().configFile 'spotless/eclipseformat.xml'
+        removeUnusedImports()
+        importOrderFile 'spotless/eclipse.importorder'
+        replaceRegex 'Too much space after if', '(if|for|while|switch) +\\(', '$1('
+    }
+}
+
+pmd {
+    toolVersion '6.42.0'
+    incrementalAnalysis.set(true)
+    ruleSets.clear()
+    ruleSetFiles = files("spotless/pmd-ruleset.xml")
+}
+
+task checkSyntax (group: "verification") {
+    // Replace the following line when Spotless is setup
+    //dependsOn spotlessJavaCheck, pmdMain
+    dependsOn pmdMain
+}
+
+processResources {
+    // copy everything excluding psd files
+    from(sourceSets.main.resources.srcDirs) {
+        exclude '**/psd/**'
+        duplicatesStrategy 'include'
+    }
+}
+
+def parseConfig(File config) {
+    config.withReader {
+        def prop = new Properties()
+        prop.load(it)
+        return (new ConfigSlurper().parse(prop))
+    }
+}
+
+jar {
+    classifier "pure" // Jar without jar-in-jar
+
+     manifest {
+        attributes([
+            "Specification-Title": "${config.mod_id}",
+            "Specification-Vendor": "vazkii",
+            "Specification-Version": "1", // We are version 1 of ourselves
+            "Implementation-Title": "${config.mod_id}",
+            "Implementation-Version": "${version}",
+            "Implementation-Vendor" :"vazkii",
+            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+            "MixinConfigs": "zeta.mixins.json,zeta_forge.mixins.json"
+        ])
+    }
+
+    exclude "**/*.bat"
+    exclude "**/*.psd"
+    exclude "**/*.exe"
+    exclude "**/unused"
+    exclude "**/genscripts"
+}
+
+task sourcesJar(type: Jar) {
+    classifier "sources"
+    from sourceSets.main.allJava
+}
+
+task deobfJar(type: Jar) {
+    classifier "deobf"
+    from sourceSets.main.output
+}
+
+tasks.jarJar.configure {
+    classifier "" // "Main" jar should be the one with jar-in-jar
+
+    exclude "**/*.bat"
+    exclude "**/*.psd"
+    exclude "**/*.exe"
+    exclude "**/unused"
+}
+
+artifacts {
+    archives sourcesJar
+    archives deobfJar
+}
+
+publish.dependsOn(project.tasks.getByName("assemble"))
+publish.mustRunAfter(project.tasks.getByName("build"))
+
+publishing {
+
+    publications {
+
+        mavenJava(MavenPublication) {
+
+            groupId project.group
+            artifactId project.archivesBaseName
+            version project.version
+            from components.java
+
+            // Allows the maven pom file to be modified.
+            pom.withXml {
+
+                // Go through all the dependencies.
+                asNode().dependencies.dependency.each { dep ->
+
+                    println 'Surpressing artifact ' + dep.artifactId.last().value().last() + ' from maven dependencies.'
+                    assert dep.parent().remove(dep)
+                }
+            }
+
+            artifact sourcesJar {
+                classifier 'sources'
+            }
+
+            jarJar.component(it)
+        }
+    }
+
+    repositories {
+        maven {
+            url "file://" + System.getenv("local_maven")
+        }
+
+    }
+}
+
+// Disables Gradle's custom module metadata from being published to maven. The
+// metadata includes mapped dependencies which are not reasonably consumable by
+// other mod developers.
+tasks.withType(GenerateModuleMetadata) {
+
+    enabled = false
+}
