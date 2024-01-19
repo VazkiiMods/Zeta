@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.violetmoon.zeta.Zeta;
 import org.violetmoon.zeta.config.ConfigFlagManager;
 import org.violetmoon.zeta.config.ConfigObjectMapper;
 import org.violetmoon.zeta.event.bus.IZetaPlayEvent;
@@ -26,23 +27,22 @@ public interface ZGatherHints extends IZetaPlayEvent {
 	void accept(ItemLike itemLike, Component extra);
 	RegistryAccess getRegistryAccess();
 
-	default void hintItem(ItemLike itemLike, Object... extra) {
+	default void hintItem(Zeta zeta, ItemLike itemLike, Object... extra) {
 		Item item = itemLike.asItem();
 		ResourceLocation res = BuiltInRegistries.ITEM.getKey(item);
 		String ns = res.getNamespace();
 		String path = res.getPath();
 
-		//TODO ZETA: quark hardcoding, needs to go
-		if(ns.equals("quark"))
+		if(ns.equals(zeta.modid))
 			ns = "";
 		else ns += ".";
 
-		hintItem(itemLike, ns + path, extra);
+		hintItem(zeta, itemLike, ns + path, extra);
 	}
 
-	default void hintItem(ItemLike itemLike, String key, Object... extra) {
+	default void hintItem(Zeta zeta, ItemLike itemLike, String key, Object... extra) {
 		Item item = itemLike.asItem();
-		String hint = "quark.jei.hint." + key; //TODO ZETA: quark hardcoding
+		String hint = zeta.modid + ".jei.hint." + key;
 		accept(item, Component.translatable(hint, extra));
 	}
 
@@ -91,11 +91,11 @@ public interface ZGatherHints extends IZetaPlayEvent {
 
 				//Application
 				if(target instanceof TagKey<?> tkey)
-					applyTag(tkey, key, extra);
+					applyTag(module.zeta, tkey, key, extra);
 				else if(target instanceof Iterable<?> iter)
-					applyIterable(iter, key, extra);
+					applyIterable(module.zeta, iter, key, extra);
 				else
-					applyObject(target, key, extra);
+					applyObject(module.zeta, target, key, extra);
 
 			} catch (Exception e) {
 				throw new RuntimeException("Problem applying annotation hint " + f.getName() +
@@ -105,37 +105,37 @@ public interface ZGatherHints extends IZetaPlayEvent {
 		}
 	}
 
-	private void applyTag(TagKey<?> tkey, String key, Object... extra) {
+	private void applyTag(Zeta zeta, TagKey<?> tkey, String key, Object... extra) {
 		if(key.isEmpty())
 			key = tkey.location().getPath();
 
 		try {
 			List<?> tagItems = RegistryUtil.getTagValues(getRegistryAccess(), tkey);
-			applyIterable(tagItems, key, extra);
+			applyIterable(zeta, tagItems, key, extra);
 		} catch(IllegalStateException e) {
 			throw new RuntimeException("TagKey " + tkey + " failed to load.", e);
 		}
 	}
 
-	private void applyIterable(Iterable<?> iter, String key, Object... extra) {
+	private void applyIterable(Zeta zeta, Iterable<?> iter, String key, Object... extra) {
 		if(key.isEmpty())
 			throw new RuntimeException("Multi-item @Hints need a defined key.");
 
 		for(Object obj : iter)
-			applyObject(obj, key, extra);
+			applyObject(zeta, obj, key, extra);
 	}
 
-	private void applyObject(Object obj, String key, Object... extra) {
+	private void applyObject(Zeta zeta, Object obj, String key, Object... extra) {
 		if(obj instanceof ItemLike ilike)
-			applyItemLike(ilike, key, extra);
+			applyItemLike(zeta, ilike, key, extra);
 		else
 			throw new RuntimeException("Not an ItemLike.");
 	}
 
-	private void applyItemLike(ItemLike itemLike, String key, Object... extra) {
+	private void applyItemLike(Zeta zeta, ItemLike itemLike, String key, Object... extra) {
 		if(key.isEmpty())
-			hintItem(itemLike, extra);
+			hintItem(zeta, itemLike, extra);
 		else
-			hintItem(itemLike, key, extra);
+			hintItem(zeta, itemLike, key, extra);
 	}
 }
