@@ -1,3 +1,6 @@
+import groovy.json.JsonOutput
+import groovy.json.JsonSlurper
+
 architectury {
     common(enabled_platforms.split(","))
 }
@@ -6,6 +9,22 @@ dependencies {
     // We depend on fabric loader here to use the fabric @Environment annotations and get the mixin dependencies
     // Do NOT use other classes from fabric loader
     modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
+
+    // Mixin Extra's
+    implementation(annotationProcessor("io.github.llamalad7:mixinextras-common:${mixin_extras_version}"))
+}
+
+processResources {
+    // Don't add Development or To-do files in final jar
+    exclude("**/*.bbmodel", "**/*.lnk", "**/*.md", "**/*.txt", "**/*.blend", "**/*.blend1",
+            "**/PlatformMethods.class")
+
+    // Minify all .json files in built jars
+    doLast {
+        fileTree(dir: processResources.outputs.files.asPath, include: '**/*.json').each {
+            it.text = JsonOutput.toJson(new JsonSlurper().parse(it))
+        }
+    }
 }
 
 publishing {

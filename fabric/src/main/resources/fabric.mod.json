@@ -2,15 +2,15 @@
   "schemaVersion": 1,
   "id": "zeta",
   "version": "${version}",
-
   "name": "Zeta",
-  "description": "Zeta",
-  "authors": [],
-  "contact": {},
-
-  "license": "MIT",
-  "icon": "icon.png",
-
+  "description": "A fully featured Library designed around loading highly configurable, agile developed. modular mods",
+  "authors": ["Vazkii", "quat", "IThundxr", "Siuolplex", "wiresegal", "MehVahdJukaar"],
+  "contact": {
+    "homepage": "https://violetmoon.org",
+    "sources": "https://github.com/VazkiiMods/Zeta",
+    "issues": "https://github.com/VazkiiMods/Zeta/issues"
+  },
+  "license": "https://github.com/VazkiiMods/Zeta/blob/master/LICENSE.md",
   "environment": "*",
   "entrypoints": {
     "main": [
@@ -22,7 +22,8 @@
     "zeta-common.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.15.6",
-    "minecraft": ">=1.20.1"
+    "minecraft": "${minecraft_version}",
+    "fabricloader": ">=${fabric_loader_version}",
+    "fabric-api": ">=${fabric_api_version}"
   }
 }
