@@ -19,11 +19,9 @@ import net.minecraft.server.packs.resources.ResourceManager;
 
 // What's a little code registration between friends
 @Mixin(RegistryDataLoader.class)
-public class RegistryDataLoaderMixin {
-
+public class MixinRegistryDataLoader {
 	@Inject(method = "loadRegistryContents", at = @At("RETURN"))
 	private static <E> void zeta$onLoadRegistryContents(RegistryOps.RegistryInfoLookup registryInfoLookup, ResourceManager mgr, ResourceKey<? extends Registry<E>> registryId, WritableRegistry<E> registry, Decoder<E> whereWereGoingWeDontNeedParsers, Map<ResourceKey<?>, Exception> failed, CallbackInfo ci) {
 		RegisterDynamicUtil.onRegisterDynamic(registryInfoLookup, registryId, registry);
 	}
-
 }

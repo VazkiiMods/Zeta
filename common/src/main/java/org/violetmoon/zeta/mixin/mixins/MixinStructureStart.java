@@ -19,15 +19,9 @@ import net.minecraft.world.level.levelgen.structure.StructureStart;
 import net.minecraft.world.level.levelgen.structure.pieces.PiecesContainer;
 
 @Mixin(StructureStart.class)
-public class StructureStartMixin {
-
-	@Shadow
-	@Final
-	private PiecesContainer pieceContainer;
-
-	@Shadow
-	@Final
-	private Structure structure;
+public class MixinStructureStart {
+	@Shadow @Final private PiecesContainer pieceContainer;
+	@Shadow @Final private Structure structure;
 
 	@Inject(method = "placeInChunk", at = @At("HEAD"))
 	public void injectReference(WorldGenLevel level, StructureManager manager, ChunkGenerator generator, RandomSource random, BoundingBox bounds, ChunkPos pos, CallbackInfo callback) {
@@ -38,5 +32,4 @@ public class StructureStartMixin {
 	public void resetReference(WorldGenLevel level, StructureManager manager, ChunkGenerator generator, RandomSource random, BoundingBox bounds, ChunkPos pos, CallbackInfo callback) {
 		StructureBlockReplacementHandler.setActiveStructure(null, null);
 	}
-
 }

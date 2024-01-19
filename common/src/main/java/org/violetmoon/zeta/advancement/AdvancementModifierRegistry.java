@@ -36,6 +36,7 @@ import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
+import org.violetmoon.zeta.mixin.mixins.AccessorCriteriaTriggers;
 
 public class AdvancementModifierRegistry {
 	protected final Zeta zeta;
@@ -50,7 +51,7 @@ public class AdvancementModifierRegistry {
 	public ManualTrigger registerManualTrigger(String resloc) {
 		ResourceLocation id = zeta.registry.newResourceLocation(resloc);
 		ManualTrigger trigger = new ManualTrigger(id);
-		CriteriaTriggers.register(trigger);
+		AccessorCriteriaTriggers.zeta$register(trigger);
 		return trigger;
 	}
 

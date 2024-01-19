@@ -14,7 +14,7 @@ public class CategoryButton extends Button {
 	private final Component text;
 
 	public CategoryButton(int x, int y, int w, int h, Component text, ItemStack icon, OnPress onClick) {
-		super(new Button.Builder(Component.literal(""), onClick).pos(x, y).size(w, h));
+		super(x, y, w, h, Component.literal(""), onClick, Button.DEFAULT_NARRATION);
 		this.icon = icon;
 		this.text = text;
 	}
@@ -31,5 +31,19 @@ public class CategoryButton extends Button {
 
 		int iconPad = (16 + 5) / 2;
 		guiGraphics.drawCenteredString(mc.font, text, getX() + width / 2 + iconPad, getY() + (height - 8) / 2, getFGColor());
+	}
+
+	// Forge stuff
+	public static final int UNSET_FG_COLOR = -1;
+	protected int packedFGColor = UNSET_FG_COLOR;
+	public int getFGColor() {
+		if (packedFGColor != UNSET_FG_COLOR) return packedFGColor;
+		return this.active ? 16777215 : 10526880; // White : Light Grey
+	}
+	public void setFGColor(int color) {
+		this.packedFGColor = color;
+	}
+	public void clearFGColor() {
+		this.packedFGColor = UNSET_FG_COLOR;
 	}
 }

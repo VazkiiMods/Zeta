@@ -9,6 +9,7 @@ import org.violetmoon.zeta.client.event.load.ZAddBlockColorHandlers;
 import org.violetmoon.zeta.client.event.load.ZAddItemColorHandlers;
 import org.violetmoon.zeta.client.event.load.ZClientSetup;
 import org.violetmoon.zeta.event.bus.LoadEvent;
+import org.violetmoon.zeta.mixin.AccessorItemProperties;
 import org.violetmoon.zeta.registry.DyeablesRegistry;
 import org.violetmoon.zeta.registry.RenderLayerRegistry;
 import org.violetmoon.zeta.registry.ZetaRegistry;
@@ -51,7 +52,7 @@ public abstract class ClientRegistryExtension {
 		ResourceLocation isDyedId = new ResourceLocation("minecraft", z.modid + "_dyed");
 
 		for(Item item : dyeables.dyeableConditions.keySet()) {
-			ItemProperties.register(item, isDyedId, isDyed);
+			AccessorItemProperties.zeta$register(item, isDyedId, isDyed);
 			event.register(color, item);
 		}
 	}

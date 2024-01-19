@@ -4,8 +4,20 @@
   "package": "org.violetmoon.zeta.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "AccessorItemProperties",
+    "mixins.AccessorCriteriaTriggers",
+    "mixins.AccessorLootPool",
+    "mixins.AccessorLootTable",
+    "mixins.AccessorPistonStructureResolver",
+    "mixins.MixinPistonBaseBlock",
+    "mixins.MixinRegistryDataLoader",
+    "mixins.MixinStructurePiece",
+    "mixins.MixinStructureStart",
+    "mixins.MixinStructureTemplate"
   ],
   "client": [
+    "mixins.AccessorItemProperties",
+    "mixins.AccessorMinecraft"
   ],
   "injectors": {
     "defaultRequire": 1

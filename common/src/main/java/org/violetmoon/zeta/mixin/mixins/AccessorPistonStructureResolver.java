@@ -10,7 +10,6 @@ import net.minecraft.world.level.block.piston.PistonStructureResolver;
 
 @Mixin(PistonStructureResolver.class)
 public interface AccessorPistonStructureResolver {
-
 	@Accessor("extending")
 	boolean zeta$extending();
 
