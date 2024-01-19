@@ -4,9 +4,7 @@ import org.violetmoon.zeta.Zeta;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
-@Mod(Zeta.MOD_ID)
+@Mod(Zeta.ZETA_ID)
 public class ZetaForge {
-    public ZetaForge() {
-        Zeta.init();
-    }
+    public ZetaForge() {}
 }
