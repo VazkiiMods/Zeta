@@ -8,6 +8,10 @@ import java.nio.file.Path;
 import java.util.Locale;
 
 public class Utils {
+    public static boolean isModLoaded(String id) {
+        return isModLoaded(id, null);
+    }
+
     @ExpectPlatform
     public static boolean isModLoaded(String id, @Nullable String fabricId) {
         throw new AssertionError();

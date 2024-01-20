@@ -93,7 +93,7 @@ public class SectionScreen extends ZetaScreen {
 			assert minecraft != null;
 
 			String s = I18n.get("quark.gui.config.subcategories");
-			guiGraphics.drawString(minecraft.font, s, rowLeft + (float) (rowWidth / 2 - minecraft.font.width(s) / 2), rowTop + 7, 0x6666FF, true);
+			guiGraphics.drawString(minecraft.font, s, rowLeft + (rowWidth / 2 - minecraft.font.width(s) / 2), rowTop + 7, 0x6666FF, true);
 		}
 
 		@Override

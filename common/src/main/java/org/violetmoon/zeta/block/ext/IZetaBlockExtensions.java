@@ -31,6 +31,7 @@ import net.minecraft.world.level.block.TrapDoorBlock;
 import net.minecraft.world.level.block.WeatheringCopper;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
+import org.violetmoon.zeta.mixin.mixins.AccessorFireBlock;
 
 /**
  * Imagine a mouse eating a suspiciously IForgeBlock-shaped piece of cheese
@@ -82,15 +83,18 @@ public interface IZetaBlockExtensions {
 	}
 
 	default boolean canStickToZeta(BlockState state, BlockState other) {
+		boolean stateIsStickyBlock = state.getBlock() == Blocks.SLIME_BLOCK || state.getBlock() == Blocks.HONEY_BLOCK;
+		boolean otherIsStickyBlock = other.getBlock() == Blocks.SLIME_BLOCK || other.getBlock() == Blocks.HONEY_BLOCK;
+
 		if(state.getBlock() == Blocks.HONEY_BLOCK && other.getBlock() == Blocks.SLIME_BLOCK)
 			return false;
 		else if(state.getBlock() == Blocks.SLIME_BLOCK && other.getBlock() == Blocks.HONEY_BLOCK)
 			return false;
-		else return state.isStickyBlock() || other.isStickyBlock();
+		else return stateIsStickyBlock || otherIsStickyBlock;
 	}
 
 	default int getFlammabilityZeta(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
-		return ((FireBlock) Blocks.FIRE).getBurnOdds(state);
+		return ((AccessorFireBlock) Blocks.FIRE).zeta$getBurnOdds(state);
 	}
 
 	default boolean isFlammableZeta(BlockState state, BlockGetter world, BlockPos pos, Direction face) {

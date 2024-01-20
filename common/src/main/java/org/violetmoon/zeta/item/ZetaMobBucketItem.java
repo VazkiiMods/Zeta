@@ -21,7 +21,7 @@ public class ZetaMobBucketItem extends MobBucketItem implements IZetaItem {
 
 	private BooleanSupplier enabledSupplier = BooleanSuppliers.TRUE;
 
-	public ZetaMobBucketItem(Supplier<? extends EntityType<?>> entity, Supplier<? extends Fluid> fluid, Supplier<? extends SoundEvent> sound, String name, @Nullable ZetaModule module) {
+	public ZetaMobBucketItem(EntityType<?> entity, Fluid fluid, SoundEvent sound, String name, @Nullable ZetaModule module) {
 		super(entity, fluid, sound, (new Properties()).stacksTo(1));
 
 		this.module = module;

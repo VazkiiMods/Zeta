@@ -15,6 +15,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
+import org.violetmoon.zeta.util.Utils;
 
 //TODO: janky
 public class RequiredModTooltipHandler {
@@ -35,7 +36,7 @@ public class RequiredModTooltipHandler {
 			return new ArrayList<>();
 		
 		return items.entrySet().stream()
-				.filter((entry) -> !ModList.get().isLoaded(entry.getValue()))
+				.filter((entry) -> !Utils.isModLoaded(entry.getValue()))
 				.map((entry) -> new ItemStack(entry.getKey()))
 				.toList();
 	}

@@ -25,7 +25,7 @@ public class ZetaStairsBlock extends StairBlock implements IZetaBlock, IZetaBloc
 	private BooleanSupplier enabledSupplier = BooleanSuppliers.TRUE;
 
 	public ZetaStairsBlock(IZetaBlock parent, @Nullable ResourceKey<CreativeModeTab> tab) {
-		super(parent.getBlock()::defaultBlockState, VariantRegistry.realStateCopy(parent));
+		super(parent.getBlock().defaultBlockState(), VariantRegistry.realStateCopy(parent));
 
 		this.parent = parent;
 

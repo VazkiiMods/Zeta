@@ -5,6 +5,7 @@ import java.util.function.BooleanSupplier;
 
 import org.violetmoon.zeta.advancement.AdvancementModifier;
 import org.violetmoon.zeta.api.IMutableAdvancement;
+import org.violetmoon.zeta.mixin.mixins.AccessorEffectsChangedTrigger;
 import org.violetmoon.zeta.module.ZetaModule;
 
 import com.google.common.collect.ImmutableSet;
@@ -42,7 +43,7 @@ public class FuriousCocktailModifier extends AdvancementModifier {
 		Criterion crit = adv.getCriterion("all_effects");
 		if(crit != null && crit.getTrigger() instanceof EffectsChangedTrigger.TriggerInstance ect)  {
 			for(MobEffect e : effects)
-				ect.effects.and(e);
+				((AccessorEffectsChangedTrigger.AccessorTriggerInstance)ect).zeta$getEffects().and(e);
 			
 			return true;
 		}

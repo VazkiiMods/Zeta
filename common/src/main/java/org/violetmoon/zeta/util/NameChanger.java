@@ -7,6 +7,7 @@ import java.util.Map;
 
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import org.violetmoon.zeta.mixin.mixins.AccessorBlock;
 
 public class NameChanger {
 
@@ -50,7 +51,7 @@ public class NameChanger {
 
 		//actually change the block's name - if there are any outstanding name-change requests, use the most recent one,
 		//else use the block's original name
-		toChange.descriptionId = changeRequests.lastOrElse(originalBlockNames.get(toChange));
+		((AccessorBlock) toChange).zeta$setDescriptionId(changeRequests.lastOrElse(originalBlockNames.get(toChange)));
 
 		//save a tiny bit of memory
 		if(changeRequests.isEmpty())
@@ -65,7 +66,7 @@ public class NameChanger {
 			changeRequests.add(newTranslationKey);
 		else
 			changeRequests.remove(newTranslationKey);
-		toChange.descriptionId = changeRequests.lastOrElse(originalItemNames.get(toChange));
+		((AccessorBlock) toChange).zeta$setDescriptionId(changeRequests.lastOrElse(originalItemNames.get(toChange)));
 
 		if(changeRequests.isEmpty())
 			changedItemNames.remove(toChange);

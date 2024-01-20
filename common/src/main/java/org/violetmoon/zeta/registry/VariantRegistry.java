@@ -67,7 +67,7 @@ public class VariantRegistry {
 		Block.Properties props = Block.Properties.of().strength(0F).pushReaction(PushReaction.DESTROY);
 		props = propertiesFunc.apply(props);
 
-		FlowerPotBlock potted = new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, () -> block, props);
+		FlowerPotBlock potted = new FlowerPotBlock(block, props);
 		zeta.renderLayerRegistry.put(potted, RenderLayerRegistry.Layer.CUTOUT);
 		ResourceLocation resLoc = zeta.registry.getRegistryName(block, BuiltInRegistries.BLOCK);
 		if (resLoc == null)

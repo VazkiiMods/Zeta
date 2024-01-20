@@ -73,7 +73,7 @@ public interface IZetaItemExtensions {
 	}
 
 	default int getEnchantmentLevelZeta(ItemStack stack, Enchantment enchantment) {
-		return EnchantmentHelper.getTagEnchantmentLevel(enchantment, stack);
+		return EnchantmentHelper.getItemEnchantmentLevel(enchantment, stack);
 	}
 
 	default Map<Enchantment, Integer> getAllEnchantmentsZeta(ItemStack stack) {

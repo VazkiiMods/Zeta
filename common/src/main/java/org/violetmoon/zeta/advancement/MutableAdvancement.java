@@ -13,6 +13,7 @@ import com.google.common.collect.Maps;
 
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.Criterion;
+import org.violetmoon.zeta.mixin.mixins.AccessorAdvancement;
 
 public class MutableAdvancement implements IMutableAdvancement {
 	
@@ -44,10 +45,10 @@ public class MutableAdvancement implements IMutableAdvancement {
 	}
 
 	private void mutabilize() {
-		this.criteria = Maps.newHashMap(advancement.criteria);
+		this.criteria = Maps.newHashMap(((AccessorAdvancement) advancement).zeta$getCriteria());
 		this.requirements = new ArrayList<>();
 
-		String[][] arr = advancement.requirements;
+		String[][] arr = ((AccessorAdvancement) advancement).zeta$getRequirements();
 		for(String[] req : arr) {
 			List<String> reqList = new ArrayList<>(Arrays.asList(req));
 			this.requirements.add(reqList);
@@ -55,7 +56,7 @@ public class MutableAdvancement implements IMutableAdvancement {
 	}
 	
 	public void commit() {
-		advancement.criteria = ImmutableMap.copyOf(criteria);
+		((AccessorAdvancement) advancement).zeta$setCriteria(ImmutableMap.copyOf(criteria));
 		
 		List<String[]> requirementArrays = new ArrayList<>();
 		for(List<String> list : requirements) {
@@ -64,7 +65,7 @@ public class MutableAdvancement implements IMutableAdvancement {
 		}
 
 		String[][] arr = requirementArrays.toArray(new String[0][requirementArrays.size()]);
-		advancement.requirements = arr;
+		((AccessorAdvancement) advancement).zeta$setRequirements(arr);
 	}
 	
 }

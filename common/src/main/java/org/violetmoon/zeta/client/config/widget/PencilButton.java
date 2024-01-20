@@ -17,7 +17,7 @@ public class PencilButton extends Button {
 	private final ResourceLocation iconsTexture;
 
 	public PencilButton(ResourceLocation iconsTexture, int x, int y, OnPress pressable) {
-		super(new Builder(Component.literal(""), pressable).size(20, 20).pos(x, y));
+		super(20, 20, x, y, Component.literal(""), pressable, Button.DEFAULT_NARRATION);
 		this.iconsTexture = iconsTexture;
 	}
 

@@ -6,6 +6,7 @@ accessWidener v2 named
 # -------------------------------------------------------------------------------------------------------------------- #
 accessible class net/minecraft/world/item/CreativeModeTab$TabVisibility # Make TabVisibility enum public
 extendable class net/minecraft/world/item/crafting/Ingredient # Make final class Ingredient non-final
+accessible method net/minecraft/world/item/crafting/Ingredient <init> (Ljava/util/stream/Stream;)V # Make private constructor public
 
 # START Make Creative Tabs Accessible transitively so mods like quark don't need to copy these AW's
 transitive-accessible field net/minecraft/world/item/CreativeModeTabs BUILDING_BLOCKS Lnet/minecraft/resources/ResourceKey;
