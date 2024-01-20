@@ -3,6 +3,7 @@ package org.violetmoon.zeta.mod;
 import org.violetmoon.zeta.Zeta;
 import org.violetmoon.zeta.config.SyncedFlagHandler;
 import org.violetmoon.zeta.config.ZetaGeneralConfig;
+import org.violetmoon.zeta.registry.CreativeTabManager;
 import org.violetmoon.zeta.util.handler.RecipeCrawlHandler;
 import org.violetmoon.zeta.util.handler.ToolInteractionHandler;
 import org.violetmoon.zeta.world.EntitySpawnHandler;
@@ -21,7 +22,8 @@ public class ZetaModProxy {
 		zeta.playBus
 			.subscribe(RecipeCrawlHandler.class)
 			.subscribe(ToolInteractionHandler.class)
-			.subscribe(SyncedFlagHandler.class);
+			.subscribe(SyncedFlagHandler.class)
+			.subscribe(CreativeTabManager.class);
 	}
 	
 	// Cast up obj to ZetaClient on the client proxy

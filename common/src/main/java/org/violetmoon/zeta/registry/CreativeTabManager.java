@@ -11,6 +11,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.violetmoon.zeta.Zeta;
+import org.violetmoon.zeta.event.bus.PlayEvent;
+import org.violetmoon.zeta.event.play.ZBuildCreativeModeTabContents;
 import org.violetmoon.zeta.module.IDisableable;
 
 import com.google.common.collect.HashMultimap;
@@ -22,8 +24,7 @@ import net.minecraft.world.item.CreativeModeTab.TabVisibility;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
-import net.minecraftforge.common.util.MutableHashedLinkedMap;
-import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
+import org.violetmoon.zeta.util.MutableHashedLinkedMap;
 
 public class CreativeTabManager {
 
@@ -105,7 +106,8 @@ public class CreativeTabManager {
 		return additions.computeIfAbsent(tab, tabRk -> new CreativeTabAdditions());
 	}
 
-	public static void buildContents(BuildCreativeModeTabContentsEvent event) {
+	@PlayEvent
+	public static void buildContents(ZBuildCreativeModeTabContents event) {
 		synchronized(MUTEX) {
 			ResourceKey<CreativeModeTab> tabKey = event.getTabKey();
 
@@ -115,7 +117,7 @@ public class CreativeTabManager {
 				for(ItemLike item : add.appendToEnd)
 					acceptItem(event, item);
 
-				MutableHashedLinkedMap<ItemStack, CreativeModeTab.TabVisibility> entries = event.getEntries();
+				MutableHashedLinkedMap<ItemStack, TabVisibility> entries = event.getEntries();
 				
 				Map<ItemSet, ItemLike> front = new LinkedHashMap<>(add.appendInFront);
 				Map<ItemSet, ItemLike> behind = new LinkedHashMap<>(add.appendBehind);
@@ -158,7 +160,7 @@ public class CreativeTabManager {
 		return true;
 	}
 
-	private static void acceptItem(BuildCreativeModeTabContentsEvent event, ItemLike item) {
+	private static void acceptItem(ZBuildCreativeModeTabContents event, ItemLike item) {
 		if(!isItemEnabled(item))
 			return;
 		
@@ -169,7 +171,7 @@ public class CreativeTabManager {
 	}
 
 	private static void addToEntries(ItemStack target, MutableHashedLinkedMap<ItemStack, CreativeModeTab.TabVisibility> entries, ItemLike item, boolean behind) {
-		List<ItemStack> stacksToAdd = Arrays.asList(new ItemStack(item));
+		List<ItemStack> stacksToAdd = List.of(new ItemStack(item));
 		if(item instanceof AppendsUniquely au)
 			stacksToAdd = au.appendItemsToCreativeTab();
 		
