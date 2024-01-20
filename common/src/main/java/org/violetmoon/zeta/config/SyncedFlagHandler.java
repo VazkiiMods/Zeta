@@ -8,6 +8,8 @@ import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.stream.Collectors;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.load.ZConfigChanged;
 import org.violetmoon.zeta.mod.ZetaMod;
@@ -16,8 +18,6 @@ import org.violetmoon.zeta.network.message.S2CUpdateFlag;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.PacketListener;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class SyncedFlagHandler {
 	private static ConfigFlagManager flagManager;
@@ -61,7 +61,7 @@ public class SyncedFlagHandler {
 		flagsFromPlayers.put(player, decodeFlags(bitSet));
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public static void receiveFlagInfoFromServer(BitSet bitSet) {
 		flagsFromServer.put(Minecraft.getInstance().getConnection(), decodeFlags(bitSet));
 	}
@@ -82,7 +82,7 @@ public class SyncedFlagHandler {
 		return enabledFlags.contains(flag);
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public static boolean getFlagForServer(String flag) {
 		for(PacketListener listener : flagsFromServer.keySet()) {
 			Set<String> enabledFlags = flagsFromServer.get(listener);

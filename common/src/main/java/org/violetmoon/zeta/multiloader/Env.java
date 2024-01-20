@@ -1,7 +1,6 @@
 package org.violetmoon.zeta.multiloader;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.loading.FMLEnvironment;
+import dev.architectury.injectables.annotations.ExpectPlatform;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.function.Supplier;
@@ -28,7 +27,8 @@ public enum Env {
     }
 
     @ApiStatus.Internal
+    @ExpectPlatform
     public static Env getCurrent() {
-        return FMLEnvironment.dist == Dist.CLIENT ? Env.CLIENT : Env.SERVER;
+        throw new AssertionError();
     }
 }

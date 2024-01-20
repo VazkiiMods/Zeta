@@ -2,11 +2,14 @@ plugins {
     id "com.github.johnrengelman.shadow" version "7.1.2"
 }
 loom {
+    accessWidenerPath = project(":common").loom.accessWidenerPath
+
     forge {
         mixinConfig "zeta-common.mixins.json"
         mixinConfig "zeta.mixins.json"
     }
 }
+
 architectury {
     platformSetupLoomIde()
     forge()

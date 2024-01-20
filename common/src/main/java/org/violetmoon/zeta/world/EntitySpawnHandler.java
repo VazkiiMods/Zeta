@@ -9,6 +9,7 @@ import org.violetmoon.zeta.config.type.EntitySpawnConfig;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.load.ZConfigChanged;
 import org.violetmoon.zeta.item.ZetaSpawnEggItem;
+import org.violetmoon.zeta.mixin.mixins.AccessorSpawnPlacements;
 import org.violetmoon.zeta.module.ZetaModule;
 
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -32,7 +33,7 @@ public class EntitySpawnHandler {
 	}
 
 	public <T extends Mob> void registerSpawn(EntityType<T> entityType, MobCategory classification, Type placementType, Heightmap.Types heightMapType, SpawnPredicate<T> placementPredicate, EntitySpawnConfig config) {
-		SpawnPlacements.register(entityType, placementType, heightMapType, placementPredicate);
+		AccessorSpawnPlacements.zeta$register(entityType, placementType, heightMapType, placementPredicate);
 
 		track(entityType, classification, config, false);
 	}

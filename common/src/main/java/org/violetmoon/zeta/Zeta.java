@@ -15,6 +15,7 @@ import org.violetmoon.zeta.config.IZetaConfigInternals;
 import org.violetmoon.zeta.config.SectionDefinition;
 import org.violetmoon.zeta.event.bus.*;
 import org.violetmoon.zeta.item.ext.ItemExtensionFactory;
+import org.violetmoon.zeta.module.ModuleFinder;
 import org.violetmoon.zeta.module.ZetaCategory;
 import org.violetmoon.zeta.module.ZetaModuleManager;
 import org.violetmoon.zeta.network.ZetaNetworkHandler;
@@ -28,6 +29,8 @@ import org.violetmoon.zeta.util.handler.RequiredModTooltipHandler;
 import org.violetmoon.zeta.util.zetalist.IZeta;
 import org.violetmoon.zeta.util.zetalist.ZetaList;
 import org.violetmoon.zeta.world.EntitySpawnHandler;
+
+import java.util.function.Supplier;
 
 public abstract class Zeta implements IZeta {
 	public static final String ZETA_ID = "zeta";

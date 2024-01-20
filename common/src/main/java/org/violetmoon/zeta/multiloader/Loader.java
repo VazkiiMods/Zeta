@@ -1,12 +1,12 @@
 package org.violetmoon.zeta.multiloader;
 
+import dev.architectury.injectables.annotations.ExpectPlatform;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.function.Supplier;
 
 public enum Loader {
-    // TODO - impl fabric once it gets xplat-ified
-    FORGE/*, FABRIC*/;
+    FORGE, FABRIC;
 
     public static final Loader CURRENT = getCurrent();
 
@@ -20,7 +20,8 @@ public enum Loader {
     }
 
     @ApiStatus.Internal
+    @ExpectPlatform
     public static Loader getCurrent() {
-        return Loader.FORGE;
+        throw new AssertionError();
     }
 }

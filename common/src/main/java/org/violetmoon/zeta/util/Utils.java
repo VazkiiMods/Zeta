@@ -1,21 +1,40 @@
 package org.violetmoon.zeta.util;
 
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.loading.FMLLoader;
-import net.minecraftforge.fml.loading.FMLPaths;
+import dev.architectury.injectables.annotations.ExpectPlatform;
+import org.jetbrains.annotations.Nullable;
+import org.violetmoon.zeta.Zeta;
 
 import java.nio.file.Path;
+import java.util.Locale;
 
 public class Utils {
+    @ExpectPlatform
+    public static boolean isModLoaded(String id, @Nullable String fabricId) {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
     public static Path configDir() {
-        return FMLPaths.CONFIGDIR.get();
+        throw new AssertionError();
     }
 
+    @ExpectPlatform
     public static Path modsDir() {
-        return FMLPaths.MODSDIR.get();
+        throw new AssertionError();
     }
 
+    @ExpectPlatform
     public static boolean isDevEnv() {
-        return !FMLLoader.isProduction();
+        throw new AssertionError();
+    }
+
+    public static boolean isEnvVarTrue(String name) {
+        try {
+            String result = System.getenv(name);
+            return result != null && result.toLowerCase(Locale.ROOT).equals("true");
+        } catch (SecurityException e) {
+            Zeta.GLOBAL_LOG.warn("Caught a security exception while trying to access environment variable `{}`.", name);
+            return false;
+        }
     }
 }

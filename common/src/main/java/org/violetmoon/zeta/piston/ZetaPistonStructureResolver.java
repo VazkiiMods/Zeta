@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
 
+import net.minecraft.world.level.block.Blocks;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.violetmoon.zeta.Zeta;
@@ -355,7 +356,7 @@ public class ZetaPistonStructureResolver extends PistonStructureResolver {
 		if(indirect != null)
 			return indirect.isEnabled() ? indirect.getStickyCondition() : null;
 
-		if (state.isStickyBlock())
+		if (state.getBlock() == Blocks.SLIME_BLOCK || state.getBlock() == Blocks.HONEY_BLOCK)
 			return DefaultStickCondition.INSTANCE;
 
 		return null;
@@ -388,7 +389,7 @@ public class ZetaPistonStructureResolver extends PistonStructureResolver {
 	}
 
 	private static boolean isBlockSticky(BlockState state) {
-		if(state.isStickyBlock())
+		if(state.getBlock() == Blocks.SLIME_BLOCK || state.getBlock() == Blocks.HONEY_BLOCK)
 			return true;
 
 		IIndirectConnector indirect = getIndirectStickiness(state);
