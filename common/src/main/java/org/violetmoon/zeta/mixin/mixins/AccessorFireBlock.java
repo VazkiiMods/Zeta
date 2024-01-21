@@ -9,4 +9,7 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 public interface AccessorFireBlock {
     @Invoker("getBurnOdds")
     int zeta$getBurnOdds(BlockState state);
+
+    @Invoker("getIgniteOdds")
+    int zeta$getIgniteOdds(BlockState state);
 }

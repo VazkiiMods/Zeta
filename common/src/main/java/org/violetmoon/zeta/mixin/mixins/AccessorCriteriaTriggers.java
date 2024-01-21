@@ -10,5 +10,5 @@ public interface AccessorCriteriaTriggers {
     @Invoker("register")
     static <T extends CriterionTrigger<?>> T zeta$register(T criterion) {
         throw new AssertionError();
-    };
+    }
 }

@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "mixins.AccessorAdvancement",
+    "mixins.AccessorAxeItem",
     "mixins.AccessorBlock",
     "mixins.AccessorContextAwarePredicate",
     "mixins.AccessorCriteriaTriggers",
@@ -16,6 +17,7 @@
     "mixins.AccessorLootPool",
     "mixins.AccessorLootTable",
     "mixins.AccessorPistonStructureResolver",
+    "mixins.AccessorShovelItem",
     "mixins.AccessorSpawnPlacements",
     "mixins.MixinPistonBaseBlock",
     "mixins.MixinRegistryDataLoader",

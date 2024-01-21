@@ -32,11 +32,11 @@ import net.minecraft.world.level.block.WeatheringCopper;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import org.violetmoon.zeta.mixin.mixins.AccessorFireBlock;
+import org.violetmoon.zeta.util.ToolUtils;
 
 /**
  * Imagine a mouse eating a suspiciously IForgeBlock-shaped piece of cheese
  */
-@SuppressWarnings("deprecation") //Forge deprecating shit in favor of their replacements
 public interface IZetaBlockExtensions {
 
 	IZetaBlockExtensions DEFAULT = new IZetaBlockExtensions() { };
@@ -102,7 +102,7 @@ public interface IZetaBlockExtensions {
 	}
 
 	default int getFireSpreadSpeedZeta(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
-		return ((FireBlock)Blocks.FIRE).getIgniteOdds(state);
+		return ((AccessorFireBlock) Blocks.FIRE).zeta$getIgniteOdds(state);
 	}
 
 	default boolean collisionExtendsVerticallyZeta(BlockState state, BlockGetter level, BlockPos pos, Entity collidingEntity) {
@@ -122,10 +122,10 @@ public interface IZetaBlockExtensions {
 		//	return null;
 
 		return switch(toolActionType) {
-			case "axe_strip" -> AxeItem.getAxeStrippingState(state); //TODO forge extension
+			case "axe_strip" -> ToolUtils.getAxeStrippingState(state);
 			case "axe_scrape" -> WeatheringCopper.getPrevious(state).orElse(null);
 			case "axe_wax_off" -> Optional.ofNullable(HoneycombItem.WAX_OFF_BY_BLOCK.get().get(state.getBlock())).map(block -> block.withPropertiesOf(state)).orElse(null);
-			case "shovel_flatten" -> ShovelItem.getShovelPathingState(state); //TODO forge extension
+			case "shovel_flatten" -> ToolUtils.getShovelPathingState(state);
 			case "hoe_till" -> {
 				Block block = state.getBlock();
 				if (block == Blocks.ROOTED_DIRT) {
