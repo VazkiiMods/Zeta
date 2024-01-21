@@ -41,13 +41,13 @@ public class TopLayerTooltipHandler {
 					(float) ((double) window.getHeight() / window.getGuiScale()),
 					0.0F,
 					1000.0F,
-					net.minecraftforge.client.ForgeHooksClient.getGuiFarPlane()
+					21000.0F
 			);
 			RenderSystem.setProjectionMatrix(matrix4f, VertexSorting.ORTHOGRAPHIC_Z);
-			PoseStack posestack = RenderSystem.getModelViewStack();
-			posestack.pushPose();
-			posestack.setIdentity();
-			posestack.translate(0.0D, 0.0D, 1000F - net.minecraftforge.client.ForgeHooksClient.getGuiFarPlane());
+			PoseStack poseStack = RenderSystem.getModelViewStack();
+			poseStack.pushPose();
+			poseStack.setIdentity();
+			poseStack.translate(0.0F, 0.0F, -11000.0F);
 			RenderSystem.applyModelViewMatrix();
 			// End
 
@@ -58,7 +58,7 @@ public class TopLayerTooltipHandler {
 
 			// Reset projection matrix
 			guiGraphics.flush();
-			posestack.popPose();
+			poseStack.popPose();
 			RenderSystem.applyModelViewMatrix();
 			RenderSystem.setProjectionMatrix(projectionMatrix, vertexSorting);
 			// End

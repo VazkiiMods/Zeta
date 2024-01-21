@@ -1,7 +1,6 @@
 package org.violetmoon.zeta.registry;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -24,7 +23,7 @@ import net.minecraft.world.item.CreativeModeTab.TabVisibility;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
-import org.violetmoon.zeta.util.MutableHashedLinkedMap;
+import org.violetmoon.zeta.forgeapi.common.util.MutableHashedLinkedMap;
 
 public class CreativeTabManager {
 

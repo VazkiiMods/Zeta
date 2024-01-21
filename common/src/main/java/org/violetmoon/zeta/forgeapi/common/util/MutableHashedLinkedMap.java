@@ -1,11 +1,9 @@
 /*
  * Copyright (c) Forge Development LLC and contributors
  * SPDX-License-Identifier: LGPL-2.1-only
- *
- * Taken from Neoforge and brought into zeta so it can work on both fabric & neoforge
  */
 
-package org.violetmoon.zeta.util;
+package org.violetmoon.zeta.forgeapi.common.util;
 
 import it.unimi.dsi.fastutil.Hash.Strategy;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenCustomHashMap;

@@ -6,7 +6,7 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 import org.violetmoon.zeta.event.bus.IZetaPlayEvent;
-import org.violetmoon.zeta.util.MutableHashedLinkedMap;
+import org.violetmoon.zeta.forgeapi.common.util.MutableHashedLinkedMap;
 
 import java.util.Collection;
 import java.util.function.Supplier;
