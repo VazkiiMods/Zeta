@@ -30,24 +30,23 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
-import net.minecraftforge.common.ToolAction;
-import net.minecraftforge.common.ToolActions;
+import org.violetmoon.zeta.util.ZetaToolActions;
 
 public final class ToolInteractionHandler {
 
 	private static final Map<Block, Block> cleanToWaxMap = HashBiMap.create();
-	private static final Map<ToolAction, Map<Block, Block>> interactionMaps = new HashMap<>();
+	private static final Map<ZetaToolActions.ZetaToolAction, Map<Block, Block>> interactionMaps = new HashMap<>();
 
 	private static final Multimap<ZetaModule, Pair<Block, Block>> waxingByModule = HashMultimap.create();
 
 	public static void registerWaxedBlock(ZetaModule module, Block clean, Block waxed) {
 		cleanToWaxMap.put(clean, waxed);
-		registerInteraction(ToolActions.AXE_WAX_OFF, waxed, clean);
+		registerInteraction(ZetaToolActions.AXE_WAX_OFF, waxed, clean);
 
 		waxingByModule.put(module, Pair.of(clean, waxed));
 	}
 
-	public static void registerInteraction(ToolAction action, Block in, Block out) {
+	public static void registerInteraction(ZetaToolActions.ZetaToolAction action, Block in, Block out) {
 		if(!interactionMaps.containsKey(action))
 			interactionMaps.put(action, new HashMap<>());
 
@@ -76,7 +75,7 @@ public final class ToolInteractionHandler {
 
 	@PlayEvent
 	public static void toolActionEvent(ZBlock.BlockToolModification event) {
-		ToolAction action = event.getToolAction();
+		ZetaToolActions.ZetaToolAction action = event.getToolAction();
 
 		if(interactionMaps.containsKey(action)) {
 			Map<Block, Block> map = interactionMaps.get(action);

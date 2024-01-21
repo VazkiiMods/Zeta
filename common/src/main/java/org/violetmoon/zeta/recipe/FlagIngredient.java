@@ -59,15 +59,16 @@ public class FlagIngredient extends Ingredient implements IZetaIngredient<FlagIn
 		return parent.test(target);
 	}
 
-	@Override
+	//@Override
 	protected void invalidate() {
 		// The invalidate method will collect our parent as well
 	}
 
-	@Override
+	//todo Seems to be just a forge thing, might need to do something about that though...
+	/*@Override
 	public boolean isSimple() {
 		return parent.isSimple();
-	}
+	}*/
 
 	@Override
 	public IZetaIngredientSerializer<FlagIngredient> zetaGetSerializer() {

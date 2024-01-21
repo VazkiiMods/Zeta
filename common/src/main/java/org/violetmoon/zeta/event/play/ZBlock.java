@@ -7,7 +7,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.ToolAction;
+import org.violetmoon.zeta.util.ZetaToolActions;
 
 public interface ZBlock extends IZetaPlayEvent {
     LevelAccessor getLevel();
@@ -23,7 +23,7 @@ public interface ZBlock extends IZetaPlayEvent {
     }
 
     interface BlockToolModification extends ZBlock {
-        ToolAction getToolAction();
+        ZetaToolActions.ZetaToolAction getToolAction();
         void setFinalState(@Nullable BlockState finalState);
     }
 }

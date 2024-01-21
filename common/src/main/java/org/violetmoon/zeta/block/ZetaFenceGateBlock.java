@@ -28,11 +28,7 @@ public class ZetaFenceGateBlock extends FenceGateBlock implements IZetaBlock {
 	}
 
 	public ZetaFenceGateBlock(String regname, @Nullable ZetaModule module, WoodType woodType, Properties properties) {
-		this(regname, module, woodType.fenceGateOpen(), woodType.fenceGateClose(), properties);
-	}
-
-	public ZetaFenceGateBlock(String regname, @Nullable ZetaModule module, SoundEvent open, SoundEvent close, Properties properties) {
-		super(properties, open, close);
+		super(properties, woodType);
 		this.module = module;
 
 		if(module == null) //auto registration below this line

@@ -55,10 +55,10 @@ public class ZetaGlassBlock extends ZetaBlock {
 	public boolean propagatesSkylightDown(@NotNull BlockState state, @NotNull BlockGetter reader, @NotNull BlockPos pos) {
 		return true;
 	}
-
+/*
 	@Override
 	public boolean shouldDisplayFluidOverlay(BlockState state, BlockAndTintGetter world, BlockPos pos, FluidState fluidState) {
 		return true;
-	}
+	}*/
 
 }

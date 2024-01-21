@@ -20,6 +20,6 @@ public interface ZAttachCapabilities<T> extends IZetaPlayEvent {
     interface BlockEntityCaps extends ZAttachCapabilities<BlockEntity> { }
     interface LevelCaps extends ZAttachCapabilities<Level> { }
 
-    @Deprecated //Forge only API, we should migrate off ICapabilityProvider.
+    @Deprecated //Forge only API, we should migrate off ICapabilityProvider. // Yeah I know
     void addCapabilityForgeApi(ResourceLocation key, ICapabilityProvider cap);
 }

@@ -23,10 +23,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.wrapper.SidedInvWrapper;
+// import net.minecraftforge.common.capabilities.Capability;
+// import net.minecraftforge.common.capabilities.ForgeCapabilities;
+// import net.minecraftforge.common.util.LazyOptional;
+// import net.minecraftforge.items.wrapper.SidedInvWrapper;
 
 // formerly from AutoRegLib
 public abstract class SimpleInventoryBlockEntity extends ZetaBlockEntity implements WorldlyContainer {
@@ -137,6 +137,7 @@ public abstract class SimpleInventoryBlockEntity extends ZetaBlockEntity impleme
 		return getLevel().getBlockEntity(getBlockPos()) == this && entityplayer.distanceToSqr(worldPosition.getX() + 0.5D, worldPosition.getY() + 0.5D, worldPosition.getZ() + 0.5D) <= 64;
 	}
 
+	/* So long, capabilities
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> capability, Direction facing) {
@@ -144,7 +145,7 @@ public abstract class SimpleInventoryBlockEntity extends ZetaBlockEntity impleme
 			return (LazyOptional<T>) LazyOptional.of(() -> new SidedInvWrapper(this, facing));
 
 		return LazyOptional.empty();
-	}
+	}*/
 
 	@Override
 	public boolean canPlaceItem(int i, @NotNull ItemStack itemstack) {
