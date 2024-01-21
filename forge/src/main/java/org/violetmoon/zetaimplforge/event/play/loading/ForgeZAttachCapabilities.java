@@ -35,12 +35,6 @@ public abstract class ForgeZAttachCapabilities<T> implements ZAttachCapabilities
         zetaCaps.attachCapability(e, key, cap, impl);
     }
 
-    @Override
-    @Deprecated //Forge only API, we should migrate off ICapabilityProvider.
-    public void addCapabilityForgeApi(ResourceLocation key, ICapabilityProvider cap) {
-        e.addCapability(key, cap);
-    }
-
     public static class ItemStackCaps extends ForgeZAttachCapabilities<ItemStack> implements ZAttachCapabilities.ItemStackCaps {
         public ItemStackCaps(ZetaCapabilityManager zetaCaps, AttachCapabilitiesEvent<ItemStack> e) {
             super(zetaCaps, e);
