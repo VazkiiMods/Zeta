@@ -3,6 +3,7 @@ package org.violetmoon.zeta.util;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import dev.architectury.injectables.annotations.ExpectPlatform;
 import org.jetbrains.annotations.NotNull;
 import org.violetmoon.zeta.Zeta;
 
@@ -49,13 +50,6 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.items.wrapper.InvWrapper;
-import net.minecraftforge.items.wrapper.SidedInvWrapper;
-import org.violetmoon.zeta.forgeapi.common.util.LazyOptional;
 
 public class MiscUtil {
 
@@ -157,25 +151,9 @@ public class MiscUtil {
 		}
 	}
 
+	@ExpectPlatform
 	public static ItemStack putIntoInv(ItemStack stack, LevelAccessor level, BlockPos blockPos, BlockEntity tile, Direction face, boolean simulate, boolean doSimulation) {
-		IItemHandler handler = null;
-
-		if(level != null && blockPos != null && level.getBlockState(blockPos).getBlock() instanceof WorldlyContainerHolder holder) {
-			handler = new SidedInvWrapper(holder.getContainer(level.getBlockState(blockPos), level, blockPos), face);
-		} else if(tile != null) {
-			LazyOptional<IItemHandler> opt  = tile.getCapability(ForgeCapabilities.ITEM_HANDLER, face);
-			if(opt.isPresent())
-				handler = opt.orElse(new ItemStackHandler());
-			else if(tile instanceof WorldlyContainer container)
-				handler = new SidedInvWrapper(container, face);
-			else if(tile instanceof Container container)
-				handler = new InvWrapper(container);
-		}
-
-		if(handler != null)
-			return (simulate && !doSimulation) ? ItemStack.EMPTY : ItemHandlerHelper.insertItem(handler, stack, simulate);
-
-		return stack;
+		throw new AssertionError();
 	}
 
 	public static boolean canPutIntoInv(ItemStack stack, LevelAccessor level, BlockPos blockPos, BlockEntity tile, Direction face, boolean doSimulation) {

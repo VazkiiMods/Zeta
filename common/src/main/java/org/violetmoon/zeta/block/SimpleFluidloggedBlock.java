@@ -57,7 +57,6 @@ public interface SimpleFluidloggedBlock extends BucketPickup, LiquidBlockContain
 		return Optional.empty(); // Irrelevant - using state variant below
 	}
 
-	@Override
 	default Optional<SoundEvent> getPickupSound(BlockState state) {
 		return fluidContained(state).getPickupSound();
 	}
