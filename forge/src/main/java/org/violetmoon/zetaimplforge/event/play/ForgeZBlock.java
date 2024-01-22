@@ -9,6 +9,8 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.ToolAction;
 import net.minecraftforge.event.level.BlockEvent;
+import org.violetmoon.zeta.util.ZetaToolActions;
+import org.violetmoon.zetaimplforge.util.ConversionUtil;
 
 public class ForgeZBlock implements ZBlock {
     private final BlockEvent e;
@@ -69,8 +71,8 @@ public class ForgeZBlock implements ZBlock {
         }
 
         @Override
-        public ToolAction getToolAction() {
-            return e.getToolAction();
+        public ZetaToolActions.ZetaToolAction getToolAction() {
+            return ConversionUtil.forgeToZetaToolActions(e.getToolAction());
         }
 
         @Override

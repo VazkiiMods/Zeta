@@ -153,7 +153,7 @@ public class MiscUtil {
 
 	@ExpectPlatform
 	public static ItemStack putIntoInv(ItemStack stack, LevelAccessor level, BlockPos blockPos, BlockEntity tile, Direction face, boolean simulate, boolean doSimulation) {
-		throw new AssertionError();
+		throw new AssertionError("ExpectPlatform failed, should NEVER happen.");
 	}
 
 	public static boolean canPutIntoInv(ItemStack stack, LevelAccessor level, BlockPos blockPos, BlockEntity tile, Direction face, boolean doSimulation) {

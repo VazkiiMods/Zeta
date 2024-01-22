@@ -23,7 +23,7 @@ public class MiscUtilImpl {
         if(level != null && blockPos != null && level.getBlockState(blockPos).getBlock() instanceof WorldlyContainerHolder holder) {
             handler = new SidedInvWrapper(holder.getContainer(level.getBlockState(blockPos), level, blockPos), face);
         } else if(tile != null) {
-            LazyOptional<IItemHandler> opt  = tile.getCapability(ForgeCapabilities.ITEM_HANDLER, face);
+            LazyOptional<IItemHandler> opt = tile.getCapability(ForgeCapabilities.ITEM_HANDLER, face);
             if(opt.isPresent())
                 handler = opt.orElse(new ItemStackHandler());
             else if(tile instanceof WorldlyContainer container)
