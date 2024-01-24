@@ -1,5 +1,7 @@
 package org.violetmoon.zeta.mixin.plugin;
 
+import org.violetmoon.zeta.DelegateInterfaceMixin;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

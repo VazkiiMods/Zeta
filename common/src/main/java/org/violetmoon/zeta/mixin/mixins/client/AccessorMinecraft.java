@@ -1,4 +1,4 @@
-package org.violetmoon.zeta.mixin.mixins;
+package org.violetmoon.zeta.mixin.mixins.client;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.item.ItemColors;

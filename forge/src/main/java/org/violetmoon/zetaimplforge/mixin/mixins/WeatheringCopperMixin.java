@@ -1,7 +1,7 @@
 package org.violetmoon.zetaimplforge.mixin.mixins;
 
 import org.spongepowered.asm.mixin.Mixin;
-import org.violetmoon.zeta.mixin.plugin.DelegateInterfaceMixin;
+import org.violetmoon.zeta.DelegateInterfaceMixin;
 import org.violetmoon.zeta.mixin.plugin.DelegateReturnValueModifier;
 import org.violetmoon.zetaimplforge.mixin.delegate.WeatheringCopperDelegate;
 

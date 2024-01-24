@@ -73,9 +73,10 @@ public class ForgeZModel implements ZModel {
             this.e = e;
         }
 
-        @Override
-        public void register(String name, IGeometryLoader<?> loader) {
-            e.register(name, loader);
-        }
+        //fixme
+//        @Override
+//        public void register(String name, IGeometryLoader<?> loader) {
+//            e.register(name, loader);
+//        }
     }
 }

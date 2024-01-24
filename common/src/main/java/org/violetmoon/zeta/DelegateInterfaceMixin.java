@@ -1,4 +1,6 @@
-package org.violetmoon.zeta.mixin.plugin;
+package org.violetmoon.zeta;
+
+import org.violetmoon.zeta.mixin.plugin.DelegateReturnValueModifier;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

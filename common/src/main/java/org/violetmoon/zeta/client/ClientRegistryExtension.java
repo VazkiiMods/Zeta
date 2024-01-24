@@ -12,7 +12,7 @@ import org.violetmoon.zeta.client.event.load.ZAddBlockColorHandlers;
 import org.violetmoon.zeta.client.event.load.ZAddItemColorHandlers;
 import org.violetmoon.zeta.client.event.load.ZClientSetup;
 import org.violetmoon.zeta.event.bus.LoadEvent;
-import org.violetmoon.zeta.mixin.mixins.AccessorItemProperties;
+import org.violetmoon.zeta.mixin.mixins.client.AccessorItemProperties;
 import org.violetmoon.zeta.registry.DyeablesRegistry;
 import org.violetmoon.zeta.registry.RenderLayerRegistry;
 import org.violetmoon.zeta.registry.ZetaRegistry;

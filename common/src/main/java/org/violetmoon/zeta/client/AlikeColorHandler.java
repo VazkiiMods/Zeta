@@ -13,7 +13,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import org.violetmoon.zeta.mixin.mixins.AccessorMinecraft;
+import org.violetmoon.zeta.mixin.mixins.client.AccessorMinecraft;
 
 /**
  * A BlockColor and ItemColor that just mimics another block.

@@ -12,8 +12,6 @@ import net.minecraft.world.level.block.Block;
 
 @Mixin(BlockColors.class)
 public interface AccessorBlockColors {
-
-	@Accessor("blockColors")
+	@Accessor("f_92571_")
 	Map<Reference<Block>, BlockColor> zeta$getBlockColors();
-
 }

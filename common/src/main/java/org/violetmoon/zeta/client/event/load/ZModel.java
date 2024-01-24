@@ -8,7 +8,6 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.client.model.geometry.IGeometryLoader;
 
 public interface ZModel extends IZetaLoadEvent {
     interface ModifyBakingResult extends ZModel {
@@ -27,6 +26,7 @@ public interface ZModel extends IZetaLoadEvent {
     }
 
     interface RegisterGeometryLoaders extends ZModel {
-        void register(String name, IGeometryLoader<?> loader);
+        //fixme
+        //void register(String name, IGeometryLoader<?> loader);
     }
 }

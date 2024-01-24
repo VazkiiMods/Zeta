@@ -2,6 +2,7 @@
   "required": true,
   "minVersion": "0.8",
   "package": "org.violetmoon.zeta.mixin",
+  "plugin": "org.violetmoon.zeta.mixin.plugin.InterfaceDelegateMixinPlugin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "mixins.AccessorAdvancement",
@@ -26,8 +27,8 @@
     "mixins.MixinStructureTemplate"
   ],
   "client": [
-    "mixins.AccessorItemProperties",
-    "mixins.AccessorMinecraft"
+    "mixins.client.AccessorItemProperties",
+    "mixins.client.AccessorMinecraft"
   ],
   "injectors": {
     "defaultRequire": 1
