@@ -24,10 +24,12 @@ public class SyncedFlagHandler {
 	private static List<String> sortedFlags;
 
 	public static void setupFlagManager(ConfigFlagManager manager) {
-		flagManager = manager;
+		if (manager != null) {
+			flagManager = manager;
 
-		//specifying the type of collection explicitly, since a hashCode is done over it and I don't want surprises
-		sortedFlags = manager.getAllFlags().stream().sorted().collect(Collectors.toCollection(ArrayList::new));
+			//specifying the type of collection explicitly, since a hashCode is done over it and I don't want surprises
+			sortedFlags = manager.getAllFlags().stream().sorted().collect(Collectors.toCollection(ArrayList::new));
+		}
 	}
 
 	public static BitSet compileFlagInfo() {
