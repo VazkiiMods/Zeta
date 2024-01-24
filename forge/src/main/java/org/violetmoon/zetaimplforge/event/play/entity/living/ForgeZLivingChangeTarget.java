@@ -4,6 +4,8 @@ import org.violetmoon.zeta.event.play.entity.living.ZLivingChangeTarget;
 
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.event.entity.living.LivingChangeTargetEvent;
+import org.violetmoon.zeta.util.ZetaEntityTargetType;
+import org.violetmoon.zetaimplforge.util.ConversionUtil;
 
 public class ForgeZLivingChangeTarget implements ZLivingChangeTarget {
     private final LivingChangeTargetEvent e;
@@ -23,8 +25,8 @@ public class ForgeZLivingChangeTarget implements ZLivingChangeTarget {
     }
 
     @Override
-    public LivingChangeTargetEvent.ILivingTargetType getTargetType() {
-        return e.getTargetType();
+    public ZetaEntityTargetType getTargetType() {
+        return ConversionUtil.forgeToZetaTargetChange(e.getTargetType());
     }
 
     @Override

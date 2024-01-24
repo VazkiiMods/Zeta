@@ -59,13 +59,4 @@ public abstract class ZetaBlockEntity extends BlockEntity {
 		writeSharedNBT(cmp);
 		return cmp;
 	}
-	
-	@Override
-	public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket packet) {
-		super.onDataPacket(net, packet);
-		
-		if(packet != null)
-			readSharedNBT(packet.getTag());
-	}
-
 }

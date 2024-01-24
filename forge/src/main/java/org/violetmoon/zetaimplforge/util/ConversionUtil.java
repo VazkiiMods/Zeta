@@ -2,7 +2,9 @@ package org.violetmoon.zetaimplforge.util;
 
 import net.minecraftforge.common.ToolAction;
 import net.minecraftforge.common.ToolActions;
+import net.minecraftforge.event.entity.living.LivingChangeTargetEvent;
 import org.violetmoon.zeta.Zeta;
+import org.violetmoon.zeta.util.ZetaEntityTargetType;
 import org.violetmoon.zeta.util.ZetaToolActions;
 
 public class ConversionUtil {
@@ -48,5 +50,13 @@ public class ConversionUtil {
                 yield ToolAction.get(name);
             }
         };
+    }
+
+    public static ZetaEntityTargetType forgeToZetaTargetChange(LivingChangeTargetEvent.ILivingTargetType targetType) {
+        if (targetType == LivingChangeTargetEvent.LivingTargetType.BEHAVIOR_TARGET) {
+            return ZetaEntityTargetType.BEHAVIOR_TARGET;
+        } else if (targetType == LivingChangeTargetEvent.LivingTargetType.MOB_TARGET) {
+            return ZetaEntityTargetType.MOB_TARGET;
+        } else return ZetaEntityTargetType.MISC_TARGET;
     }
 }
