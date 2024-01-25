@@ -9,16 +9,16 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.WritableRegistry;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceKey;
-import org.violetmoon.zeta.mixin.mixins.MixinRegistryDataLoader;
+import org.violetmoon.zeta.mixin.mixins.RegistryDataLoaderMixin;
 
 /**
- * Weird supporting code for MixinRegistryDataLoader. Mixing into RegistryDataLoader
+ * Weird supporting code for RegistryDataLoaderMixin. Mixing into RegistryDataLoader
  * is inherently a global thing, but Zeta is a non-static library where there might be several instances of it
  * in a running game, so *some* static needs to be involved in order to connect the two.
  *
  * TODO: Would it be better to just... have a global list of Zeta instances, that can be queried for situations like this?
  *
- * @see MixinRegistryDataLoader for implementation
+ * @see RegistryDataLoaderMixin for implementation
  */
 public class RegisterDynamicUtil {
 

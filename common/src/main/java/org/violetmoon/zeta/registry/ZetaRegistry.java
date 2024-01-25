@@ -160,7 +160,7 @@ public abstract class ZetaRegistry {
 	// - Because the worldgen registries are datapackable, their contents depend on the MinecraftServer. So they are not accessible
 	//    everywhere. You need a live MinecraftServer to read from worldgen registries.[^1]
 	// - This API allows you to register stuff to these registries with an "easy" API. Much like how "real" block registration is deferred
-	//    until the right time, RegisterDynamicUtil/MixinRegistryDataLoader take care of actually registering these to the game at the right time.
+	//    until the right time, RegisterDynamicUtil/RegistryDataLoaderMixin take care of actually registering these to the game at the right time.
 	// - The "Holder" type represents a handle into a registry. You can obtain the live object with "get()", but to avoid hairy registry-ordering
 	//    problems, some Minecraft APIs accept the Holder instead. This allows you to *mention* things before they're actually registered.
 	// - The "HolderGetter" type is a stripped-down interface to Registry that allows you to obtain Holders from it.

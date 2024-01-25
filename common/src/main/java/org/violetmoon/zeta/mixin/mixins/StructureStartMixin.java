@@ -19,7 +19,7 @@ import net.minecraft.world.level.levelgen.structure.StructureStart;
 import net.minecraft.world.level.levelgen.structure.pieces.PiecesContainer;
 
 @Mixin(StructureStart.class)
-public class MixinStructureStart {
+public class StructureStartMixin {
 	@Shadow @Final private PiecesContainer pieceContainer;
 	@Shadow @Final private Structure structure;
 

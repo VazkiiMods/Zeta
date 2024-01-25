@@ -3,6 +3,7 @@ package org.violetmoon.zeta.event.play.loading;
 import java.util.List;
 
 import com.google.common.collect.Lists;
+import dev.architectury.injectables.annotations.ExpectPlatform;
 import org.violetmoon.zeta.event.bus.Cancellable;
 import org.violetmoon.zeta.event.bus.IZetaPlayEvent;
 import org.violetmoon.zeta.mixin.mixins.AccessorLootPool;
@@ -12,6 +13,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
+import org.violetmoon.zeta.util.MixinAbstractions;
 
 public interface ZLootTableLoad extends IZetaPlayEvent, Cancellable {
 	ResourceLocation getName();
@@ -19,10 +21,7 @@ public interface ZLootTableLoad extends IZetaPlayEvent, Cancellable {
 	void setTable(LootTable table);
 
 	default void add(LootPoolEntryContainer entry) {
-		LootTable table = getTable();
-
-		LootPool[] lootPoolsArray = ((AccessorLootTable) table).zeta$getPools();
-		List<LootPool> pools = Lists.newArrayList(lootPoolsArray);
+		List<LootPool> pools = MixinAbstractions.LootPoolsAccessorAbstraction(getTable());
 		if (!pools.isEmpty()) {
 			LootPool firstPool = pools.get(0);
 			LootPoolEntryContainer[] entries = ((AccessorLootPool) firstPool).zeta$getEntries();

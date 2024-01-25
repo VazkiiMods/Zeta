@@ -16,15 +16,14 @@
     "mixins.AccessorItemUsedOnLocationTrigger",
     "mixins.AccessorItemUsedOnLocationTrigger$AccessorTriggerInstance",
     "mixins.AccessorLootPool",
-    "mixins.AccessorLootTable",
     "mixins.AccessorPistonStructureResolver",
     "mixins.AccessorShovelItem",
     "mixins.AccessorSpawnPlacements",
-    "mixins.MixinPistonBaseBlock",
-    "mixins.MixinRegistryDataLoader",
-    "mixins.MixinStructurePiece",
-    "mixins.MixinStructureStart",
-    "mixins.MixinStructureTemplate"
+    "mixins.PistonBaseBlockMixin",
+    "mixins.RegistryDataLoaderMixin",
+    "mixins.StructurePieceMixin",
+    "mixins.StructureStartMixin",
+    "mixins.StructureTemplateMixin"
   ],
   "client": [
     "mixins.client.AccessorItemProperties",
