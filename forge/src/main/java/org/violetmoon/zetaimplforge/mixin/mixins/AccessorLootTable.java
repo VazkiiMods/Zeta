@@ -9,6 +9,6 @@ import java.util.List;
 
 @Mixin(LootTable.class)
 public interface AccessorLootTable {
-    @Accessor("f_79109_")
+    @Accessor(value = "f_79109_", remap = false)
     List<LootPool> zeta$getPools();
 }
