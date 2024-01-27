@@ -5,7 +5,6 @@ import org.violetmoon.zeta.Zeta;
 import org.violetmoon.zeta.mod.ZetaClientProxy;
 import org.violetmoon.zeta.mod.ZetaMod;
 import org.violetmoon.zeta.mod.ZetaModProxy;
-import org.violetmoon.zeta.multiloader.Env;
 import org.violetmoon.zeta.util.ZetaSide;
 import org.violetmoon.zeta.util.handler.ToolInteractionHandler;
 import org.violetmoon.zetaimplforge.ForgeZeta;
@@ -15,7 +14,6 @@ import org.violetmoon.zetaimplforge.world.ZetaBiomeModifier;
 
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
