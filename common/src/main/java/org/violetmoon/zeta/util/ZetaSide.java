@@ -2,7 +2,6 @@ package org.violetmoon.zeta.util;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import org.jetbrains.annotations.ApiStatus;
-import org.violetmoon.zeta.multiloader.Env;
 
 import java.util.function.Supplier;
 
