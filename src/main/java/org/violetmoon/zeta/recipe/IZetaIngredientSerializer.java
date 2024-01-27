@@ -19,6 +19,7 @@ public interface IZetaIngredientSerializer<T extends Ingredient> {
 	//Aaaaaaaa
 	Zeta getZeta();
 
+	//TODO: Is getId needed?
 	default ResourceLocation getID() {
 		return getZeta().craftingExtensions.getID(this);
 	}
