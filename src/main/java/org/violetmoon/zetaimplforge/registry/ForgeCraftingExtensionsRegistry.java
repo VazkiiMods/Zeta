@@ -24,13 +24,13 @@ public class ForgeCraftingExtensionsRegistry implements CraftingExtensionsRegist
 
 	/// Ingredient serializers ///
 
-	//TODO: Is getId needed?
-	private final Map<IZetaIngredientSerializer<?>, ResourceLocation> ingredientSerializerIds = new IdentityHashMap<>();
+	//Used in IngredientMixin on Forge
+	public final Map<IZetaIngredientSerializer<?>, IIngredientSerializer<?>> toForgeIngredientSerializers = new IdentityHashMap<>();
 
 	@Override
 	public <T extends Ingredient> IZetaIngredientSerializer<T> registerIngredientSerializer(ResourceLocation id, IZetaIngredientSerializer<T> serializer) {
 		//Register a Forge ingredient serializer that delegates to our ingredient serializer.
-		CraftingHelper.register(id, new IIngredientSerializer<T>() {
+		IIngredientSerializer<T> forge = new IIngredientSerializer<>() {
 			@Override
 			public T parse(FriendlyByteBuf buffer) {
 				return serializer.parse(buffer);
@@ -45,9 +45,10 @@ public class ForgeCraftingExtensionsRegistry implements CraftingExtensionsRegist
 			public void write(FriendlyByteBuf buffer, T ingredient) {
 				serializer.write(buffer, ingredient);
 			}
-		});
+		};
 
-		ingredientSerializerIds.put(serializer, id);
+		CraftingHelper.register(id, forge);
+		toForgeIngredientSerializers.put(serializer, forge);
 
 		return serializer;
 	}
@@ -55,7 +56,7 @@ public class ForgeCraftingExtensionsRegistry implements CraftingExtensionsRegist
 	//TODO: Is getId needed?
 	@Override
 	public ResourceLocation getID(IZetaIngredientSerializer<?> serializer) {
-		return ingredientSerializerIds.get(serializer);
+		return CraftingHelper.getID(toForgeIngredientSerializers.get(serializer));
 	}
 
 	/// Condition serializers ///
