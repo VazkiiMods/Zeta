@@ -1,4 +1,4 @@
-package org.violetmoon.zeta.multiloader;
+package org.violetmoon.zeta.util;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import org.jetbrains.annotations.ApiStatus;

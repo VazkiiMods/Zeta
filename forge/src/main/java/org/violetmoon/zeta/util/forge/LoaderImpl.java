@@ -1,6 +1,6 @@
-package org.violetmoon.zeta.multiloader.forge;
+package org.violetmoon.zeta.util.forge;
 
-import org.violetmoon.zeta.multiloader.Loader;
+import org.violetmoon.zeta.util.Loader;
 
 public class LoaderImpl {
     public static Loader getCurrent() {
