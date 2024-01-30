@@ -1,5 +1,6 @@
 package org.violetmoon.zeta.api;
 
+import org.jetbrains.annotations.ApiStatus;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.AnnotationNode;
 import org.spongepowered.asm.service.MixinService;
@@ -11,6 +12,10 @@ import org.violetmoon.zeta.annotation.Requirement;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * You are on your own using this; I do not understand what's going on here with the for loops lmao
+ */
+@ApiStatus.Internal
 public class ConditionalMixinManager {
     public static boolean shouldApply(Zeta zeta, String targetClassName, String mixinClassName) {
         try {
@@ -23,12 +28,19 @@ public class ConditionalMixinManager {
                     List<Requirement> requirements = Annotations.getValue(node, "require", Requirement.class);
                     for (Requirement req : requirements) {
                         String[] modids = req.value();
-                        boolean applyIfPresent = req.applyIfPresent();
 
-                        boolean areModsLoaded = areModsLoaded(zeta, modids);
+                        shouldApply = areModsLoaded(zeta, modids);
 
-                        shouldApply = areModsLoaded == applyIfPresent;
-                        Zeta.GLOBAL_LOG.info("{}: {} is{}being applied because the mod(s) {} are{}loaded", zeta.modid, targetClassName, shouldApply ? " " : " not ", modids, areModsLoaded ? " " : " not ");
+                        Zeta.GLOBAL_LOG.info("{}: {} is{}being applied because the mod(s) {} are{}loaded", zeta.getModDisplayName(zeta.modid), targetClassName, shouldApply ? " " : " not ", modids, shouldApply ? " " : " not ");
+                    }
+
+                    List<Requirement> conflicts = Annotations.getValue(node, "conflict", Requirement.class);
+                    for (Requirement conflict : conflicts) {
+                        String[] modids = conflict.value();
+
+                        shouldApply = areModsLoaded(zeta, modids);
+
+                        Zeta.GLOBAL_LOG.info("{}: {} is{}being applied because the mod(s) {} are{}loaded", zeta.getModDisplayName(zeta.modid), targetClassName, shouldApply ? " " : " not ", modids, shouldApply ? " " : " not ");
                     }
                 }
             }

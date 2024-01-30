@@ -14,9 +14,4 @@ public @interface Requirement {
      * Versions | Doesnt work yet
      */
     String[] versionPredicates() default {};
-
-    /**
-     * if true, then mixin is applied when x mod is present otherwise not
-     */
-    boolean applyIfPresent() default true;
 }
