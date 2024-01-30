@@ -16,5 +16,8 @@ public @interface ConditionalMixin {
      */
     String[] value();
 
+    /**
+     * Should the mixin be applied if the mod is present?
+     */
     boolean applyIfPresent() default true;
 }
