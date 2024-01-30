@@ -12,12 +12,9 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ConditionalMixin {
     /**
-     * Only load mixin if requirements are fulfilled
+     * List of mod id's
      */
-    Requirement[] require() default {};
+    String[] value();
 
-    /**
-     * Don't load mixin if any of the requirements are fulfilled, higher priority then require
-     */
-    Requirement[] conflict() default {};
+    boolean applyIfPresent() default true;
 }

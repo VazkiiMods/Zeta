@@ -7,7 +7,6 @@ import org.spongepowered.asm.service.MixinService;
 import org.spongepowered.asm.util.Annotations;
 import org.violetmoon.zeta.Zeta;
 import org.violetmoon.zeta.annotation.ConditionalMixin;
-import org.violetmoon.zeta.annotation.Requirement;
 
 import java.io.IOException;
 import java.util.List;
@@ -28,23 +27,11 @@ public class ConditionalMixinManager {
             boolean shouldApply = true;
             for (AnnotationNode node : annotationNodes) {
                 if (node.desc.equals(Type.getDescriptor(ConditionalMixin.class))) {
-                    List<Requirement> requirements = Annotations.getValue(node, "require", Requirement.class);
-                    for (Requirement req : requirements) {
-                        String[] modids = req.value();
-
-                        shouldApply = areModsLoaded(zeta, modids);
-
-                        Zeta.GLOBAL_LOG.info("{}: {} is{}being applied because the mod(s) {} are{}loaded", zeta.getModDisplayName(zeta.modid), targetClassName, shouldApply ? " " : " not ", modids, shouldApply ? " " : " not ");
-                    }
-
-                    List<Requirement> conflicts = Annotations.getValue(node, "conflict", Requirement.class);
-                    for (Requirement conflict : conflicts) {
-                        String[] modids = conflict.value();
-
-                        shouldApply = areModsLoaded(zeta, modids);
-
-                        Zeta.GLOBAL_LOG.info("{}: {} is{}being applied because the mod(s) {} are{}loaded", zeta.getModDisplayName(zeta.modid), targetClassName, shouldApply ? " " : " not ", modids, shouldApply ? " " : " not ");
-                    }
+                    List<String> mods = Annotations.getValue(node, "value");
+                    boolean applyIfPresent = Annotations.getValue(node, "applyIfPresent", Boolean.TRUE);
+                    boolean anyModsLoaded = areModsLoaded(zeta, mods);
+                    shouldApply = anyModsLoaded == applyIfPresent;
+                    Zeta.GLOBAL_LOG.info("{}: {} is{}being applied because the mod(s) {} are{}loaded", zeta.getModDisplayName(zeta.modid), targetClassName, shouldApply ? " " : " not ", mods, anyModsLoaded ? " " : " not ");
                 }
             }
 
@@ -54,7 +41,7 @@ public class ConditionalMixinManager {
         }
     }
 
-    private static boolean areModsLoaded(Zeta zeta, String[] modids) {
+    private static boolean areModsLoaded(Zeta zeta, List<String> modids) {
         for (String mod : modids) {
             if (zeta.isModLoaded(mod)) {
                 return true;
