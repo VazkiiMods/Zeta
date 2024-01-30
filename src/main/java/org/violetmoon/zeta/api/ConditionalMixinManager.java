@@ -14,6 +14,9 @@ import java.util.List;
 
 /**
  * You are on your own using this; I do not understand what's going on here with the for loops lmao
+ * <p>
+ * How to use:
+ * call ConditionalMixinManager#shouldApply in your shouldApply of your mixin plugin and return the result of it
  */
 @ApiStatus.Internal
 public class ConditionalMixinManager {
