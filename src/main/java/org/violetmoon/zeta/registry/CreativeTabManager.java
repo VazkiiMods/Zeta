@@ -169,6 +169,9 @@ public class CreativeTabManager {
 	}
 
 	private static void addToEntries(ItemStack target, MutableHashedLinkedMap<ItemStack, CreativeModeTab.TabVisibility> entries, ItemLike item, boolean behind) {
+		if(!isItemEnabled(item))
+			return;
+		
 		List<ItemStack> stacksToAdd = Arrays.asList(new ItemStack(item));
 		if(item instanceof AppendsUniquely au)
 			stacksToAdd = au.appendItemsToCreativeTab();
