@@ -29,7 +29,7 @@ def main():
 	    build.store(f, encoding="utf-8")
 
 	os.system('git commit -a -m build')
-	os.system('git push origin master release-{}-{}-{}'.format(mc_version, version, build_number))
+	os.system('git push origin main release-{}-{}-{}'.format(mc_version, version, build_number))
 
 if __name__ == '__main__':
 	main()
