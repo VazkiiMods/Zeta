@@ -1,1 +1,2 @@
-Initial public release.
+- Initial public release.
+- Fully functional to support Quark, but other mods shouldn't rely on it yet until we fully finish it and release documentation.
