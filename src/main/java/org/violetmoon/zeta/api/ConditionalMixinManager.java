@@ -1,5 +1,7 @@
 package org.violetmoon.zeta.api;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.ApiStatus;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.AnnotationNode;
@@ -19,6 +21,8 @@ import java.util.List;
  */
 @ApiStatus.Internal
 public class ConditionalMixinManager {
+    private static final Logger LOGGER = LogManager.getLogger("ZetaConditionalMixinManager");
+
     public static boolean shouldApply(Zeta zeta, String targetClassName, String mixinClassName) {
         try {
             List<AnnotationNode> annotationNodes = MixinService.getService().getBytecodeProvider().getClassNode(targetClassName).visibleAnnotations;
@@ -31,7 +35,7 @@ public class ConditionalMixinManager {
                     boolean applyIfPresent = Annotations.getValue(node, "applyIfPresent", Boolean.TRUE);
                     boolean anyModsLoaded = areModsLoaded(zeta, mods);
                     shouldApply = anyModsLoaded == applyIfPresent;
-                    Zeta.GLOBAL_LOG.info("{}: {} is{}being applied because the mod(s) {} are{}loaded", zeta.getModDisplayName(zeta.modid), targetClassName, shouldApply ? " " : " not ", mods, anyModsLoaded ? " " : " not ");
+                    LOGGER.info("{}: {} is{}being applied because the mod(s) {} are{}loaded", zeta.getModDisplayName(zeta.modid), targetClassName, shouldApply ? " " : " not ", mods, anyModsLoaded ? " " : " not ");
                 }
             }
 
