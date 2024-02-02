@@ -8,7 +8,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
 
-@EventBusSubscriber(modid = Zeta.ZETA_ID)
+@EventBusSubscriber(modid = Zeta.ZETA_ID, bus = EventBusSubscriber.Bus.MOD)
 public class ConfigEventDispatcher {
 
 	@SubscribeEvent
