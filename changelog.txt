@@ -1,2 +1,1 @@
-- Initial public release.
-- Fully functional to support Quark, but other mods shouldn't rely on it yet until we fully finish it and release documentation.
+- Fix config event invoking making changing configs no longer need a restart
