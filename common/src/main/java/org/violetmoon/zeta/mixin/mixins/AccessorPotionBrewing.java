@@ -1,19 +1,17 @@
-package org.violetmoon.zetaimplforge.mixin.mixins;
-
-import java.util.List;
-
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.gen.Accessor;
+package org.violetmoon.zeta.mixin.mixins;
 
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionBrewing;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.gen.Accessor;
+
+import java.util.List;
 
 @Mixin(PotionBrewing.class)
 public interface AccessorPotionBrewing {
-
 	@Accessor("POTION_MIXES")
 	static List<PotionBrewing.Mix<Potion>> zeta$getPotionMixes() {
-		throw new UnsupportedOperationException();
+		throw new AssertionError();
 	}
 
 }

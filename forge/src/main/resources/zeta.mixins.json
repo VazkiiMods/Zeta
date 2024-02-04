@@ -6,7 +6,6 @@
   "package": "org.violetmoon.zetaimplforge.mixin.mixins",
   "mixins": [
     "AccessorLootTable",
-    "AccessorPotionBrewing",
     "IngredientMixin",
     "WeatheringCopperMixin",
     "self.IZetaBlockMixin_FAKE",

@@ -6,9 +6,9 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.load.ZCommonSetup;
+import org.violetmoon.zeta.mixin.mixins.AccessorPotionBrewing;
 import org.violetmoon.zeta.registry.BrewingRegistry;
 import org.violetmoon.zetaimplforge.ForgeZeta;
-import org.violetmoon.zetaimplforge.mixin.mixins.AccessorPotionBrewing;
 
 import java.util.ArrayList;
 import java.util.List;

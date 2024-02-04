@@ -17,6 +17,7 @@
     "mixins.AccessorItemUsedOnLocationTrigger$AccessorTriggerInstance",
     "mixins.AccessorLootPool",
     "mixins.AccessorPistonStructureResolver",
+    "mixins.AccessorPotionBrewing",
     "mixins.AccessorShovelItem",
     "mixins.AccessorSpawnPlacements",
     "mixins.PistonBaseBlockMixin",
