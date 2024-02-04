@@ -1,27 +1,28 @@
-package org.violetmoon.zetaimplforge.registry;
+package org.violetmoon.zeta.registry;
 
+import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.violetmoon.zeta.Zeta;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.load.ZCommonSetup;
 import org.violetmoon.zeta.mixin.mixins.AccessorPotionBrewing;
 import org.violetmoon.zeta.registry.BrewingRegistry;
-import org.violetmoon.zetaimplforge.ForgeZeta;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
 public class ForgeBrewingRegistry extends BrewingRegistry {
-	public ForgeBrewingRegistry(ForgeZeta zeta) {
+	public ForgeBrewingRegistry(Zeta zeta) {
 		super(zeta);
 	}
 
 	private record DelayedPotion(Potion input, Supplier<Ingredient> reagentSupplier, Potion output) {
 		void register() {
-			AccessorPotionBrewing.zeta$getPotionMixes().add(new PotionBrewing.Mix<>(ForgeRegistries.POTIONS, input, reagentSupplier.get(), output));
+			setupRegister(input,reagentSupplier,output);
 		}
 	}
 	private List<DelayedPotion> delayedPotions = new ArrayList<>();
@@ -44,5 +45,10 @@ public class ForgeBrewingRegistry extends BrewingRegistry {
 			delayedPotions.forEach(DelayedPotion::register);
 			delayedPotions = null;
 		});
+	}
+
+	@ExpectPlatform
+	public static void setupRegister(Potion input, Supplier<Ingredient> reagentSupplier, Potion output) {
+		throw new AssertionError();
 	}
 }
