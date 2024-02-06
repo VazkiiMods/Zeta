@@ -1,10 +1,15 @@
 package org.violetmoon.zeta.registry;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
+import dev.architectury.injectables.annotations.ExpectPlatform;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.zeta.Zeta;
+import org.violetmoon.zeta.event.bus.LoadEvent;
+import org.violetmoon.zeta.event.load.ZCommonSetup;
 import org.violetmoon.zeta.recipe.FlagIngredient;
 
 import com.google.common.collect.Maps;
@@ -23,9 +28,11 @@ import net.minecraft.world.item.crafting.Ingredient;
  * @author WireSegal
  * Created at 3:34 PM on 9/23/19.
  */
-public abstract class BrewingRegistry {
+public class BrewingRegistry {
 
 	protected final Zeta zeta;
+	private List<DelayedPotion> delayedPotions = new ArrayList<>();
+	private boolean okToRegisterImmediately = false;
 
 	public BrewingRegistry(Zeta zeta) {
 		this.zeta = zeta;
@@ -141,5 +148,33 @@ public abstract class BrewingRegistry {
 		return Ingredient.of(Items.FERMENTED_SPIDER_EYE);
 	}
 
-	protected abstract void addBrewingRecipe(Potion potion, Supplier<Ingredient> reagent, Potion result);
+	protected void addBrewingRecipe(Potion input, Supplier<Ingredient> reagentSupplier, Potion output) {
+		DelayedPotion d = new DelayedPotion(input, reagentSupplier, output);
+
+		if(okToRegisterImmediately)
+			d.register();
+		else
+			delayedPotions.add(d);
+	}
+
+	@LoadEvent
+	public void commonSetup(ZCommonSetup event) {
+		event.enqueueWork(() -> {
+			okToRegisterImmediately = true;
+			delayedPotions.forEach(DelayedPotion::register);
+			delayedPotions = null;
+		});
+	}
+
+	@ExpectPlatform
+	public static void setupRegister(Potion input, Supplier<Ingredient> reagentSupplier, Potion output) {
+		throw new AssertionError();
+	}
+
+	private record DelayedPotion(Potion input, Supplier<Ingredient> reagentSupplier, Potion output) {
+		void register() {
+			setupRegister(input,reagentSupplier,output);
+		}
+	}
+
 }

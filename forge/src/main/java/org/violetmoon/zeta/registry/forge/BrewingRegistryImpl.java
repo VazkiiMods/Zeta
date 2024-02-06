@@ -8,7 +8,7 @@ import org.violetmoon.zeta.mixin.mixins.AccessorPotionBrewing;
 
 import java.util.function.Supplier;
 
-public class ForgeBrewingRegistryImpl {
+public class BrewingRegistryImpl {
     public static void setupRegister(Potion input, Supplier<Ingredient> reagentSupplier, Potion output) {
         AccessorPotionBrewing.zeta$getPotionMixes().add(new PotionBrewing.Mix<>(ForgeRegistries.POTIONS, input, reagentSupplier.get(), output));
     }

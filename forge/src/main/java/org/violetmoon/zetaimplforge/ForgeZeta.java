@@ -70,7 +70,6 @@ import org.violetmoon.zetaimplforge.event.play.loading.ForgeZVillagerTrades;
 import org.violetmoon.zetaimplforge.event.play.loading.ForgeZWandererTrades;
 import org.violetmoon.zetaimplforge.item.IForgeItemItemExtensions;
 import org.violetmoon.zetaimplforge.network.ForgeZetaNetworkHandler;
-import org.violetmoon.zeta.registry.ForgeBrewingRegistry;
 import org.violetmoon.zetaimplforge.registry.ForgeCraftingExtensionsRegistry;
 import org.violetmoon.zetaimplforge.registry.ForgeZetaRegistry;
 import org.violetmoon.zetaimplforge.util.ForgeRaytracingUtil;
@@ -118,7 +117,7 @@ public class ForgeZeta extends Zeta {
 
 	@Override
 	public BrewingRegistry createBrewingRegistry() {
-		return new ForgeBrewingRegistry(this);
+		return new BrewingRegistry(this);
 	}
 
 	@Override
