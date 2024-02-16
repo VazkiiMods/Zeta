@@ -31,8 +31,7 @@ import java.util.*;
 public final class ToolInteractionHandler {
 
 	private static final Map<Block, Block> cleanToWaxMap = HashBiMap.create();
-	// Intellij is lying, do not make this final it will explode in your face :p
-	private static Set<BooleanPropertyWaxableBlock> booleanPropertySet = Collections.emptySet();
+	private static final List<BooleanPropertyWaxableBlock> booleanPropertySet = new ArrayList<>();
 
 	private static final Map<ToolAction, Map<Block, Block>> interactionMaps = new HashMap<>();
 
