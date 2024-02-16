@@ -13,12 +13,12 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraftforge.common.ToolAction;
 import net.minecraftforge.common.ToolActions;
 import org.apache.commons.lang3.tuple.Pair;
 import org.violetmoon.zeta.advancement.modifier.WaxModifier;
-import org.violetmoon.zeta.block.ZetaWaxableStateBlock;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.bus.PlayEvent;
 import org.violetmoon.zeta.event.load.ZCommonSetup;
@@ -31,10 +31,10 @@ import java.util.*;
 public final class ToolInteractionHandler {
 
 	private static final Map<Block, Block> cleanToWaxMap = HashBiMap.create();
-	private static final Map<Block, BlockState> cleanToWaxMapState = HashBiMap.create();
+	// Intellij is lying, do not make this final it will explode in your face :p
+	private static Set<BooleanPropertyWaxableBlock> booleanPropertySet = Collections.emptySet();
 
 	private static final Map<ToolAction, Map<Block, Block>> interactionMaps = new HashMap<>();
-	private static final Map<ToolAction, Map<BlockState, Block>> interactionMapsState = new HashMap<>();
 
 	private static final Multimap<ZetaModule, Pair<Block, Block>> waxingByModule = HashMultimap.create();
 
@@ -45,13 +45,13 @@ public final class ToolInteractionHandler {
 		waxingByModule.put(module, Pair.of(clean, waxed));
 	}
 
-	// BlockStates block must implement extend ZetaWaxableStateBlock for now.
-	public static void registerWaxedBlock(ZetaModule module, Block clean, BlockState waxedState) {
-		if (!(waxedState.getBlock() instanceof ZetaWaxableStateBlock))
-			throw new IllegalArgumentException("registerWaxedBlock(ZetaModule, Block, Blockstate) only supports ZetaWaxableStateBlock");
+	public static void registerWaxedBlockBooleanProperty(ZetaModule module, Block clean, Block waxed, BooleanProperty property) {
+		BooleanPropertyWaxableBlock booleanPropertyWaxableBlock =
+				new BooleanPropertyWaxableBlock(module, clean, waxed, property, ToolActions.AXE_WAX_OFF);
 
-		cleanToWaxMapState.put(clean, waxedState);
-		registerInteraction(ToolActions.AXE_WAX_OFF, waxedState, clean);
+		booleanPropertySet.add(booleanPropertyWaxableBlock);
+
+		waxingByModule.put(module, Pair.of(clean, waxed));
 	}
 
 	public static void registerInteraction(ToolAction action, Block in, Block out) {
@@ -59,14 +59,6 @@ public final class ToolInteractionHandler {
 			interactionMaps.put(action, new HashMap<>());
 
 		Map<Block, Block> map = interactionMaps.get(action);
-		map.put(in, out);
-	}
-
-	public static void registerInteraction(ToolAction action, BlockState in, Block out) {
-		if(!interactionMapsState.containsKey(action))
-			interactionMapsState.put(action, new HashMap<>());
-
-		Map<BlockState, Block> map = interactionMapsState.get(action);
 		map.put(in, out);
 	}
 
@@ -104,13 +96,17 @@ public final class ToolInteractionHandler {
 			}
 		}
 
-		if(interactionMapsState.containsKey(action)) {
-			Map<BlockState, Block> map = interactionMapsState.get(action);
-			BlockState state = event.getState();
+		for (BooleanPropertyWaxableBlock waxableBlock : booleanPropertySet) {
+			if (waxableBlock.action == action) {
+				BlockState state = event.getState();
+				Block block = state.getBlock();
 
-			if(map.containsKey(state)) {
-				Block finalBlock = map.get(state);
-				event.setFinalState(copyState(state, finalBlock).setValue(ZetaWaxableStateBlock.ZETA_WAXED, false));
+				if(waxableBlock.clean == block) {
+					Block finalBlock = waxableBlock.waxed;
+					event.setFinalState(copyState(state, finalBlock)
+							.setValue(waxableBlock.property, false)
+					);
+				}
 			}
 		}
 	}
@@ -142,21 +138,25 @@ public final class ToolInteractionHandler {
 				event.setCancellationResult(InteractionResult.SUCCESS);
 			}
 
-			if(cleanToWaxMapState.containsKey(block)) {
-				BlockState alternate = cleanToWaxMapState.get(block);
+			for (BooleanPropertyWaxableBlock waxableBlock : booleanPropertySet) {
+				if(waxableBlock.clean == block) {
+					Block alternate = waxableBlock.waxed;
 
-				if(event.getEntity() instanceof ServerPlayer sp)
-					CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(sp, pos, stack);
+					if(event.getEntity() instanceof ServerPlayer sp)
+						CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(sp, pos, stack);
 
-				if(!world.isClientSide)
-					world.setBlockAndUpdate(pos, copyState(state, alternate.getBlock()).setValue(ZetaWaxableStateBlock.ZETA_WAXED, true));
-				world.levelEvent(event.getPlayer(), LevelEvent.PARTICLES_AND_SOUND_WAX_ON, pos, 0);
+					if(!world.isClientSide)
+						world.setBlockAndUpdate(pos, copyState(state, alternate)
+								.setValue(waxableBlock.property, true)
+						);
+					world.levelEvent(event.getPlayer(), LevelEvent.PARTICLES_AND_SOUND_WAX_ON, pos, 0);
 
-				if(!event.getPlayer().getAbilities().instabuild)
-					stack.setCount(stack.getCount() - 1);
+					if(!event.getPlayer().getAbilities().instabuild)
+						stack.setCount(stack.getCount() - 1);
 
-				event.setCanceled(true);
-				event.setCancellationResult(InteractionResult.SUCCESS);
+					event.setCanceled(true);
+					event.setCancellationResult(InteractionResult.SUCCESS);
+				}
 			}
 		}
 	}
@@ -172,4 +172,19 @@ public final class ToolInteractionHandler {
 
 	}
 
+	public static class BooleanPropertyWaxableBlock {
+		public ZetaModule module;
+		public Block clean;
+		public Block waxed;
+		public BooleanProperty property;
+		public ToolAction action;
+
+		private BooleanPropertyWaxableBlock(ZetaModule module, Block clean, Block waxed, BooleanProperty property, ToolAction action) {
+			this.module = module;
+			this.clean = clean;
+			this.waxed = waxed;
+			this.property = property;
+			this.action = action;
+		}
+	}
 }
