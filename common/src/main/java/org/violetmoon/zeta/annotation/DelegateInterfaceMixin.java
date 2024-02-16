@@ -1,4 +1,4 @@
-package org.violetmoon.zeta;
+package org.violetmoon.zeta.annotation;
 
 import org.violetmoon.zeta.mixin.plugin.DelegateReturnValueModifier;
 

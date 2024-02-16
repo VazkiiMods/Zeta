@@ -23,7 +23,7 @@ import org.spongepowered.asm.util.Annotations;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import org.violetmoon.zeta.DelegateInterfaceMixin;
+import org.violetmoon.zeta.annotation.DelegateInterfaceMixin;
 
 /**
  * Very little safety checking is done. Use wisely or not at all.
