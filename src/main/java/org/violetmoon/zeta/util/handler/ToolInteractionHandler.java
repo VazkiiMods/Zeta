@@ -100,7 +100,7 @@ public final class ToolInteractionHandler {
 				BlockState state = event.getState();
 				Block block = state.getBlock();
 
-				if(waxableBlock.block == block) {
+				if(waxableBlock.block == block && state.getValue(waxableBlock.property)) {
 					event.setFinalState(copyState(state, waxableBlock.block)
 							.setValue(waxableBlock.property, false)
 					);
@@ -137,7 +137,7 @@ public final class ToolInteractionHandler {
 			}
 
 			for (BooleanPropertyWaxableBlock waxableBlock : booleanPropertySet) {
-				if(waxableBlock.block == block) {
+				if(waxableBlock.block == block && !state.getValue(waxableBlock.property)) {
 					if(event.getEntity() instanceof ServerPlayer sp)
 						CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(sp, pos, stack);
 
