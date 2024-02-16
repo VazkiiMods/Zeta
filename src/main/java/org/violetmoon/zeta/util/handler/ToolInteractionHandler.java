@@ -45,13 +45,13 @@ public final class ToolInteractionHandler {
 		waxingByModule.put(module, Pair.of(clean, waxed));
 	}
 
-	public static void registerWaxedBlockBooleanProperty(ZetaModule module, Block clean, Block waxed, BooleanProperty property) {
+	public static void registerWaxedBlockBooleanProperty(ZetaModule module, Block block, BooleanProperty property) {
 		BooleanPropertyWaxableBlock booleanPropertyWaxableBlock =
-				new BooleanPropertyWaxableBlock(module, clean, waxed, property, ToolActions.AXE_WAX_OFF);
+				new BooleanPropertyWaxableBlock(module, block, property, ToolActions.AXE_WAX_OFF);
 
 		booleanPropertySet.add(booleanPropertyWaxableBlock);
 
-		waxingByModule.put(module, Pair.of(clean, waxed));
+		waxingByModule.put(module, Pair.of(block, block));
 	}
 
 	public static void registerInteraction(ToolAction action, Block in, Block out) {
@@ -101,9 +101,8 @@ public final class ToolInteractionHandler {
 				BlockState state = event.getState();
 				Block block = state.getBlock();
 
-				if(waxableBlock.clean == block) {
-					Block finalBlock = waxableBlock.waxed;
-					event.setFinalState(copyState(state, finalBlock)
+				if(waxableBlock.block == block) {
+					event.setFinalState(copyState(state, waxableBlock.block)
 							.setValue(waxableBlock.property, false)
 					);
 				}
@@ -139,14 +138,12 @@ public final class ToolInteractionHandler {
 			}
 
 			for (BooleanPropertyWaxableBlock waxableBlock : booleanPropertySet) {
-				if(waxableBlock.clean == block) {
-					Block alternate = waxableBlock.waxed;
-
+				if(waxableBlock.block == block) {
 					if(event.getEntity() instanceof ServerPlayer sp)
 						CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(sp, pos, stack);
 
 					if(!world.isClientSide)
-						world.setBlockAndUpdate(pos, copyState(state, alternate)
+						world.setBlockAndUpdate(pos, copyState(state, waxableBlock.block)
 								.setValue(waxableBlock.property, true)
 						);
 					world.levelEvent(event.getPlayer(), LevelEvent.PARTICLES_AND_SOUND_WAX_ON, pos, 0);
@@ -174,15 +171,13 @@ public final class ToolInteractionHandler {
 
 	public static class BooleanPropertyWaxableBlock {
 		public ZetaModule module;
-		public Block clean;
-		public Block waxed;
+		public Block block;
 		public BooleanProperty property;
 		public ToolAction action;
 
-		private BooleanPropertyWaxableBlock(ZetaModule module, Block clean, Block waxed, BooleanProperty property, ToolAction action) {
+		private BooleanPropertyWaxableBlock(ZetaModule module, Block block, BooleanProperty property, ToolAction action) {
 			this.module = module;
-			this.clean = clean;
-			this.waxed = waxed;
+			this.block = block;
 			this.property = property;
 			this.action = action;
 		}
