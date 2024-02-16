@@ -2,7 +2,6 @@ package org.violetmoon.zeta.client.event.play;
 
 import net.minecraft.client.Minecraft;
 import org.violetmoon.zeta.event.bus.IZetaPlayEvent;
-//import org.violetmoon.zetaimplforge.mixin.mixins.client.GameRenderMixin;
 
 import net.minecraft.client.gui.GuiGraphics;
 

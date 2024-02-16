@@ -1,13 +1,13 @@
 package org.violetmoon.zeta.module;
 
+import org.violetmoon.zeta.Zeta;
+
 import java.util.Objects;
 import java.util.ServiceLoader;
 import java.util.stream.Stream;
 
-import org.violetmoon.zeta.Zeta;
-
 /**
- * @see org.violetmoon.zetaimplforge.module.ModFileScanDataModuleFinder alternative Forge-only implementation
+ * @see org.violetmoon.zeta.module.ModFileScanDataModuleFinder alternative Forge-only implementation
  */
 public class ServiceLoaderModuleFinder implements ModuleFinder {
 	public ServiceLoaderModuleFinder(Zeta z) {
