@@ -332,7 +332,7 @@ abstract class CmnFastMath {
         static {
             init();
         }
-        private static strictfp void init() {
+        private static void init() {
             final int SIN_COS_PI_INDEX = (SIN_COS_TABS_SIZE-1)/2;
             final int SIN_COS_PI_MUL_2_INDEX = 2*SIN_COS_PI_INDEX;
             final int SIN_COS_PI_MUL_0_5_INDEX = SIN_COS_PI_INDEX/2;
@@ -409,7 +409,7 @@ abstract class CmnFastMath {
         static {
             init();
         }
-        private static strictfp void init() {
+        private static void init() {
             for (int i=0;i<TAN_TABS_SIZE;i++) {
                 // angle: in [0,TAN_MAX_VALUE_FOR_TABS].
                 double angle = i * TAN_DELTA_HI + i * TAN_DELTA_LO;
@@ -470,7 +470,7 @@ abstract class CmnFastMath {
         static {
             init();
         }
-        private static strictfp void init() {
+        private static void init() {
             for (int i=0;i<ASIN_TABS_SIZE;i++) {
                 // x: in [0,ASIN_MAX_VALUE_FOR_TABS].
                 double x = i * ASIN_DELTA;
@@ -505,7 +505,7 @@ abstract class CmnFastMath {
         static {
             init();
         }
-        private static strictfp void init() {
+        private static void init() {
             if (FM_USE_POWTABS_FOR_ASIN || SFM_USE_POWTABS_FOR_ASIN) {
                 for (int i=0;i<ASIN_POWTABS_SIZE;i++) {
                     // x: in [0,ASIN_MAX_VALUE_FOR_POWTABS].
@@ -566,7 +566,7 @@ abstract class CmnFastMath {
         static {
             init();
         }
-        private static strictfp void init() {
+        private static void init() {
             for (int i=0;i<ATAN_TABS_SIZE;i++) {
                 // x: in [0,ATAN_MAX_VALUE_FOR_TABS].
                 double x = i * ATAN_DELTA;
@@ -641,7 +641,7 @@ abstract class CmnFastMath {
         static {
             init();
         }
-        private static strictfp void init() {
+        private static void init() {
             for (int i=(int)EXP_UNDERFLOW_LIMIT;i<=(int)EXP_OVERFLOW_LIMIT;i++) {
                 expHiTab[i-(int)EXP_UNDERFLOW_LIMIT] = StrictMath.exp(i);
             }
@@ -670,7 +670,7 @@ abstract class CmnFastMath {
         static {
             init();
         }
-        private static strictfp void init() {
+        private static void init() {
             for (int i=0;i<LOG_TAB_SIZE;i++) {
                 // Exact to use inverse of tab size, since it is a power of two.
                 double x = 1+i*(1.0/LOG_TAB_SIZE);
@@ -692,7 +692,7 @@ abstract class CmnFastMath {
         static {
             init();
         }
-        private static strictfp void init() {
+        private static void init() {
             if (USE_TWO_POW_TAB) {
                 for (int i=MIN_DOUBLE_EXPONENT;i<=MAX_DOUBLE_EXPONENT;i++) {
                     twoPowTab[i-MIN_DOUBLE_EXPONENT] = NumbersUtils.twoPow(i);
@@ -716,7 +716,7 @@ abstract class CmnFastMath {
         static {
             init();
         }
-        private static strictfp void init() {
+        private static void init() {
             for (int i=MIN_DOUBLE_EXPONENT;i<=MAX_DOUBLE_EXPONENT;i++) {
                 double twoPowExpDiv2 = StrictMath.pow(2.0,i*0.5);
                 sqrtXSqrtHiTab[i-MIN_DOUBLE_EXPONENT] = twoPowExpDiv2 * 0.5; // Half sqrt, to avoid overflows.
@@ -756,7 +756,7 @@ abstract class CmnFastMath {
         static {
             init();
         }
-        private static strictfp void init() {
+        private static void init() {
             for (int i=MIN_DOUBLE_EXPONENT;i<=MAX_DOUBLE_EXPONENT;i++) {
                 double twoPowExpDiv3 = StrictMath.pow(2.0,i*(1.0/3));
                 cbrtXCbrtHiTab[i-MIN_DOUBLE_EXPONENT] = twoPowExpDiv3 * 0.5; // Half cbrt, to avoid overflows.
@@ -1605,7 +1605,7 @@ abstract class CmnFastMath {
      * @param angle Angle, in radians.
      * @return Remainder of (angle % (2*PI)), in [-PI,PI].
      */
-    static strictfp double jdkRemainderTwoPi(double angle) {
+    static double jdkRemainderTwoPi(double angle) {
         final double sin = StrictMath.sin(angle);
         final double cos = StrictMath.cos(angle);
         return StrictMath.atan2(sin, cos);
@@ -1615,7 +1615,7 @@ abstract class CmnFastMath {
      * @param angle Angle, in radians.
      * @return Remainder of (angle % PI), in [-PI/2,PI/2].
      */
-    static strictfp double jdkRemainderPi(double angle) {
+    static double jdkRemainderPi(double angle) {
         final double sin = StrictMath.sin(angle);
         final double cos = StrictMath.cos(angle);
         /*
@@ -1630,7 +1630,7 @@ abstract class CmnFastMath {
      * @return Bits of double corresponding to remainder of (angle % (PI/2)),
      *         in [-PI/4,PI/4], with quadrant encoded in exponent bits.
      */
-    static strictfp long jdkRemainderPiO2(double angle, boolean negateRem) {
+    static long jdkRemainderPiO2(double angle, boolean negateRem) {
         final double sin = StrictMath.sin(angle);
         final double cos = StrictMath.cos(angle);
 
@@ -1678,7 +1678,7 @@ abstract class CmnFastMath {
      * @param angle Angle, in radians. Must not be NaN nor +-Infinity.
      * @return Remainder of (angle % (2*PI)), in [-PI,PI].
      */
-    static strictfp double heavyRemainderTwoPi(double angle) {
+    static double heavyRemainderTwoPi(double angle) {
         final long remAndQuad = heavyRemainderPiO2(angle, false);
         final double rem = decodeRemainder(remAndQuad);
         final int q = decodeQuadrant(remAndQuad);
@@ -1701,7 +1701,7 @@ abstract class CmnFastMath {
      * @param angle Angle, in radians. Must not be NaN nor +-Infinity.
      * @return Remainder of (angle % PI), in [-PI/2,PI/2].
      */
-    static strictfp double heavyRemainderPi(double angle) {
+    static double heavyRemainderPi(double angle) {
         final long remAndQuad = heavyRemainderPiO2(angle, false);
         final double rem = decodeRemainder(remAndQuad);
         final int q = decodeQuadrant(remAndQuad);
@@ -1729,7 +1729,7 @@ abstract class CmnFastMath {
      * @return Bits of double corresponding to remainder of (angle % (PI/2)),
      *         in [-PI/4,PI/4], with quadrant encoded in exponent bits.
      */
-    static strictfp long heavyRemainderPiO2(double angle, boolean negateRem) {
+    static long heavyRemainderPiO2(double angle, boolean negateRem) {
         
         /*
          * fdlibm treatments unrolled, to avoid garbage and be OOME-free,

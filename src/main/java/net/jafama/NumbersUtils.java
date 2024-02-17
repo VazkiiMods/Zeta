@@ -115,7 +115,7 @@ public final class NumbersUtils {
      */
     public static boolean equal(float a, float b) {
         // Only does one test if a == b.
-        return (a == b) ? true : ((a != a) && (b != b));
+        return a == b || ((a != a) && (b != b));
     }
 
     /**
@@ -123,7 +123,7 @@ public final class NumbersUtils {
      */
     public static boolean equal(double a, double b) {
         // Only does one test if a == b.
-        return (a == b) ? true : ((a != a) && (b != b));
+        return a == b || ((a != a) && (b != b));
     }
 
     /**
@@ -1530,7 +1530,7 @@ public final class NumbersUtils {
      * @param a A value.
      * @return a*a.
      */
-    public static strictfp float pow2_strict(float a) {
+    public static float pow2_strict(float a) {
         return a*a;
     }
 
@@ -1548,7 +1548,7 @@ public final class NumbersUtils {
      * @param a A value.
      * @return a*a.
      */
-    public static strictfp double pow2_strict(double a) {
+    public static double pow2_strict(double a) {
         return a*a;
     }
 
@@ -1582,7 +1582,7 @@ public final class NumbersUtils {
      * @param a A value.
      * @return a*a*a.
      */
-    public static strictfp float pow3_strict(float a) {
+    public static float pow3_strict(float a) {
         return a*a*a;
     }
 
@@ -1600,7 +1600,7 @@ public final class NumbersUtils {
      * @param a A value.
      * @return a*a*a.
      */
-    public static strictfp double pow3_strict(double a) {
+    public static double pow3_strict(double a) {
         return a*a*a;
     }
 
@@ -1628,7 +1628,7 @@ public final class NumbersUtils {
      * @param angRad An angle, in radians.
      * @return angRad + 2*PI, accurately computed.
      */
-    public static strictfp double plus2PI_strict(double angRad) {
+    public static double plus2PI_strict(double angRad) {
         if (angRad > -Math.PI) {
             // LO then HI, for better accuracy (if starting near 0).
             return (angRad + TWOPI_LO) + TWOPI_HI;
@@ -1658,7 +1658,7 @@ public final class NumbersUtils {
      * @param angRad An angle, in radians.
      * @return angRad - 2*PI, accurately computed.
      */
-    public static strictfp double minus2PI_strict(double angRad) {
+    public static double minus2PI_strict(double angRad) {
         if (angRad < Math.PI) {
             // LO then HI, for better accuracy (if starting near 0).
             return (angRad - TWOPI_LO) - TWOPI_HI;
@@ -1688,7 +1688,7 @@ public final class NumbersUtils {
      * @param angRad An angle, in radians.
      * @return angRad + PI, accurately computed.
      */
-    public static strictfp double plusPI_strict(double angRad) {
+    public static double plusPI_strict(double angRad) {
         if (angRad > -Math.PI/2) {
             // LO then HI, for better accuracy (if starting near 0).
             return (angRad + PI_LO) + PI_HI;
@@ -1718,7 +1718,7 @@ public final class NumbersUtils {
      * @param angRad An angle, in radians.
      * @return angRad - PI, accurately computed.
      */
-    public static strictfp double minusPI_strict(double angRad) {
+    public static double minusPI_strict(double angRad) {
         if (angRad < Math.PI/2) {
             // LO then HI, for better accuracy (if starting near 0).
             return (angRad - PI_LO) - PI_HI;
@@ -1748,7 +1748,7 @@ public final class NumbersUtils {
      * @param angRad An angle, in radians.
      * @return angRad + PI/2, accurately computed.
      */
-    public static strictfp double plusPIO2_strict(double angRad) {
+    public static double plusPIO2_strict(double angRad) {
         if (angRad > -Math.PI/4) {
             // LO then HI, for better accuracy (if starting near 0).
             return (angRad + PIO2_LO) + PIO2_HI;
@@ -1778,7 +1778,7 @@ public final class NumbersUtils {
      * @param angRad An angle, in radians.
      * @return angRad - PI/2, accurately computed.
      */
-    public static strictfp double minusPIO2_strict(double angRad) {
+    public static double minusPIO2_strict(double angRad) {
         if (angRad < Math.PI/4) {
             // LO then HI, for better accuracy (if starting near 0).
             return (angRad - PIO2_LO) - PIO2_HI;
