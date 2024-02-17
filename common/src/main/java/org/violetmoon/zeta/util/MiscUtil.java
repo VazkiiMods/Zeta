@@ -11,10 +11,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-
-import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.resources.language.I18n;
+import math.fast.SpeedyMath;
 import net.minecraft.commands.arguments.blocks.BlockStateParser;
 import net.minecraft.commands.arguments.blocks.BlockStateParser.BlockResult;
 import net.minecraft.core.BlockPos;
@@ -120,6 +117,31 @@ public class MiscUtil {
 
 		double pitch = Math.asin(direction.y);
 		double yaw = Math.asin(direction.x / Math.cos(pitch));
+
+		return new Vec2((float) (pitch * 180 / Math.PI), (float) (-yaw * 180 / Math.PI));
+	}
+
+	/**
+	 * possible accuracy errors while using this over {@link MiscUtil#getMinecraftAngles}
+	 * <p>
+	 * We use SpeedyMath, it's quite a bit faster than java's Math and from the looks has little to no accuracy issues
+	 * you should still be careful while using it as accuracy might not be the same as {@link MiscUtil#getMinecraftAngles}
+	 * <p>
+	 * Below are the JMH results of SpeedyMath and Java's Math
+	 * <p>
+	 * Benchmark               Mode  Cnt    Score   Error  Units
+	 * <p>
+	 * MyBenchmark.math        avgt   15  110.567 ± 0.970  ns/op
+	 * <p>
+	 * MyBenchmark.speedyMath  avgt   15   31.496 ± 0.238  ns/op
+	 */
+	public static Vec2 getMinecraftAnglesLossy(Vec3 direction) {
+		// <sin(-y) * cos(p), -sin(-p), cos(-y) * cos(p)>
+
+		direction = direction.normalize();
+
+		double pitch = SpeedyMath.asin(direction.y);
+		double yaw = SpeedyMath.asin(direction.x / SpeedyMath.cos(pitch));
 
 		return new Vec2((float) (pitch * 180 / Math.PI), (float) (-yaw * 180 / Math.PI));
 	}
