@@ -123,8 +123,9 @@ public class MiscUtil {
 	}
 
 	/**
-	 * 1e-15ish accuracy errors With using this over {@link MiscUtil#getMinecraftAngles}
-	 * Around 2.19 Faster but again, not as accurate
+	 * 1e-15ish accuracy errors while using this over {@link MiscUtil#getMinecraftAngles}
+	 * <p>
+	 * Around 2.19 times faster but again, not as accurate
 	 */
 	public static Vec2 getMinecraftAnglesLossy(Vec3 direction) {
 		// <sin(-y) * cos(p), -sin(-p), cos(-y) * cos(p)>
