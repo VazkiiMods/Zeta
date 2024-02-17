@@ -2,7 +2,7 @@ package org.violetmoon.zeta.util;
 
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import net.jafama.FastMath;
+import math.fast.SpeedyMath;
 import net.minecraft.commands.arguments.blocks.BlockStateParser;
 import net.minecraft.commands.arguments.blocks.BlockStateParser.BlockResult;
 import net.minecraft.core.BlockPos;
@@ -123,19 +123,28 @@ public class MiscUtil {
 	}
 
 	/**
-	 * 1e-15ish accuracy errors while using this over {@link MiscUtil#getMinecraftAngles}
+	 * possible accuracy errors while using this over {@link MiscUtil#getMinecraftAngles}
 	 * <p>
-	 * Around 2.19 times faster but again, not as accurate
+	 * We use SpeedyMath, it's quite a bit faster than java's Math and from the looks has little to no accuracy issues
+	 * you should still be careful while using it as accuracy might not be the same as {@link MiscUtil#getMinecraftAngles}
+	 * <p>
+	 * Below are the JMH results of SpeedyMath and Java's Math
+	 * <p>
+	 * Benchmark               Mode  Cnt    Score   Error  Units
+	 * <p>
+	 * MyBenchmark.math        avgt   15  110.567 ± 0.970  ns/op
+	 * <p>
+	 * MyBenchmark.speedyMath  avgt   15   31.496 ± 0.238  ns/op
 	 */
 	public static Vec2 getMinecraftAnglesLossy(Vec3 direction) {
 		// <sin(-y) * cos(p), -sin(-p), cos(-y) * cos(p)>
 
 		direction = direction.normalize();
 
-		double pitch = FastMath.asin(direction.y);
-		double yaw = FastMath.asin(direction.x / FastMath.cos(pitch));
+		double pitch = SpeedyMath.asin(direction.y);
+		double yaw = SpeedyMath.asin(direction.x / SpeedyMath.cos(pitch));
 
-		return new Vec2((float) (pitch * 180 / FastMath.PI), (float) (-yaw * 180 / FastMath.PI));
+		return new Vec2((float) (pitch * 180 / Math.PI), (float) (-yaw * 180 / Math.PI));
 	}
 
 	public static boolean validSpawnLight(ServerLevelAccessor world, BlockPos pos, RandomSource rand) {
