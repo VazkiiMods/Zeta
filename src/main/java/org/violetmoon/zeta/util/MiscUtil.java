@@ -1,19 +1,8 @@
 package org.violetmoon.zeta.util;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-
-import org.jetbrains.annotations.NotNull;
-import org.violetmoon.zeta.Zeta;
-
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-
-import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.resources.language.I18n;
+import net.jafama.FastMath;
 import net.minecraft.commands.arguments.blocks.BlockStateParser;
 import net.minecraft.commands.arguments.blocks.BlockStateParser.BlockResult;
 import net.minecraft.core.BlockPos;
@@ -21,7 +10,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Container;
@@ -56,6 +44,10 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 public class MiscUtil {
 
@@ -128,6 +120,21 @@ public class MiscUtil {
 		double yaw = Math.asin(direction.x / Math.cos(pitch));
 
 		return new Vec2((float) (pitch * 180 / Math.PI), (float) (-yaw * 180 / Math.PI));
+	}
+
+	/**
+	 * 1e-15ish accuracy errors With using this over {@link MiscUtil#getMinecraftAngles}
+	 * Around 2.19 Faster but again, not as accurate
+	 */
+	public static Vec2 getMinecraftAnglesLossy(Vec3 direction) {
+		// <sin(-y) * cos(p), -sin(-p), cos(-y) * cos(p)>
+
+		direction = direction.normalize();
+
+		double pitch = FastMath.asin(direction.y);
+		double yaw = FastMath.asin(direction.x / FastMath.cos(pitch));
+
+		return new Vec2((float) (pitch * 180 / FastMath.PI), (float) (-yaw * 180 / FastMath.PI));
 	}
 
 	public static boolean validSpawnLight(ServerLevelAccessor world, BlockPos pos, RandomSource rand) {
