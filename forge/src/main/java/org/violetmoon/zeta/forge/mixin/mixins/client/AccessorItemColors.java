@@ -12,6 +12,6 @@ import net.minecraft.world.item.Item;
 
 @Mixin(ItemColors.class)
 public interface AccessorItemColors {
-	@Accessor("f_92674_")
+	@Accessor("itemColors")
 	Map<Reference<Item>, ItemColor> zeta$getItemColors();
 }
