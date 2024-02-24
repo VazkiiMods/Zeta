@@ -57,7 +57,7 @@ public interface IZetaItemExtensions {
 	}
 
 	default int getMaxDamageZeta(ItemStack stack) {
-		return stack.getItem().getMaxDamage();
+		return stack.getItem().getMaxDamage(); //todo: Chat is this possible to remove?
 	}
 
 	default boolean canShearZeta(ItemStack stack) { //canPerformAction

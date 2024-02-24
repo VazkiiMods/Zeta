@@ -1,7 +1,9 @@
-package org.violetmoon.zeta.api;
+package org.violetmoon.zeta.api.fabric;
 
 import net.minecraftforge.eventbus.api.Event;
 import org.violetmoon.zeta.Zeta;
+import org.violetmoon.zeta.api.IAdvancementModifier;
+import org.violetmoon.zeta.api.IAdvancementModifierDelegate;
 import org.violetmoon.zeta.event.load.ZGatherAdvancementModifiers;
 
 public class GatherAdvancementModifiersEvent extends Event implements ZGatherAdvancementModifiers {
