@@ -1,1 +1,2 @@
-- Fix config event invoking making changing configs no longer need a restart
+- Add state waxing utils
+- Add/Shade speedymath for quicker math at the same ish accuracy
