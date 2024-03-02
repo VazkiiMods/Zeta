@@ -10,7 +10,7 @@ import org.violetmoon.zeta.Zeta;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.bus.PlayEvent;
 import org.violetmoon.zeta.event.load.ZLoadComplete;
-import org.violetmoon.zeta.event.play.ZFurnaceFuelBurnTime;
+import org.violetmoon.zeta.event.play.furnace.ZFurnaceFuelBurnTime;
 import org.violetmoon.zeta.util.BlockUtils;
 
 import net.minecraft.core.registries.BuiltInRegistries;

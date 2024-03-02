@@ -1,9 +1,7 @@
 /*
  * Copyright (c) The Fabricators of Create
  * Licensed under GNU Lesser General Public License
- */
-
-package org.violetmoon.zeta.util;
+ */package org.violetmoon.zeta.util;
 
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
