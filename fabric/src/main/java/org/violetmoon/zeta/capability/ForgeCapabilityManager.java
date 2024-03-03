@@ -15,6 +15,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.IdentityHashMap;
 import java.util.Map;
 
+//Todo: We def dont need this, but we need to find a replacement
 public class ForgeCapabilityManager implements ZetaCapabilityManager {
 	protected Map<ZetaCapability<?>, Capability<?>> toForge = new IdentityHashMap<>();
 

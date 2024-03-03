@@ -1,6 +1,5 @@
 package org.violetmoon.zeta.block;
 
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
@@ -19,9 +18,9 @@ import org.jetbrains.annotations.Nullable;
 import org.violetmoon.zeta.block.ext.IZetaBlockExtensions;
 
 //dumb class name; (IForgeBlock)(BlockExtensions); implementation of IZetaBlockExtensions using methods from IForgeBlock
-public class IForgeBlockBlockExtensions implements IZetaBlockExtensions {
+public class IFabricBlockBlockExtensions implements IZetaBlockExtensions {
 
-	public static final IForgeBlockBlockExtensions INSTANCE = new IForgeBlockBlockExtensions();
+	public static final IFabricBlockBlockExtensions INSTANCE = new IFabricBlockBlockExtensions();
 
 	@Override
 	public int getLightEmissionZeta(BlockState state, BlockGetter level, BlockPos pos) {

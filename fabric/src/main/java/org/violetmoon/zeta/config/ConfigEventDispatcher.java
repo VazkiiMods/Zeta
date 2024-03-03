@@ -1,8 +1,5 @@
 package org.violetmoon.zeta.config;
 
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.event.config.ModConfigEvent;
 import org.violetmoon.zeta.Zeta;
 import org.violetmoon.zeta.event.load.ZConfigChanged;
 import org.violetmoon.zeta.util.zetalist.ZetaList;

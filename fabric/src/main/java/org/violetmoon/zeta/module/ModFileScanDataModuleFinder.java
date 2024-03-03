@@ -6,6 +6,7 @@ import org.objectweb.asm.Type;
 
 import java.util.stream.Stream;
 
+//Todo: What the fuck
 public class ModFileScanDataModuleFinder implements ModuleFinder {
 	private static final Type ZLM_TYPE = Type.getType(ZetaLoadModule.class);
 	private final ModFileScanData mfsd;
