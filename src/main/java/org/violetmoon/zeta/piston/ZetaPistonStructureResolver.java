@@ -94,14 +94,8 @@ public class ZetaPistonStructureResolver extends PistonStructureResolver {
 
 		this.world = ((AccessorPistonStructureResolver) parent).zeta$level();
 		this.pistonPos = ((AccessorPistonStructureResolver) parent).zeta$pistonPos();
-		Direction pistonFacing = ((AccessorPistonStructureResolver) parent).zeta$pistonDirection();
-		if(((AccessorPistonStructureResolver) parent).zeta$extending()) {
-			this.moveDirection = pistonFacing;
-			this.blockToMove = this.pistonPos.relative(pistonFacing);
-		} else {
-			this.moveDirection = pistonFacing.getOpposite();
-			this.blockToMove = this.pistonPos.relative(pistonFacing, 2);
-		}
+		this.moveDirection = parent.getPushDirection();
+		this.blockToMove = ((AccessorPistonStructureResolver) parent).zeta$startPos();
 	}
 
 	@Override
