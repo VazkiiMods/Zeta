@@ -1,2 +1,6 @@
-- Add state waxing utils
-- Add/Shade speedymath for quicker math at the same ish accuracy
+- Added some options to debug creative tab logic to try and track the sporadic loop bug
+- Fixed crash loop when putting stairs in front of beacon beams
+- Fixed mouse event being erroneously marked as cancellable (crashing when tried to cancel)
+- Fixed some burn times not being calculated properly
+- Fixed vine blocks having wrong sfx
+- Improved creative tab logic performance
