@@ -30,7 +30,7 @@ public interface ZScreen extends IZetaPlayEvent {
         interface Post extends Render { }
     }
 
-    interface MouseButtonPressed extends ZScreen, Cancellable {
+    interface MouseButtonPressed extends ZScreen {
         int getButton();
         double getMouseX();
         double getMouseY();

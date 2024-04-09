@@ -116,16 +116,6 @@ public class ForgeZScreen implements ZScreen {
             return e.getMouseY();
         }
 
-        @Override
-        public boolean isCanceled() {
-            return e.isCanceled();
-        }
-
-        @Override
-        public void setCanceled(boolean cancel) {
-            e.setCanceled(cancel);
-        }
-
         public static class Pre extends ForgeZScreen.MouseButtonPressed implements ZScreen.MouseButtonPressed.Pre {
             public Pre(ScreenEvent.MouseButtonPressed.Pre e) {
                 super(e);
