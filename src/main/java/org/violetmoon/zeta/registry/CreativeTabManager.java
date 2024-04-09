@@ -28,6 +28,7 @@ import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 public class CreativeTabManager {
 
 	private static final Object MUTEX = new Object();
+	private static final Map<ItemLike, Item> itemLikeCache = new HashMap<>();
 
 	private static final Map<ResourceKey<CreativeModeTab>, CreativeTabAdditions> additions = new HashMap<>();
 	private static final Multimap<ItemLike, ResourceKey<CreativeModeTab>> mappedItems = HashMultimap.create();
@@ -210,7 +211,12 @@ public class CreativeTabManager {
 		for(Entry<ItemStack, TabVisibility> entry : entries) {
 			ItemStack stack = entry.getKey();
 			Item item = stack.getItem();
-			if(item == target.asItem()) {
+			
+			if(!itemLikeCache.containsKey(target))
+				itemLikeCache.put(target, target.asItem());
+			Item targetItem = itemLikeCache.get(target);
+			
+			if(item == targetItem) {
 				for(int i = 0; i < firstSet.items.size(); i++) {
 					int j = i;
 					if(!behind)
