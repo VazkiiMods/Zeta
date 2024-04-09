@@ -222,8 +222,10 @@ public class CreativeTabManager {
 		ItemLike firstSetItem = firstSet.items.get(0);
 		ItemLike target = map.get(firstSet);
 		
-		if(log)
+		if(log) {
 			Zeta.GLOBAL_LOG.warn("Creative tab loop found when adding {} next to {}", firstSetItem, target);
+			Zeta.GLOBAL_LOG.warn("For more info enable Creative Verbose Logging in the Zeta config, or set Force Creative Tab Appends to true to disable this behavior");
+		}
 		
 		map.remove(firstSet);
 		
