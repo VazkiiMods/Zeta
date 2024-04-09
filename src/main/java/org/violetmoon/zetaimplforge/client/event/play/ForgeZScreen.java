@@ -94,7 +94,7 @@ public class ForgeZScreen implements ZScreen {
     }
 
     public static class MouseButtonPressed extends ForgeZScreen implements ZScreen.MouseButtonPressed {
-        private final ScreenEvent.MouseButtonPressed e;
+        final ScreenEvent.MouseButtonPressed e;
 
         public MouseButtonPressed(ScreenEvent.MouseButtonPressed e) {
             super(e);
@@ -119,6 +119,16 @@ public class ForgeZScreen implements ZScreen {
         public static class Pre extends ForgeZScreen.MouseButtonPressed implements ZScreen.MouseButtonPressed.Pre {
             public Pre(ScreenEvent.MouseButtonPressed.Pre e) {
                 super(e);
+            }
+            
+            @Override
+            public boolean isCanceled() {
+                return e.isCanceled();
+            }
+
+            @Override
+            public void setCanceled(boolean cancel) {
+                e.setCanceled(cancel);
             }
         }
 

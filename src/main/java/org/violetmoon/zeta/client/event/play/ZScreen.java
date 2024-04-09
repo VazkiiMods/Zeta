@@ -35,7 +35,7 @@ public interface ZScreen extends IZetaPlayEvent {
         double getMouseX();
         double getMouseY();
 
-        interface Pre extends MouseButtonPressed { }
+        interface Pre extends MouseButtonPressed, Cancellable { }
         interface Post extends MouseButtonPressed { }
     }
 
