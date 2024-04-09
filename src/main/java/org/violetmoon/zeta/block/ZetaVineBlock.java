@@ -24,7 +24,7 @@ public class ZetaVineBlock extends VineBlock implements IZetaBlock {
 	private BooleanSupplier enabledSupplier = BooleanSuppliers.TRUE;
 
 	public ZetaVineBlock(@Nullable ZetaModule module, String name, boolean creative) {
-		super(OldMaterials.replaceablePlant().noCollission().randomTicks().strength(0.2F).sound(SoundType.GRASS));
+		super(OldMaterials.replaceablePlant().noCollission().randomTicks().strength(0.2F).sound(SoundType.VINE));
 		this.module = module;
 
 		if(module == null) //auto registration below this line
