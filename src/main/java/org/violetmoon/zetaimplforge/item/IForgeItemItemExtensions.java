@@ -20,6 +20,7 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.LevelReader;
+import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.ToolActions;
 
 public class IForgeItemItemExtensions implements IZetaItemExtensions {
@@ -97,7 +98,7 @@ public class IForgeItemItemExtensions implements IZetaItemExtensions {
 
 	@Override
 	public int getBurnTimeZeta(ItemStack stack, @Nullable RecipeType<?> recipeType) {
-		return stack.getBurnTime(recipeType);
+		return ForgeHooks.getBurnTime(stack, recipeType);
 	}
 
 	@Override
