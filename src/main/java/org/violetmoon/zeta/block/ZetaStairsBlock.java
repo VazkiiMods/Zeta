@@ -72,7 +72,7 @@ public class ZetaStairsBlock extends StairBlock implements IZetaBlock, IZetaBloc
 	@Override
 	public float[] getBeaconColorMultiplierZeta(BlockState state, LevelReader world, BlockPos pos, BlockPos beaconPos) {
 		BlockState parentState = parent.getBlock().defaultBlockState();
-		return parent.getModule().zeta.blockExtensions.get(parentState).getBeaconColorMultiplierZeta(state, world, pos, beaconPos);
+		return parent.getModule().zeta.blockExtensions.get(parentState).getBeaconColorMultiplierZeta(parentState, world, pos, beaconPos);
 	}
 
 	@Override
