@@ -232,6 +232,7 @@ public class CreativeTabManager {
 		ItemSet firstSet = coll.iterator().next();
 		ItemLike firstSetItem = firstSet.items.get(0);
 		ItemLike target = map.get(firstSet);
+		logVerbose(() -> "target is " + target);
 		
 		if(log) {
 			Zeta.GLOBAL_LOG.error("Creative tab loop found when adding {} next to {}", firstSetItem, target);
@@ -256,7 +257,7 @@ public class CreativeTabManager {
 			logVerbose(() -> "Comparing item " + item + " to our target " + targetItem);
 			
 			if(item == targetItem) {
-				logVerbose(() -> "Matched");
+				logVerbose(() -> "Matched! Adding successfully");
 				for(int i = 0; i < firstSet.items.size(); i++) {
 					int j = i;
 					if(!behind)
