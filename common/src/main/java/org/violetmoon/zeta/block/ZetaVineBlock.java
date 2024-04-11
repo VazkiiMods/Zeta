@@ -1,13 +1,5 @@
 package org.violetmoon.zeta.block;
 
-import java.util.function.BooleanSupplier;
-
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.violetmoon.zeta.module.ZetaModule;
-import org.violetmoon.zeta.registry.RenderLayerRegistry;
-import org.violetmoon.zeta.util.BooleanSuppliers;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -17,6 +9,13 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.VineBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.violetmoon.zeta.module.ZetaModule;
+import org.violetmoon.zeta.registry.RenderLayerRegistry;
+import org.violetmoon.zeta.util.BooleanSuppliers;
+
+import java.util.function.BooleanSupplier;
 
 public class ZetaVineBlock extends VineBlock implements IZetaBlock {
 
@@ -24,7 +23,7 @@ public class ZetaVineBlock extends VineBlock implements IZetaBlock {
 	private BooleanSupplier enabledSupplier = BooleanSuppliers.TRUE;
 
 	public ZetaVineBlock(@Nullable ZetaModule module, String name, boolean creative) {
-		super(OldMaterials.replaceablePlant().noCollission().randomTicks().strength(0.2F).sound(SoundType.GRASS));
+		super(OldMaterials.replaceablePlant().noCollission().randomTicks().strength(0.2F).sound(SoundType.VINE));
 		this.module = module;
 
 		if(module == null) //auto registration below this line

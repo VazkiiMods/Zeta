@@ -21,4 +21,7 @@ public interface AccessorPistonStructureResolver {
 
 	@Accessor("pistonDirection")
 	Direction zeta$pistonDirection();
+
+	@Accessor("startPos")
+	BlockPos zeta$startPos();
 }

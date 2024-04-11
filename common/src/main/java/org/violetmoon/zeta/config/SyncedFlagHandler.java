@@ -1,33 +1,29 @@
 package org.violetmoon.zeta.config;
 
-import java.util.ArrayList;
-import java.util.BitSet;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.WeakHashMap;
-import java.util.stream.Collectors;
-
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.PacketListener;
+import net.minecraft.server.level.ServerPlayer;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.load.ZConfigChanged;
 import org.violetmoon.zeta.mod.ZetaMod;
 import org.violetmoon.zeta.network.message.S2CUpdateFlag;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.network.PacketListener;
-import net.minecraft.server.level.ServerPlayer;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class SyncedFlagHandler {
 	private static ConfigFlagManager flagManager;
 	private static List<String> sortedFlags;
 
 	public static void setupFlagManager(ConfigFlagManager manager) {
-		flagManager = manager;
+		if (manager != null) {
+			flagManager = manager;
 
-		//specifying the type of collection explicitly, since a hashCode is done over it and I don't want surprises
-		sortedFlags = manager.getAllFlags().stream().sorted().collect(Collectors.toCollection(ArrayList::new));
+			//specifying the type of collection explicitly, since a hashCode is done over it and I don't want surprises
+			sortedFlags = manager.getAllFlags().stream().sorted().collect(Collectors.toCollection(ArrayList::new));
+		}
 	}
 
 	public static BitSet compileFlagInfo() {

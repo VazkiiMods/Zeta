@@ -1,11 +1,11 @@
 package org.violetmoon.zeta.client.event.play;
 
-import java.util.List;
-
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraftforge.client.event.ScreenEvent;
+
+import java.util.List;
 
 public class ForgeZScreen implements ZScreen {
     private final ScreenEvent e;
@@ -92,7 +92,7 @@ public class ForgeZScreen implements ZScreen {
     }
 
     public static class MouseButtonPressed extends ForgeZScreen implements ZScreen.MouseButtonPressed {
-        private final ScreenEvent.MouseButtonPressed e;
+        final ScreenEvent.MouseButtonPressed e;
 
         public MouseButtonPressed(ScreenEvent.MouseButtonPressed e) {
             super(e);
@@ -114,19 +114,19 @@ public class ForgeZScreen implements ZScreen {
             return e.getMouseY();
         }
 
-        @Override
-        public boolean isCanceled() {
-            return e.isCanceled();
-        }
-
-        @Override
-        public void setCanceled(boolean cancel) {
-            e.setCanceled(cancel);
-        }
-
         public static class Pre extends ForgeZScreen.MouseButtonPressed implements ZScreen.MouseButtonPressed.Pre {
             public Pre(ScreenEvent.MouseButtonPressed.Pre e) {
                 super(e);
+            }
+
+            @Override
+            public boolean isCanceled() {
+                return e.isCanceled();
+            }
+
+            @Override
+            public void setCanceled(boolean cancel) {
+                e.setCanceled(cancel);
             }
         }
 

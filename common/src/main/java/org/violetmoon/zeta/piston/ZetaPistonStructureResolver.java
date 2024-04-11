@@ -1,11 +1,17 @@
 package org.violetmoon.zeta.piston;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.function.Predicate;
-
+import com.google.common.collect.Lists;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.piston.PistonBaseBlock;
+import net.minecraft.world.level.block.piston.PistonStructureResolver;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.PushReaction;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.violetmoon.zeta.Zeta;
@@ -16,18 +22,10 @@ import org.violetmoon.zeta.api.IIndirectConnector;
 import org.violetmoon.zeta.block.ext.IZetaBlockExtensions;
 import org.violetmoon.zeta.mixin.mixins.AccessorPistonStructureResolver;
 
-import com.google.common.collect.Lists;
-
-import it.unimi.dsi.fastutil.objects.Object2IntMap;
-import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.piston.PistonBaseBlock;
-import net.minecraft.world.level.block.piston.PistonStructureResolver;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.PushReaction;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.function.Predicate;
 
 public class ZetaPistonStructureResolver extends PistonStructureResolver {
 
@@ -95,14 +93,8 @@ public class ZetaPistonStructureResolver extends PistonStructureResolver {
 
 		this.world = ((AccessorPistonStructureResolver) parent).zeta$level();
 		this.pistonPos = ((AccessorPistonStructureResolver) parent).zeta$pistonPos();
-		Direction pistonFacing = ((AccessorPistonStructureResolver) parent).zeta$pistonDirection();
-		if(((AccessorPistonStructureResolver) parent).zeta$extending()) {
-			this.moveDirection = pistonFacing;
-			this.blockToMove = this.pistonPos.relative(pistonFacing);
-		} else {
-			this.moveDirection = pistonFacing.getOpposite();
-			this.blockToMove = this.pistonPos.relative(pistonFacing, 2);
-		}
+		this.moveDirection = parent.getPushDirection();
+		this.blockToMove = ((AccessorPistonStructureResolver) parent).zeta$startPos();
 	}
 
 	@Override

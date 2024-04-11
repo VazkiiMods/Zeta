@@ -1,33 +1,28 @@
 package org.violetmoon.zeta.registry;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import org.violetmoon.zeta.Zeta;
-import org.violetmoon.zeta.event.bus.PlayEvent;
-import org.violetmoon.zeta.event.play.ZBuildCreativeModeTabContents;
-import org.violetmoon.zeta.module.IDisableable;
-
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTab.TabVisibility;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
+import org.violetmoon.zeta.Zeta;
+import org.violetmoon.zeta.config.ZetaGeneralConfig;
+import org.violetmoon.zeta.event.bus.PlayEvent;
+import org.violetmoon.zeta.event.play.ZBuildCreativeModeTabContents;
 import org.violetmoon.zeta.forgeapi.common.util.MutableHashedLinkedMap;
+import org.violetmoon.zeta.module.IDisableable;
+
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.function.Supplier;
 
 public class CreativeTabManager {
 
 	private static final Object MUTEX = new Object();
+	private static final Map<ItemLike, Item> itemLikeCache = new HashMap<>();
 
 	private static final Map<ResourceKey<CreativeModeTab>, CreativeTabAdditions> additions = new HashMap<>();
 	private static final Multimap<ItemLike, ResourceKey<CreativeModeTab>> mappedItems = HashMultimap.create();
@@ -109,6 +104,7 @@ public class CreativeTabManager {
 	public static void buildContents(ZBuildCreativeModeTabContents event) {
 		synchronized(MUTEX) {
 			ResourceKey<CreativeModeTab> tabKey = event.getTabKey();
+			MutableHashedLinkedMap<ItemStack, CreativeModeTab.TabVisibility> entries = event.getEntries();
 
 			if(additions.containsKey(tabKey)) {
 				CreativeTabAdditions add = additions.get(tabKey);
@@ -116,29 +112,57 @@ public class CreativeTabManager {
 				for(ItemLike item : add.appendToEnd)
 					acceptItem(event, item);
 
-				MutableHashedLinkedMap<ItemStack, TabVisibility> entries = event.getEntries();
+				if(ZetaGeneralConfig.forceCreativeTabAppends) {
+					for(ItemSet itemset : add.appendInFront.keySet())
+						for(ItemLike item : itemset.items)
+							acceptItem(event, item);
+					for(ItemSet itemset : add.appendBehind.keySet())
+						for(ItemLike item : itemset.items)
+							acceptItem(event, item);
+
+					return;
+				}
 				
 				Map<ItemSet, ItemLike> front = new LinkedHashMap<>(add.appendInFront);
 				Map<ItemSet, ItemLike> behind = new LinkedHashMap<>(add.appendBehind);
-				
-				final int failsafe = 99999;
-				final int printThreshold = failsafe - 100;
+
+				final int failsafe = 100;
+				final int printThreshold = failsafe - 10;
 				
 				int misses = 0;
 				boolean failsafing = false;
 				
             	while(true) {
-            		boolean missed = false; 
+            		boolean missed = false;
+					logVerbose(() -> "front empty=" + front.isEmpty() + " / behind empty=" + behind.isEmpty());
+
+					if(entries.isEmpty()) {
+						Zeta.GLOBAL_LOG.error("entries map for tab " + tabKey + " is empty, this should never happen");
+						return;
+					}
+
             		if(!front.isEmpty())
             			missed = appendNextTo(tabKey, entries, front, false, failsafing);
             		if(!behind.isEmpty())
             			missed |= appendNextTo(tabKey, entries, behind, true, failsafing);
 
-            		if(missed)
-            			misses++;
+					if(missed) {
+						int fMisses = misses;
+						logVerbose(() -> "Missed " + fMisses + "times out of " + failsafe);
+
+						misses++;
+					}
             		
             		// arbitrary failsafe, should never happen
             		if(misses > failsafe) {
+						logVerbose(() -> {
+							StringBuilder sb = new StringBuilder();
+							for(Entry<ItemStack, TabVisibility> entry : entries) {
+								sb.append(entry.getKey());
+								sb.append("; ");
+							}
+							return sb.toString();
+						});
             			new RuntimeException("Creative tab placement misses exceeded failsafe, aborting logic").printStackTrace();
             			return;
             		}
@@ -170,6 +194,10 @@ public class CreativeTabManager {
 	}
 
 	private static void addToEntries(ItemStack target, MutableHashedLinkedMap<ItemStack, CreativeModeTab.TabVisibility> entries, ItemLike item, boolean behind) {
+		logVerbose(() -> "adding target=" + target + " next to " + item + " with behind=" + behind);
+		if(!isItemEnabled(item))
+			return;
+
 		List<ItemStack> stacksToAdd = List.of(new ItemStack(item));
 		if(item instanceof AppendsUniquely au)
 			stacksToAdd = au.appendItemsToCreativeTab();
@@ -189,6 +217,7 @@ public class CreativeTabManager {
 	 * Returns true if the item needs to be tried again later 
 	 */
 	private static boolean appendNextTo(ResourceKey<CreativeModeTab> tabKey, MutableHashedLinkedMap<ItemStack, CreativeModeTab.TabVisibility> entries, Map<ItemSet, ItemLike> map, boolean behind, boolean log) {
+		logVerbose(() -> "appendNextTo " + tabKey + " / behind=" + behind);
 		Collection<ItemSet> coll = map.keySet();
 		if(coll.isEmpty())
 			throw new RuntimeException("Tab collection is empty, this should never happen.");
@@ -196,19 +225,31 @@ public class CreativeTabManager {
 		ItemSet firstSet = coll.iterator().next();
 		ItemLike firstSetItem = firstSet.items.get(0);
 		ItemLike target = map.get(firstSet);
-		
-		if(log)
-			Zeta.GLOBAL_LOG.warn("Creative tab loop found when adding {} next to {}", firstSetItem, target);
-		
+		logVerbose(() -> "target is " + target);
+
+		if(log) {
+			Zeta.GLOBAL_LOG.error("Creative tab loop found when adding {} next to {}", firstSetItem, target);
+			Zeta.GLOBAL_LOG.error("For more info enable Creative Verbose Logging in the Zeta config, or set Force Creative Tab Appends to true to disable this behavior");
+		}
+
 		map.remove(firstSet);
-		
-		if(!isItemEnabled(firstSetItem) || target == null)
+
+		if(!isItemEnabled(firstSetItem) || target == null) {
+			logVerbose(() -> "hit early false return");
 			return false;
-		
+		}
+
+		if(!itemLikeCache.containsKey(target))
+			itemLikeCache.put(target, target.asItem());
+		Item targetItem = itemLikeCache.get(target);
+
 		for(Entry<ItemStack, TabVisibility> entry : entries) {
 			ItemStack stack = entry.getKey();
 			Item item = stack.getItem();
-			if(item == target.asItem()) {
+			logVerbose(() -> "Comparing item " + item + " to our target " + targetItem);
+
+			if(item == targetItem) {
+				logVerbose(() -> "Matched! Adding successfully");
 				for(int i = 0; i < firstSet.items.size(); i++) {
 					int j = i;
 					if(!behind)
@@ -226,6 +267,11 @@ public class CreativeTabManager {
 		return true;
 	}
 
+	private static void logVerbose(Supplier<String> s) {
+		if(ZetaGeneralConfig.enableCreativeVerboseLogging)
+			Zeta.GLOBAL_LOG.warn(s.get());
+	}
+
 	private static class CreativeTabAdditions {
 
 		private List<ItemLike> appendToEnd = new ArrayList<>();
@@ -241,11 +287,7 @@ public class CreativeTabManager {
 		public ItemSet(ItemLike item) {
 			items.add(item);
 		}
-		
-		public boolean isFresh() {
-			return items.size() == 1;
-		}
-		
+
 	}
 
 	public interface AppendsUniquely extends ItemLike {

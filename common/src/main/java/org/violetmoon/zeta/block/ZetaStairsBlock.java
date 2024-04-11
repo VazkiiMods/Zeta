@@ -1,14 +1,5 @@
 package org.violetmoon.zeta.block;
 
-import java.util.function.BooleanSupplier;
-
-import org.jetbrains.annotations.Nullable;
-import org.violetmoon.zeta.module.ZetaModule;
-import org.violetmoon.zeta.registry.IZetaBlockColorProvider;
-import org.violetmoon.zeta.registry.IZetaItemColorProvider;
-import org.violetmoon.zeta.registry.VariantRegistry;
-import org.violetmoon.zeta.util.BooleanSuppliers;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceKey;
@@ -18,6 +9,14 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
+import org.violetmoon.zeta.module.ZetaModule;
+import org.violetmoon.zeta.registry.IZetaBlockColorProvider;
+import org.violetmoon.zeta.registry.IZetaItemColorProvider;
+import org.violetmoon.zeta.registry.VariantRegistry;
+import org.violetmoon.zeta.util.BooleanSuppliers;
+
+import java.util.function.BooleanSupplier;
 
 public class ZetaStairsBlock extends StairBlock implements IZetaBlock, IZetaBlockColorProvider {
 
@@ -71,7 +70,8 @@ public class ZetaStairsBlock extends StairBlock implements IZetaBlock, IZetaBloc
 	@Nullable
 	@Override
 	public float[] getBeaconColorMultiplierZeta(BlockState state, LevelReader world, BlockPos pos, BlockPos beaconPos) {
-		return parent.getModule().zeta.blockExtensions.get(state).getBeaconColorMultiplierZeta(state, world, pos, beaconPos);
+		BlockState parentState = parent.getBlock().defaultBlockState();
+		return parent.getModule().zeta.blockExtensions.get(parentState).getBeaconColorMultiplierZeta(parentState, world, pos, beaconPos);
 	}
 
 	@Override

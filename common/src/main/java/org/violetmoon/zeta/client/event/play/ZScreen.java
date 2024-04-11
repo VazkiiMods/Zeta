@@ -1,13 +1,12 @@
 package org.violetmoon.zeta.client.event.play;
 
-import java.util.List;
-
-import org.violetmoon.zeta.event.bus.Cancellable;
-import org.violetmoon.zeta.event.bus.IZetaPlayEvent;
-
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
+import org.violetmoon.zeta.event.bus.Cancellable;
+import org.violetmoon.zeta.event.bus.IZetaPlayEvent;
+
+import java.util.List;
 
 public interface ZScreen extends IZetaPlayEvent {
     Screen getScreen();
@@ -30,12 +29,12 @@ public interface ZScreen extends IZetaPlayEvent {
         interface Post extends Render { }
     }
 
-    interface MouseButtonPressed extends ZScreen, Cancellable {
+    interface MouseButtonPressed extends ZScreen {
         int getButton();
         double getMouseX();
         double getMouseY();
 
-        interface Pre extends MouseButtonPressed { }
+        interface Pre extends MouseButtonPressed, Cancellable { }
         interface Post extends MouseButtonPressed { }
     }
 

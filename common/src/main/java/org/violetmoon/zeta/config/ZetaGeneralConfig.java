@@ -1,13 +1,12 @@
 package org.violetmoon.zeta.config;
 
-import java.util.List;
-
+import com.google.common.collect.Lists;
 import org.violetmoon.zeta.Zeta;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.load.ZConfigChanged;
 import org.violetmoon.zeta.piston.ZetaPistonStructureResolver;
 
-import com.google.common.collect.Lists;
+import java.util.List;
 
 public class ZetaGeneralConfig {
 
@@ -46,7 +45,13 @@ public class ZetaGeneralConfig {
 	
 	@Config(description = "Set to true to make the Zeta big worldgen features generate as spheres rather than unique shapes. It's faster, but won't look as cool")
 	public static boolean useFastWorldgen = false;
-	
+
+	@Config(description = "Set to true to enable verbose logging of creative tab logic, for debugging purposes")
+	public static boolean enableCreativeVerboseLogging = false;
+
+	@Config(description = "Set to true to force all creative tab additions to be added to the end of the creative tabs rather than the middle, as a failsafe")
+	public static boolean forceCreativeTabAppends = false;
+
 	private ZetaGeneralConfig() {
 		// NO-OP
 	}	

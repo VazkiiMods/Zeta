@@ -32,42 +32,26 @@ import net.minecraftforge.registries.RegisterEvent;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.zeta.api.GatherAdvancementModifiersEvent;
+import org.violetmoon.zeta.block.IForgeBlockBlockExtensions;
 import org.violetmoon.zeta.block.ext.BlockExtensionFactory;
+import org.violetmoon.zeta.capability.ForgeCapabilityManager;
 import org.violetmoon.zeta.capability.ZetaCapabilityManager;
-import org.violetmoon.zeta.config.IZetaConfigInternals;
-import org.violetmoon.zeta.config.SectionDefinition;
+import org.violetmoon.zeta.config.*;
 import org.violetmoon.zeta.event.bus.ZResult;
 import org.violetmoon.zeta.event.load.*;
 import org.violetmoon.zeta.event.play.*;
 import org.violetmoon.zeta.event.play.entity.*;
 import org.violetmoon.zeta.event.play.entity.living.*;
 import org.violetmoon.zeta.event.play.entity.player.*;
-import org.violetmoon.zeta.event.play.loading.ZAttachCapabilities;
-import org.violetmoon.zeta.event.play.loading.ZLootTableLoad;
-import org.violetmoon.zeta.event.play.loading.ZVillagerTrades;
-import org.violetmoon.zeta.event.play.loading.ZWandererTrades;
+import org.violetmoon.zeta.event.play.loading.*;
+import org.violetmoon.zeta.item.IForgeItemItemExtensions;
 import org.violetmoon.zeta.item.ext.ItemExtensionFactory;
+import org.violetmoon.zeta.network.ForgeZetaNetworkHandler;
 import org.violetmoon.zeta.network.ZetaNetworkHandler;
 import org.violetmoon.zeta.registry.*;
+import org.violetmoon.zeta.util.ForgeRaytracingUtil;
 import org.violetmoon.zeta.util.RaytracingUtil;
 import org.violetmoon.zeta.util.ZetaSide;
-import org.violetmoon.zeta.block.IForgeBlockBlockExtensions;
-import org.violetmoon.zeta.capability.ForgeCapabilityManager;
-import org.violetmoon.zeta.config.ForgeBackedConfig;
-import org.violetmoon.zeta.config.TerribleForgeConfigHackery;
-import org.violetmoon.zeta.event.load.ForgeZAddReloadListener;
-import org.violetmoon.zeta.event.load.ForgeZCommonSetup;
-import org.violetmoon.zeta.event.load.ForgeZEntityAttributeCreation;
-import org.violetmoon.zeta.event.load.ForgeZLoadComplete;
-import org.violetmoon.zeta.event.play.loading.ForgeZAttachCapabilities;
-import org.violetmoon.zeta.event.play.loading.ForgeZLootTableLoad;
-import org.violetmoon.zeta.event.play.loading.ForgeZVillagerTrades;
-import org.violetmoon.zeta.event.play.loading.ForgeZWandererTrades;
-import org.violetmoon.zeta.item.IForgeItemItemExtensions;
-import org.violetmoon.zeta.network.ForgeZetaNetworkHandler;
-import org.violetmoon.zeta.registry.ForgeCraftingExtensionsRegistry;
-import org.violetmoon.zeta.registry.ForgeZetaRegistry;
-import org.violetmoon.zeta.util.ForgeRaytracingUtil;
 
 /**
  * ideally do not touch quark from this package, it will later be split off
@@ -173,7 +157,8 @@ public class ForgeZeta extends Zeta {
 		MinecraftForge.EVENT_BUS.addListener(this::tagsUpdated);
 
 		// TODO FIX very ugly & bad
-		modbus.addListener(CreativeTabManager::buildContents);
+		modbus.addListener(EventPriority.LOWEST, CreativeTabManager::buildContents);
+		modbus.addListener(ConfigEventDispatcher::configChanged);
 
 		//play
 		MinecraftForge.EVENT_BUS.addListener(this::rightClickBlock);

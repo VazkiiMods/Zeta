@@ -1,17 +1,12 @@
 package org.violetmoon.zeta.config;
 
+import net.minecraftforge.fml.event.config.ModConfigEvent;
 import org.violetmoon.zeta.Zeta;
 import org.violetmoon.zeta.event.load.ZConfigChanged;
 import org.violetmoon.zeta.util.zetalist.ZetaList;
 
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.event.config.ModConfigEvent;
-
-@EventBusSubscriber(modid = Zeta.ZETA_ID)
 public class ConfigEventDispatcher {
 
-	@SubscribeEvent
 	public static void configChanged(ModConfigEvent event) {
 		for(Zeta z : ZetaList.INSTANCE.getZetas()) {
 			String modid = z.modid;
