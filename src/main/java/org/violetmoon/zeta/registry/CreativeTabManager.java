@@ -162,6 +162,14 @@ public class CreativeTabManager {
             		
             		// arbitrary failsafe, should never happen
             		if(misses > failsafe) {
+                  		logVerbose(() -> {
+                			StringBuilder sb = new StringBuilder();
+                			for(Entry<ItemStack, TabVisibility> entry : entries) {
+                				sb.append(entry.getKey());
+                				sb.append("; ");
+                			}
+                			return sb.toString();
+                		});
             			new RuntimeException("Creative tab placement misses exceeded failsafe, aborting logic").printStackTrace();
             			return;
             		}
