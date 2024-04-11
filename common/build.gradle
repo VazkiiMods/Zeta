@@ -36,6 +36,7 @@ publishing {
         maven(MavenPublication) {
             group = "$maven_group-$project.name"
             artifactId = "$archives_base_name-$project.name-$minecraft_version"
+            from components.java
         }
     }
 
