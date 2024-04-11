@@ -76,3 +76,23 @@ components.java {
         skip()
     }
 }
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            group = "$maven_group-$project.name"
+            artifactId = "$archives_base_name-$project.name-$minecraft_version"
+        }
+    }
+
+    repositories {
+        maven {
+            name = "IThundxrMaven$project.name"
+            url = "https://maven.ithundxr.dev/hidden"
+            credentials {
+                username = IThundxrMavenUsername
+                password = IThundxrMavenPassword
+            }
+        }
+    }
+}

@@ -10,6 +10,7 @@ architectury {
 
 subprojects {
     apply plugin: "dev.architectury.loom"
+    apply plugin: "maven-publish"
 
     loom {
         silentMojangMappingsLicense()
@@ -29,25 +30,6 @@ subprojects {
             it.parchment("org.parchmentmc.data:parchment-${minecraft_version}:${parchment_version}@zip")
             it.officialMojangMappings { nameSyntheticMembers = false }
         })
-    }
-
-    publishing {
-        publications {
-            maven(MavenPublication) {
-                artifactId = "$archives_base_name-$project.name-$minecraft_version"
-            }
-        }
-
-        repositories {
-            maven {
-                name = "IThundxrMaven$project.name"
-                url = "https://maven.ithundxr.dev/hidden"
-                credentials {
-                    username = IThundxrMavenUsername
-                    password = IThundxrMavenPassword
-                }
-            }
-        }
     }
 }
 
