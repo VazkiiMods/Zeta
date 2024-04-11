@@ -1,4 +1,5 @@
 plugins {
+    id "maven-publish"
     id "architectury-plugin" version "3.4.+"
     id "dev.architectury.loom" version "1.5.+" apply false
 }
@@ -29,6 +30,25 @@ subprojects {
             it.officialMojangMappings { nameSyntheticMembers = false }
         })
     }
+
+    publishing {
+        publications {
+            maven(MavenPublication) {
+                artifactId = "$archives_base_name-$project.name-$minecraft_version"
+            }
+        }
+
+        repositories {
+            maven {
+                name = "IThundxrMaven$project.name"
+                url = "https://maven.ithundxr.dev/hidden"
+                credentials {
+                    username = IThundxrMavenUsername
+                    password = IThundxrMavenPassword
+                }
+            }
+        }
+    }
 }
 
 allprojects {
@@ -40,15 +60,7 @@ allprojects {
     version = mod_version
     group = maven_group
 
-    repositories {
-        // Add repositories to retrieve artifacts from in here.
-        // You should only use this when depending on other mods because
-        // Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
-        // See https://docs.gradle.org/current/userguide/declaring_repositories.html
-        // for more information about repositories.
-    }
-
-    tasks.withType(JavaCompile) {
+    tasks.withType(JavaCompile).configureEach {
         options.encoding = "UTF-8"
         options.release.set(17)
     }
