@@ -111,7 +111,8 @@ public class CreativeTabManager {
 	public static void buildContents(BuildCreativeModeTabContentsEvent event) {
 		synchronized(MUTEX) {
 			ResourceKey<CreativeModeTab> tabKey = event.getTabKey();
-
+			MutableHashedLinkedMap<ItemStack, CreativeModeTab.TabVisibility> entries = event.getEntries();
+			
 			if(additions.containsKey(tabKey)) {
 				CreativeTabAdditions add = additions.get(tabKey);
 
@@ -129,14 +130,11 @@ public class CreativeTabManager {
 					return;
 				}
 				
-				
-				MutableHashedLinkedMap<ItemStack, CreativeModeTab.TabVisibility> entries = event.getEntries();
-				
 				Map<ItemSet, ItemLike> front = new LinkedHashMap<>(add.appendInFront);
 				Map<ItemSet, ItemLike> behind = new LinkedHashMap<>(add.appendBehind);
 				
-				final int failsafe = 99999;
-				final int printThreshold = failsafe - 100;
+				final int failsafe = 100;
+				final int printThreshold = failsafe - 10;
 				
 				int misses = 0;
 				boolean failsafing = false;
@@ -144,6 +142,11 @@ public class CreativeTabManager {
             	while(true) {
             		boolean missed = false; 
             		logVerbose(() -> "front empty=" + front.isEmpty() + " / behind empty=" + behind.isEmpty());
+            		
+            		if(entries.isEmpty()) {
+            			Zeta.GLOBAL_LOG.error("entries map for tab " + tabKey + " is empty, this should never happen");
+            			return;
+            		}
             		
             		if(!front.isEmpty())
             			missed = appendNextTo(tabKey, entries, front, false, failsafing);
@@ -190,7 +193,7 @@ public class CreativeTabManager {
 	}
 	
 	private static void addToEntries(ItemStack target, MutableHashedLinkedMap<ItemStack, CreativeModeTab.TabVisibility> entries, ItemLike item, boolean behind) {
-		logVerbose(() -> "adding target=" + item + " next to " + item + " with behind=" + behind);
+		logVerbose(() -> "adding target=" + target + " next to " + item + " with behind=" + behind);
 		if(!isItemEnabled(item))
 			return;
 		
@@ -223,8 +226,8 @@ public class CreativeTabManager {
 		ItemLike target = map.get(firstSet);
 		
 		if(log) {
-			Zeta.GLOBAL_LOG.warn("Creative tab loop found when adding {} next to {}", firstSetItem, target);
-			Zeta.GLOBAL_LOG.warn("For more info enable Creative Verbose Logging in the Zeta config, or set Force Creative Tab Appends to true to disable this behavior");
+			Zeta.GLOBAL_LOG.error("Creative tab loop found when adding {} next to {}", firstSetItem, target);
+			Zeta.GLOBAL_LOG.error("For more info enable Creative Verbose Logging in the Zeta config, or set Force Creative Tab Appends to true to disable this behavior");
 		}
 		
 		map.remove(firstSet);
