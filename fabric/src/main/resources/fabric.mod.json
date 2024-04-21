@@ -13,9 +13,7 @@
   "license": "https://github.com/VazkiiMods/Zeta/blob/master/LICENSE.md",
   "environment": "*",
   "entrypoints": {
-    "main": [
-      "org.violetmoon.zeta.fabric.ZetaFabric"
-    ]
+    "main": [ "org.violetmoon.zeta.fabric.mod.ZetaFabricMod" ]
   },
   "mixins": [
     "zeta.mixins.json",
