@@ -4,9 +4,11 @@ import io.github.fabricators_of_create.porting_lib.core.event.BaseEvent;
 import io.github.fabricators_of_create.porting_lib.entity.events.LivingDeathEvent;
 import io.github.fabricators_of_create.porting_lib.entity.events.LivingEntityEvents;
 import net.fabricmc.api.EnvType;
+import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -16,6 +18,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FlowerPotBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.common.ForgeConfigSpec;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
@@ -161,7 +164,7 @@ public class FabricZeta extends Zeta {
         MinecraftForge.EVENT_BUS.addListener(EventPriority.LOWEST, this::anvilUpdateLowest);
         MinecraftForge.EVENT_BUS.addListener(EventPriority.HIGHEST, this::anvilUpdateHighest);
         MinecraftForge.EVENT_BUS.addListener(this::entityConstruct);
-        MinecraftForge.EVENT_BUS.addListener(this::entityInteract);
+        UseEntityCallback.EVENT.register(this::entityInteract);
         MinecraftForge.EVENT_BUS.addListener(this::entityMobGriefing);
         MinecraftForge.EVENT_BUS.addListener(this::livingDrops);
         MinecraftForge.EVENT_BUS.addListener(this::livingDropsLowest);
@@ -302,8 +305,8 @@ public class FabricZeta extends Zeta {
         playBus.fire(new FabricZEntityConstruct(e), ZEntityConstruct.class);
     }
 
-    public void entityInteract(PlayerInteractEvent.EntityInteract e) {
-        playBus.fire(new FabricZEntityInteract(e), ZEntityInteract.class);
+    public void entityInteract(Player player, Level level, InteractionHand hand, Entity entity, @Nullable EntityHitResult hitResult) {
+        playBus.fire(new FabricZEntityInteract(player, level, hand, entity), ZEntityInteract.class);
     }
 
     public void entityMobGriefing(EntityMobGriefingEvent e) {

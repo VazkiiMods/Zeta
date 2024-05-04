@@ -5,37 +5,42 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 
 public class FabricZEntityInteract implements ZEntityInteract {
-	private final PlayerInteractEvent.EntityInteract e;
+	private final Player player;
+	private final Level level;
+	private final InteractionHand hand;
+	private final Entity entity;
 
-	public FabricZEntityInteract(PlayerInteractEvent.EntityInteract e) {
-		this.e = e;
+	public FabricZEntityInteract(Player player, Level level, InteractionHand hand, Entity entity) {
+		this.player = player;
+		this.level = level;
+		this.hand = hand;
+		this.entity = entity;
 	}
 
 	@Override
 	public Entity getTarget() {
-		return e.getTarget();
+		return entity;
 	}
 
 	@Override
 	public Player getEntity() {
-		return e.getEntity();
+		return player;
 	}
 
 	@Override
 	public Level getLevel() {
-		return e.getLevel();
+		return level;
 	}
 
 	@Override
 	public InteractionHand getHand() {
-		return e.getHand();
+		return hand;
 	}
 
 	@Override
 	public ItemStack getItemStack() {
-		return e.getItemStack();
+		return getEntity().getItemInHand(hand);
 	}
 }
