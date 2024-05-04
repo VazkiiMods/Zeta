@@ -19,24 +19,48 @@ configurations {
     developmentFabric.extendsFrom common
 }
 
+repositories {
+    maven { url "https://mvn.devos.one/releases" } // Porting Lib
+    maven { // Forge Config API Port
+        url = "https://raw.githubusercontent.com/Fuzss/modresources/main/maven/"
+        content {
+            includeGroup("fuzs.forgeconfigapiport")
+        }
+    }
+    maven { // Reach Entity Attributes - Porting Lib Dependency
+        url = "https://maven.jamieswhiteshirt.com/libs-release"
+        content {
+            includeGroup("com.jamieswhiteshirt")
+        }
+    }
+}
+
 dependencies {
-    modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}"
+    modImplementation("net.fabricmc:fabric-loader:${fabric_loader_version}")
+    modImplementation("net.fabricmc.fabric-api:fabric-api:${fabric_api_version}")
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
 
     // Mixin Extra's
-    include(implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:${mixin_extras_version}")))
+    modImplementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:${mixin_extras_version}"))
+
+    for (String module in port_lib_modules.split(","))
+        modApi(include("io.github.fabricators_of_create.Porting-Lib:$module:$port_lib_version"))
+
+    include(modImplementation("fuzs.forgeconfigapiport:forgeconfigapiport-fabric:${forgeconfigapiport_version}"))
 }
 
 processResources {
-    Map<String, String> properties = Map.of(
-            "version", version as String,
-            "fabric_loader_version", fabric_loader_version,
-            "fabric_api_version", fabric_api_version,
-            "minecraft_version", minecraft_version
-    )
+    Map<String, String> properties = [
+            "version": version as String,
+            "fabric_loader_version": fabric_loader_version,
+            "fabric_api_version": fabric_api_version,
+            "minecraft_version": minecraft_version
+    ]
+
+    for (String module in port_lib_modules.split(","))
+        properties.put("port_lib_${module}_version".toString(), port_lib_version)
 
     properties.forEach((k, v) -> inputs.property(k, v))
 

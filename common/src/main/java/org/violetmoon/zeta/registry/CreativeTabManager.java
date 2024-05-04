@@ -193,7 +193,7 @@ public class CreativeTabManager {
 			event.accept(item);
 	}
 
-	private static void addToEntries(ItemStack target, MutableHashedLinkedMap<ItemStack, CreativeModeTab.TabVisibility> entries, ItemLike item, boolean behind) {
+	private static void addToEntries(ItemStack target, MutableHashedLinkedMap<ItemStack, TabVisibility> entries, ItemLike item, boolean behind) {
 		logVerbose(() -> "adding target=" + target + " next to " + item + " with behind=" + behind);
 		if(!isItemEnabled(item))
 			return;

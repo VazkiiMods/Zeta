@@ -1,0 +1,17 @@
+package org.violetmoon.zeta.event.play.entity;
+
+import net.minecraft.world.entity.Entity;
+import net.minecraftforge.event.entity.EntityEvent;
+
+public class FabricZEntityConstruct implements ZEntityConstruct {
+	private final EntityEvent.EntityConstructing e;
+
+	public FabricZEntityConstruct(EntityEvent.EntityConstructing e) {
+		this.e = e;
+	}
+
+	@Override
+	public Entity getEntity() {
+		return e.getEntity();
+	}
+}

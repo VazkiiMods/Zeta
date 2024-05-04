@@ -24,14 +24,14 @@ configurations {
 }
 
 dependencies {
-    forge "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+    forge("net.minecraftforge:forge:${minecraft_version}-${forge_version}")
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
 
     // Mixin Extra's
-    compileOnly("io.github.llamalad7:mixinextras-common:${mixin_extras_version}")
-    include(implementation(annotationProcessor("io.github.llamalad7:mixinextras-forge:${mixin_extras_version}")))
+    modCompileOnly("io.github.llamalad7:mixinextras-common:${mixin_extras_version}")
+    include(modImplementation(annotationProcessor("io.github.llamalad7:mixinextras-forge:${mixin_extras_version}")))
 }
 
 processResources {

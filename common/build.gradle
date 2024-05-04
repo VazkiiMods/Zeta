@@ -9,13 +9,19 @@ loom {
     accessWidenerPath = file("src/main/resources/zeta.accesswidener")
 }
 
+repositories {
+    maven { url = "https://raw.githubusercontent.com/Fuzss/modresources/main/maven/" } // Forge Config API Port
+}
+
 dependencies {
     // We depend on fabric loader here to use the fabric @Environment annotations and get the mixin dependencies
     // Do NOT use other classes from fabric loader
-    modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
+    modImplementation("net.fabricmc:fabric-loader:${fabric_loader_version}")
 
     // Mixin Extra's
     implementation(annotationProcessor("io.github.llamalad7:mixinextras-common:${mixin_extras_version}"))
+
+    modImplementation("fuzs.forgeconfigapiport:forgeconfigapiport-fabric:${forgeconfigapiport_version}")
 }
 
 processResources {

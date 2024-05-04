@@ -1,0 +1,27 @@
+package org.violetmoon.zeta.event.play.entity;
+
+import net.minecraft.world.entity.Entity;
+import net.minecraftforge.event.entity.EntityJoinLevelEvent;
+
+public class FabricZEntityJoinLevel implements ZEntityJoinLevel {
+    private final EntityJoinLevelEvent e;
+
+    public FabricZEntityJoinLevel(EntityJoinLevelEvent e) {
+        this.e = e;
+    }
+
+    @Override
+    public Entity getEntity() {
+        return e.getEntity();
+    }
+
+    @Override
+    public boolean isCanceled() {
+        return e.isCanceled();
+    }
+
+    @Override
+    public void setCanceled(boolean cancel) {
+        e.setCanceled(cancel);
+    }
+}
