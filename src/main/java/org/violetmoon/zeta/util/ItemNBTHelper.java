@@ -14,9 +14,11 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.world.item.ItemStack;
 
+// TBH this entire class could be Deprecated and removed
 public final class ItemNBTHelper {
 
 	/** Checks if an ItemStack has a Tag Compound **/
+	@Deprecated(forRemoval = true) // Just use stack.hasTag()
 	public static boolean detectNBT(ItemStack stack) {
 		return stack.hasTag();
 	}
@@ -24,119 +26,122 @@ public final class ItemNBTHelper {
 	/** Tries to initialize an NBT Tag Compound in an ItemStack,
 	 * this will not do anything if the stack already has a tag
 	 * compound **/
+	@Deprecated(forRemoval = true) // Just use stack.getOrCreateTag()
 	public static void initNBT(ItemStack stack) {
-		if(!detectNBT(stack))
-			injectNBT(stack, new CompoundTag());
+		stack.getOrCreateTag();
 	}
 
 	/** Injects an NBT Tag Compound to an ItemStack, no checks
 	 * are made previously **/
+	@Deprecated(forRemoval = true) // Just use stack.setTag(nbt)
 	public static void injectNBT(ItemStack stack, CompoundTag nbt) {
 		stack.setTag(nbt);
 	}
 
 	/** Gets the CompoundNBT in an ItemStack. Tries to init it
 	 * previously in case there isn't one present **/
+	@Deprecated(forRemoval = true) // Just use stack.getOrCreateTag()
 	public static CompoundTag getNBT(ItemStack stack) {
-		initNBT(stack);
-		return stack.getTag();
+		return stack.getOrCreateTag();
 	}
 
 	// SETTERS ///////////////////////////////////////////////////////////////////
 
+	// All these force create a tag if it doesn't exist
+
 	public static void setBoolean(ItemStack stack, String tag, boolean b) {
-		getNBT(stack).putBoolean(tag, b);
+		stack.getOrCreateTag().putBoolean(tag, b);
 	}
 
 	public static void setByte(ItemStack stack, String tag, byte b) {
-		getNBT(stack).putByte(tag, b);
+		stack.getOrCreateTag().putByte(tag, b);
 	}
 
 	public static void setShort(ItemStack stack, String tag, short s) {
-		getNBT(stack).putShort(tag, s);
+		stack.getOrCreateTag().putShort(tag, s);
 	}
 
 	public static void setInt(ItemStack stack, String tag, int i) {
-		getNBT(stack).putInt(tag, i);
+		stack.getOrCreateTag().putInt(tag, i);
 	}
 
 	public static void setLong(ItemStack stack, String tag, long l) {
-		getNBT(stack).putLong(tag, l);
+		stack.getOrCreateTag().putLong(tag, l);
 	}
 
 	public static void setFloat(ItemStack stack, String tag, float f) {
-		getNBT(stack).putFloat(tag, f);
+		stack.getOrCreateTag().putFloat(tag, f);
 	}
 
 	public static void setDouble(ItemStack stack, String tag, double d) {
-		getNBT(stack).putDouble(tag, d);
+		stack.getOrCreateTag().putDouble(tag, d);
 	}
 
 	public static void setCompound(ItemStack stack, String tag, CompoundTag cmp) {
 		if(!tag.equalsIgnoreCase("ench")) // not override the enchantments
-			getNBT(stack).put(tag, cmp);
+			stack.getOrCreateTag().put(tag, cmp);
 	}
 
 	public static void setString(ItemStack stack, String tag, String s) {
-		getNBT(stack).putString(tag, s);
+		stack.getOrCreateTag().putString(tag, s);
 	}
 
 	public static void setList(ItemStack stack, String tag, ListTag list) {
-		getNBT(stack).put(tag, list);
+		stack.getOrCreateTag().put(tag, list);
 	}
 
 	// GETTERS ///////////////////////////////////////////////////////////////////
 
 
 	public static boolean verifyExistence(ItemStack stack, String tag) {
-		return !stack.isEmpty() && detectNBT(stack) && getNBT(stack).contains(tag);
+		return !stack.isEmpty() && stack.hasTag() && stack.getOrCreateTag().contains(tag);
 	}
 
-	@Deprecated
+	@Deprecated(forRemoval = true)
 	public static boolean verifyExistance(ItemStack stack, String tag) {
 		return verifyExistence(stack, tag);
 	}
 
 	public static boolean getBoolean(ItemStack stack, String tag, boolean defaultExpected) {
-		return verifyExistence(stack, tag) ? getNBT(stack).getBoolean(tag) : defaultExpected;
+		return verifyExistence(stack, tag) ? stack.getOrCreateTag().getBoolean(tag) : defaultExpected;
 	}
 
 	public static byte getByte(ItemStack stack, String tag, byte defaultExpected) {
-		return verifyExistence(stack, tag) ? getNBT(stack).getByte(tag) : defaultExpected;
+		return verifyExistence(stack, tag) ? stack.getOrCreateTag().getByte(tag) : defaultExpected;
 	}
 
 	public static short getShort(ItemStack stack, String tag, short defaultExpected) {
-		return verifyExistence(stack, tag) ? getNBT(stack).getShort(tag) : defaultExpected;
+		return verifyExistence(stack, tag) ? stack.getOrCreateTag().getShort(tag) : defaultExpected;
 	}
 
 	public static int getInt(ItemStack stack, String tag, int defaultExpected) {
-		return verifyExistence(stack, tag) ? getNBT(stack).getInt(tag) : defaultExpected;
+		return verifyExistence(stack, tag) ? stack.getOrCreateTag().getInt(tag) : defaultExpected;
 	}
 
 	public static long getLong(ItemStack stack, String tag, long defaultExpected) {
-		return verifyExistence(stack, tag) ? getNBT(stack).getLong(tag) : defaultExpected;
+		return verifyExistence(stack, tag) ? stack.getOrCreateTag().getLong(tag) : defaultExpected;
 	}
 
 	public static float getFloat(ItemStack stack, String tag, float defaultExpected) {
-		return verifyExistence(stack, tag) ? getNBT(stack).getFloat(tag) : defaultExpected;
+		return verifyExistence(stack, tag) ? stack.getOrCreateTag().getFloat(tag) : defaultExpected;
 	}
 
 	public static double getDouble(ItemStack stack, String tag, double defaultExpected) {
-		return verifyExistence(stack, tag) ? getNBT(stack).getDouble(tag) : defaultExpected;
+		return verifyExistence(stack, tag) ? stack.getOrCreateTag().getDouble(tag) : defaultExpected;
 	}
 
 	/** If nullifyOnFail is true it'll return null if it doesn't find any
 	 * compounds, otherwise it'll return a new one. **/
 	public static CompoundTag getCompound(ItemStack stack, String tag, boolean nullifyOnFail) {
-		return verifyExistence(stack, tag) ? getNBT(stack).getCompound(tag) : nullifyOnFail ? null : new CompoundTag();
+		return verifyExistence(stack, tag) ? stack.getOrCreateTag().getCompound(tag) : nullifyOnFail ? null : new CompoundTag();
 	}
 
 	public static String getString(ItemStack stack, String tag, String defaultExpected) {
-		return verifyExistence(stack, tag) ? getNBT(stack).getString(tag) : defaultExpected;
+		return verifyExistence(stack, tag) ? stack.getOrCreateTag().getString(tag) : defaultExpected;
 	}
 
 	public static ListTag getList(ItemStack stack, String tag, int objtype, boolean nullifyOnFail) {
-		return verifyExistence(stack, tag) ? getNBT(stack).getList(tag, objtype) : nullifyOnFail ? null : new ListTag();
+		return verifyExistence(stack, tag) ? stack.getOrCreateTag().getList(tag, objtype) : nullifyOnFail ? null : new ListTag();
 	}
 
 }
