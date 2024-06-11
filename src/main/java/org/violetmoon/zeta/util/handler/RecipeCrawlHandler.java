@@ -156,7 +156,7 @@ public class RecipeCrawlHandler {
 		for (Ingredient ingredient : ingredients) {
 			for (ItemStack inStack : ingredient.getItems()) {
 				//don't include catalyst items. This includes partial ones like buckets and such
-				if (!inStack.getCraftingRemainingItem().isEmpty()) {
+				if (inStack.getCraftingRemainingItem().isEmpty()) {
 					vanillaRecipeDigestion.put(inStack.getItem(), out);
 					backwardsVanillaDigestion.put(outItem, inStack);
 				}
