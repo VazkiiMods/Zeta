@@ -1,1 +1,3 @@
-- Made some minor tweaks to the creative tab addition logic to try and fix whatever is going on with the sporadic tabs disappearing/crashing bug
+- mass recipe get can now also get tags
+- recipe crawl event will ignore catalyst items
+- Recipe crawl digestion will only target vanilla recipe types as to noc cause problems with unknown recipe types that could have some different interpretation
