@@ -1,3 +1,6 @@
 - mass recipe get can now also get tags
 - recipe crawl event will ignore catalyst items
 - Recipe crawl digestion will only target vanilla recipe types as to noc cause problems with unknown recipe types that could have some different interpretation
+- moved recipe handler methods in recipe digest event
+
+(sorry for double release i messed up :/)
