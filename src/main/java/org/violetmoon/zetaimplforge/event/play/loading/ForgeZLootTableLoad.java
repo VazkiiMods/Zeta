@@ -1,10 +1,9 @@
 package org.violetmoon.zetaimplforge.event.play.loading;
 
-import org.violetmoon.zeta.event.play.loading.ZLootTableLoad;
-
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.storage.loot.LootTable;
-import net.minecraftforge.event.LootTableLoadEvent;
+import net.neoforged.neoforge.event.LootTableLoadEvent;
+import org.violetmoon.zeta.event.play.loading.ZLootTableLoad;
 
 public record ForgeZLootTableLoad(LootTableLoadEvent e) implements ZLootTableLoad {
 	@Override

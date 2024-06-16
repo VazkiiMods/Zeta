@@ -1,15 +1,14 @@
 package org.violetmoon.zetaimplforge.client.event.load;
 
-import java.util.Map;
-
-import org.violetmoon.zeta.client.event.load.ZModel;
-
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.client.event.ModelEvent;
-import net.minecraftforge.client.model.geometry.IGeometryLoader;
+import net.neoforged.neoforge.client.event.ModelEvent;
+import net.neoforged.neoforge.client.model.geometry.IGeometryLoader;
+import org.violetmoon.zeta.client.event.load.ZModel;
+
+import java.util.Map;
 
 public class ForgeZModel implements ZModel {
     public static class ModifyBakingResult extends ForgeZModel implements ZModel.ModifyBakingResult {

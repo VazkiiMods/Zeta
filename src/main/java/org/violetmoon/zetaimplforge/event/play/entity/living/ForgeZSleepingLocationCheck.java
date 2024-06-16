@@ -6,7 +6,6 @@ import org.violetmoon.zetaimplforge.ForgeZeta;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraftforge.event.entity.player.SleepingLocationCheckEvent;
 
 public class ForgeZSleepingLocationCheck implements ZSleepingLocationCheck {
     private final SleepingLocationCheckEvent e;

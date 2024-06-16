@@ -1,6 +1,6 @@
 package org.violetmoon.zetaimplforge.config;
 
-import net.minecraftforge.fml.event.config.ModConfigEvent;
+import net.neoforged.fml.event.config.ModConfigEvent;
 import org.violetmoon.zeta.Zeta;
 import org.violetmoon.zeta.event.load.ZConfigChanged;
 import org.violetmoon.zeta.util.zetalist.ZetaList;

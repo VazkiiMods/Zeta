@@ -1,8 +1,7 @@
 package org.violetmoon.zetaimplforge.event.load;
 
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import org.violetmoon.zeta.event.load.ZCommonSetup;
-
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
 public record ForgeZCommonSetup(FMLCommonSetupEvent e) implements ZCommonSetup {
 	@Override

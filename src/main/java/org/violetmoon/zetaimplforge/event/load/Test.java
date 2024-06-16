@@ -1,11 +1,10 @@
 package org.violetmoon.zetaimplforge.event.load;
 
-import net.minecraftforge.event.AddReloadListenerEvent;
-import net.minecraftforge.eventbus.EventBus;
-import net.minecraftforge.eventbus.api.Event;
+import net.neoforged.bus.EventBus;
+import net.neoforged.bus.api.Event;
+import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import org.jetbrains.annotations.NotNull;
 import org.violetmoon.zeta.event.bus.IZetaLoadEvent;
-import org.violetmoon.zeta.event.bus.ZetaEventBus;
 
 import java.util.Map;
 import java.util.function.Consumer;

@@ -1,24 +1,23 @@
 package org.violetmoon.zetaimplforge.config;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import net.neoforged.neoforge.common.ModConfigSpec;
 import org.violetmoon.zeta.config.IZetaConfigInternals;
 import org.violetmoon.zeta.config.SectionDefinition;
 import org.violetmoon.zeta.config.ValueDefinition;
 
-import net.minecraftforge.common.ForgeConfigSpec;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ForgeBackedConfig implements IZetaConfigInternals {
-	private final Map<ValueDefinition<?>, ForgeConfigSpec.ConfigValue<?>> definitionsToValues = new HashMap<>();
+	private final Map<ValueDefinition<?>, ModConfigSpec.ConfigValue<?>> definitionsToValues = new HashMap<>();
 	private long debounceTime = System.currentTimeMillis();
 
-	public ForgeBackedConfig(SectionDefinition rootSection, ForgeConfigSpec.Builder forgeBuilder) {
+	public ForgeBackedConfig(SectionDefinition rootSection, ModConfigSpec.Builder forgeBuilder) {
 		walkSection(rootSection, forgeBuilder, true);
 	}
 
-	private void walkSection(SectionDefinition sect, ForgeConfigSpec.Builder builder, boolean root) {
+	private void walkSection(SectionDefinition sect, ModConfigSpec.Builder builder, boolean root) {
 		if(!root) {
 			builder.comment(sect.commentToArray());
 			builder.push(sect.name);
@@ -34,10 +33,10 @@ public class ForgeBackedConfig implements IZetaConfigInternals {
 			builder.pop();
 	}
 
-	private <T> void addValue(ValueDefinition<T> val, ForgeConfigSpec.Builder builder) {
+	private <T> void addValue(ValueDefinition<T> val, ModConfigSpec.Builder builder) {
 		builder.comment(val.commentToArray());
 
-		ForgeConfigSpec.ConfigValue<?> forge;
+		ModConfigSpec.ConfigValue<?> forge;
 		if(val.defaultValue instanceof List<?> list)
 			forge = builder.defineList(val.name, list, val::validate);
 		else
@@ -49,14 +48,14 @@ public class ForgeBackedConfig implements IZetaConfigInternals {
 	@Override
 	@SuppressWarnings("unchecked")
 	public <T> T get(ValueDefinition<T> definition) {
-		ForgeConfigSpec.ConfigValue<T> forge = (ForgeConfigSpec.ConfigValue<T>) definitionsToValues.get(definition);
+		ModConfigSpec.ConfigValue<T> forge = (ModConfigSpec.ConfigValue<T>) definitionsToValues.get(definition);
 		return forge.get();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public <T> void set(ValueDefinition<T> definition, T value) {
-		ForgeConfigSpec.ConfigValue<T> forge = (ForgeConfigSpec.ConfigValue<T>) definitionsToValues.get(definition);
+		ModConfigSpec.ConfigValue<T> forge = (ModConfigSpec.ConfigValue<T>) definitionsToValues.get(definition);
 		debounceTime = System.currentTimeMillis();
 		forge.set(value);
 	}

@@ -1,5 +1,51 @@
 package org.violetmoon.zetaimplforge;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.FlowerPotBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.phys.BlockHitResult;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModList;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
+import net.neoforged.fml.loading.FMLEnvironment;
+import net.neoforged.neoforge.common.ModConfigSpec;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.AddReloadListenerEvent;
+import net.neoforged.neoforge.event.AnvilUpdateEvent;
+import net.neoforged.neoforge.event.LootTableLoadEvent;
+import net.neoforged.neoforge.event.TagsUpdatedEvent;
+import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
+import net.neoforged.neoforge.event.entity.EntityEvent;
+import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
+import net.neoforged.neoforge.event.entity.EntityMobGriefingEvent;
+import net.neoforged.neoforge.event.entity.EntityTeleportEvent;
+import net.neoforged.neoforge.event.entity.living.AnimalTameEvent;
+import net.neoforged.neoforge.event.entity.living.BabyEntitySpawnEvent;
+import net.neoforged.neoforge.event.entity.living.LivingChangeTargetEvent;
+import net.neoforged.neoforge.event.entity.living.LivingConversionEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDropsEvent;
+import net.neoforged.neoforge.event.entity.living.LivingFallEvent;
+import net.neoforged.neoforge.event.entity.living.MobSpawnEvent;
+import net.neoforged.neoforge.event.entity.player.AnvilRepairEvent;
+import net.neoforged.neoforge.event.entity.player.BonemealEvent;
+import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerDestroyItemEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.neoforged.neoforge.event.furnace.FurnaceFuelBurnTimeEvent;
+import net.neoforged.neoforge.event.level.BlockEvent;
+import net.neoforged.neoforge.event.level.NoteBlockEvent;
+import net.neoforged.neoforge.event.village.VillagerTradesEvent;
+import net.neoforged.neoforge.event.village.WandererTradesEvent;
+import net.neoforged.neoforge.registries.RegisterEvent;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.zeta.Zeta;
@@ -111,60 +157,6 @@ import org.violetmoon.zetaimplforge.registry.ForgeCraftingExtensionsRegistry;
 import org.violetmoon.zetaimplforge.registry.ForgeZetaRegistry;
 import org.violetmoon.zetaimplforge.util.ForgeRaytracingUtil;
 
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.FlowerPotBlock;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.AddReloadListenerEvent;
-import net.minecraftforge.event.AnvilUpdateEvent;
-import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.event.LootTableLoadEvent;
-import net.minecraftforge.event.TagsUpdatedEvent;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
-import net.minecraftforge.event.entity.EntityEvent;
-import net.minecraftforge.event.entity.EntityJoinLevelEvent;
-import net.minecraftforge.event.entity.EntityMobGriefingEvent;
-import net.minecraftforge.event.entity.EntityTeleportEvent;
-import net.minecraftforge.event.entity.living.AnimalTameEvent;
-import net.minecraftforge.event.entity.living.BabyEntitySpawnEvent;
-import net.minecraftforge.event.entity.living.LivingChangeTargetEvent;
-import net.minecraftforge.event.entity.living.LivingConversionEvent;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.living.LivingDropsEvent;
-import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.event.entity.living.LivingFallEvent;
-import net.minecraftforge.event.entity.living.MobSpawnEvent;
-import net.minecraftforge.event.entity.player.AnvilRepairEvent;
-import net.minecraftforge.event.entity.player.BonemealEvent;
-import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
-import net.minecraftforge.event.entity.player.ItemTooltipEvent;
-import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.entity.player.SleepingLocationCheckEvent;
-import net.minecraftforge.event.furnace.FurnaceFuelBurnTimeEvent;
-import net.minecraftforge.event.level.BlockEvent;
-import net.minecraftforge.event.level.NoteBlockEvent;
-import net.minecraftforge.event.village.VillagerTradesEvent;
-import net.minecraftforge.event.village.WandererTradesEvent;
-import net.minecraftforge.eventbus.api.Event;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.loading.FMLEnvironment;
-import net.minecraftforge.registries.RegisterEvent;
-
 /**
  * ideally do not touch quark from this package, it will later be split off
  */
@@ -187,9 +179,9 @@ public class ForgeZeta extends Zeta {
 
 	@Override
 	public IZetaConfigInternals makeConfigInternals(SectionDefinition rootSection) {
-		ForgeConfigSpec.Builder bob = new ForgeConfigSpec.Builder();
+		ModConfigSpec.Builder bob = new ModConfigSpec.Builder();
 		ForgeBackedConfig forge = new ForgeBackedConfig(rootSection, bob);
-		ForgeConfigSpec spec = bob.build();
+		ModConfigSpec spec = bob.build();
 
 		TerribleForgeConfigHackery.registerAndLoadConfigEarlierThanUsual(spec);
 
@@ -243,98 +235,97 @@ public class ForgeZeta extends Zeta {
 
 	@Override
 	public boolean fireRightClickBlock(Player player, InteractionHand hand, BlockPos pos, BlockHitResult bhr) {
-		return MinecraftForge.EVENT_BUS.post(new PlayerInteractEvent.RightClickBlock(player, hand, pos, bhr));
+		return NeoForge.EVENT_BUS.post(new PlayerInteractEvent.RightClickBlock(player, hand, pos, bhr));
 	}
 
 	@Override
 	public <E, T extends E> T fireExternalEvent(T impl) {
 		if(impl instanceof ZGatherAdvancementModifiers advancementModifiers)
-			MinecraftForge.EVENT_BUS.post(new GatherAdvancementModifiersEvent(this, advancementModifiers));
+			NeoForge.EVENT_BUS.post(new GatherAdvancementModifiersEvent(this, advancementModifiers));
 
 		return impl;
 	}
 
 	@SuppressWarnings("duplicates")
 	@Override
-	public void start() {
+	public void start(IEventBus modbus) {
 		//TODO: sort these somehow lol
 
 		//load
-		IEventBus modbus = FMLJavaModLoadingContext.get().getModEventBus();
 		modbus.addListener(EventPriority.HIGHEST, this::registerHighest);
 		modbus.addListener(this::commonSetup);
 		modbus.addListener(this::loadComplete);
 		modbus.addListener(this::entityAttributeCreation);
-		MinecraftForge.EVENT_BUS.addListener(this::addReloadListener);
-		MinecraftForge.EVENT_BUS.addListener(this::tagsUpdated);
+		NeoForge.EVENT_BUS.addListener(this::addReloadListener);
+		NeoForge.EVENT_BUS.addListener(this::tagsUpdated);
 
 		// TODO FIX very ugly & bad
 		modbus.addListener(EventPriority.LOWEST, CreativeTabManager::buildContents);
 		modbus.addListener(ConfigEventDispatcher::configChanged);
 
 		//play
-		MinecraftForge.EVENT_BUS.addListener(this::rightClickBlock);
-		MinecraftForge.EVENT_BUS.addListener(EventPriority.LOW, this::rightClickBlockLow);
-		MinecraftForge.EVENT_BUS.addListener(this::rightClickItem);
-		MinecraftForge.EVENT_BUS.addListener(this::livingDeath);
-		MinecraftForge.EVENT_BUS.addListener(EventPriority.LOWEST, this::livingDeathLowest);
-		MinecraftForge.EVENT_BUS.addListener(this::livingTick);
-		MinecraftForge.EVENT_BUS.addListener(this::playNoteBlock);
-		MinecraftForge.EVENT_BUS.addListener(this::lootTableLoad);
-		MinecraftForge.EVENT_BUS.addListener(this::livingConversion);
-		MinecraftForge.EVENT_BUS.addListener(this::livingConversionPre);
-		MinecraftForge.EVENT_BUS.addListener(this::livingConversionPost);
-		MinecraftForge.EVENT_BUS.addListener(this::anvilUpdate);
-		MinecraftForge.EVENT_BUS.addListener(EventPriority.LOWEST, this::anvilUpdateLowest);
-		MinecraftForge.EVENT_BUS.addListener(EventPriority.HIGHEST, this::anvilUpdateHighest);
-		MinecraftForge.EVENT_BUS.addListener(this::entityConstruct);
-		MinecraftForge.EVENT_BUS.addListener(this::entityInteract);
-		MinecraftForge.EVENT_BUS.addListener(this::entityMobGriefing);
-		MinecraftForge.EVENT_BUS.addListener(this::livingDrops);
-		MinecraftForge.EVENT_BUS.addListener(this::livingDropsLowest);
-		MinecraftForge.EVENT_BUS.addListener(this::playerTickStart);
-		MinecraftForge.EVENT_BUS.addListener(this::playerTickEnd);
-		MinecraftForge.EVENT_BUS.addListener(this::babyEntitySpawn);
-		MinecraftForge.EVENT_BUS.addListener(this::babyEntitySpawnLowest);
-		MinecraftForge.EVENT_BUS.addListener(this::entityJoinLevel);
+		NeoForge.EVENT_BUS.addListener(this::rightClickBlock);
+		NeoForge.EVENT_BUS.addListener(EventPriority.LOW, this::rightClickBlockLow);
+		NeoForge.EVENT_BUS.addListener(this::rightClickItem);
+		NeoForge.EVENT_BUS.addListener(this::livingDeath);
+		NeoForge.EVENT_BUS.addListener(EventPriority.LOWEST, this::livingDeathLowest);
+		NeoForge.EVENT_BUS.addListener(this::livingTick);
+		NeoForge.EVENT_BUS.addListener(this::playNoteBlock);
+		NeoForge.EVENT_BUS.addListener(this::lootTableLoad);
+		NeoForge.EVENT_BUS.addListener(this::livingConversion);
+		NeoForge.EVENT_BUS.addListener(this::livingConversionPre);
+		NeoForge.EVENT_BUS.addListener(this::livingConversionPost);
+		NeoForge.EVENT_BUS.addListener(this::anvilUpdate);
+		NeoForge.EVENT_BUS.addListener(EventPriority.LOWEST, this::anvilUpdateLowest);
+		NeoForge.EVENT_BUS.addListener(EventPriority.HIGHEST, this::anvilUpdateHighest);
+		NeoForge.EVENT_BUS.addListener(this::entityConstruct);
+		NeoForge.EVENT_BUS.addListener(this::entityInteract);
+		NeoForge.EVENT_BUS.addListener(this::entityMobGriefing);
+		NeoForge.EVENT_BUS.addListener(this::livingDrops);
+		NeoForge.EVENT_BUS.addListener(this::livingDropsLowest);
+		NeoForge.EVENT_BUS.addListener(this::playerTickStart);
+		NeoForge.EVENT_BUS.addListener(this::playerTickEnd);
+		NeoForge.EVENT_BUS.addListener(this::babyEntitySpawn);
+		NeoForge.EVENT_BUS.addListener(this::babyEntitySpawnLowest);
+		NeoForge.EVENT_BUS.addListener(this::entityJoinLevel);
 
-		MinecraftForge.EVENT_BUS.addGenericListener(ItemStack.class, this::itemStackCaps);
-		MinecraftForge.EVENT_BUS.addGenericListener(BlockEntity.class, this::blockEntityCaps);
-		MinecraftForge.EVENT_BUS.addGenericListener(Level.class, this::levelCaps);
+		NeoForge.EVENT_BUS.addGenericListener(ItemStack.class, this::itemStackCaps);
+		NeoForge.EVENT_BUS.addGenericListener(BlockEntity.class, this::blockEntityCaps);
+		NeoForge.EVENT_BUS.addGenericListener(Level.class, this::levelCaps);
 
-		MinecraftForge.EVENT_BUS.addListener(this::serverTickStart);
-		MinecraftForge.EVENT_BUS.addListener(this::serverTickEnd);
-		MinecraftForge.EVENT_BUS.addListener(this::levelTickStart);
-		MinecraftForge.EVENT_BUS.addListener(this::levelTickEnd);
-		MinecraftForge.EVENT_BUS.addListener(this::playerInteract);
-		MinecraftForge.EVENT_BUS.addListener(this::playerInteractEntityInteractSpecific);
-		MinecraftForge.EVENT_BUS.addListener(this::playerInteractEntityInteract);
-		MinecraftForge.EVENT_BUS.addListener(this::playerInteractRightClickBlock);
-		MinecraftForge.EVENT_BUS.addListener(this::playerInteractRightClickItem);
-		MinecraftForge.EVENT_BUS.addListener(this::playerDestroyItem);
-		MinecraftForge.EVENT_BUS.addListener(this::mobSpawn);
-		MinecraftForge.EVENT_BUS.addListener(this::mobSpawnFinalizeSpawn);
-		MinecraftForge.EVENT_BUS.addListener(this::mobSpawnFinalizeSpawnLowest);
-		MinecraftForge.EVENT_BUS.addListener(this::livingChangeTarget);
-		MinecraftForge.EVENT_BUS.addListener(this::sleepingLocationCheck);
-		MinecraftForge.EVENT_BUS.addListener(this::villagerTrades);
-		MinecraftForge.EVENT_BUS.addListener(this::anvilRepair);
-		MinecraftForge.EVENT_BUS.addListener(this::player);
-		MinecraftForge.EVENT_BUS.addListener(this::playerBreakSpeed);
-		MinecraftForge.EVENT_BUS.addListener(this::playerClone);
-		MinecraftForge.EVENT_BUS.addListener(this::playerLoggedIn);
-		MinecraftForge.EVENT_BUS.addListener(this::playerLoggedOut);
-		MinecraftForge.EVENT_BUS.addListener(this::entityItemPickup);
-		MinecraftForge.EVENT_BUS.addListener(this::blockBreak);
-		MinecraftForge.EVENT_BUS.addListener(this::blockEntityPlace);
-		MinecraftForge.EVENT_BUS.addListener(this::blockToolModification);
-		MinecraftForge.EVENT_BUS.addListener(this::animalTame);
-		MinecraftForge.EVENT_BUS.addListener(this::bonemeal);
-		MinecraftForge.EVENT_BUS.addListener(this::entityTeleport);
-		MinecraftForge.EVENT_BUS.addListener(this::livingFall);
-		MinecraftForge.EVENT_BUS.addListener(this::wandererTrades);
-		MinecraftForge.EVENT_BUS.addListener(this::furnaceFuelBurnTime);
-		MinecraftForge.EVENT_BUS.addListener(this::itemTooltip);
+		NeoForge.EVENT_BUS.addListener(this::serverTickStart);
+		NeoForge.EVENT_BUS.addListener(this::serverTickEnd);
+		NeoForge.EVENT_BUS.addListener(this::levelTickStart);
+		NeoForge.EVENT_BUS.addListener(this::levelTickEnd);
+		NeoForge.EVENT_BUS.addListener(this::playerInteract);
+		NeoForge.EVENT_BUS.addListener(this::playerInteractEntityInteractSpecific);
+		NeoForge.EVENT_BUS.addListener(this::playerInteractEntityInteract);
+		NeoForge.EVENT_BUS.addListener(this::playerInteractRightClickBlock);
+		NeoForge.EVENT_BUS.addListener(this::playerInteractRightClickItem);
+		NeoForge.EVENT_BUS.addListener(this::playerDestroyItem);
+		NeoForge.EVENT_BUS.addListener(this::mobSpawn);
+		NeoForge.EVENT_BUS.addListener(this::mobSpawnFinalizeSpawn);
+		NeoForge.EVENT_BUS.addListener(this::mobSpawnFinalizeSpawnLowest);
+		NeoForge.EVENT_BUS.addListener(this::livingChangeTarget);
+		NeoForge.EVENT_BUS.addListener(this::sleepingLocationCheck);
+		NeoForge.EVENT_BUS.addListener(this::villagerTrades);
+		NeoForge.EVENT_BUS.addListener(this::anvilRepair);
+		NeoForge.EVENT_BUS.addListener(this::player);
+		NeoForge.EVENT_BUS.addListener(this::playerBreakSpeed);
+		NeoForge.EVENT_BUS.addListener(this::playerClone);
+		NeoForge.EVENT_BUS.addListener(this::playerLoggedIn);
+		NeoForge.EVENT_BUS.addListener(this::playerLoggedOut);
+		NeoForge.EVENT_BUS.addListener(this::entityItemPickup);
+		NeoForge.EVENT_BUS.addListener(this::blockBreak);
+		NeoForge.EVENT_BUS.addListener(this::blockEntityPlace);
+		NeoForge.EVENT_BUS.addListener(this::blockToolModification);
+		NeoForge.EVENT_BUS.addListener(this::animalTame);
+		NeoForge.EVENT_BUS.addListener(this::bonemeal);
+		NeoForge.EVENT_BUS.addListener(this::entityTeleport);
+		NeoForge.EVENT_BUS.addListener(this::livingFall);
+		NeoForge.EVENT_BUS.addListener(this::wandererTrades);
+		NeoForge.EVENT_BUS.addListener(this::furnaceFuelBurnTime);
+		NeoForge.EVENT_BUS.addListener(this::itemTooltip);
 	}
 
 	private boolean registerDone = false;

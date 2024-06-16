@@ -1,7 +1,19 @@
 package org.violetmoon.zetaimplforge.mixin.mixins.self;
 
-import java.util.Locale;
-
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FluidState;
+import net.neoforged.neoforge.common.IPlantable;
+import net.neoforged.neoforge.common.ToolAction;
+import net.neoforged.neoforge.common.extensions.IBlockExtension;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.violetmoon.zeta.block.ZetaBlock;
@@ -28,20 +40,7 @@ import org.violetmoon.zeta.block.ZetaWallHangingSignBlock;
 import org.violetmoon.zeta.block.ZetaWallSignBlock;
 import org.violetmoon.zeta.block.ext.IZetaBlockExtensions;
 
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.level.BlockAndTintGetter;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.FluidState;
-import net.minecraftforge.common.IPlantable;
-import net.minecraftforge.common.ToolAction;
-import net.minecraftforge.common.extensions.IForgeBlock;
+import java.util.Locale;
 
 // Forge can't actually mixin to interfaces, so we fake it by just... mixing in to everyone inheriting the interface.
 @Mixin({
@@ -68,7 +67,7 @@ import net.minecraftforge.common.extensions.IForgeBlock;
 	ZetaWallBlock.class,
 	ZetaWallSignBlock.class,
 })
-public class IZetaBlockMixin_FAKE implements IZetaBlockExtensions, IForgeBlock {
+public class IZetaBlockMixin_FAKE implements IZetaBlockExtensions, IBlockExtension {
 
 	@Override
 	public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
@@ -106,7 +105,7 @@ public class IZetaBlockMixin_FAKE implements IZetaBlockExtensions, IForgeBlock {
 	}
 
 	@Override
-	public @Nullable float[] getBeaconColorMultiplier(BlockState state, LevelReader level, BlockPos pos, BlockPos beaconPos) {
+	public @Nullable Integer getBeaconColorMultiplier(BlockState state, LevelReader level, BlockPos pos, BlockPos beaconPos) {
 		return getBeaconColorMultiplierZeta(state, level, pos, beaconPos);
 	}
 

@@ -1,22 +1,21 @@
 package org.violetmoon.zeta.client;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import org.joml.Matrix4f;
-import org.violetmoon.zeta.client.event.play.ZRenderTick;
-import org.violetmoon.zeta.event.bus.PlayEvent;
-
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexSorting;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.neoforged.neoforge.client.ClientHooks;
+import org.joml.Matrix4f;
+import org.joml.Matrix4fStack;
+import org.violetmoon.zeta.client.event.play.ZRenderTick;
+import org.violetmoon.zeta.event.bus.PlayEvent;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Deprecated // Very hacky for what it does.
 public class TopLayerTooltipHandler {
@@ -41,13 +40,12 @@ public class TopLayerTooltipHandler {
 					(float) ((double) window.getHeight() / window.getGuiScale()),
 					0.0F,
 					1000.0F,
-					net.minecraftforge.client.ForgeHooksClient.getGuiFarPlane()
+					ClientHooks.getGuiFarPlane()
 			);
 			RenderSystem.setProjectionMatrix(matrix4f, VertexSorting.ORTHOGRAPHIC_Z);
-			PoseStack posestack = RenderSystem.getModelViewStack();
-			posestack.pushPose();
-			posestack.setIdentity();
-			posestack.translate(0.0D, 0.0D, 1000F - net.minecraftforge.client.ForgeHooksClient.getGuiFarPlane());
+			Matrix4fStack matrix4fstack = RenderSystem.getModelViewStack();
+			matrix4fstack.pushMatrix();
+			matrix4fstack.translation(0.0F, 0.0F, 1000F - ClientHooks.getGuiFarPlane());
 			RenderSystem.applyModelViewMatrix();
 			// End
 
@@ -58,7 +56,7 @@ public class TopLayerTooltipHandler {
 
 			// Reset projection matrix
 			guiGraphics.flush();
-			posestack.popPose();
+			matrix4fstack.popMatrix();
 			RenderSystem.applyModelViewMatrix();
 			RenderSystem.setProjectionMatrix(projectionMatrix, vertexSorting);
 			// End

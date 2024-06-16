@@ -1,16 +1,5 @@
 package org.violetmoon.zetaimplforge.mixin.mixins.self;
 
-import java.util.Map;
-import java.util.function.Consumer;
-
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.spongepowered.asm.mixin.Mixin;
-import org.violetmoon.zeta.item.ZetaArmorItem;
-import org.violetmoon.zeta.item.ZetaBlockItem;
-import org.violetmoon.zeta.item.ZetaItem;
-import org.violetmoon.zeta.item.ext.IZetaItemExtensions;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -24,9 +13,18 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.LevelReader;
-import net.minecraftforge.common.ToolAction;
-import net.minecraftforge.common.ToolActions;
-import net.minecraftforge.common.extensions.IForgeItem;
+import net.neoforged.neoforge.common.ToolAction;
+import net.neoforged.neoforge.common.ToolActions;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.spongepowered.asm.mixin.Mixin;
+import org.violetmoon.zeta.item.ZetaArmorItem;
+import org.violetmoon.zeta.item.ZetaBlockItem;
+import org.violetmoon.zeta.item.ZetaItem;
+import org.violetmoon.zeta.item.ext.IZetaItemExtensions;
+
+import java.util.Map;
+import java.util.function.Consumer;
 
 // Forge can't actually mixin to interfaces, so we fake it by just... mixing in to everyone inheriting the interface.
 @Mixin({

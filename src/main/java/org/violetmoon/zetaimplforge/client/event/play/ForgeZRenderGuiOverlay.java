@@ -6,8 +6,6 @@ import com.mojang.blaze3d.platform.Window;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraftforge.client.event.RenderGuiOverlayEvent;
-import net.minecraftforge.client.gui.overlay.ForgeGui;
 
 public class ForgeZRenderGuiOverlay implements ZRenderGuiOverlay {
 	private final RenderGuiOverlayEvent e;

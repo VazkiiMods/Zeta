@@ -1,13 +1,12 @@
 package org.violetmoon.zetaimplforge.client.event.load;
 
+import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.neoforged.neoforge.client.event.ModelEvent;
 import org.violetmoon.zeta.client.event.load.ZAddModels;
-
-import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.client.event.ModelEvent;
 
 public record ForgeZAddModels(ModelEvent.RegisterAdditional e) implements ZAddModels {
 	@Override
-	public void register(ResourceLocation model) {
+	public void register(ModelResourceLocation model) {
 		e.register(model);
 	}
 }

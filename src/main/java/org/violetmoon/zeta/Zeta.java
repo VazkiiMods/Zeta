@@ -1,7 +1,10 @@
 package org.violetmoon.zeta;
 
-import java.util.function.Supplier;
-
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.BlockHitResult;
+import net.neoforged.bus.api.IEventBus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
@@ -38,10 +41,7 @@ import org.violetmoon.zeta.util.zetalist.IZeta;
 import org.violetmoon.zeta.util.zetalist.ZetaList;
 import org.violetmoon.zeta.world.EntitySpawnHandler;
 
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.phys.BlockHitResult;
+import java.util.function.Supplier;
 
 /**
  * do not touch forge OR quark from this package, it will later be split off
@@ -207,7 +207,7 @@ public abstract class Zeta implements IZeta {
 	public abstract boolean fireRightClickBlock(Player player, InteractionHand hand, BlockPos pos, BlockHitResult bhr);
 
 	// Let's Jump
-	public abstract void start();
+	public abstract void start(IEventBus modbus);
 	
 	@Override
 	public Zeta asZeta() {

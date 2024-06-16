@@ -1,28 +1,27 @@
 package org.violetmoon.zetaimplforge.config;
 
-import java.io.Serial;
-import java.lang.reflect.Method;
-import java.nio.file.Path;
-
 import com.electronwill.nightconfig.core.CommentedConfig;
 import com.electronwill.nightconfig.core.ConfigFormat;
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.electronwill.nightconfig.core.io.WritingMode;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.ModLoadingContext;
+import net.neoforged.fml.config.ConfigFileTypeHandler;
+import net.neoforged.fml.config.ModConfig;
+import net.neoforged.fml.loading.FMLPaths;
+import net.neoforged.fml.util.ObfuscationReflectionHelper;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.fml.ModContainer;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.config.ConfigFileTypeHandler;
-import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.loading.FMLPaths;
-import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
+import java.io.Serial;
+import java.lang.reflect.Method;
+import java.nio.file.Path;
 
 public class TerribleForgeConfigHackery {
 	private static final Method SET_CONFIG_DATA = ObfuscationReflectionHelper.findMethod(ModConfig.class, "setConfigData", CommentedConfig.class);
 	private static final Method SETUP_CONFIG_FILE = ObfuscationReflectionHelper.findMethod(ConfigFileTypeHandler.class,
 		"setupConfigFile", ModConfig.class, Path.class, ConfigFormat.class);
 
-	public static void registerAndLoadConfigEarlierThanUsual(ForgeConfigSpec spec) {
+	public static void registerAndLoadConfigEarlierThanUsual(ModConfigSpec spec) {
 		ModContainer container = ModLoadingContext.get().getActiveContainer();
 		ModConfig modConfig = new ModConfig(ModConfig.Type.COMMON, spec, container);
 		container.addConfig(modConfig);

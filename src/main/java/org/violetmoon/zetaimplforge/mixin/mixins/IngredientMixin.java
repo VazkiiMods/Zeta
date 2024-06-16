@@ -3,13 +3,11 @@ package org.violetmoon.zetaimplforge.mixin.mixins;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.violetmoon.zeta.recipe.IZetaIngredient;
 import org.violetmoon.zeta.recipe.IZetaIngredientSerializer;
 import org.violetmoon.zetaimplforge.registry.ForgeCraftingExtensionsRegistry;
 
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraftforge.common.crafting.IIngredientSerializer;
 
 /**
  * Forge hacks an "IIngredientSerializer getSerializer()" method onto Ingredient, which Zeta's ingredients

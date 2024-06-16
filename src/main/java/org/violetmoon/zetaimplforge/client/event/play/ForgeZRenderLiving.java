@@ -1,11 +1,9 @@
 package org.violetmoon.zetaimplforge.client.event.play;
 
-import org.violetmoon.zeta.client.event.play.ZRenderLiving;
-
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.minecraft.world.entity.Entity;
-import net.minecraftforge.client.event.RenderLivingEvent;
+import net.neoforged.neoforge.client.event.RenderLivingEvent;
+import org.violetmoon.zeta.client.event.play.ZRenderLiving;
 
 public abstract class ForgeZRenderLiving implements ZRenderLiving {
 	protected final RenderLivingEvent<?, ?> e;

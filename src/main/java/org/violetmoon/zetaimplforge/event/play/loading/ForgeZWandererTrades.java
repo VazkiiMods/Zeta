@@ -1,11 +1,10 @@
 package org.violetmoon.zetaimplforge.event.play.loading;
 
-import java.util.List;
-
+import net.minecraft.world.entity.npc.VillagerTrades;
+import net.neoforged.neoforge.event.village.WandererTradesEvent;
 import org.violetmoon.zeta.event.play.loading.ZWandererTrades;
 
-import net.minecraft.world.entity.npc.VillagerTrades;
-import net.minecraftforge.event.village.WandererTradesEvent;
+import java.util.List;
 
 public class ForgeZWandererTrades implements ZWandererTrades {
     private final WandererTradesEvent e;

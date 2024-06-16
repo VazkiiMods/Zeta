@@ -1,10 +1,8 @@
 package org.violetmoon.zetaimplforge.client.event.play;
 
+import net.neoforged.neoforge.client.event.ClientTickEvent;
 import org.violetmoon.zeta.client.event.play.ZClientTick;
 import org.violetmoon.zeta.event.bus.ZPhase;
-
-import net.minecraftforge.event.TickEvent.ClientTickEvent;
-import net.minecraftforge.event.TickEvent.Phase;
 
 public class ForgeZClientTick implements ZClientTick {
     private final ClientTickEvent e;

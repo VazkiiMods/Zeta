@@ -1,14 +1,13 @@
 package org.violetmoon.zetaimplforge.event.play.entity.living;
 
-import org.violetmoon.zeta.event.bus.ZResult;
-import org.violetmoon.zeta.event.play.entity.living.ZMobSpawnEvent;
-import org.violetmoon.zetaimplforge.ForgeZeta;
-
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.level.BaseSpawner;
 import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraftforge.event.entity.living.MobSpawnEvent;
+import net.neoforged.neoforge.event.entity.living.MobSpawnEvent;
+import org.violetmoon.zeta.event.bus.ZResult;
+import org.violetmoon.zeta.event.play.entity.living.ZMobSpawnEvent;
+import org.violetmoon.zetaimplforge.ForgeZeta;
 
 public class ForgeZMobSpawnEvent implements ZMobSpawnEvent {
     private final MobSpawnEvent e;

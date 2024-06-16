@@ -3,7 +3,6 @@ package org.violetmoon.zetaimplforge.event.play.entity.player;
 import org.violetmoon.zeta.event.play.entity.player.ZPlayerTick;
 
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.event.TickEvent;
 
 public abstract class ForgeZPlayerTick implements ZPlayerTick {
 	private final TickEvent.PlayerTickEvent e;

@@ -1,9 +1,5 @@
 package org.violetmoon.zetaimplforge.registry;
 
-import java.util.Collection;
-import java.util.IdentityHashMap;
-import java.util.Map;
-
 import com.google.gson.JsonObject;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
@@ -11,14 +7,15 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraftforge.common.crafting.CraftingHelper;
-import net.minecraftforge.common.crafting.IIngredientSerializer;
-import net.minecraftforge.common.crafting.conditions.ICondition;
-import net.minecraftforge.common.crafting.conditions.IConditionSerializer;
+import net.neoforged.neoforge.common.conditions.ICondition;
 import org.violetmoon.zeta.recipe.IZetaCondition;
 import org.violetmoon.zeta.recipe.IZetaConditionSerializer;
 import org.violetmoon.zeta.recipe.IZetaIngredientSerializer;
 import org.violetmoon.zeta.registry.CraftingExtensionsRegistry;
+
+import java.util.Collection;
+import java.util.IdentityHashMap;
+import java.util.Map;
 
 public class ForgeCraftingExtensionsRegistry implements CraftingExtensionsRegistry {
 

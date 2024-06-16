@@ -1,8 +1,7 @@
 package org.violetmoon.zetaimplforge.client.event.load;
 
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import org.violetmoon.zeta.client.event.load.ZClientSetup;
-
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 public record ForgeZClientSetup(FMLClientSetupEvent e) implements ZClientSetup {
 	@Override

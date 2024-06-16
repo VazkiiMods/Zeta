@@ -1,23 +1,17 @@
 package org.violetmoon.zeta.config;
 
-import java.util.ArrayList;
-import java.util.BitSet;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.WeakHashMap;
-import java.util.stream.Collectors;
-
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.PacketListener;
+import net.minecraft.server.level.ServerPlayer;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.load.ZConfigChanged;
 import org.violetmoon.zeta.mod.ZetaMod;
 import org.violetmoon.zeta.network.message.S2CUpdateFlag;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.network.PacketListener;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class SyncedFlagHandler {
 	private static ConfigFlagManager flagManager;

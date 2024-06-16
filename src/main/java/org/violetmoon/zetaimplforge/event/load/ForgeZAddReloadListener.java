@@ -5,7 +5,6 @@ import org.violetmoon.zeta.event.load.ZAddReloadListener;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.server.ReloadableServerResources;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
-import net.minecraftforge.event.AddReloadListenerEvent;
 
 public class ForgeZAddReloadListener implements ZAddReloadListener {
 	private final AddReloadListenerEvent e;

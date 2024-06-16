@@ -1,13 +1,12 @@
 package org.violetmoon.zetaimplforge.event.play.loading;
 
-import java.util.List;
-
-import org.violetmoon.zeta.event.play.loading.ZVillagerTrades;
-
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.npc.VillagerTrades;
-import net.minecraftforge.event.village.VillagerTradesEvent;
+import net.neoforged.neoforge.event.village.VillagerTradesEvent;
+import org.violetmoon.zeta.event.play.loading.ZVillagerTrades;
+
+import java.util.List;
 
 public class ForgeZVillagerTrades implements ZVillagerTrades {
     private final VillagerTradesEvent e;

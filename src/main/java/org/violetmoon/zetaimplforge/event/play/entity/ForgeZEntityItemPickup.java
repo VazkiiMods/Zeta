@@ -4,7 +4,6 @@ import org.violetmoon.zeta.event.play.entity.ZEntityItemPickup;
 
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 
 public class ForgeZEntityItemPickup implements ZEntityItemPickup {
     private final EntityItemPickupEvent e;

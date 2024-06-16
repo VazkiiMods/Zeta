@@ -1,5 +1,39 @@
 package org.violetmoon.zetaimplforge.client;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.color.block.BlockColor;
+import net.minecraft.client.color.block.BlockColors;
+import net.minecraft.client.color.item.ItemColor;
+import net.minecraft.client.color.item.ItemColors;
+import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.Block;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.fml.util.thread.EffectiveSide;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.neoforge.client.event.ContainerScreenEvent;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.event.InputEvent;
+import net.neoforged.neoforge.client.event.ModelEvent;
+import net.neoforged.neoforge.client.event.MovementInputUpdateEvent;
+import net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent;
+import net.neoforged.neoforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
+import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
+import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
+import net.neoforged.neoforge.client.event.RenderHighlightEvent;
+import net.neoforged.neoforge.client.event.RenderLivingEvent;
+import net.neoforged.neoforge.client.event.RenderPlayerEvent;
+import net.neoforged.neoforge.client.event.RenderTooltipEvent;
+import net.neoforged.neoforge.client.event.ScreenEvent;
+import net.neoforged.neoforge.client.event.ScreenshotEvent;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
+import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.zeta.Zeta;
 import org.violetmoon.zeta.client.ClientRegistryExtension;
@@ -29,7 +63,6 @@ import org.violetmoon.zeta.client.event.play.ZRenderTick;
 import org.violetmoon.zeta.client.event.play.ZRenderTooltip;
 import org.violetmoon.zeta.client.event.play.ZScreen;
 import org.violetmoon.zeta.client.event.play.ZScreenshot;
-import org.violetmoon.zeta.util.zetalist.ZetaClientList;
 import org.violetmoon.zetaimplforge.client.event.load.ForgeZAddBlockColorHandlers;
 import org.violetmoon.zetaimplforge.client.event.load.ForgeZAddItemColorHandlers;
 import org.violetmoon.zetaimplforge.client.event.load.ForgeZAddModelLayers;
@@ -54,44 +87,6 @@ import org.violetmoon.zetaimplforge.client.event.play.ForgeZScreen;
 import org.violetmoon.zetaimplforge.mixin.mixins.client.AccessorBlockColors;
 import org.violetmoon.zetaimplforge.mixin.mixins.client.AccessorItemColors;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.color.block.BlockColor;
-import net.minecraft.client.color.block.BlockColors;
-import net.minecraft.client.color.item.ItemColor;
-import net.minecraft.client.color.item.ItemColors;
-import net.minecraft.client.multiplayer.ClientPacketListener;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.level.ItemLike;
-import net.minecraft.world.level.block.Block;
-import net.minecraftforge.client.event.ContainerScreenEvent;
-import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.client.event.InputEvent;
-import net.minecraftforge.client.event.ModelEvent;
-import net.minecraftforge.client.event.MovementInputUpdateEvent;
-import net.minecraftforge.client.event.RegisterClientReloadListenersEvent;
-import net.minecraftforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
-import net.minecraftforge.client.event.RegisterColorHandlersEvent;
-import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
-import net.minecraftforge.client.event.RenderGuiOverlayEvent;
-import net.minecraftforge.client.event.RenderHighlightEvent;
-import net.minecraftforge.client.event.RenderLivingEvent;
-import net.minecraftforge.client.event.RenderPlayerEvent;
-import net.minecraftforge.client.event.RenderTooltipEvent;
-import net.minecraftforge.client.event.ScreenEvent;
-import net.minecraftforge.client.event.ScreenshotEvent;
-import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.util.thread.EffectiveSide;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.server.ServerLifecycleHooks;
-
 public class ForgeZetaClient extends ZetaClient {
 	public ForgeZetaClient(Zeta z) {
 		super(z);
@@ -99,7 +94,7 @@ public class ForgeZetaClient extends ZetaClient {
 
 	@Override
 	public @Nullable BlockColor getBlockColor(BlockColors bcs, Block block) {
-		return ForgeRegistries.BLOCKS.getDelegate(block)
+		return NeoForgeRegistries.BLOCKS.getDelegate(block)
 			.map(ref -> ((AccessorBlockColors) bcs).zeta$getBlockColors().get(ref))
 			.orElse(null);
 	}
@@ -153,41 +148,41 @@ public class ForgeZetaClient extends ZetaClient {
 		bus.addListener(this::registerClientTooltipComponentFactories);
 		bus.addListener(this::registerLayerDefinitions);
 
-		MinecraftForge.EVENT_BUS.addListener(this::renderTick);
-		MinecraftForge.EVENT_BUS.addListener(this::clientTick);
-		MinecraftForge.EVENT_BUS.addListener(this::inputMouseButton);
-		MinecraftForge.EVENT_BUS.addListener(this::inputKey);
-		MinecraftForge.EVENT_BUS.addListener(this::screenshot);
-		MinecraftForge.EVENT_BUS.addListener(this::movementInputUpdate);
-		MinecraftForge.EVENT_BUS.addListener(this::renderBlockHighlight);
-		MinecraftForge.EVENT_BUS.addListener(this::gatherTooltipComponents);
+		NeoForge.EVENT_BUS.addListener(this::renderTick);
+		NeoForge.EVENT_BUS.addListener(this::clientTick);
+		NeoForge.EVENT_BUS.addListener(this::inputMouseButton);
+		NeoForge.EVENT_BUS.addListener(this::inputKey);
+		NeoForge.EVENT_BUS.addListener(this::screenshot);
+		NeoForge.EVENT_BUS.addListener(this::movementInputUpdate);
+		NeoForge.EVENT_BUS.addListener(this::renderBlockHighlight);
+		NeoForge.EVENT_BUS.addListener(this::gatherTooltipComponents);
 
-		MinecraftForge.EVENT_BUS.addListener(this::renderContainerScreenForeground);
-		MinecraftForge.EVENT_BUS.addListener(this::renderContainerScreenBackground);
+		NeoForge.EVENT_BUS.addListener(this::renderContainerScreenForeground);
+		NeoForge.EVENT_BUS.addListener(this::renderContainerScreenBackground);
 
-		MinecraftForge.EVENT_BUS.addListener(this::renderGameOverlayNeitherPreNorPost);
-		MinecraftForge.EVENT_BUS.addListener(this::renderGuiOverlayPre);
-		MinecraftForge.EVENT_BUS.addListener(this::renderGuiOverlayPost);
-		MinecraftForge.EVENT_BUS.addListener(this::renderPlayerPre);
-		MinecraftForge.EVENT_BUS.addListener(this::renderPlayerPost);
-		MinecraftForge.EVENT_BUS.addListener(EventPriority.HIGHEST, this::renderLivingPreHighest);
-		MinecraftForge.EVENT_BUS.addListener(EventPriority.LOWEST, this::renderLivingPostLowest);
-		MinecraftForge.EVENT_BUS.addListener(this::renderTooltipGatherComponents);
-		MinecraftForge.EVENT_BUS.addListener(this::renderTooltipGatherComponentsLow);
+		NeoForge.EVENT_BUS.addListener(this::renderGameOverlayNeitherPreNorPost);
+		NeoForge.EVENT_BUS.addListener(this::renderGuiOverlayPre);
+		NeoForge.EVENT_BUS.addListener(this::renderGuiOverlayPost);
+		NeoForge.EVENT_BUS.addListener(this::renderPlayerPre);
+		NeoForge.EVENT_BUS.addListener(this::renderPlayerPost);
+		NeoForge.EVENT_BUS.addListener(EventPriority.HIGHEST, this::renderLivingPreHighest);
+		NeoForge.EVENT_BUS.addListener(EventPriority.LOWEST, this::renderLivingPostLowest);
+		NeoForge.EVENT_BUS.addListener(this::renderTooltipGatherComponents);
+		NeoForge.EVENT_BUS.addListener(this::renderTooltipGatherComponentsLow);
 
-		MinecraftForge.EVENT_BUS.addListener(this::screenInitPre);
-		MinecraftForge.EVENT_BUS.addListener(this::screenInitPost);
-		MinecraftForge.EVENT_BUS.addListener(this::screenRenderPre);
-		MinecraftForge.EVENT_BUS.addListener(this::screenRenderPost);
-		MinecraftForge.EVENT_BUS.addListener(this::screenMouseButtonPressedPre);
-		MinecraftForge.EVENT_BUS.addListener(this::screenMouseButtonPressedPost);
-		MinecraftForge.EVENT_BUS.addListener(this::screenMouseScrolledPre);
-		MinecraftForge.EVENT_BUS.addListener(this::screenMouseScrolledPost);
-		MinecraftForge.EVENT_BUS.addListener(this::screenKeyPressedPre);
-		MinecraftForge.EVENT_BUS.addListener(this::screenKeyPressedPost);
-		MinecraftForge.EVENT_BUS.addListener(this::screenCharacterTypedPre);
-		MinecraftForge.EVENT_BUS.addListener(this::screenCharacterTypedPost);
-		MinecraftForge.EVENT_BUS.addListener(this::screenOpening);
+		NeoForge.EVENT_BUS.addListener(this::screenInitPre);
+		NeoForge.EVENT_BUS.addListener(this::screenInitPost);
+		NeoForge.EVENT_BUS.addListener(this::screenRenderPre);
+		NeoForge.EVENT_BUS.addListener(this::screenRenderPost);
+		NeoForge.EVENT_BUS.addListener(this::screenMouseButtonPressedPre);
+		NeoForge.EVENT_BUS.addListener(this::screenMouseButtonPressedPost);
+		NeoForge.EVENT_BUS.addListener(this::screenMouseScrolledPre);
+		NeoForge.EVENT_BUS.addListener(this::screenMouseScrolledPost);
+		NeoForge.EVENT_BUS.addListener(this::screenKeyPressedPre);
+		NeoForge.EVENT_BUS.addListener(this::screenKeyPressedPost);
+		NeoForge.EVENT_BUS.addListener(this::screenCharacterTypedPre);
+		NeoForge.EVENT_BUS.addListener(this::screenCharacterTypedPost);
+		NeoForge.EVENT_BUS.addListener(this::screenOpening);
 	}
 
 	public void registerBlockColors(RegisterColorHandlersEvent.Block event) {
@@ -252,7 +247,7 @@ public class ForgeZetaClient extends ZetaClient {
 	}
 
 	boolean clientTicked = false;
-	public void clientTick(TickEvent.ClientTickEvent e) {
+	public void clientTick(ClientTickEvent e) {
 		if(!clientTicked) {
 			loadBus.fire(new ZFirstClientTick());
 			clientTicked = true;
