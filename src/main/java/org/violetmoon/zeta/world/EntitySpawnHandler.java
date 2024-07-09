@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.BooleanSupplier;
 
+import net.minecraft.world.entity.*;
 import org.violetmoon.zeta.Zeta;
 import org.violetmoon.zeta.config.type.EntitySpawnConfig;
 import org.violetmoon.zeta.event.bus.LoadEvent;
@@ -12,12 +13,7 @@ import org.violetmoon.zeta.item.ZetaSpawnEggItem;
 import org.violetmoon.zeta.module.ZetaModule;
 
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.MobCategory;
-import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.entity.SpawnPlacements.SpawnPredicate;
-import net.minecraft.world.entity.SpawnPlacements.Type;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraft.world.level.levelgen.Heightmap;
@@ -31,8 +27,8 @@ public class EntitySpawnHandler {
 		this.zeta = zeta;
 	}
 
-	public <T extends Mob> void registerSpawn(EntityType<T> entityType, MobCategory classification, Type placementType, Heightmap.Types heightMapType, SpawnPredicate<T> placementPredicate, EntitySpawnConfig config) {
-		SpawnPlacements.register(entityType, placementType, heightMapType, placementPredicate);
+	public <T extends Mob> void registerSpawn(EntityType<T> entityType, MobCategory classification, SpawnPlacementType placementType, Heightmap.Types heightMapType, SpawnPredicate<T> placementPredicate, EntitySpawnConfig config) {
+		SpawnPlacements.register(entityType, placementType, heightMapType, placementPredicate); //todo: Access Widener
 
 		track(entityType, classification, config, false);
 	}

@@ -1,5 +1,6 @@
 package org.violetmoon.zeta.advancement.modifier;
 
+import java.util.Optional;
 import java.util.Set;
 
 import org.violetmoon.zeta.advancement.AdvancementModifier;
@@ -19,7 +20,7 @@ import net.minecraft.world.level.ItemLike;
 
 public class FishyBusinessModifier extends AdvancementModifier {
 
-    private static final ResourceLocation TARGET = new ResourceLocation("husbandry/fishy_business");
+    private static final ResourceLocation TARGET = ResourceLocation.withDefaultNamespace("husbandry/fishy_business");
 
     final Set<ItemLike> fishes;
 
@@ -38,11 +39,9 @@ public class FishyBusinessModifier extends AdvancementModifier {
     public boolean apply(ResourceLocation res, IMutableAdvancement adv) {
 
         ItemLike[] array = fishes.toArray(ItemLike[]::new);
-        Criterion criterion = new Criterion(FishingRodHookedTrigger.
+        Criterion criterion = FishingRodHookedTrigger.
                 TriggerInstance.fishedItem(
-                        ItemPredicate.ANY,
-                        EntityPredicate.ANY,
-                        ItemPredicate.Builder.item().of(array).build()));
+                        Optional.empty(), Optional.empty(), Optional.of(ItemPredicate.Builder.item().of(array).build()));
 
         String name = BuiltInRegistries.ITEM.getKey(array[0].asItem()).toString();
         adv.addOrCriterion(name, criterion);

@@ -25,7 +25,7 @@ public class ZetaStairsBlock extends StairBlock implements IZetaBlock, IZetaBloc
 	private BooleanSupplier enabledSupplier = BooleanSuppliers.TRUE;
 
 	public ZetaStairsBlock(IZetaBlock parent, @Nullable ResourceKey<CreativeModeTab> tab) {
-		super(parent.getBlock()::defaultBlockState, VariantRegistry.realStateCopy(parent));
+		super(parent.getBlock().defaultBlockState(), VariantRegistry.realStateCopy(parent));
 
 		this.parent = parent;
 
@@ -68,9 +68,8 @@ public class ZetaStairsBlock extends StairBlock implements IZetaBlock, IZetaBloc
 		return enabledSupplier.getAsBoolean();
 	}
 
-	@Nullable
 	@Override
-	public float[] getBeaconColorMultiplierZeta(BlockState state, LevelReader world, BlockPos pos, BlockPos beaconPos) {
+	public Integer getBeaconColorMultiplierZeta(BlockState state, LevelReader world, BlockPos pos, BlockPos beaconPos) {
 		BlockState parentState = parent.getBlock().defaultBlockState();
 		return parent.getModule().zeta.blockExtensions.get(parentState).getBeaconColorMultiplierZeta(parentState, world, pos, beaconPos);
 	}

@@ -17,7 +17,7 @@ import net.minecraft.world.level.biome.Biome;
 
 public class AdventuringTimeModifier extends AdvancementModifier {
 
-	private static final ResourceLocation TARGET = new ResourceLocation("adventure/adventuring_time");
+	private static final ResourceLocation TARGET = ResourceLocation.withDefaultNamespace("adventure/adventuring_time");
 	
 	private final Set<ResourceKey<Biome>> locations;
 	
@@ -37,7 +37,7 @@ public class AdventuringTimeModifier extends AdvancementModifier {
 			String name = key.location().toString();
 			
 			Criterion criterion = new Criterion(PlayerTrigger.TriggerInstance.located(
-					LocationPredicate.inBiome(key)));
+					LocationPredicate.inBiome(key))); //todo: I dunno how to do codec
 			adv.addRequiredCriterion(name, criterion);
 		}
 		

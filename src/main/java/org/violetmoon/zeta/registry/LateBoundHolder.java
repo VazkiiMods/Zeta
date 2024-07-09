@@ -64,8 +64,13 @@ public class LateBoundHolder<T> implements Holder<T> {
 	}
 
 	@Override
-	public boolean is(TagKey<T> p_205705_) {
+	public boolean is(TagKey<T> tagKey) {
 		return false; //um
+	}
+
+	@Override
+	public boolean is(Holder<T> holder) {
+		return false; //uhhhhh
 	}
 
 	@Override

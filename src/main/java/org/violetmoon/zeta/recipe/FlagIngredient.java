@@ -19,7 +19,7 @@ import net.minecraft.world.item.crafting.Ingredient;
  * @author WireSegal
  * Created at 3:44 PM on 10/20/19.
  */
-public class FlagIngredient extends Ingredient implements IZetaIngredient<FlagIngredient> {
+public class FlagIngredient extends Ingredient implements IZetaIngredient<FlagIngredient> { //AccessWidener? Idk I think this is cooked.
 
 	private final Ingredient parent;
 

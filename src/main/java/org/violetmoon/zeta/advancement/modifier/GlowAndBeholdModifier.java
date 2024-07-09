@@ -21,7 +21,7 @@ import net.minecraft.world.level.block.Block;
 
 public class GlowAndBeholdModifier extends AdvancementModifier {
 
-    private static final ResourceLocation TARGET = new ResourceLocation("husbandry/make_a_sign_glow");
+    private static final ResourceLocation TARGET = ResourceLocation.withDefaultNamespace("husbandry/make_a_sign_glow");
 
     final Set<Block> blocks;
 
@@ -40,12 +40,11 @@ public class GlowAndBeholdModifier extends AdvancementModifier {
     public boolean apply(ResourceLocation res, IMutableAdvancement adv) {
 
         Block[] array = blocks.toArray(Block[]::new);
-        Criterion criterion = new Criterion(ItemUsedOnLocationTrigger.
-                TriggerInstance.itemUsedOnBlock(
-                        LocationPredicate.Builder.location().setBlock(
-                                BlockPredicate.Builder.block()
-                                        .of(array).build()),
-                        ItemPredicate.Builder.item().of(Items.GLOW_INK_SAC)));
+        Criterion criterion = ItemUsedOnLocationTrigger.TriggerInstance.itemUsedOnBlock(
+                LocationPredicate.Builder.location().setBlock(
+                        BlockPredicate.Builder.block()
+                                .of(array)),
+                ItemPredicate.Builder.item().of(Items.GLOW_INK_SAC));
 
         String name = BuiltInRegistries.BLOCK.getKey(array[0]).toString();
         adv.addOrCriterion(name, criterion);

@@ -48,7 +48,7 @@ public abstract class ClientRegistryExtension {
 		ClampedItemPropertyFunction isDyed = (stack, level, entity, i) -> dyeables.isDyed(stack) ? 1 : 0;
 		ItemColor color = (stack, layer) -> layer == 0 ? dyeables.getColor(stack) : 0xFF_FF_FF;
 		//apparently ItemPropertyFunctions are weird and can only be assigned to the minecraft: namespace
-		ResourceLocation isDyedId = new ResourceLocation("minecraft", z.modid + "_dyed");
+		ResourceLocation isDyedId = ResourceLocation.withDefaultNamespace( z.modid + "_dyed");
 
 		for(Item item : dyeables.dyeableConditions.keySet()) {
 			ItemProperties.register(item, isDyedId, isDyed);

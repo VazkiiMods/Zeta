@@ -34,7 +34,7 @@ public class ZetaInheritedPaneBlock extends ZetaPaneBlock implements IZetaBlock,
 	}
 
 	public ZetaInheritedPaneBlock(IZetaBlock parent) {
-		this(parent, Block.Properties.copy(parent.getBlock()));
+		this(parent, Block.Properties.ofFullCopy(parent.getBlock()));
 	}
 
 	@Override
@@ -42,9 +42,8 @@ public class ZetaInheritedPaneBlock extends ZetaPaneBlock implements IZetaBlock,
 		return super.isEnabled() && parent.isEnabled();
 	}
 
-	@Nullable
 	@Override
-	public float[] getBeaconColorMultiplierZeta(BlockState state, LevelReader world, BlockPos pos, BlockPos beaconPos) {
+	public Integer getBeaconColorMultiplierZeta(BlockState state, LevelReader world, BlockPos pos, BlockPos beaconPos) {
 		BlockState parentState = parent.getBlock().defaultBlockState();
 		return parent.getModule().zeta.blockExtensions.get(parentState).getBeaconColorMultiplierZeta(parentState, world, pos, beaconPos);
 	}

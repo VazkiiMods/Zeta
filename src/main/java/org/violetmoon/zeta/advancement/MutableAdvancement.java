@@ -55,7 +55,7 @@ public class MutableAdvancement implements IMutableAdvancement {
 	}
 	
 	public void commit() {
-		advancement.criteria = ImmutableMap.copyOf(criteria);
+		advancement.criteria() = ImmutableMap.copyOf(criteria);
 		
 		List<String[]> requirementArrays = new ArrayList<>();
 		for(List<String> list : requirements) {

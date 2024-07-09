@@ -74,7 +74,7 @@ public class BiomeTagConfig implements IBiomeConfig, IConfigType {
 	public void updateTypes() {
 		tags = new LinkedList<>();
 		for(String s : biomeTagStrings) {
-			TagKey<Biome> tag = TagKey.create(Registries.BIOME, new ResourceLocation(s));
+			TagKey<Biome> tag = TagKey.create(Registries.BIOME, ResourceLocation.parse(s));
 
 			if(tag != null)
 				tags.add(tag);

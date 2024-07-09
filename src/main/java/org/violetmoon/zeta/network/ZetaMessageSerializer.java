@@ -38,10 +38,10 @@ public final class ZetaMessageSerializer {
 		this.<Character>mapFunctions(char.class, FriendlyByteBuf::readChar, FriendlyByteBuf::writeChar);
 
 		mapFunctions(BlockPos.class, FriendlyByteBuf::readBlockPos, FriendlyByteBuf::writeBlockPos);
-		mapFunctions(Component.class, FriendlyByteBuf::readComponent, FriendlyByteBuf::writeComponent);
+		//mapFunctions(Component.class, FriendlyByteBuf::readComponent, FriendlyByteBuf::writeComponent);
 		mapFunctions(UUID.class, FriendlyByteBuf::readUUID, FriendlyByteBuf::writeUUID);
 		mapFunctions(CompoundTag.class, FriendlyByteBuf::readNbt, FriendlyByteBuf::writeNbt);
-		mapFunctions(ItemStack.class, FriendlyByteBuf::readItem, ZetaMessageSerializer::writeItemStack);
+		//mapFunctions(ItemStack.class, FriendlyByteBuf::readItem, ZetaMessageSerializer::writeItemStack);
 		mapFunctions(String.class, ZetaMessageSerializer::readString, ZetaMessageSerializer::writeString);
 		mapFunctions(ResourceLocation.class, FriendlyByteBuf::readResourceLocation, FriendlyByteBuf::writeResourceLocation);
 		mapFunctions(Date.class, FriendlyByteBuf::readDate, FriendlyByteBuf::writeDate);
@@ -170,9 +170,9 @@ public final class ZetaMessageSerializer {
 
 	// Needed because the methods are overloaded
 
-	private static void writeItemStack(FriendlyByteBuf buf, ItemStack stack) {
+	/*private static void writeItemStack(FriendlyByteBuf buf, ItemStack stack) {
 		buf.writeItem(stack);
-	}
+	}*/
 
 	private static String readString(FriendlyByteBuf buf) {
 		return buf.readUtf(32767);

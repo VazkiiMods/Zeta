@@ -16,7 +16,7 @@ import net.minecraft.world.level.block.Block;
 
 public class ASeedyPlaceModifier extends AdvancementModifier {
 
-	private static final ResourceLocation TARGET = new ResourceLocation("husbandry/plant_seed");
+	private static final ResourceLocation TARGET = ResourceLocation.withDefaultNamespace("husbandry/plant_seed");
 
 	final Set<Block> seeds;
 
@@ -34,7 +34,7 @@ public class ASeedyPlaceModifier extends AdvancementModifier {
 	@Override
 	public boolean apply(ResourceLocation res, IMutableAdvancement adv) {
 		for(var block : seeds) {
-			Criterion criterion = new Criterion(EnterBlockTrigger.TriggerInstance.entersBlock(block));
+			Criterion criterion = EnterBlockTrigger.TriggerInstance.entersBlock(block);
 			
 			String name = BuiltInRegistries.BLOCK.getKey(block).toString();
 			adv.addOrCriterion(name, criterion);

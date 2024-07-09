@@ -21,8 +21,8 @@ import net.minecraft.world.level.block.Block;
 
 public class WaxModifier extends AdvancementModifier {
 
-	private static final ResourceLocation TARGET_ON = new ResourceLocation("husbandry/wax_on");
-	private static final ResourceLocation TARGET_OFF = new ResourceLocation("husbandry/wax_off");
+	private static final ResourceLocation TARGET_ON = ResourceLocation.withDefaultNamespace("husbandry/wax_on");
+	private static final ResourceLocation TARGET_OFF = ResourceLocation.withDefaultNamespace("husbandry/wax_off");
 	
 	private final Set<Block> unwaxed;
 	private final Set<Block> waxed;
@@ -46,20 +46,20 @@ public class WaxModifier extends AdvancementModifier {
 	public boolean apply(ResourceLocation res, IMutableAdvancement adv) {
 		String title = res.getPath().replaceAll(".+/", "");
 		Criterion criterion = adv.getCriterion(title);
-		if(criterion != null && criterion.getTrigger() instanceof ItemUsedOnLocationTrigger.TriggerInstance iib) {
+		if(criterion != null && criterion.triggerInstance() instanceof ItemUsedOnLocationTrigger.TriggerInstance iib) {
 			// Yes I know its wordy, yes I know this is stupid. Please forgive me I couldnt make it better.
-			iib.location.compositePredicates = (res.equals(TARGET_ON)) ? iib.location.compositePredicates
+			iib.location().get().compositePredicates = (res.equals(TARGET_ON)) ? iib.location().get().compositePredicates //todo: AccessWidener
 					.or(ItemUsedOnLocationTrigger.TriggerInstance.itemUsedOnBlock(
 							LocationPredicate.Builder.location().setBlock(
-									BlockPredicate.Builder.block().of(unwaxed).build()),
+									BlockPredicate.Builder.block().of(unwaxed)),
 							ItemPredicate.Builder.item().of(Items.HONEYCOMB))
-							.location.compositePredicates
-			) : iib.location.compositePredicates
+							.triggerInstance().location().get().compositePredicates
+			) : iib.location().get().compositePredicates
 					.or(ItemUsedOnLocationTrigger.TriggerInstance.itemUsedOnBlock(
 							LocationPredicate.Builder.location().setBlock(
-									BlockPredicate.Builder.block().of(waxed).build()),
+									BlockPredicate.Builder.block().of(waxed)),
 							ItemPredicate.Builder.item().of(ItemTags.AXES))
-					.location.compositePredicates);
+							.triggerInstance().location().get().compositePredicates);
 		}
 		
 		return true;

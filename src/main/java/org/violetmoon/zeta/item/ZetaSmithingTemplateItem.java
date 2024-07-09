@@ -17,22 +17,22 @@ public class ZetaSmithingTemplateItem extends SmithingTemplateItem implements IZ
 	
 	protected static final ChatFormatting Z_TITLE_FORMAT = ChatFormatting.GRAY;
 	protected static final ChatFormatting Z_DESCRIPTION_FORMAT = ChatFormatting.BLUE;
-	protected static final ResourceLocation Z_EMPTY_SLOT_HELMET = new ResourceLocation("item/empty_armor_slot_helmet");
-	protected static final ResourceLocation Z_EMPTY_SLOT_CHESTPLATE = new ResourceLocation("item/empty_armor_slot_chestplate");
-	protected static final ResourceLocation Z_EMPTY_SLOT_LEGGINGS = new ResourceLocation("item/empty_armor_slot_leggings");
-	protected static final ResourceLocation Z_EMPTY_SLOT_BOOTS = new ResourceLocation("item/empty_armor_slot_boots");
-	protected static final ResourceLocation Z_EMPTY_SLOT_HOE = new ResourceLocation("item/empty_slot_hoe");
-	protected static final ResourceLocation Z_EMPTY_SLOT_AXE = new ResourceLocation("item/empty_slot_axe");
-	protected static final ResourceLocation Z_EMPTY_SLOT_SWORD = new ResourceLocation("item/empty_slot_sword");
-	protected static final ResourceLocation Z_EMPTY_SLOT_SHOVEL = new ResourceLocation("item/empty_slot_shovel");
-	protected static final ResourceLocation Z_EMPTY_SLOT_PICKAXE = new ResourceLocation("item/empty_slot_pickaxe");
-	protected static final ResourceLocation Z_EMPTY_SLOT_INGOT = new ResourceLocation("item/empty_slot_ingot");
-	protected static final ResourceLocation Z_EMPTY_SLOT_REDSTONE_DUST = new ResourceLocation("item/empty_slot_redstone_dust");
-	protected static final ResourceLocation Z_EMPTY_SLOT_QUARTZ = new ResourceLocation("item/empty_slot_quartz");
-	protected static final ResourceLocation Z_EMPTY_SLOT_EMERALD = new ResourceLocation("item/empty_slot_emerald");
-	protected static final ResourceLocation Z_EMPTY_SLOT_DIAMOND = new ResourceLocation("item/empty_slot_diamond");
-	protected static final ResourceLocation Z_EMPTY_SLOT_LAPIS_LAZULI = new ResourceLocation("item/empty_slot_lapis_lazuli");
-	protected static final ResourceLocation Z_EMPTY_SLOT_AMETHYST_SHARD = new ResourceLocation("item/empty_slot_amethyst_shard");
+	protected static final ResourceLocation Z_EMPTY_SLOT_HELMET = ResourceLocation.withDefaultNamespace("item/empty_armor_slot_helmet");
+	protected static final ResourceLocation Z_EMPTY_SLOT_CHESTPLATE = ResourceLocation.withDefaultNamespace("item/empty_armor_slot_chestplate");
+	protected static final ResourceLocation Z_EMPTY_SLOT_LEGGINGS = ResourceLocation.withDefaultNamespace("item/empty_armor_slot_leggings");
+	protected static final ResourceLocation Z_EMPTY_SLOT_BOOTS = ResourceLocation.withDefaultNamespace("item/empty_armor_slot_boots");
+	protected static final ResourceLocation Z_EMPTY_SLOT_HOE = ResourceLocation.withDefaultNamespace("item/empty_slot_hoe");
+	protected static final ResourceLocation Z_EMPTY_SLOT_AXE = ResourceLocation.withDefaultNamespace("item/empty_slot_axe");
+	protected static final ResourceLocation Z_EMPTY_SLOT_SWORD = ResourceLocation.withDefaultNamespace("item/empty_slot_sword");
+	protected static final ResourceLocation Z_EMPTY_SLOT_SHOVEL = ResourceLocation.withDefaultNamespace("item/empty_slot_shovel");
+	protected static final ResourceLocation Z_EMPTY_SLOT_PICKAXE = ResourceLocation.withDefaultNamespace("item/empty_slot_pickaxe");
+	protected static final ResourceLocation Z_EMPTY_SLOT_INGOT = ResourceLocation.withDefaultNamespace("item/empty_slot_ingot");
+	protected static final ResourceLocation Z_EMPTY_SLOT_REDSTONE_DUST = ResourceLocation.withDefaultNamespace("item/empty_slot_redstone_dust");
+	protected static final ResourceLocation Z_EMPTY_SLOT_QUARTZ = ResourceLocation.withDefaultNamespace("item/empty_slot_quartz");
+	protected static final ResourceLocation Z_EMPTY_SLOT_EMERALD = ResourceLocation.withDefaultNamespace("item/empty_slot_emerald");
+	protected static final ResourceLocation Z_EMPTY_SLOT_DIAMOND = ResourceLocation.withDefaultNamespace("item/empty_slot_diamond");
+	protected static final ResourceLocation Z_EMPTY_SLOT_LAPIS_LAZULI = ResourceLocation.withDefaultNamespace("item/empty_slot_lapis_lazuli");
+	protected static final ResourceLocation Z_EMPTY_SLOT_AMETHYST_SHARD = ResourceLocation.withDefaultNamespace("item/empty_slot_amethyst_shard");
 
 	protected static List<ResourceLocation> anyToolIconList() {
 		return List.of(Z_EMPTY_SLOT_HELMET, Z_EMPTY_SLOT_SWORD, Z_EMPTY_SLOT_CHESTPLATE, Z_EMPTY_SLOT_PICKAXE, Z_EMPTY_SLOT_LEGGINGS, Z_EMPTY_SLOT_AXE, Z_EMPTY_SLOT_BOOTS, Z_EMPTY_SLOT_HOE, Z_EMPTY_SLOT_SHOVEL);

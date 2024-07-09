@@ -19,7 +19,7 @@ import net.minecraft.world.entity.EntityType;
 
 public class TwoByTwoModifier extends AdvancementModifier {
 
-	private static final ResourceLocation TARGET = new ResourceLocation("husbandry/bred_all_animals");
+	private static final ResourceLocation TARGET = ResourceLocation.withDefaultNamespace("husbandry/bred_all_animals");
 	
 	final Set<EntityType<?>> entityTypes;
 	
@@ -39,8 +39,8 @@ public class TwoByTwoModifier extends AdvancementModifier {
 	@Override
 	public boolean apply(ResourceLocation res, IMutableAdvancement adv) {
 		for(EntityType<?> type : entityTypes) {
-			Criterion criterion = new Criterion(BredAnimalsTrigger.TriggerInstance
-					.bredAnimals(EntityPredicate.Builder.entity().entityType(EntityTypePredicate.of(type))));
+			Criterion criterion = BredAnimalsTrigger.TriggerInstance
+					.bredAnimals(EntityPredicate.Builder.entity().entityType(EntityTypePredicate.of(type)));
 			
 			String name = BuiltInRegistries.ENTITY_TYPE.getKey(type).toString();
 			adv.addRequiredCriterion(name, criterion);

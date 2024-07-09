@@ -27,10 +27,10 @@ public class RegistryUtil {
         ImmutableList.Builder<T> builder = new ImmutableList.Builder<>();
         for (String s : coll) {
             if (s.startsWith("#")) {
-                TagKey<T> tag = TagKey.create(reg.key(), new ResourceLocation(s.substring(1)));
+                TagKey<T> tag = TagKey.create(reg.key(), ResourceLocation.parse(s.substring(1)));
                 reg.getTagOrEmpty(tag).forEach(tHolder -> builder.add(tHolder.value()));
             } else {
-                reg.getOptional(new ResourceLocation(s)).ifPresent(builder::add);
+                reg.getOptional(ResourceLocation.parse(s)).ifPresent(builder::add);
             }
         }
         return builder.build();

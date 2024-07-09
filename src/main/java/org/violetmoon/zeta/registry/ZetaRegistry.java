@@ -1,15 +1,11 @@
 package org.violetmoon.zeta.registry;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.IdentityHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import net.minecraft.core.RegistrationInfo;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.zeta.Zeta;
 import org.violetmoon.zeta.item.ZetaBlockItem;
@@ -59,11 +55,11 @@ public abstract class ZetaRegistry {
 		return internal == null ? registry.getKey(obj) : internal;
 	}
 
-	//You know how `new ResourceLocation(String)` prepends "minecraft" if there's no prefix?
+	//You know how `ResourceLocation.parse(String)` prepends "minecraft" if there's no prefix?
 	//This method is like that, except it prepends *your* modid
 	public ResourceLocation newResourceLocation(String in) {
-		if(in.indexOf(':') == -1) return new ResourceLocation(z.modid, in);
-		else return new ResourceLocation(in);
+		if(in.indexOf(':') == -1) return ResourceLocation.fromNamespaceAndPath(z.modid, in);
+		else return ResourceLocation.parse(in);
 	}
 
 	//Root registration method
@@ -235,7 +231,7 @@ public abstract class ZetaRegistry {
 		List<DynamicEntry<T>> typePun = ((List<DynamicEntry<T>>) (Object) entries);
 		typePun.forEach(entry -> {
 			T thing = entry.creator.apply(lookup);
-			writable.register(entry.id, thing, Lifecycle.stable());
+			writable.register(entry.id, thing, new RegistrationInfo(Optional.empty(), Lifecycle.stable())); //todo: Should this be Optional.empty()?
 
 			if(entry.lateBound != null)
 				entry.lateBound.bind(thing, writable);

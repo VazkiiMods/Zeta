@@ -1,6 +1,8 @@
 package org.violetmoon.zetaimplforge.item;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -8,12 +10,14 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.EnderMan;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.LevelReader;
 import net.neoforged.neoforge.common.ToolActions;
+import net.neoforged.neoforge.event.EventHooks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.zeta.item.ext.IZetaItemExtensions;
@@ -45,7 +49,7 @@ public class IForgeItemItemExtensions implements IZetaItemExtensions {
 	}
 
 	@Override
-	public boolean canEquipZeta(ItemStack stack, EquipmentSlot armorType, Entity ent) {
+	public boolean canEquipZeta(ItemStack stack, EquipmentSlot armorType, LivingEntity ent) {
 		return stack.canEquip(armorType, ent);
 	}
 
@@ -74,19 +78,19 @@ public class IForgeItemItemExtensions implements IZetaItemExtensions {
 		return stack.getItem().getEnchantmentValue(stack);
 	}
 
-	@Override
+	/*@Override
 	public boolean canApplyAtEnchantingTableZeta(ItemStack stack, Enchantment enchantment) {
 		return stack.canApplyAtEnchantingTable(enchantment);
-	}
+	}*/
 
 	@Override
-	public int getEnchantmentLevelZeta(ItemStack stack, Enchantment enchantment) {
+	public int getEnchantmentLevelZeta(ItemStack stack, Holder<Enchantment> enchantment) {
 		return stack.getEnchantmentLevel(enchantment);
 	}
 
 	@Override
 	public Map<Enchantment, Integer> getAllEnchantmentsZeta(ItemStack stack) {
-		return stack.getAllEnchantments();
+		return stack.getAllEnchantments(registryAccess().lookupOrThrow(net.minecraft.core.registries.Registries.ENCHANTMENT)); //todo: We need to get RegistryAccess somehow
 	}
 
 	@Override
@@ -95,12 +99,12 @@ public class IForgeItemItemExtensions implements IZetaItemExtensions {
 	}
 
 	@Override
-	public int getBurnTimeZeta(ItemStack stack, @Nullable RecipeType<?> recipeType) {
-		return ForgeHooks.getBurnTime(stack, recipeType);
+	public int getBurnTimeZeta(ItemStack stack, int burnTime, @Nullable RecipeType<?> recipeType) {
+		return EventHooks.getItemBurnTime(stack, burnTime, recipeType);
 	}
 
 	@Override
-	public <T extends LivingEntity> int damageItemZeta(ItemStack stack, int amount, T entity, Consumer<T> onBroken) {
+	public <T extends LivingEntity> int damageItemZeta(ItemStack stack, int amount, T entity, Consumer<Item> onBroken) {
 		return stack.getItem().damageItem(stack, amount, entity, onBroken);
 	}
 
@@ -116,6 +120,6 @@ public class IForgeItemItemExtensions implements IZetaItemExtensions {
 
 	@Override
 	public int getDefaultTooltipHideFlagsZeta(@NotNull ItemStack stack) {
-		return stack.getItem().getDefaultTooltipHideFlags(stack);
+		return stack.getItem().getDefaultTooltipHideFlags(stack); //todo: What
 	}
 }

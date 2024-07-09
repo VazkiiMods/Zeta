@@ -25,13 +25,13 @@ public abstract class AbstractEditBoxInputScreen<T> extends AbstractInputScreen<
 
 	@Override
 	public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-		renderBackground(guiGraphics);
+		renderBackground(guiGraphics, mouseX, mouseY, partialTicks);
 
 		super.render(guiGraphics, mouseX, mouseY, partialTicks);
 
 		guiGraphics.drawCenteredString(font, Component.literal(def.getTranslatedDisplayName(I18n::get)).withStyle(ChatFormatting.BOLD), width / 2, 20, 0xFFFFFF);
 		guiGraphics.drawCenteredString(font, I18n.get("quark.gui.config.defaultvalue", def.defaultValue), width / 2, 30, 0xFFFFFF);
-
+		//todo: Quark Reference
 		input.render(guiGraphics, mouseX, mouseY, partialTicks);
 	}
 

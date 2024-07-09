@@ -16,8 +16,8 @@ import net.minecraft.world.effect.MobEffect;
 
 public class FuriousCocktailModifier extends AdvancementModifier {
 	
-	private static final ResourceLocation TARGET_AP = new ResourceLocation("nether/all_potions");
-	private static final ResourceLocation TARGET_AE = new ResourceLocation("nether/all_effects");
+	private static final ResourceLocation TARGET_AP = ResourceLocation.withDefaultNamespace("nether/all_potions");
+	private static final ResourceLocation TARGET_AE = ResourceLocation.withDefaultNamespace("nether/all_effects");
 
 	final BooleanSupplier isPotion;
 	final Set<MobEffect> effects;
@@ -40,9 +40,11 @@ public class FuriousCocktailModifier extends AdvancementModifier {
 			return false;
 		
 		Criterion crit = adv.getCriterion("all_effects");
-		if(crit != null && crit.getTrigger() instanceof EffectsChangedTrigger.TriggerInstance ect)  {
+		if(crit != null && crit.triggerInstance() instanceof EffectsChangedTrigger.TriggerInstance ect)  {
+
 			for(MobEffect e : effects)
-				ect.effects.and(e);
+				ect.effects().and(e);
+
 			
 			return true;
 		}

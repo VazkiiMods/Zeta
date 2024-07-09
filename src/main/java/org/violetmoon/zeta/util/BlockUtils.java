@@ -24,7 +24,7 @@ public class BlockUtils {
 				soundType == SoundType.WOOD;
 	}
 
-	public static boolean isGlassBased(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos) {
+	public static boolean isGlassBased(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos) { //todo: Access Widener
 		return blockState.getBlock().propagatesSkylightDown(blockState, blockGetter, blockPos) ||
 				blockState.getSoundType() == SoundType.GLASS;
 	}

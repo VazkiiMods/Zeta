@@ -20,11 +20,11 @@ public class CategoryButton extends Button {
 	}
 
 	@Override
-	public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+	public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) { //Todo: Are we able to fix this on Neoforge?
 		super.render(guiGraphics, mouseX, mouseY, partialTicks);
 
 		if(!active)
-			setTooltip(Tooltip.create(Component.translatable("quark.gui.config.missingaddon")));
+			setTooltip(Tooltip.create(Component.translatable("quark.gui.config.missingaddon"))); // todo: QUARK REFERENCE
 
 		Minecraft mc = Minecraft.getInstance();
 		guiGraphics.renderFakeItem(icon, getX() + 5, getY() + 2);

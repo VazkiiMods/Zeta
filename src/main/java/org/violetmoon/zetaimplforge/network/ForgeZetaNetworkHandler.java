@@ -27,7 +27,7 @@ public class ForgeZetaNetworkHandler extends ZetaNetworkHandler {
 		String protocolStr = Integer.toString(protocolVersion);
 
 		channel = NetworkRegistry.ChannelBuilder
-			.named(new ResourceLocation(zeta.modid, "main"))
+			.named(ResourceLocation.fromNamespaceAndPath(zeta.modid, "main"))
 			.networkProtocolVersion(() -> protocolStr)
 			.clientAcceptedVersions(protocolStr::equals)
 			.serverAcceptedVersions(protocolStr::equals)

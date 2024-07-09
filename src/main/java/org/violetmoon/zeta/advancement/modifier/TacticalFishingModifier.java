@@ -19,7 +19,7 @@ import net.minecraft.world.level.ItemLike;
 
 public class TacticalFishingModifier extends AdvancementModifier {
 
-    private static final ResourceLocation TARGET = new ResourceLocation("husbandry/tactical_fishing");
+    private static final ResourceLocation TARGET = ResourceLocation.withDefaultNamespace("husbandry/tactical_fishing");
 
     final Set<BucketItem> bucketItems;
 
@@ -38,9 +38,8 @@ public class TacticalFishingModifier extends AdvancementModifier {
     public boolean apply(ResourceLocation res, IMutableAdvancement adv) {
 
         ItemLike[] array = bucketItems.toArray(ItemLike[]::new);
-        Criterion criterion = new Criterion(FilledBucketTrigger.
-                TriggerInstance.filledBucket(ItemPredicate.Builder.item()
-                        .of(array).build()));
+        Criterion<FilledBucketTrigger.TriggerInstance> criterion = FilledBucketTrigger.TriggerInstance.filledBucket(
+                ItemPredicate.Builder.item().of(array));
 
         String name = BuiltInRegistries.ITEM.getKey(array[0].asItem()).toString();
         adv.addOrCriterion(name, criterion);

@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.function.BooleanSupplier;
 
 import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.item.ArmorItem;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.load.ZRegister;
 import org.violetmoon.zeta.module.ZetaModule;
@@ -31,7 +32,7 @@ import net.minecraft.world.level.block.state.BlockState;
  * @see org.violetmoon.zeta.client.ClientRegistryExtension
  */
 public class DyeablesRegistry {
-
+	//todo: This needs a redo
 	public final Map<Item, BooleanSupplier> dyeableConditions = new HashMap<>();
 	public final DyeableLeatherItem SURROGATE = new DyeableLeatherItem() {}; //Simply an accessor for various DyeableLeatherItem default methods
 

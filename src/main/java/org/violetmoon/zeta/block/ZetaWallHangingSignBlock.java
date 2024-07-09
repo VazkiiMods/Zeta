@@ -15,7 +15,7 @@ public class ZetaWallHangingSignBlock extends WallHangingSignBlock implements IZ
     private BooleanSupplier enabledSupplier = BooleanSuppliers.TRUE;
 
     public ZetaWallHangingSignBlock(String regname, @Nullable ZetaModule module, WoodType type, BlockBehaviour.Properties properties) {
-        super(properties, type);
+        super(type, properties);
         this.module = module;
 
         if(module == null) //auto registration below this line

@@ -36,17 +36,15 @@ public final class ConfigFlagManager {
 	public void onRegister(ZRegister event) {
 		CraftingExtensionsRegistry ext = event.getCraftingExtensionsRegistry();
 
-		//TODO: make these Quark-independent
-		ext.registerConditionSerializer(new FlagCondition.Serializer(this, new ResourceLocation(zeta.modid, "flag")));
-		//Especially this one, which requires quark advancement config option :/
-		ext.registerConditionSerializer(new FlagCondition.Serializer(this, new ResourceLocation(zeta.modid, "advancement_flag"), () -> ZetaGeneralConfig.enableModdedAdvancements));
+		//Note: These SHOULD be Quark-independent already, but hell if I know. Todo: Double check it.
+		ext.registerConditionSerializer(new FlagCondition.Serializer(this, ResourceLocation.fromNamespaceAndPath(zeta.modid, "flag")));
+		ext.registerConditionSerializer(new FlagCondition.Serializer(this, ResourceLocation.fromNamespaceAndPath(zeta.modid, "advancement_flag"), () -> ZetaGeneralConfig.enableModdedAdvancements));
 
 		FlagLootCondition.FlagSerializer flagSerializer = new FlagLootCondition.FlagSerializer(this);
-		Registry.register(BuiltInRegistries.LOOT_CONDITION_TYPE, new ResourceLocation(zeta.modid, "flag"), flagSerializer.selfType);
+		Registry.register(BuiltInRegistries.LOOT_CONDITION_TYPE, ResourceLocation.fromNamespaceAndPath(zeta.modid, "flag"), flagSerializer.selfType);
 
-		ext.registerIngredientSerializer(new ResourceLocation(zeta.modid, "flag"), flagIngredientSerializer);
+		ext.registerIngredientSerializer(ResourceLocation.fromNamespaceAndPath(zeta.modid, "flag"), flagIngredientSerializer);
 
-		//TODO: make this Quark-independent
 		SyncedFlagHandler.setupFlagManager(this);
 	}
 

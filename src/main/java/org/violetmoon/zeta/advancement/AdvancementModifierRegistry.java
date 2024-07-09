@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.function.BooleanSupplier;
 
+import net.minecraft.advancements.AdvancementHolder;
 import org.violetmoon.zeta.Zeta;
 import org.violetmoon.zeta.advancement.modifier.ASeedyPlaceModifier;
 import org.violetmoon.zeta.advancement.modifier.AdventuringTimeModifier;
@@ -50,7 +51,7 @@ public class AdvancementModifierRegistry {
 	public ManualTrigger registerManualTrigger(String resloc) {
 		ResourceLocation id = zeta.registry.newResourceLocation(resloc);
 		ManualTrigger trigger = new ManualTrigger(id);
-		CriteriaTriggers.register(trigger);
+		CriteriaTriggers.register(id.toString(), trigger);
 		return trigger;
 	}
 
@@ -85,21 +86,21 @@ public class AdvancementModifierRegistry {
 
 	private void onAdvancementsLoaded(ServerAdvancementManager manager) {
 		for(ResourceLocation res : modifiers.keySet()) {
-			Advancement adv = manager.getAdvancement(res);
+			AdvancementHolder advHolder = manager.get(res);
 
-			if(adv != null) {
+			if(advHolder != null) {
 				Collection<IAdvancementModifier> found = modifiers.get(res);
 
 				if(!found.isEmpty()) {
 					int modifications = 0;
-					MutableAdvancement mutable = new MutableAdvancement(adv);
+					MutableAdvancement mutable = new MutableAdvancement(advHolder.value());
 
 					for(IAdvancementModifier mod : found)
 						if(mod.isActive() && mod.apply(res, mutable))
 							modifications++;
 
 					if(modifications > 0) {
-						zeta.log.info("Modified advancement {} with {} patches", adv.getId(), modifications);
+						zeta.log.info("Modified advancement {} with {} patches", advHolder.id(), modifications);
 						mutable.commit();
 					}
 				}

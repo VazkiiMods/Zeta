@@ -11,7 +11,7 @@ import net.minecraft.world.level.block.state.properties.BlockSetType;
 public class ZetaWoodenButtonBlock extends ZetaButtonBlock {
 
 	public ZetaWoodenButtonBlock(BlockSetType setType, String regname, @Nullable ZetaModule module, Properties properties) {
-		super(setType, 30, true, regname, module, properties);
+		super(setType, 30, regname, module, properties);
 	}
 
 	@NotNull

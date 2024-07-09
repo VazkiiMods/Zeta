@@ -72,7 +72,7 @@ public class SectionScreen extends ZetaScreen {
 
 	@Override
 	public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-		renderBackground(guiGraphics);
+		renderBackground(guiGraphics, mouseX, mouseY, partialTicks);
 
 		list.render(guiGraphics, mouseX, mouseY, partialTicks);
 		super.render(guiGraphics, mouseX, mouseY, partialTicks);
@@ -81,7 +81,7 @@ public class SectionScreen extends ZetaScreen {
 		int left = 20;
 
 		String modName = WordUtils.capitalizeFully(z.modid);
-		guiGraphics.drawString(font, ChatFormatting.BOLD + I18n.get("quark.gui.config.header", modName), left, 10, 0x48ddbc);
+		guiGraphics.drawString(font, ChatFormatting.BOLD + I18n.get("quark.gui.config.header", modName), left, 10, 0x48ddbc); //todo: QUARK REFERENCE
 		guiGraphics.drawString(font, breadcrumbs, left, 20, 0xFFFFFF);
 	}
 
@@ -92,7 +92,7 @@ public class SectionScreen extends ZetaScreen {
 		public void render(@NotNull GuiGraphics guiGraphics, int index, int rowTop, int rowLeft, int rowWidth, int rowHeight, int mouseX, int mouseY, boolean hovered, float partialTicks) {
 			assert minecraft != null;
 
-			String s = I18n.get("quark.gui.config.subcategories");
+			String s = I18n.get("quark.gui.config.subcategories"); //todo: QUARK REFERENCE
 			guiGraphics.drawString(minecraft.font, s, rowLeft + (float) (rowWidth / 2 - minecraft.font.width(s) / 2), rowTop + 7, 0x6666FF, true);
 		}
 

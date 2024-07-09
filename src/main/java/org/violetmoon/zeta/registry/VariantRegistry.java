@@ -71,7 +71,7 @@ public class VariantRegistry {
 		zeta.renderLayerRegistry.put(potted, RenderLayerRegistry.Layer.CUTOUT);
 		ResourceLocation resLoc = zeta.registry.getRegistryName(block, BuiltInRegistries.BLOCK);
 		if (resLoc == null)
-			resLoc = new ResourceLocation("missingno");
+			resLoc = ResourceLocation.withDefaultNamespace("missingno");
 
 		zeta.registry.registerBlock(potted, "potted_" + name, false);
 		zeta.pottedPlantRegistry.addPot(resLoc, potted);
@@ -80,7 +80,7 @@ public class VariantRegistry {
 	}
 
 	public static BlockBehaviour.Properties realStateCopy(IZetaBlock parent) {
-		BlockBehaviour.Properties props = BlockBehaviour.Properties.copy(parent.getBlock());
+		BlockBehaviour.Properties props = BlockBehaviour.Properties.ofFullCopy(parent.getBlock());
 		if(parent instanceof IVariantsShouldBeEmissive)
 			props = props.emissiveRendering((s, r, p) -> true);
 

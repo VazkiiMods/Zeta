@@ -25,7 +25,7 @@ public class ZetaDyeRecipe extends CustomRecipe {
 	protected final RecipeSerializer<?> serializer;
 
 	public ZetaDyeRecipe(ResourceLocation id, CraftingBookCategory cat, DyeablesRegistry dyeablesRegistry) {
-		super(id, cat);
+		super(cat);
 		this.dyeablesRegistry = dyeablesRegistry;
 		// We need to plug the serializer into itself, so that when a fresh copy of this ZetaDyeRecipe is constructed
 		// it will have the exact same serializer instance already registered in the recipe serializer registry.

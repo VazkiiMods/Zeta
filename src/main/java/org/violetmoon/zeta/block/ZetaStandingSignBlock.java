@@ -15,7 +15,7 @@ public class ZetaStandingSignBlock extends StandingSignBlock implements IZetaBlo
 	private BooleanSupplier enabledSupplier = BooleanSuppliers.TRUE;
 
 	public ZetaStandingSignBlock(String regname, @Nullable ZetaModule module, WoodType type, Properties properties) {
-		super(properties, type);
+		super(type, properties);
 		this.module = module;
 
 		if(module == null) //auto registration below this line

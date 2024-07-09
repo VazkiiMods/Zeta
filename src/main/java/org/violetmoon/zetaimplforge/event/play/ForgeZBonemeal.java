@@ -28,7 +28,7 @@ public class ForgeZBonemeal implements ZBonemeal {
 
     @Override
     public BlockState getBlock() {
-        return e.getBlock();
+        return e.getState();
     }
 
     @Override
@@ -38,7 +38,7 @@ public class ForgeZBonemeal implements ZBonemeal {
 
     @Override
     public ZResult getResult() {
-        return ForgeZeta.from(e.getResult());
+        return ForgeZeta.from(e.isSuccessful());
     }
 
     @Override

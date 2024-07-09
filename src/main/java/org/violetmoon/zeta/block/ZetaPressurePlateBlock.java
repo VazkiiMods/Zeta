@@ -20,8 +20,8 @@ public class ZetaPressurePlateBlock extends PressurePlateBlock implements IZetaB
 	private final @Nullable ZetaModule module;
 	private BooleanSupplier enabledSupplier = BooleanSuppliers.TRUE;
 
-	public ZetaPressurePlateBlock(Sensitivity sensitivity, String regname, @Nullable ZetaModule module, Properties properties, BlockSetType blockSetType) {
-		super(sensitivity, properties, blockSetType);
+	public ZetaPressurePlateBlock(String regname, @Nullable ZetaModule module, BlockSetType blockSetType, Properties properties) {
+		super(blockSetType, properties);
 		this.module = module;
 
 		if(module == null) //auto registration below this line

@@ -46,7 +46,7 @@ public abstract class ZetaClient implements IZeta {
 	public final ZetaEventBus<IZetaLoadEvent> loadBus;
 	public final ZetaEventBus<IZetaPlayEvent> playBus;
 
-	public ResourceLocation generalIcons = new ResourceLocation("zeta", "textures/gui/general_icons.png");
+	public ResourceLocation generalIcons = ResourceLocation.fromNamespaceAndPath("zeta", "textures/gui/general_icons.png");
 
 	public final ClientTicker ticker;
 	public final ClientConfigManager clientConfigManager;

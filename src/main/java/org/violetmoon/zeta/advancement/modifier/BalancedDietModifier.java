@@ -18,7 +18,7 @@ import net.minecraft.world.level.ItemLike;
 
 public class BalancedDietModifier extends AdvancementModifier {
 
-    private static final ResourceLocation TARGET = new ResourceLocation("husbandry/balanced_diet");
+    private static final ResourceLocation TARGET = ResourceLocation.withDefaultNamespace("husbandry/balanced_diet");
 
     private final Set<ItemLike> items;
 
@@ -26,7 +26,6 @@ public class BalancedDietModifier extends AdvancementModifier {
         super(module);
         this.items = items;
         Preconditions.checkArgument(!items.isEmpty(), "Advancement modifier list cant be empty");
-
     }
 
     @Override
@@ -37,14 +36,9 @@ public class BalancedDietModifier extends AdvancementModifier {
     @Override
     public boolean apply(ResourceLocation res, IMutableAdvancement adv) {
         ItemLike[] array = items.toArray(ItemLike[]::new);
-
-        Criterion criterion = new Criterion(ConsumeItemTrigger.TriggerInstance.usedItem(
-                ItemPredicate.Builder.item().of(array).build()));
-
+        Criterion criterion = ConsumeItemTrigger.TriggerInstance.usedItem(ItemPredicate.Builder.item().of(array));
         String name = BuiltInRegistries.ITEM.getKey(array[0].asItem()).toString();
-
         adv.addRequiredCriterion(name, criterion);
-
         return true;
     }
 

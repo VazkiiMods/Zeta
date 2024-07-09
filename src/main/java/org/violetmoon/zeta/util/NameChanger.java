@@ -50,7 +50,7 @@ public class NameChanger {
 
 		//actually change the block's name - if there are any outstanding name-change requests, use the most recent one,
 		//else use the block's original name
-		toChange.descriptionId = changeRequests.lastOrElse(originalBlockNames.get(toChange));
+		toChange.descriptionId = changeRequests.lastOrElse(originalBlockNames.get(toChange)); //todo: AccessWidener
 
 		//save a tiny bit of memory
 		if(changeRequests.isEmpty())
@@ -65,7 +65,7 @@ public class NameChanger {
 			changeRequests.add(newTranslationKey);
 		else
 			changeRequests.remove(newTranslationKey);
-		toChange.descriptionId = changeRequests.lastOrElse(originalItemNames.get(toChange));
+		toChange.descriptionId = changeRequests.lastOrElse(originalItemNames.get(toChange)); //todo: AccessWidener
 
 		if(changeRequests.isEmpty())
 			changedItemNames.remove(toChange);

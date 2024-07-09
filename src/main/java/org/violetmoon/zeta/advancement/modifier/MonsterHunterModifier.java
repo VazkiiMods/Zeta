@@ -18,8 +18,8 @@ import net.minecraft.world.entity.EntityType;
 
 public class MonsterHunterModifier extends AdvancementModifier {
 
-	private static final ResourceLocation TARGET_ONE = new ResourceLocation("adventure/kill_a_mob");
-	private static final ResourceLocation TARGET_ALL = new ResourceLocation("adventure/kill_all_mobs");
+	private static final ResourceLocation TARGET_ONE = ResourceLocation.withDefaultNamespace("adventure/kill_a_mob");
+	private static final ResourceLocation TARGET_ALL = ResourceLocation.withDefaultNamespace("adventure/kill_all_mobs");
 	
 	final Set<EntityType<?>> entityTypes;
 	
@@ -39,7 +39,7 @@ public class MonsterHunterModifier extends AdvancementModifier {
 		boolean all = res.equals(TARGET_ALL);
 		
 		for(EntityType<?> type : entityTypes) {
-			Criterion criterion = new Criterion(KilledTrigger.TriggerInstance.playerKilledEntity(EntityPredicate.Builder.entity().entityType(EntityTypePredicate.of(type))));
+			Criterion criterion = KilledTrigger.TriggerInstance.playerKilledEntity(EntityPredicate.Builder.entity().entityType(EntityTypePredicate.of(type)));
 			
 			String name = BuiltInRegistries.ENTITY_TYPE.getKey(type).toString();
 			if(all)

@@ -15,7 +15,7 @@ public class ZetaWallSignBlock extends WallSignBlock implements IZetaBlock {
 	private BooleanSupplier enabledSupplier = BooleanSuppliers.TRUE;
 
 	public ZetaWallSignBlock(String regname, ZetaModule module, WoodType type, Properties properties) {
-		super(properties, type);
+		super(type, properties);
 		this.module = module;
 
 		if(module == null) //auto registration below this line

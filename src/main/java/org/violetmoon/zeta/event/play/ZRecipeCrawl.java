@@ -42,7 +42,7 @@ public abstract class ZRecipeCrawl implements IZetaPlayEvent {
 
 		public Visit(T recipe, RegistryAccess access) {
 			this.recipe = recipe;
-			this.recipeID = recipe.getId();
+			this.recipeID = recipe.getId(); //todo: Get ID another way
 			this.output = recipe.getResultItem(access);
 			this.ingredients = recipe.getIngredients();
 		}

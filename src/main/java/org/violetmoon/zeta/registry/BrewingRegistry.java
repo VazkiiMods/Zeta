@@ -3,6 +3,7 @@ package org.violetmoon.zeta.registry;
 import java.util.Map;
 import java.util.function.Supplier;
 
+import net.minecraft.core.Holder;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.zeta.Zeta;
 import org.violetmoon.zeta.recipe.FlagIngredient;
@@ -53,10 +54,11 @@ public abstract class BrewingRegistry {
 		if (loc != null) {
 			String baseName = loc.getPath();
 			boolean hasStrong = strongTime > 0;
+			Holder<MobEffect> effectHolder = Holder.direct(effect);
 
-			Potion normalType = registerPotion(new MobEffectInstance(effect, normalTime), baseName, baseName);
-			Potion longType = registerPotion(new MobEffectInstance(effect, longTime), baseName, "long_" + baseName);
-			Potion strongType = !hasStrong ? null : registerPotion(new MobEffectInstance(effect, strongTime, 1), baseName, "strong_" + baseName);
+			Potion normalType = registerPotion(new MobEffectInstance(effectHolder, normalTime), baseName, baseName);
+			Potion longType = registerPotion(new MobEffectInstance(effectHolder, longTime), baseName, "long_" + baseName);
+			Potion strongType = !hasStrong ? null : registerPotion(new MobEffectInstance(effectHolder, strongTime, 1), baseName, "strong_" + baseName);
 
 			addPotionMix(flag, reagent, normalType, longType, strongType);
 
@@ -64,10 +66,11 @@ public abstract class BrewingRegistry {
 				ResourceLocation negationLoc = zeta.registry.getRegistryName(negation, BuiltInRegistries.MOB_EFFECT);
 				if (negationLoc != null) {
 					String negationBaseName = negationLoc.getPath();
+					Holder<MobEffect> negationHolder = Holder.direct(negation);
 
-					Potion normalNegationType = registerPotion(new MobEffectInstance(negation, normalTime), negationBaseName, negationBaseName);
-					Potion longNegationType = registerPotion(new MobEffectInstance(negation, longTime), negationBaseName, "long_" + negationBaseName);
-					Potion strongNegationType = !hasStrong ? null : registerPotion(new MobEffectInstance(negation, strongTime, 1), negationBaseName, "strong_" + negationBaseName);
+					Potion normalNegationType = registerPotion(new MobEffectInstance(negationHolder, normalTime), negationBaseName, negationBaseName);
+					Potion longNegationType = registerPotion(new MobEffectInstance(negationHolder, longTime), negationBaseName, "long_" + negationBaseName);
+					Potion strongNegationType = !hasStrong ? null : registerPotion(new MobEffectInstance(negationHolder, strongTime, 1), negationBaseName, "strong_" + negationBaseName);
 
 					addNegation(flag, normalType, longType, strongType, normalNegationType, longNegationType, strongNegationType);
 				}
@@ -79,8 +82,8 @@ public abstract class BrewingRegistry {
 	public void addPotionMix(String flag, Supplier<Ingredient> reagent, Potion normalType, Potion longType, @Nullable Potion strongType) {
 		boolean hasStrong = strongType != null;
 
-		addFlaggedRecipe(flag, Potions.AWKWARD, reagent, normalType);
-		addFlaggedRecipe(flag, Potions.WATER, reagent, Potions.MUNDANE);
+		addFlaggedRecipe(flag, Potions.AWKWARD.value(), reagent, normalType);
+		addFlaggedRecipe(flag, Potions.WATER.value(), reagent, Potions.MUNDANE.value());
 
 		if (hasStrong)
 			addFlaggedRecipe(flag, normalType, BrewingRegistry::glowstone, strongType);
