@@ -13,20 +13,11 @@ public class ForgeZClientTick implements ZClientTick {
 
     @Override
     public ZPhase getPhase() {
-        return from(e.phase);
+        return from(e instanceof ClientTickEvent.Pre);
     }
 
-    public static ZPhase from(Phase r) {
-        return switch(r) {
-            case START -> ZPhase.START;
-            case END -> ZPhase.END;
-        };
-    }
-
-    public static Phase to(ZPhase r) {
-        return switch(r) {
-            case START -> Phase.START;
-            case END -> Phase.END;
-        };
+    public static ZPhase from(boolean bool) {
+        return (bool) ? ZPhase.START : ZPhase.END;
     }
 }
+

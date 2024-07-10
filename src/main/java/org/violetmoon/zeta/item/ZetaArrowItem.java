@@ -59,12 +59,12 @@ public abstract class ZetaArrowItem extends ArrowItem implements IZetaItem {
 		}
 		
 		@Override
-		public AbstractArrow createArrow(Level p_40513_, ItemStack p_40514_, LivingEntity p_40515_) {
-			return creator.createArrow(p_40513_, p_40514_, p_40515_);
+		public AbstractArrow createArrow(Level level, ItemStack arrowStack, LivingEntity entity, @javax.annotation.Nullable ItemStack weaponStack) {
+			return creator.createArrow(level, arrowStack, entity, weaponStack);
 		}
 		
-		public static interface ArrowCreator {
-			public AbstractArrow createArrow(Level level, ItemStack stack, LivingEntity living);
+		public interface ArrowCreator {
+			AbstractArrow createArrow(Level level, ItemStack stack, LivingEntity living, @javax.annotation.Nullable ItemStack weaponStack);
 		}
 		
 	}

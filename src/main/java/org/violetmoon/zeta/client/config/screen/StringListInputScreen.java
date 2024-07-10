@@ -113,7 +113,7 @@ public class StringListInputScreen extends AbstractInputScreen<List<String>> {
 				EditBox field = new EditBox(mc.font, 10, 3, 210, 20, Component.literal(""));
 				field.setMaxLength(256);
 				field.setValue(here);
-				field.moveCursorTo(0);
+				field.moveCursorTo(0, false);
 				field.setResponder(str -> setString(index, str));
 				addScrollingWidget(field);
 

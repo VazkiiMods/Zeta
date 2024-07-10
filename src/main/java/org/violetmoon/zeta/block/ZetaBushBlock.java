@@ -2,6 +2,7 @@ package org.violetmoon.zeta.block;
 
 import java.util.function.BooleanSupplier;
 
+import com.mojang.serialization.MapCodec;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.registry.RenderLayerRegistry;
@@ -46,4 +47,8 @@ public class ZetaBushBlock extends BushBlock implements IZetaBlock {
 		return module;
 	}
 
+	@Override
+	protected MapCodec<? extends BushBlock> codec() {
+		return null; //Might cause issues but it should be overriden by any children classes. Maybe make this abstract?
+	}
 }

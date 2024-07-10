@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
 
+import net.minecraft.world.item.crafting.*;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.zeta.Zeta;
@@ -27,13 +28,6 @@ import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.AbstractCookingRecipe;
-import net.minecraft.world.item.crafting.CustomRecipe;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeManager;
-import net.minecraft.world.item.crafting.ShapedRecipe;
-import net.minecraft.world.item.crafting.ShapelessRecipe;
 
 @ApiStatus.Internal
 public class RecipeCrawlHandler {
@@ -87,8 +81,10 @@ public class RecipeCrawlHandler {
 			vanillaRecipeDigestion.clear();
 			backwardsVanillaDigestion.clear();
 
-			for (Recipe<?> recipe : manager.getRecipes()) {
+			//todo: Chat verify this works, and then clean it up
+			for (RecipeHolder<?> recipeHolder : manager.getRecipes()) {
 				try {
+					Recipe<?> recipe = recipeHolder.value();
 					if (recipe == null)
 						throw new IllegalStateException("Recipe is null");
 					if (recipe.getIngredients() == null)
@@ -97,16 +93,16 @@ public class RecipeCrawlHandler {
 						throw new IllegalStateException("Recipe getResultItem is null");
 
 					ZRecipeCrawl.Visit<?> event;
-					if (recipe instanceof ShapedRecipe sr)
-						event = new ZRecipeCrawl.Visit.Shaped(sr, access);
-					else if (recipe instanceof ShapelessRecipe sr)
-						event = new ZRecipeCrawl.Visit.Shapeless(sr, access);
-					else if (recipe instanceof CustomRecipe cr)
-						event = new ZRecipeCrawl.Visit.Custom(cr, access);
-					else if (recipe instanceof AbstractCookingRecipe acr)
-						event = new ZRecipeCrawl.Visit.Cooking(acr, access);
+					if (recipe instanceof ShapedRecipe)
+						event = new ZRecipeCrawl.Visit.Shaped((RecipeHolder<ShapedRecipe>) recipeHolder, access);
+					else if (recipe instanceof ShapelessRecipe)
+						event = new ZRecipeCrawl.Visit.Shapeless((RecipeHolder<ShapelessRecipe>) recipeHolder, access);
+					else if (recipe instanceof CustomRecipe)
+						event = new ZRecipeCrawl.Visit.Custom((RecipeHolder<CustomRecipe>) recipeHolder, access);
+					else if (recipe instanceof AbstractCookingRecipe)
+						event = new ZRecipeCrawl.Visit.Cooking((RecipeHolder<ShapelessRecipe>) recipeHolder, access);
 					else
-						event = new ZRecipeCrawl.Visit.Misc(recipe, access);
+						event = new ZRecipeCrawl.Visit.Misc((RecipeHolder<Recipe<?>>) recipeHolder, access);
 
 					//misc recipes could have custom logic that we cant make many assumptions on. For example FD cutting board recipes are lossy.
 					//for instance a hanging sign can be cut into a plank. A hanging sign is magnetic but this does not mean planks are
@@ -115,10 +111,10 @@ public class RecipeCrawlHandler {
 					}
 					fire(event);
 				} catch (Exception e) {
-					if (recipe == null)
+					if (recipeHolder == null)
 						Zeta.GLOBAL_LOG.error("Encountered null recipe in RecipeManager.getRecipes. This is not good");
 					else
-						Zeta.GLOBAL_LOG.error("Failed to scan recipe " + recipe.getId() + ". This should be reported to " + recipe.getId().getNamespace() + "!", e);
+						Zeta.GLOBAL_LOG.error("Failed to scan recipe " + recipeHolder.id() + ". This should be reported to " + recipeHolder.id().getNamespace() + "!", e);
 				}
 			}
 		}

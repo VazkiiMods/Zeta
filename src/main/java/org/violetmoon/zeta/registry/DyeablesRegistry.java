@@ -39,7 +39,7 @@ public class DyeablesRegistry {
 	@LoadEvent
 	public void register(ZRegister event) {
 		ResourceLocation id = event.getRegistry().newResourceLocation("dye_item");
-		ZetaDyeRecipe recipe = new ZetaDyeRecipe(id, CraftingBookCategory.EQUIPMENT, this);
+		ZetaDyeRecipe recipe = new ZetaDyeRecipe(CraftingBookCategory.EQUIPMENT, this);
 		event.getRegistry().register(recipe.getSerializer(), id, Registries.RECIPE_SERIALIZER);
 	}
 
@@ -47,7 +47,7 @@ public class DyeablesRegistry {
 	public void registerPost(ZRegister.Post event) {
 		WashingInteraction wosh = new WashingInteraction();
 		for(Item item : dyeableConditions.keySet())
-			CauldronInteraction.WATER.put(item, wosh);
+			CauldronInteraction.WATER.map().put(item, wosh);
 	}
 
 	class WashingInteraction implements CauldronInteraction {

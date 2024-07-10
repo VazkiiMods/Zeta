@@ -23,7 +23,7 @@ public class ZetaDoorBlock extends DoorBlock implements IZetaBlock, IZetaBlockIt
 	private BooleanSupplier enabledSupplier = BooleanSuppliers.TRUE;
 
 	public ZetaDoorBlock(BlockSetType setType, String regname, @Nullable ZetaModule module, Properties properties) {
-		super(properties, setType);
+		super(setType, properties);
 		this.module = module;
 
 		if(module == null) //auto registration below this line

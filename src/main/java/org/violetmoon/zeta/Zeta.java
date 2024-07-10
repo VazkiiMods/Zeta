@@ -5,12 +5,12 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.zeta.advancement.AdvancementModifierRegistry;
 import org.violetmoon.zeta.block.ext.BlockExtensionFactory;
-import org.violetmoon.zeta.capability.ZetaCapabilityManager;
 import org.violetmoon.zeta.config.ConfigManager;
 import org.violetmoon.zeta.config.IZetaConfigInternals;
 import org.violetmoon.zeta.config.SectionDefinition;
@@ -70,7 +70,7 @@ public abstract class Zeta implements IZeta {
 
 		this.blockExtensions = createBlockExtensionFactory();
 		this.itemExtensions = createItemExtensionFactory();
-		this.capabilityManager = createCapabilityManager();
+		//this.capabilityManager = createCapabilityManager();
 
 		this.raytracingUtil = createRaytracingUtil();
 		this.nameChanger = createNameChanger();
@@ -111,7 +111,7 @@ public abstract class Zeta implements IZeta {
 	public final VariantRegistry variantRegistry = new VariantRegistry(this);
 
 	//extensions
-	public final ZetaCapabilityManager capabilityManager;
+	//public final ZetaCapabilityManager capabilityManager;
 	public final BlockExtensionFactory blockExtensions;
 	public final ItemExtensionFactory itemExtensions;
 
@@ -182,7 +182,7 @@ public abstract class Zeta implements IZeta {
 		return new AdvancementModifierRegistry(this);
 	}
 	public abstract PottedPlantRegistry createPottedPlantRegistry();
-	public abstract ZetaCapabilityManager createCapabilityManager();
+	//public abstract ZetaCapabilityManager createCapabilityManager();
 	public BlockExtensionFactory createBlockExtensionFactory() {
 		return BlockExtensionFactory.DEFAULT;
 	}
@@ -204,7 +204,7 @@ public abstract class Zeta implements IZeta {
 	public abstract <E, T extends E> T fireExternalEvent(T impl);
 
 	// ummmmmm why is this here
-	public abstract boolean fireRightClickBlock(Player player, InteractionHand hand, BlockPos pos, BlockHitResult bhr);
+	public abstract PlayerInteractEvent.RightClickBlock fireRightClickBlock(Player player, InteractionHand hand, BlockPos pos, BlockHitResult bhr);
 
 	// Let's Jump
 	public abstract void start(IEventBus modbus);

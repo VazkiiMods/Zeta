@@ -24,7 +24,7 @@ public final class ClientTicker {
 
 	@PlayEvent
 	public void onEndClientTick(ZClientTick event) {
-		if(event.getPhase() != ZPhase.END)
+		if(event. != ZPhase.END)
 			return;
 
 		Screen gui = Minecraft.getInstance().screen;

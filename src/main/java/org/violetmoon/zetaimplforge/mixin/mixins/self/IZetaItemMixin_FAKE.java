@@ -33,6 +33,7 @@ import java.util.function.Consumer;
 	ZetaBlockItem.class,
 	ZetaItem.class,
 })
+//todo: Chat... I think its over for IForgeItem
 public class IZetaItemMixin_FAKE implements IForgeItem, IZetaItemExtensions {
 	@Override
 	public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext context) {

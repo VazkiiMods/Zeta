@@ -3,11 +3,8 @@ package org.violetmoon.zetaimplforge;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FlowerPotBlock;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.IEventBus;
@@ -34,12 +31,7 @@ import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDropsEvent;
 import net.neoforged.neoforge.event.entity.living.LivingFallEvent;
 import net.neoforged.neoforge.event.entity.living.MobSpawnEvent;
-import net.neoforged.neoforge.event.entity.player.AnvilRepairEvent;
-import net.neoforged.neoforge.event.entity.player.BonemealEvent;
-import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
-import net.neoforged.neoforge.event.entity.player.PlayerDestroyItemEvent;
-import net.neoforged.neoforge.event.entity.player.PlayerEvent;
-import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.neoforged.neoforge.event.entity.player.*;
 import net.neoforged.neoforge.event.furnace.FurnaceFuelBurnTimeEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.event.level.NoteBlockEvent;
@@ -50,7 +42,6 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.zeta.Zeta;
 import org.violetmoon.zeta.block.ext.BlockExtensionFactory;
-import org.violetmoon.zeta.capability.ZetaCapabilityManager;
 import org.violetmoon.zeta.config.IZetaConfigInternals;
 import org.violetmoon.zeta.config.SectionDefinition;
 import org.violetmoon.zeta.event.bus.ZResult;
@@ -72,27 +63,17 @@ import org.violetmoon.zeta.event.play.ZPlayNoteBlock;
 import org.violetmoon.zeta.event.play.ZServerTick;
 import org.violetmoon.zeta.event.play.entity.ZEntityConstruct;
 import org.violetmoon.zeta.event.play.entity.ZEntityInteract;
-import org.violetmoon.zeta.event.play.entity.ZEntityItemPickup;
+import org.violetmoon.zeta.event.play.entity.ZItemEntityPickup;
 import org.violetmoon.zeta.event.play.entity.ZEntityJoinLevel;
 import org.violetmoon.zeta.event.play.entity.ZEntityMobGriefing;
 import org.violetmoon.zeta.event.play.entity.ZEntityTeleport;
-import org.violetmoon.zeta.event.play.entity.living.ZAnimalTame;
-import org.violetmoon.zeta.event.play.entity.living.ZBabyEntitySpawn;
-import org.violetmoon.zeta.event.play.entity.living.ZLivingChangeTarget;
-import org.violetmoon.zeta.event.play.entity.living.ZLivingConversion;
-import org.violetmoon.zeta.event.play.entity.living.ZLivingDeath;
-import org.violetmoon.zeta.event.play.entity.living.ZLivingDrops;
-import org.violetmoon.zeta.event.play.entity.living.ZLivingFall;
-import org.violetmoon.zeta.event.play.entity.living.ZLivingTick;
-import org.violetmoon.zeta.event.play.entity.living.ZMobSpawnEvent;
-import org.violetmoon.zeta.event.play.entity.living.ZSleepingLocationCheck;
+import org.violetmoon.zeta.event.play.entity.living.*;
 import org.violetmoon.zeta.event.play.entity.player.ZPlayer;
 import org.violetmoon.zeta.event.play.entity.player.ZPlayerDestroyItem;
 import org.violetmoon.zeta.event.play.entity.player.ZPlayerInteract;
 import org.violetmoon.zeta.event.play.entity.player.ZPlayerTick;
 import org.violetmoon.zeta.event.play.entity.player.ZRightClickBlock;
 import org.violetmoon.zeta.event.play.entity.player.ZRightClickItem;
-import org.violetmoon.zeta.event.play.loading.ZAttachCapabilities;
 import org.violetmoon.zeta.event.play.loading.ZLootTableLoad;
 import org.violetmoon.zeta.event.play.loading.ZVillagerTrades;
 import org.violetmoon.zeta.event.play.loading.ZWandererTrades;
@@ -107,7 +88,6 @@ import org.violetmoon.zeta.util.RaytracingUtil;
 import org.violetmoon.zeta.util.ZetaSide;
 import org.violetmoon.zetaimplforge.api.GatherAdvancementModifiersEvent;
 import org.violetmoon.zetaimplforge.block.IForgeBlockBlockExtensions;
-import org.violetmoon.zetaimplforge.capability.ForgeCapabilityManager;
 import org.violetmoon.zetaimplforge.config.ConfigEventDispatcher;
 import org.violetmoon.zetaimplforge.config.ForgeBackedConfig;
 import org.violetmoon.zetaimplforge.config.TerribleForgeConfigHackery;
@@ -139,14 +119,12 @@ import org.violetmoon.zetaimplforge.event.play.entity.living.ForgeZLivingDrops;
 import org.violetmoon.zetaimplforge.event.play.entity.living.ForgeZLivingFall;
 import org.violetmoon.zetaimplforge.event.play.entity.living.ForgeZLivingTick;
 import org.violetmoon.zetaimplforge.event.play.entity.living.ForgeZMobSpawnEvent;
-import org.violetmoon.zetaimplforge.event.play.entity.living.ForgeZSleepingLocationCheck;
 import org.violetmoon.zetaimplforge.event.play.entity.player.ForgeZPlayer;
 import org.violetmoon.zetaimplforge.event.play.entity.player.ForgeZPlayerDestroyItem;
 import org.violetmoon.zetaimplforge.event.play.entity.player.ForgeZPlayerInteract;
 import org.violetmoon.zetaimplforge.event.play.entity.player.ForgeZPlayerTick;
 import org.violetmoon.zetaimplforge.event.play.entity.player.ForgeZRightClickBlock;
 import org.violetmoon.zetaimplforge.event.play.entity.player.ForgeZRightClickItem;
-import org.violetmoon.zetaimplforge.event.play.loading.ForgeZAttachCapabilities;
 import org.violetmoon.zetaimplforge.event.play.loading.ForgeZLootTableLoad;
 import org.violetmoon.zetaimplforge.event.play.loading.ForgeZVillagerTrades;
 import org.violetmoon.zetaimplforge.event.play.loading.ForgeZWandererTrades;
@@ -208,10 +186,10 @@ public class ForgeZeta extends Zeta {
 		return (resloc, potted) -> ((FlowerPotBlock)Blocks.FLOWER_POT).addPlant(resloc, () -> potted);
 	}
 
-	@Override
+	/*@Override
 	public ZetaCapabilityManager createCapabilityManager() {
 		return new ForgeCapabilityManager();
-	}
+	}*/
 
 	@Override
 	public BlockExtensionFactory createBlockExtensionFactory() {
@@ -234,7 +212,7 @@ public class ForgeZeta extends Zeta {
 	}
 
 	@Override
-	public boolean fireRightClickBlock(Player player, InteractionHand hand, BlockPos pos, BlockHitResult bhr) {
+	public PlayerInteractEvent.RightClickBlock fireRightClickBlock(Player player, InteractionHand hand, BlockPos pos, BlockHitResult bhr) {
 		return NeoForge.EVENT_BUS.post(new PlayerInteractEvent.RightClickBlock(player, hand, pos, bhr));
 	}
 
@@ -289,9 +267,9 @@ public class ForgeZeta extends Zeta {
 		NeoForge.EVENT_BUS.addListener(this::babyEntitySpawnLowest);
 		NeoForge.EVENT_BUS.addListener(this::entityJoinLevel);
 
-		NeoForge.EVENT_BUS.addGenericListener(ItemStack.class, this::itemStackCaps);
+		/*NeoForge.EVENT_BUS.addGenericListener(ItemStack.class, this::itemStackCaps);
 		NeoForge.EVENT_BUS.addGenericListener(BlockEntity.class, this::blockEntityCaps);
-		NeoForge.EVENT_BUS.addGenericListener(Level.class, this::levelCaps);
+		NeoForge.EVENT_BUS.addGenericListener(Level.class, this::levelCaps);*/
 
 		NeoForge.EVENT_BUS.addListener(this::serverTickStart);
 		NeoForge.EVENT_BUS.addListener(this::serverTickEnd);
@@ -458,7 +436,7 @@ public class ForgeZeta extends Zeta {
 		playBus.fire(new ForgeZEntityJoinLevel(e), ZEntityJoinLevel.class);
 	}
 
-	public void itemStackCaps(AttachCapabilitiesEvent<ItemStack> e) {
+	/*public void itemStackCaps(AttachCapabilitiesEvent<ItemStack> e) {
 		playBus.fire(new ForgeZAttachCapabilities.ItemStackCaps(capabilityManager, e), ZAttachCapabilities.ItemStackCaps.class);
 	}
 
@@ -468,7 +446,7 @@ public class ForgeZeta extends Zeta {
 
 	public void levelCaps(AttachCapabilitiesEvent<Level> e) {
 		playBus.fire(new ForgeZAttachCapabilities.LevelCaps(capabilityManager, e), ZAttachCapabilities.LevelCaps.class);
-	}
+	}*/
 
 	public void serverTickStart(TickEvent.ServerTickEvent e) {
 		if (e.phase == TickEvent.Phase.START)
@@ -530,12 +508,12 @@ public class ForgeZeta extends Zeta {
 		playBus.fire(new ForgeZLivingChangeTarget(e), ZLivingChangeTarget.class);
 	}
 
-	public void sleepingLocationCheck(SleepingLocationCheckEvent e) {
+	/*public void sleepingLocationCheck(SleepingLocationCheckEvent e) {
 		playBus.fire(new ForgeZSleepingLocationCheck(e), ZSleepingLocationCheck.class);
-	}
+	}*/
 
-	public void entityItemPickup(EntityItemPickupEvent e) {
-		playBus.fire(new ForgeZEntityItemPickup(e), ZEntityItemPickup.class);
+	public void entityItemPickup(ItemEntityPickupEvent e) {
+		playBus.fire(new ForgeZEntityItemPickup(e), ZItemEntityPickup.class);
 	}
 
 	public void blockBreak(BlockEvent.BreakEvent e) {

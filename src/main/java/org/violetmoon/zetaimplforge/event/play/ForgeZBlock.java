@@ -4,7 +4,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.common.ToolAction;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.zeta.event.play.ZBlock;
@@ -59,7 +58,7 @@ public class ForgeZBlock implements ZBlock {
         }
     }
 
-    public static class BlockToolModification extends ForgeZBlock implements ZBlock.BlockToolModification {
+    /*public static class BlockToolModification extends ForgeZBlock implements ZBlock.BlockToolModification {
         private final BlockEvent.BlockToolModificationEvent e;
 
         public BlockToolModification(BlockEvent.BlockToolModificationEvent e) {
@@ -67,8 +66,8 @@ public class ForgeZBlock implements ZBlock {
             this.e = e;
         }
 
-        @Override
-        public ToolAction getToolAction() {
+        //@Override
+        //public ToolAction getToolAction() {
             return e.getToolAction();
         }
 
@@ -76,5 +75,5 @@ public class ForgeZBlock implements ZBlock {
         public void setFinalState(@Nullable BlockState finalState) {
             e.setFinalState(finalState);
         }
-    }
+    }*/
 }

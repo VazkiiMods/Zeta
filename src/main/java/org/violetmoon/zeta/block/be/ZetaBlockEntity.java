@@ -11,6 +11,8 @@
 package org.violetmoon.zeta.block.be;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -26,15 +28,15 @@ public abstract class ZetaBlockEntity extends BlockEntity {
 	}
 
 	@Override
-	protected void saveAdditional(CompoundTag nbt) {
-		super.saveAdditional(nbt);
+	protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider provider) {
+		super.saveAdditional(nbt, provider);
 		
 		writeSharedNBT(nbt);
 	}
 
 	@Override
-	public void load(CompoundTag nbt) {
-		super.load(nbt);
+	public void loadWithComponents(CompoundTag nbt, HolderLookup.Provider provider) {
+		super.loadWithComponents(nbt, provider);
 
 		readSharedNBT(nbt);
 	}

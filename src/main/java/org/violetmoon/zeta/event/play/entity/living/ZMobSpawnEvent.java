@@ -8,7 +8,7 @@ import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.level.BaseSpawner;
 import net.minecraft.world.level.ServerLevelAccessor;
 
-public interface ZMobSpawnEvent extends IZetaPlayEvent, Resultable {
+public interface ZMobSpawnEvent extends IZetaPlayEvent /*, Resultable*/ {
     Mob getEntity();
     ServerLevelAccessor getLevel();
     double getX();

@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import net.minecraft.advancements.AdvancementRequirements;
 import org.violetmoon.zeta.api.IMutableAdvancement;
 
 import com.google.common.collect.ImmutableMap;
@@ -44,18 +45,17 @@ public class MutableAdvancement implements IMutableAdvancement {
 	}
 
 	private void mutabilize() {
-		this.criteria = Maps.newHashMap(advancement.criteria);
+		this.criteria = Maps.newHashMap(advancement.criteria());
 		this.requirements = new ArrayList<>();
 
-		String[][] arr = advancement.requirements;
-		for(String[] req : arr) {
-			List<String> reqList = new ArrayList<>(Arrays.asList(req));
+		AdvancementRequirements advReq = advancement.requirements();
+		for (List<String> reqList : advReq.requirements()) {
 			this.requirements.add(reqList);
 		}
 	}
 	
 	public void commit() {
-		advancement.criteria() = ImmutableMap.copyOf(criteria);
+		advancement.criteria = ImmutableMap.copyOf(criteria); //todo: Mixin I believe would fix this
 		
 		List<String[]> requirementArrays = new ArrayList<>();
 		for(List<String> list : requirements) {

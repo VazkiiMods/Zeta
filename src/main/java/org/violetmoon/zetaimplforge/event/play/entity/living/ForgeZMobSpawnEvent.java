@@ -41,7 +41,7 @@ public class ForgeZMobSpawnEvent implements ZMobSpawnEvent {
         return e.getZ();
     }
 
-    @Override
+    /*@Override
     public ZResult getResult() {
         return ForgeZeta.from(e.getResult());
     }
@@ -49,7 +49,7 @@ public class ForgeZMobSpawnEvent implements ZMobSpawnEvent {
     @Override
     public void setResult(ZResult value) {
         e.setResult(ForgeZeta.to(value));
-    }
+    }*/
 
     public static class FinalizeSpawn extends ForgeZMobSpawnEvent implements ZMobSpawnEvent.CheckSpawn {
         private final MobSpawnEvent.FinalizeSpawn e;

@@ -2,6 +2,7 @@ package org.violetmoon.zeta.block;
 
 import java.util.function.BooleanSupplier;
 
+import net.minecraft.world.level.block.grower.TreeGrower;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.registry.RenderLayerRegistry;
@@ -11,15 +12,14 @@ import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SaplingBlock;
-import net.minecraft.world.level.block.grower.AbstractTreeGrower;
 
 public class ZetaSaplingBlock extends SaplingBlock implements IZetaBlock {
 
 	private final @Nullable ZetaModule module;
 	private BooleanSupplier enabledSupplier = BooleanSuppliers.TRUE;
 	
-	public ZetaSaplingBlock(String name, @Nullable ZetaModule module, AbstractTreeGrower tree) {
-		super(tree, Block.Properties.copy(Blocks.OAK_SAPLING));
+	public ZetaSaplingBlock(String name, @Nullable ZetaModule module, TreeGrower tree) {
+		super(tree, Block.Properties.ofFullCopy(Blocks.OAK_SAPLING));
 		this.module = module;
 
 		if(module == null) //auto registration below this line

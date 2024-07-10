@@ -1,24 +1,25 @@
 package org.violetmoon.zetaimplforge.event.play.entity;
 
-import org.violetmoon.zeta.event.play.entity.ZEntityItemPickup;
+import net.neoforged.neoforge.event.entity.player.ItemEntityPickupEvent;
+import org.violetmoon.zeta.event.play.entity.ZItemEntityPickup;
 
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 
-public class ForgeZEntityItemPickup implements ZEntityItemPickup {
-    private final EntityItemPickupEvent e;
+public class ForgeZEntityItemPickup implements ZItemEntityPickup {
+    private final ItemEntityPickupEvent e;
 
-    public ForgeZEntityItemPickup(EntityItemPickupEvent e) {
+    public ForgeZEntityItemPickup(ItemEntityPickupEvent e) {
         this.e = e;
     }
 
     @Override
     public Player getEntity() {
-        return e.getEntity();
+        return e.getPlayer();
     }
 
     @Override
     public ItemEntity getItem() {
-        return e.getItem();
+        return e.getItemEntity();
     }
 }

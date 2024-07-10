@@ -9,6 +9,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Streams;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.item.crafting.*;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.zeta.event.bus.IZetaPlayEvent;
@@ -20,12 +21,6 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.AbstractCookingRecipe;
-import net.minecraft.world.item.crafting.CustomRecipe;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.ShapedRecipe;
-import net.minecraft.world.item.crafting.ShapelessRecipe;
 import org.violetmoon.zeta.util.RegistryUtil;
 
 public abstract class ZRecipeCrawl implements IZetaPlayEvent {
@@ -33,56 +28,58 @@ public abstract class ZRecipeCrawl implements IZetaPlayEvent {
 	public static class Reset extends ZRecipeCrawl { }
 	public static class Starting extends ZRecipeCrawl { }
 
-	public static abstract class Visit<T extends Recipe<?>> extends ZRecipeCrawl {
+	public static abstract class Visit<T extends RecipeHolder<?>> extends ZRecipeCrawl {
 
-		public final T recipe;
+		public final RecipeHolder<?> recipeHolder;
+		public final Recipe<?> recipe;
 		public final ResourceLocation recipeID;
 		public final ItemStack output;
 		public final NonNullList<Ingredient> ingredients;
 
-		public Visit(T recipe, RegistryAccess access) {
-			this.recipe = recipe;
-			this.recipeID = recipe.getId(); //todo: Get ID another way
-			this.output = recipe.getResultItem(access);
-			this.ingredients = recipe.getIngredients();
+		public Visit(RecipeHolder<?> recipeHolder, RegistryAccess access) {
+			this.recipeHolder = recipeHolder;
+			this.recipe = recipeHolder.value();
+			this.recipeID = recipeHolder.id();
+			this.output = recipeHolder.value().getResultItem(access);
+			this.ingredients = recipeHolder.value().getIngredients();
 		}
 
-		public static class Shaped extends Visit<ShapedRecipe> {
+		public static class Shaped extends Visit<RecipeHolder<ShapedRecipe>> {
 
-			public Shaped(ShapedRecipe recipe, RegistryAccess access) {
-				super(recipe, access);
+			public Shaped(RecipeHolder<ShapedRecipe> recipeHolder, RegistryAccess access) {
+				super(recipeHolder, access);
 			}
 
 		}
 
-		public static class Shapeless extends Visit<ShapelessRecipe> {
+		public static class Shapeless extends Visit<RecipeHolder<ShapelessRecipe>> {
 
-			public Shapeless(ShapelessRecipe recipe, RegistryAccess access) {
-				super(recipe, access);
+			public Shapeless(RecipeHolder<ShapelessRecipe> recipeHolder, RegistryAccess access) {
+				super(recipeHolder, access);
 			}
 
 		}
 
-		public static class Custom extends Visit<CustomRecipe> {
+		public static class Custom extends Visit<RecipeHolder<CustomRecipe>> {
 
-			public Custom(CustomRecipe recipe, RegistryAccess access) {
-				super(recipe, access);
+			public Custom(RecipeHolder<CustomRecipe> recipeHolder, RegistryAccess access) {
+				super(recipeHolder, access);
 			}
 
 		}
 
-		public static class Cooking extends Visit<AbstractCookingRecipe> {
+		public static class Cooking extends Visit<RecipeHolder<AbstractCookingRecipe>> {
 
-			public Cooking(AbstractCookingRecipe recipe, RegistryAccess access) {
-				super(recipe, access);
+			public Cooking(RecipeHolder<ShapelessRecipe> recipeHolder, RegistryAccess access) {
+				super(recipeHolder, access);
 			}
 
 		}
 
-		public static class Misc extends Visit<Recipe<?>> {
+		public static class Misc extends Visit<RecipeHolder<Recipe<?>>> {
 
-			public Misc(Recipe<?> recipe, RegistryAccess access) {
-				super(recipe, access);
+			public Misc(RecipeHolder<Recipe<?>> recipeHolder, RegistryAccess access) {
+				super(recipeHolder, access);
 			}
 
 		}
