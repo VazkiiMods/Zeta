@@ -8,7 +8,7 @@ import org.violetmoon.zeta.event.bus.IZetaPlayEvent;
  * will not work, Use {@link ZEarlyRender } instead.
  * </p>
  */
-public interface ZRenderTick extends IZetaPlayEvent {
+public interface ZRenderFrame extends IZetaPlayEvent {
 	float getRenderTickTime();
 	boolean isEndPhase();
 

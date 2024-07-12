@@ -1,5 +1,6 @@
 package org.violetmoon.zeta.event.play.entity.player;
 
+import net.neoforged.neoforge.common.util.TriState;
 import org.violetmoon.zeta.event.bus.Cancellable;
 import org.violetmoon.zeta.event.bus.IZetaPlayEvent;
 import org.violetmoon.zeta.event.bus.Resultable;
@@ -22,7 +23,7 @@ public interface ZRightClickBlock extends IZetaPlayEvent, Cancellable, Resultabl
 	BlockHitResult getHitVec();
 	Direction getFace();
 
-	ZResult getUseBlock();
+	TriState getUseBlock();
 
 	void setCancellationResult(InteractionResult result);
 

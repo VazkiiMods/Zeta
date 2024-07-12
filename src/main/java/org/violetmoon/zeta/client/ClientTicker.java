@@ -1,7 +1,7 @@
 package org.violetmoon.zeta.client;
 
 import org.violetmoon.zeta.client.event.play.ZClientTick;
-import org.violetmoon.zeta.client.event.play.ZRenderTick;
+import org.violetmoon.zeta.client.event.play.ZRenderFrame;
 import org.violetmoon.zeta.event.bus.PlayEvent;
 import org.violetmoon.zeta.event.bus.ZPhase;
 
@@ -15,7 +15,7 @@ public final class ClientTicker {
 	public float total = 0;
 
 	@PlayEvent
-	public void onRenderTick(ZRenderTick event) {
+	public void onRenderTick(ZRenderFrame event) {
 		if(event.isStartPhase())
 			partialTicks = event.getRenderTickTime();
 		else

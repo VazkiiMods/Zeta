@@ -10,7 +10,7 @@ import net.minecraft.network.chat.Component;
 import net.neoforged.neoforge.client.ClientHooks;
 import org.joml.Matrix4f;
 import org.joml.Matrix4fStack;
-import org.violetmoon.zeta.client.event.play.ZRenderTick;
+import org.violetmoon.zeta.client.event.play.ZRenderFrame;
 import org.violetmoon.zeta.event.bus.PlayEvent;
 
 import java.util.List;
@@ -24,7 +24,7 @@ public class TopLayerTooltipHandler {
 	private int tooltipX, tooltipY;
 
 	@PlayEvent
-	public void renderTick(ZRenderTick event) {
+	public void renderTick(ZRenderFrame event) {
 		if(tooltip != null && event.isEndPhase()) {
 			Minecraft mc = Minecraft.getInstance();
 			Screen screen = mc.screen;

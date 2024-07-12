@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 import net.minecraft.core.Holder;
+import net.minecraft.world.item.Item;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.zeta.Zeta;
 import org.violetmoon.zeta.recipe.FlagIngredient;
@@ -24,6 +25,8 @@ import net.minecraft.world.item.crafting.Ingredient;
  * @author WireSegal
  * Created at 3:34 PM on 9/23/19.
  */
+
+//Todo: This NEEDS a rewrite, I feel its been butchered in 1.21
 public abstract class BrewingRegistry {
 
 	protected final Zeta zeta;
@@ -32,22 +35,22 @@ public abstract class BrewingRegistry {
 		this.zeta = zeta;
 	}
 
-	public void addPotionMix(String flag, Supplier<Ingredient> reagent, MobEffect effect) {
+	public void addPotionMix(String flag, Item reagent, MobEffect effect) {
 		addPotionMix(flag, reagent, effect, null);
 	}
 
-	public void addPotionMix(String flag, Supplier<Ingredient> reagent, MobEffect effect,
+	public void addPotionMix(String flag, Item reagent, MobEffect effect,
 									int normalTime, int longTime, int strongTime) {
 		addPotionMix(flag, reagent, effect, null, normalTime, longTime, strongTime);
 	}
 
-	public void addPotionMix(String flag, Supplier<Ingredient> reagent, MobEffect effect,
-									@Nullable MobEffect negation) {
+	public void addPotionMix(String flag, Item reagent, MobEffect effect,
+							 @Nullable MobEffect negation) {
 		addPotionMix(flag, reagent, effect, negation, 3600, 9600, 1800);
 	}
 
 
-	public void addPotionMix(String flag, Supplier<Ingredient> reagent, MobEffect effect,
+	public void addPotionMix(String flag, Item reagent, MobEffect effect,
 									@Nullable MobEffect negation, int normalTime, int longTime, int strongTime) {
 		ResourceLocation loc = zeta.registry.getRegistryName(effect, BuiltInRegistries.MOB_EFFECT);
 
@@ -79,44 +82,47 @@ public abstract class BrewingRegistry {
 
 	}
 
-	public void addPotionMix(String flag, Supplier<Ingredient> reagent, Potion normalType, Potion longType, @Nullable Potion strongType) {
+	public void addPotionMix(String flag, Item reagent, Potion normalType, Potion longType, @Nullable Potion strongType) {
 		boolean hasStrong = strongType != null;
 
 		addFlaggedRecipe(flag, Potions.AWKWARD.value(), reagent, normalType);
 		addFlaggedRecipe(flag, Potions.WATER.value(), reagent, Potions.MUNDANE.value());
 
 		if (hasStrong)
-			addFlaggedRecipe(flag, normalType, BrewingRegistry::glowstone, strongType);
-		addFlaggedRecipe(flag, normalType, BrewingRegistry::redstone, longType);
+			addFlaggedRecipe(flag, normalType, Items.GLOWSTONE, strongType);
+		addFlaggedRecipe(flag, normalType, Items.REDSTONE, longType);
 	}
 
 	public void addNegation(String flag, Potion normalType, Potion longType, @Nullable Potion strongType,
 								   Potion normalNegatedType, Potion longNegatedType, @Nullable Potion strongNegatedType) {
-		addFlaggedRecipe(flag, normalType, BrewingRegistry::spiderEye, normalNegatedType);
+		addFlaggedRecipe(flag, normalType, Items.FERMENTED_SPIDER_EYE, normalNegatedType);
 
 		boolean hasStrong = strongType != null && strongNegatedType != null;
 
 		if (hasStrong) {
-			addFlaggedRecipe(flag, strongType, BrewingRegistry::spiderEye, strongNegatedType);
-			addFlaggedRecipe(flag, normalNegatedType, BrewingRegistry::glowstone, strongNegatedType);
+			addFlaggedRecipe(flag, strongType, Items.FERMENTED_SPIDER_EYE, strongNegatedType);
+			addFlaggedRecipe(flag, normalNegatedType, Items.GLOWSTONE_DUST, strongNegatedType);
 		}
-		addFlaggedRecipe(flag, longType, BrewingRegistry::spiderEye, longNegatedType);
-		addFlaggedRecipe(flag, normalNegatedType, BrewingRegistry::redstone, longNegatedType);
+		addFlaggedRecipe(flag, longType, Items.FERMENTED_SPIDER_EYE, longNegatedType);
+		addFlaggedRecipe(flag, normalNegatedType, Items.REDSTONE, longNegatedType);
 
 	}
 
 	protected final Map<Potion, String> flaggedPotions = Maps.newHashMap();
 
-	protected void addFlaggedRecipe(String flag, Potion potion, Supplier<Ingredient> reagent, Potion to) {
+	protected void addFlaggedRecipe(String flag, Potion potion, Item reagent, Potion to) {
 		flaggedPotions.put(to, flag);
-		Supplier<Ingredient> flagIngredientSupplier = () -> new FlagIngredient(
-			reagent.get(),
+		/*Supplier<Ingredient> flagIngredientSupplier = () -> new FlagIngredient(
+			reagent,
 			flag,
 			zeta.configManager.getConfigFlagManager(),
 			zeta.configManager.getConfigFlagManager().flagIngredientSerializer
-		);
+		);*/
+		//todo: Chat checkup on this
+		if (zeta.configManager.getConfigFlagManager().getFlag(flag)) {
+			addBrewingRecipe(potion, reagent, to);
+		};
 
-		addBrewingRecipe(potion, flagIngredientSupplier, to);
 	}
 
 	protected Potion registerPotion(MobEffectInstance eff, String baseName, String name) {
@@ -132,17 +138,5 @@ public abstract class BrewingRegistry {
 		return zeta.configManager.getConfigFlagManager().getFlag(flaggedPotions.get(potion));
 	}
 
-	public static Ingredient redstone() {
-		return Ingredient.of(Items.REDSTONE);
-	}
-
-	public static Ingredient glowstone() {
-		return Ingredient.of(Items.GLOWSTONE_DUST);
-	}
-
-	public static Ingredient spiderEye() {
-		return Ingredient.of(Items.FERMENTED_SPIDER_EYE);
-	}
-
-	protected abstract void addBrewingRecipe(Potion potion, Supplier<Ingredient> reagent, Potion result);
+	protected abstract void addBrewingRecipe(Potion input, Item reagentSupplier, Potion output);
 }

@@ -62,7 +62,7 @@ public class RequiredModTooltipHandler {
 			if(ITEMS.containsKey(item)) {
 				String mod = ITEMS.get(item);
 				if (!z.isModLoaded(mod)) {
-					event.getToolTip().add(Component.translatable("quark.misc.mod_disabled", mod).withStyle(ChatFormatting.GRAY));
+					event.getToolTip().add(Component.translatable("quark.misc.mod_disabled", mod).withStyle(ChatFormatting.GRAY)); //todo: Quark reference
 				}
 			}
 		}

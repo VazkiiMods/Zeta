@@ -8,6 +8,7 @@ import net.minecraft.client.color.item.ItemColors;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
@@ -15,22 +16,8 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.util.thread.EffectiveSide;
-import net.neoforged.neoforge.client.event.ClientTickEvent;
-import net.neoforged.neoforge.client.event.ContainerScreenEvent;
-import net.neoforged.neoforge.client.event.EntityRenderersEvent;
-import net.neoforged.neoforge.client.event.InputEvent;
-import net.neoforged.neoforge.client.event.ModelEvent;
-import net.neoforged.neoforge.client.event.MovementInputUpdateEvent;
-import net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent;
-import net.neoforged.neoforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
-import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
-import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
-import net.neoforged.neoforge.client.event.RenderHighlightEvent;
-import net.neoforged.neoforge.client.event.RenderLivingEvent;
-import net.neoforged.neoforge.client.event.RenderPlayerEvent;
-import net.neoforged.neoforge.client.event.RenderTooltipEvent;
-import net.neoforged.neoforge.client.event.ScreenEvent;
-import net.neoforged.neoforge.client.event.ScreenshotEvent;
+import net.neoforged.neoforge.client.event.*;
+import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
@@ -59,7 +46,7 @@ import org.violetmoon.zeta.client.event.play.ZRenderContainerScreen;
 import org.violetmoon.zeta.client.event.play.ZRenderGuiOverlay;
 import org.violetmoon.zeta.client.event.play.ZRenderLiving;
 import org.violetmoon.zeta.client.event.play.ZRenderPlayer;
-import org.violetmoon.zeta.client.event.play.ZRenderTick;
+import org.violetmoon.zeta.client.event.play.ZRenderFrame;
 import org.violetmoon.zeta.client.event.play.ZRenderTooltip;
 import org.violetmoon.zeta.client.event.play.ZScreen;
 import org.violetmoon.zeta.client.event.play.ZScreenshot;
@@ -81,7 +68,7 @@ import org.violetmoon.zetaimplforge.client.event.play.ForgeZRenderContainerScree
 import org.violetmoon.zetaimplforge.client.event.play.ForgeZRenderGuiOverlay;
 import org.violetmoon.zetaimplforge.client.event.play.ForgeZRenderLiving;
 import org.violetmoon.zetaimplforge.client.event.play.ForgeZRenderPlayer;
-import org.violetmoon.zetaimplforge.client.event.play.ForgeZRenderTick;
+import org.violetmoon.zetaimplforge.client.event.play.ForgeZRenderFrame;
 import org.violetmoon.zetaimplforge.client.event.play.ForgeZRenderTooltip;
 import org.violetmoon.zetaimplforge.client.event.play.ForgeZScreen;
 import org.violetmoon.zetaimplforge.mixin.mixins.client.AccessorBlockColors;
@@ -94,16 +81,12 @@ public class ForgeZetaClient extends ZetaClient {
 
 	@Override
 	public @Nullable BlockColor getBlockColor(BlockColors bcs, Block block) {
-		return NeoForgeRegistries.BLOCKS.getDelegate(block)
-			.map(ref -> ((AccessorBlockColors) bcs).zeta$getBlockColors().get(ref))
-			.orElse(null);
+		return ((AccessorBlockColors) bcs).zeta$getBlockColors().get(block);
 	}
 
 	@Override
 	public @Nullable ItemColor getItemColor(ItemColors ics, ItemLike itemlike) {
-		return ForgeRegistries.ITEMS.getDelegate(itemlike.asItem())
-			.map(ref -> ((AccessorItemColors) ics).zeta$getItemColors().get(ref))
-			.orElse(null);
+		return ((AccessorItemColors) ics).zeta$getItemColors().get(itemlike);
 	}
 
 	@Override
@@ -132,7 +115,7 @@ public class ForgeZetaClient extends ZetaClient {
 
 	@Override
 	public void start() {
-		IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
+		IEventBus bus = NeoForge.EVENT_BUS;
 
 		bus.addListener(this::registerBlockColors);
 		bus.addListener(this::registerItemColors);
@@ -242,8 +225,8 @@ public class ForgeZetaClient extends ZetaClient {
 	//TODO: move ticker stuff out of forge event handlers, subscribe to them from zeta
 	// Also these events are a mess lol; sometimes there's 2 start/end events, sometimes there's
 	// one event with multiple Phases... bad
-	public void renderTick(TickEvent.RenderTickEvent e) {
-		playBus.fire(new ForgeZRenderTick(e), ZRenderTick.class);
+	public void renderTick(RenderFrameEvent e) {
+		playBus.fire(new ForgeZRenderFrame(e), ZRenderFrame.class);
 	}
 
 	boolean clientTicked = false;
@@ -289,44 +272,44 @@ public class ForgeZetaClient extends ZetaClient {
 	}
 
 	//TODO: This probably should have been a PRE/POST event (just copying quark here)
-	public void renderGameOverlayNeitherPreNorPost(RenderGuiOverlayEvent e) {
-		if(e.getOverlay() == VanillaGuiOverlay.CROSSHAIR.type())
+	public void renderGameOverlayNeitherPreNorPost(RenderGuiLayerEvent e) {
+		if(e.getName() == VanillaGuiLayers.CROSSHAIR)
 			playBus.fire(new ForgeZRenderGuiOverlay.Crosshair(e), ZRenderGuiOverlay.Crosshair.class);
-		else if(e.getOverlay() == VanillaGuiOverlay.HOTBAR.type())
+		else if(e.getName() == VanillaGuiLayers.HOTBAR)
 			playBus.fire(new ForgeZRenderGuiOverlay.Hotbar(e), ZRenderGuiOverlay.Hotbar.class);
 	}
 
-	public void renderGuiOverlayPre(RenderGuiOverlayEvent.Pre e) {
-		if (e.getOverlay() == VanillaGuiOverlay.HOTBAR.type())
+	public void renderGuiOverlayPre(RenderGuiLayerEvent.Pre e) {
+		if (e.getName() == VanillaGuiLayers.HOTBAR)
 			playBus.fire(new ForgeZRenderGuiOverlay.Hotbar.Pre(e), ZRenderGuiOverlay.Hotbar.Pre.class);
-		else if (e.getOverlay() == VanillaGuiOverlay.CROSSHAIR.type())
+		else if (e.getName() == VanillaGuiLayers.CROSSHAIR)
 			playBus.fire(new ForgeZRenderGuiOverlay.Crosshair.Pre(e), ZRenderGuiOverlay.Crosshair.Pre.class);
-		else if (e.getOverlay() == VanillaGuiOverlay.PLAYER_HEALTH.type())
+		else if (e.getName() == VanillaGuiLayers.PLAYER_HEALTH)
 			playBus.fire(new ForgeZRenderGuiOverlay.PlayerHealth.Pre(e), ZRenderGuiOverlay.PlayerHealth.Pre.class);
-		else if (e.getOverlay() == VanillaGuiOverlay.ARMOR_LEVEL.type())
+		else if (e.getName() == VanillaGuiLayers.ARMOR_LEVEL)
 			playBus.fire(new ForgeZRenderGuiOverlay.ArmorLevel.Pre(e), ZRenderGuiOverlay.ArmorLevel.Pre.class);
-		else if (e.getOverlay() == VanillaGuiOverlay.DEBUG_TEXT.type())
+		else if (e.getName() == VanillaGuiLayers.DEBUG_OVERLAY)
 			playBus.fire(new ForgeZRenderGuiOverlay.DebugText.Pre(e), ZRenderGuiOverlay.DebugText.Pre.class);
-		else if (e.getOverlay() == VanillaGuiOverlay.POTION_ICONS.type())
+		else if (e.getName() == VanillaGuiLayers.EFFECTS)
 			playBus.fire(new ForgeZRenderGuiOverlay.PotionIcons.Pre(e), ZRenderGuiOverlay.PotionIcons.Pre.class);
-		else if (e.getOverlay() == VanillaGuiOverlay.CHAT_PANEL.type())
+		else if (e.getName() == VanillaGuiLayers.CHAT)
 			playBus.fire(new ForgeZRenderGuiOverlay.ChatPanel.Pre(e), ZRenderGuiOverlay.ChatPanel.Pre.class);
 	}
 
-	public void renderGuiOverlayPost(RenderGuiOverlayEvent.Post e) {
-		if (e.getOverlay() == VanillaGuiOverlay.HOTBAR.type())
+	public void renderGuiOverlayPost(RenderGuiLayerEvent.Post e) {
+		if (e.getName() == VanillaGuiLayers.HOTBAR)
 			playBus.fire(new ForgeZRenderGuiOverlay.Hotbar.Post(e), ZRenderGuiOverlay.Hotbar.Post.class);
-		else if (e.getOverlay() == VanillaGuiOverlay.CROSSHAIR.type())
+		else if (e.getName() == VanillaGuiLayers.CROSSHAIR)
 			playBus.fire(new ForgeZRenderGuiOverlay.Crosshair.Post(e), ZRenderGuiOverlay.Crosshair.Post.class);
-		else if (e.getOverlay() == VanillaGuiOverlay.PLAYER_HEALTH.type())
+		else if (e.getName() == VanillaGuiLayers.PLAYER_HEALTH)
 			playBus.fire(new ForgeZRenderGuiOverlay.PlayerHealth.Post(e), ZRenderGuiOverlay.PlayerHealth.Post.class);
-		else if (e.getOverlay() == VanillaGuiOverlay.ARMOR_LEVEL.type())
+		else if (e.getName() == VanillaGuiLayers.ARMOR_LEVEL)
 			playBus.fire(new ForgeZRenderGuiOverlay.ArmorLevel.Post(e), ZRenderGuiOverlay.ArmorLevel.Post.class);
-		else if (e.getOverlay() == VanillaGuiOverlay.DEBUG_TEXT.type())
+		else if (e.getName() == VanillaGuiLayers.DEBUG_OVERLAY)
 			playBus.fire(new ForgeZRenderGuiOverlay.DebugText.Post(e), ZRenderGuiOverlay.DebugText.Post.class);
-		else if (e.getOverlay() == VanillaGuiOverlay.POTION_ICONS.type())
+		else if (e.getName() == VanillaGuiLayers.EFFECTS)
 			playBus.fire(new ForgeZRenderGuiOverlay.PotionIcons.Post(e), ZRenderGuiOverlay.PotionIcons.Post.class);
-		else if (e.getOverlay() == VanillaGuiOverlay.CHAT_PANEL.type())
+		else if (e.getName() == VanillaGuiLayers.CHAT)
 			playBus.fire(new ForgeZRenderGuiOverlay.ChatPanel.Post(e), ZRenderGuiOverlay.ChatPanel.Post.class);
 	}
 

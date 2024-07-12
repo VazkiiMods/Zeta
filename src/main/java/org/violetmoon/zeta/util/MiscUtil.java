@@ -105,8 +105,8 @@ public class MiscUtil {
 		}
 	}
 
-	public static void damageStack(Player player, InteractionHand hand, ItemStack stack, int dmg) {
-		stack.hurtAndBreak(dmg, player, (p) -> p.broadcastBreakEvent(hand));
+	public static void damageStack(Player player, ItemStack stack, int dmg) {
+		stack.hurtAndBreak(dmg, player, stack.getEquipmentSlot());
 	}
 
 	public static Vec2 getMinecraftAngles(Vec3 direction) {
@@ -178,10 +178,10 @@ public class MiscUtil {
 		if(level != null && blockPos != null && level.getBlockState(blockPos).getBlock() instanceof WorldlyContainerHolder holder) {
 			handler = new SidedInvWrapper(holder.getContainer(level.getBlockState(blockPos), level, blockPos), face);
 		} else if(tile != null) {
-			LazyOptional<IItemHandler> opt = tile.getCapability(ForgeCapabilities.ITEM_HANDLER, face);
+			/*LazyOptional<IItemHandler> opt = tile.getCapability(ForgeCapabilities.ITEM_HANDLER, face);
 			if(opt.isPresent())
 				handler = opt.orElse(new ItemStackHandler());
-			else if(tile instanceof WorldlyContainer container)
+			else */if(tile instanceof WorldlyContainer container)
 				handler = new SidedInvWrapper(container, face);
 			else if(tile instanceof Container container)
 				handler = new InvWrapper(container);
@@ -209,7 +209,7 @@ public class MiscUtil {
 
 	//gets rid of lambdas that could contain references to blockstate properties we might not have
 	public static BlockBehaviour.Properties copyPropertySafe(BlockBehaviour blockBehaviour) {
-		BlockBehaviour.Properties p = BlockBehaviour.Properties.copy(blockBehaviour);
+		BlockBehaviour.Properties p = BlockBehaviour.Properties.ofFullCopy(blockBehaviour);
 		p.lightLevel(s -> 0);
 		p.offsetType(BlockBehaviour.OffsetType.NONE);
 		p.mapColor(blockBehaviour.defaultMapColor());

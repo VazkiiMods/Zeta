@@ -5,7 +5,6 @@ import org.violetmoon.zeta.config.ZetaGeneralConfig;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.load.ZCommonSetup;
 import org.violetmoon.zeta.network.ZetaModInternalNetwork;
-import org.violetmoon.zetaimplforge.config.ConfigEventDispatcher;
 
 public class ZetaMod {
 

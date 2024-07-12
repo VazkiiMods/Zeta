@@ -28,7 +28,7 @@ public final class ZetaMessageSerializer {
 	private final HashMap<Class<?>, Field[]> fieldCache = new HashMap<>();
 
 	{
-		this.<Byte>mapFunctions(byte.class, FriendlyByteBuf::readByte, FriendlyByteBuf::writeByte);
+		this.mapFunctions(byte.class, FriendlyByteBuf::readByte, FriendlyByteBuf::writeByte);
 		this.<Short>mapFunctions(short.class, FriendlyByteBuf::readShort, FriendlyByteBuf::writeShort);
 		mapFunctions(int.class, FriendlyByteBuf::readInt, FriendlyByteBuf::writeInt);
 		mapFunctions(long.class, FriendlyByteBuf::readLong, FriendlyByteBuf::writeLong);
@@ -186,11 +186,11 @@ public final class ZetaMessageSerializer {
 	// Functional interfaces
 	// ================================================================
 
-	public static interface Reader<T> {
-		public T read(FriendlyByteBuf buf, Field field);
+	public interface Reader<T> {
+		T read(FriendlyByteBuf buf, Field field);
 	}
 
-	public static interface Writer<T> {
-		public void write(FriendlyByteBuf buf, Field field, T t);
+	public interface Writer<T> {
+		void write(FriendlyByteBuf buf, Field field, T t);
 	}
 }

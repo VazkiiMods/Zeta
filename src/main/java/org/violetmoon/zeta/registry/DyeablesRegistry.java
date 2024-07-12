@@ -5,8 +5,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BooleanSupplier;
 
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.stats.Stats;
 import net.minecraft.world.ItemInteractionResult;
-import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.component.DyedItemColor;
+import org.jetbrains.annotations.NotNull;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.load.ZRegister;
 import org.violetmoon.zeta.module.ZetaModule;
@@ -18,7 +21,6 @@ import net.minecraft.core.cauldron.CauldronInteraction;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.Item;
@@ -34,7 +36,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class DyeablesRegistry {
 	//todo: This needs a redo
 	public final Map<Item, BooleanSupplier> dyeableConditions = new HashMap<>();
-	public final DyeableLeatherItem SURROGATE = new DyeableLeatherItem() {}; //Simply an accessor for various DyeableLeatherItem default methods
+	//public final DyeableLeatherItem SURROGATE = new DyeableLeatherItem() {}; //Simply an accessor for various DyeableLeatherItem default methods
 
 	@LoadEvent
 	public void register(ZRegister event) {
@@ -53,13 +55,13 @@ public class DyeablesRegistry {
 	class WashingInteraction implements CauldronInteraction {
 		//Copy of CauldronInteraction.DYED_ITEM
 		@Override
-		public ItemInteractionResult interact(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, ItemStack stack) {
+		public @NotNull ItemInteractionResult interact(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, ItemStack stack) {
 			if(!isDyed(stack))
 				return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 
 			if(!level.isClientSide) {
-				SURROGATE.clearColor(stack);
-				//player.awardStat(Stats.CLEAN_ARMOR);
+				stack.remove(DataComponents.DYED_COLOR);
+				player.awardStat(Stats.CLEAN_ARMOR);
 				LayeredCauldronBlock.lowerFillLevel(state, level, pos);
 			}
 
@@ -85,20 +87,20 @@ public class DyeablesRegistry {
 	}
 
 	public boolean isDyed(ItemStack stack) {
-		return isDyeable(stack) && SURROGATE.hasCustomColor(stack);
+		return isDyeable(stack) && stack.getComponents().has(DataComponents.DYED_COLOR);
 	}
 
-	public int getDye(ItemStack stack) {
-		return SURROGATE.getColor(stack);
+	public DyedItemColor getDye(ItemStack stack) {
+		return stack.getComponents().get(DataComponents.DYED_COLOR);
 	}
 
-	public void applyDye(ItemStack stack, int color) {
+	public void applyDye(ItemStack stack, DyedItemColor color) {
 		if(isDyeable(stack))
-			SURROGATE.setColor(stack, color);
+			stack.update(DataComponents.DYED_COLOR, color,  dyedItemColor -> dyedItemColor);
 	}
 
-	public int getColor(ItemStack stack) {
-		return isDyed(stack) ? SURROGATE.getColor(stack) : 0xFF_FF_FF;
+	public DyedItemColor getColor(ItemStack stack) {
+		return isDyed(stack) ? stack.getComponents().get(DataComponents.DYED_COLOR) : new DyedItemColor(0xFF_FF_FF, false);
 	}
 
 	// Copy of DyeableLeatherItem
@@ -111,11 +113,11 @@ public class DyeablesRegistry {
 		if(isDyeable(stack)) {
 			itemstack = stack.copy();
 			itemstack.setCount(1);
-			if(SURROGATE.hasCustomColor(stack)) {
-				int k = SURROGATE.getColor(itemstack);
-				float f = (float) (k >> 16 & 255) / 255.0F;
-				float f1 = (float) (k >> 8 & 255) / 255.0F;
-				float f2 = (float) (k & 255) / 255.0F;
+			if(stack.getComponents().has(DataComponents.DYED_COLOR)) {
+				DyedItemColor k = stack.getComponents().get(DataComponents.DYED_COLOR);
+				float f = (float) (k.rgb() >> 16 & 255) / 255.0F;
+				float f1 = (float) (k.rgb() >> 8 & 255) / 255.0F;
+				float f2 = (float) (k.rgb() & 255) / 255.0F;
 				i += (int) (Math.max(f, Math.max(f1, f2)) * 255.0F);
 				aint[0] += (int) (f * 255.0F);
 				aint[1] += (int) (f1 * 255.0F);
@@ -123,15 +125,15 @@ public class DyeablesRegistry {
 				++j;
 			}
 
-			for(DyeItem dyeitem : dyes) {
-				float[] afloat = dyeitem.getDyeColor().getTextureDiffuseColors();
-				int i2 = (int) (afloat[0] * 255.0F);
-				int l = (int) (afloat[1] * 255.0F);
-				int i1 = (int) (afloat[2] * 255.0F);
-				i += Math.max(i2, Math.max(l, i1));
-				aint[0] += i2;
-				aint[1] += l;
-				aint[2] += i1;
+			for(DyeItem dyeItem : dyes) {
+				int diffuseColor = dyeItem.getDyeColor().getTextureDiffuseColor();
+				float f = (diffuseColor >> 16 & 255) / 255.0F;
+				float f1 = (diffuseColor >> 8 & 255) / 255.0F;
+				float f2 = (diffuseColor & 255) / 255.0F;
+				i += (int) Math.max(f2, Math.max(f, f1));
+				aint[0] += (int) f;
+				aint[1] += (int) f1;
+				aint[2] += (int) f2;
 				++j;
 			}
 
@@ -145,7 +147,7 @@ public class DyeablesRegistry {
 			l1 = (int) ((float) l1 * f3 / f4);
 			int j2 = (j1 << 8) + k1;
 			j2 = (j2 << 8) + l1;
-			SURROGATE.setColor(itemstack, j2);
+			stack.set(DataComponents.DYED_COLOR, new DyedItemColor(j2, false));
 
 			return itemstack;
 		}

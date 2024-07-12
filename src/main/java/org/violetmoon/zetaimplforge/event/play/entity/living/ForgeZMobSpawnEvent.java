@@ -51,7 +51,7 @@ public class ForgeZMobSpawnEvent implements ZMobSpawnEvent {
         e.setResult(ForgeZeta.to(value));
     }*/
 
-    public static class FinalizeSpawn extends ForgeZMobSpawnEvent implements ZMobSpawnEvent.CheckSpawn {
+    /*public static class FinalizeSpawn extends ForgeZMobSpawnEvent implements ZMobSpawnEvent.CheckSpawn {
         private final MobSpawnEvent.FinalizeSpawn e;
 
         public FinalizeSpawn(MobSpawnEvent.FinalizeSpawn e) {
@@ -74,5 +74,5 @@ public class ForgeZMobSpawnEvent implements ZMobSpawnEvent {
                 super(e);
             }
         }
-    }
+    }*/
 }

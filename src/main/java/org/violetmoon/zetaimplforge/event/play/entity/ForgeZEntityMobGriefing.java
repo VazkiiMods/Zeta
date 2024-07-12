@@ -19,8 +19,8 @@ public class ForgeZEntityMobGriefing implements ZEntityMobGriefing {
     }
 
     @Override
-    public ZResult getResult() {
-        return ForgeZeta.from(e.getResult());
+    public boolean getResult() {
+        return true; //todo: FIX
     }
 
     @Override

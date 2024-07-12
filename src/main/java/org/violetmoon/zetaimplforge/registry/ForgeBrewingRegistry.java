@@ -1,6 +1,8 @@
 package org.violetmoon.zetaimplforge.registry;
 
 import net.minecraft.core.Holder;
+import net.minecraft.world.flag.FeatureFlagSet;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -19,16 +21,16 @@ public class ForgeBrewingRegistry extends BrewingRegistry {
 		super(zeta);
 	}
 
-	private record DelayedPotion(Holder<Potion> input, Supplier<Ingredient> reagentSupplier, Holder<Potion> output) {
+	private record DelayedPotion(Holder<Potion> input, Item reagentSupplier, Holder<Potion> output) {
 		void register() {
-			AccessorPotionBrewing.zeta$getPotionMixes().add(new PotionBrewing.Mix<>(input, reagentSupplier.get(), output));
+			new PotionBrewing.Builder(FeatureFlagSet.of()).addMix(input, reagentSupplier, output);
 		}
 	}
 	private List<DelayedPotion> delayedPotions = new ArrayList<>();
 	private boolean okToRegisterImmediately = false;
 
 	@Override
-	public void addBrewingRecipe(Potion input, Supplier<Ingredient> reagentSupplier, Potion output) {
+	public void addBrewingRecipe(Potion input, Item reagentSupplier, Potion output) {
 		DelayedPotion d = new DelayedPotion(Holder.direct(input), reagentSupplier, Holder.direct(output));
 
 		if(okToRegisterImmediately)

@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.enchantment.Enchantments;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -74,6 +75,7 @@ public interface IZetaItemExtensions {
 	}
 
 	default Map<Enchantment, Integer> getAllEnchantmentsZeta(ItemStack stack) {
+		Enchantments
 		return EnchantmentHelper.deserializeEnchantments(stack.getEnchantmentTags());
 	}
 

@@ -1,5 +1,6 @@
 package org.violetmoon.zeta.client.event.play;
 
+import net.minecraft.client.DeltaTracker;
 import org.violetmoon.zeta.event.bus.IZetaPlayEvent;
 
 import com.mojang.blaze3d.platform.Window;
@@ -9,7 +10,7 @@ import net.minecraft.client.gui.GuiGraphics;
 public interface ZRenderGuiOverlay extends IZetaPlayEvent {
 	Window getWindow();
 	GuiGraphics getGuiGraphics();
-	float getPartialTick();
+	DeltaTracker getPartialTick();
 
 	boolean shouldDrawSurvivalElements();
 	int getLeftHeight(); //weird ForgeGui stuff

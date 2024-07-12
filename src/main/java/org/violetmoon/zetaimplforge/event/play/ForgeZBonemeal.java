@@ -37,8 +37,8 @@ public class ForgeZBonemeal implements ZBonemeal {
     }
 
     @Override
-    public ZResult getResult() {
-        return ForgeZeta.from(e.isSuccessful());
+    public boolean getResult() {
+        return e.isSuccessful();
     }
 
     @Override

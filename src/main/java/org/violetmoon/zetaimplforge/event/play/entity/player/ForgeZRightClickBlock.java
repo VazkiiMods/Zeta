@@ -8,6 +8,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
+import net.neoforged.neoforge.common.util.TriState;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import org.violetmoon.zeta.event.bus.ZResult;
 import org.violetmoon.zeta.event.play.entity.player.ZRightClickBlock;
@@ -56,8 +57,8 @@ public class ForgeZRightClickBlock implements ZRightClickBlock {
 	}
 
 	@Override
-	public ZResult getUseBlock() {
-		return ForgeZeta.from(e.getUseBlock());
+	public TriState getUseBlock() {
+		return e.getUseBlock();
 	}
 
 	@Override
@@ -76,8 +77,8 @@ public class ForgeZRightClickBlock implements ZRightClickBlock {
 	}
 
 	@Override
-	public ZResult getResult() {
-		return ForgeZeta.from(e.getResult());
+	public boolean getResult() {
+		return e.getCancellationResult();
 	}
 
 	@Override

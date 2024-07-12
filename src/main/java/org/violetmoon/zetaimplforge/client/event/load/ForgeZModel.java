@@ -3,6 +3,7 @@ package org.violetmoon.zetaimplforge.client.event.load;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelManager;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.client.event.ModelEvent;
 import net.neoforged.neoforge.client.model.geometry.IGeometryLoader;
@@ -19,7 +20,7 @@ public class ForgeZModel implements ZModel {
         }
 
         @Override
-        public Map<ResourceLocation, BakedModel> getModels() {
+        public Map<ModelResourceLocation, BakedModel> getModels() {
             return e.getModels();
         }
 
@@ -42,7 +43,7 @@ public class ForgeZModel implements ZModel {
         }
 
         @Override
-        public Map<ResourceLocation, BakedModel> getModels() {
+        public Map<ModelResourceLocation, BakedModel> getModels() {
             return e.getModels();
         }
 
@@ -60,7 +61,7 @@ public class ForgeZModel implements ZModel {
         }
 
         @Override
-        public void register(ResourceLocation model) {
+        public void register(ModelResourceLocation model) {
             e.register(model);
         }
     }
@@ -73,8 +74,8 @@ public class ForgeZModel implements ZModel {
         }
 
         @Override
-        public void register(String name, IGeometryLoader<?> loader) {
-            e.register(name, loader);
+        public void register(ResourceLocation id, IGeometryLoader<?> loader) {
+            e.register(id, loader);
         }
     }
 }
