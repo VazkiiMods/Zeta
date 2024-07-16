@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.common.ItemAbility;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.zeta.event.bus.IZetaPlayEvent;
 
@@ -20,8 +21,8 @@ public interface ZBlock extends IZetaPlayEvent {
         BlockState getPlacedBlock();
     }
 
-    /*interface BlockToolModification extends ZBlock {
-        ToolAction getToolAction();
+    interface BlockToolModification extends ZBlock {
+        ItemAbility getItemAbility();
         void setFinalState(@Nullable BlockState finalState);
-    }*/
+    }
 }

@@ -15,8 +15,8 @@ import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.Property;
-import net.neoforged.neoforge.common.ToolAction;
-import net.neoforged.neoforge.common.ToolActions;
+import net.neoforged.neoforge.common.ItemAbilities;
+import net.neoforged.neoforge.common.ItemAbility;
 import org.apache.commons.lang3.tuple.Pair;
 import org.violetmoon.zeta.advancement.modifier.WaxModifier;
 import org.violetmoon.zeta.event.bus.LoadEvent;
@@ -39,31 +39,31 @@ public final class ToolInteractionHandler {
 	private static final Map<Block, Block> cleanToWaxMap = HashBiMap.create();
 	private static final List<BooleanPropertyWaxableBlock> booleanPropertySet = new ArrayList<>();
 
-	private static final Map<ToolAction, Map<Block, Block>> interactionMaps = new HashMap<>();
+	private static final Map<ItemAbility, Map<Block, Block>> interactionMaps = new HashMap<>();
 
 	private static final Multimap<ZetaModule, Pair<Block, Block>> waxingByModule = HashMultimap.create();
 
 	public static void registerWaxedBlock(ZetaModule module, Block clean, Block waxed) {
 		cleanToWaxMap.put(clean, waxed);
-		registerInteraction(ToolActions.AXE_WAX_OFF, waxed, clean);
+		registerInteraction(ItemAbilities.AXE_WAX_OFF, waxed, clean);
 
 		waxingByModule.put(module, Pair.of(clean, waxed));
 	}
 
 	public static void registerWaxedBlockBooleanProperty(ZetaModule module, Block block, BooleanProperty property) {
 		BooleanPropertyWaxableBlock booleanPropertyWaxableBlock =
-				new BooleanPropertyWaxableBlock(module, block, property, ToolActions.AXE_WAX_OFF);
+				new BooleanPropertyWaxableBlock(module, block, property, ItemAbilities.AXE_WAX_OFF);
 
 		booleanPropertySet.add(booleanPropertyWaxableBlock);
 
 		waxingByModule.put(module, Pair.of(block, block));
 	}
 
-	public static void registerInteraction(ToolAction action, Block in, Block out) {
-		if(!interactionMaps.containsKey(action))
-			interactionMaps.put(action, new HashMap<>());
+	public static void registerInteraction(ItemAbility ability, Block in, Block out) {
+		if(!interactionMaps.containsKey(ability))
+			interactionMaps.put(ability, new HashMap<>());
 
-		Map<Block, Block> map = interactionMaps.get(action);
+		Map<Block, Block> map = interactionMaps.get(ability);
 		map.put(in, out);
 	}
 
@@ -87,8 +87,8 @@ public final class ToolInteractionHandler {
 	}
 
 	@PlayEvent
-	public static void toolActionEvent(ZBlock.BlockToolModification event) {
-		ToolAction action = event.getToolAction();
+	public static void itemAbilityEvent(ZBlock.BlockToolModification event) {
+		ItemAbility action = event.getItemAbility();
 
 		if(interactionMaps.containsKey(action)) {
 			Map<Block, Block> map = interactionMaps.get(action);
@@ -102,7 +102,7 @@ public final class ToolInteractionHandler {
 		}
 
 		for (BooleanPropertyWaxableBlock waxableBlock : booleanPropertySet) {
-			if (waxableBlock.action == action) {
+			if (waxableBlock.itemAbility == action) {
 				BlockState state = event.getState();
 				Block block = state.getBlock();
 
@@ -178,13 +178,13 @@ public final class ToolInteractionHandler {
 		public ZetaModule module;
 		public Block block;
 		public BooleanProperty property;
-		public ToolAction action;
+		public ItemAbility itemAbility;
 
-		private BooleanPropertyWaxableBlock(ZetaModule module, Block block, BooleanProperty property, ToolAction action) {
+		private BooleanPropertyWaxableBlock(ZetaModule module, Block block, BooleanProperty property, ItemAbility action) {
 			this.module = module;
 			this.block = block;
 			this.property = property;
-			this.action = action;
+			this.itemAbility = action;
 		}
 	}
 }
