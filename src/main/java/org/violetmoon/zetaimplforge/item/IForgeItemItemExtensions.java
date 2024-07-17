@@ -2,7 +2,6 @@ package org.violetmoon.zetaimplforge.item;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -16,7 +15,7 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.LevelReader;
-import net.neoforged.neoforge.common.ToolActions;
+import net.neoforged.neoforge.common.ItemAbilities;
 import net.neoforged.neoforge.event.EventHooks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -70,7 +69,7 @@ public class IForgeItemItemExtensions implements IZetaItemExtensions {
 
 	@Override
 	public boolean canShearZeta(ItemStack stack) {
-		return stack.canPerformAction(ToolActions.SHEARS_CARVE);
+		return stack.canPerformAction(ItemAbilities.SHEARS_CARVE);
 	}
 
 	@Override
@@ -78,10 +77,10 @@ public class IForgeItemItemExtensions implements IZetaItemExtensions {
 		return stack.getItem().getEnchantmentValue(stack);
 	}
 
-	/*@Override
+	@Override
 	public boolean canApplyAtEnchantingTableZeta(ItemStack stack, Enchantment enchantment) {
 		return stack.canApplyAtEnchantingTable(enchantment);
-	}*/
+	}
 
 	@Override
 	public int getEnchantmentLevelZeta(ItemStack stack, Holder<Enchantment> enchantment) {

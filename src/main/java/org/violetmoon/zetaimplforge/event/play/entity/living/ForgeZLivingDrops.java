@@ -31,11 +31,6 @@ public class ForgeZLivingDrops implements ZLivingDrops {
 	}
 
 	@Override
-	public int getLootingLevel() {
-		return e.getLootingLevel();
-	}
-
-	@Override
 	public boolean isRecentlyHit() {
 		return e.isRecentlyHit();
 	}

@@ -1,13 +1,13 @@
 package org.violetmoon.zetaimplforge.event.play.entity.living;
 
-import net.neoforged.neoforge.event.entity.living.LivingEvent;
+import net.minecraft.world.entity.Entity;
+import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import org.violetmoon.zeta.event.play.entity.living.ZLivingTick;
 
-import net.minecraft.world.entity.LivingEntity;
+public record ForgeZLivingTick(EntityTickEvent e) implements ZLivingTick {
 
-public record ForgeZLivingTick(LivingTickEvent e) implements ZLivingTick {
 	@Override
-	public LivingEntity getEntity() {
+	public Entity getEntity() {
 		return e.getEntity();
 	}
 }

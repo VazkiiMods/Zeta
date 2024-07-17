@@ -137,7 +137,7 @@ public abstract class SimpleInventoryBlockEntity extends ZetaBlockEntity impleme
 	@Override
 	public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> capability, Direction facing) {
 		if(capability == ForgeCapabilities.ITEM_HANDLER)
-			return (LazyOptional<T>) LazyOptional.of(() -> new SidedInvWrapper(this, facing));
+			return (LazyOptional<T>)) LazyOptional.of(() -> new SidedInvWrapper(this, facing));
 
 		return LazyOptional.empty();
 	}

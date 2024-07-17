@@ -11,7 +11,7 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
-import net.neoforged.neoforge.common.ToolAction;
+import net.neoforged.neoforge.common.ItemAbility;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.zeta.block.ext.IZetaBlockExtensions;
 
@@ -97,12 +97,8 @@ public class IForgeBlockBlockExtensions implements IZetaBlockExtensions {
 	}
 
 	@Override
-	public @Nullable BlockState getToolModifiedStateZeta(BlockState state, UseOnContext context, String toolActionType, boolean simulate) {
-		ToolAction action = ToolAction.get(toolActionType);
-		if(action == null)
-			return null;
-		else
-			return state.getToolModifiedState(context, action, simulate);
+	public @Nullable BlockState getToolModifiedStateZeta(BlockState state, UseOnContext context, ItemAbility ability, boolean simulate) {
+		return ability == null ? null : state.getToolModifiedState(context, ability, simulate);
 	}
 
 	@Override

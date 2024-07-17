@@ -95,14 +95,13 @@ public interface IZetaBlockExtensions {
 	}
 
 	@Nullable
-	default BlockState getToolModifiedStateZeta(BlockState state, UseOnContext context, String toolActionType, boolean simulate) {
+	default BlockState getToolModifiedStateZeta(BlockState state, UseOnContext context, String itemAbility, boolean simulate) {
 		//TODO, check i copied forge correctly
 
 		//ItemStack itemStack = context.getItemInHand();
 		//if (!itemStack.canPerformAction(toolAction)) //Forge extension, TODO when i make an IZetaItemExtensions
 		//	return null;
-
-		return switch(toolActionType) {
+		return switch(itemAbility) {
 			case "axe_strip" -> AxeItem.getAxeStrippingState(state); //TODO forge extension
 			case "axe_scrape" -> WeatheringCopper.getPrevious(state).orElse(null);
 			case "axe_wax_off" -> Optional.ofNullable(HoneycombItem.WAX_OFF_BY_BLOCK.get().get(state.getBlock())).map(block -> block.withPropertiesOf(state)).orElse(null);
