@@ -11,33 +11,11 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
-import net.neoforged.neoforge.common.IPlantable;
-import net.neoforged.neoforge.common.ToolAction;
+import net.neoforged.neoforge.common.ItemAbility;
 import net.neoforged.neoforge.common.extensions.IBlockExtension;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
-import org.violetmoon.zeta.block.ZetaBlock;
-import org.violetmoon.zeta.block.ZetaBlockWrapper;
-import org.violetmoon.zeta.block.ZetaBushBlock;
-import org.violetmoon.zeta.block.ZetaButtonBlock;
-import org.violetmoon.zeta.block.ZetaCeilingHangingSignBlock;
-import org.violetmoon.zeta.block.ZetaDoorBlock;
-import org.violetmoon.zeta.block.ZetaFenceBlock;
-import org.violetmoon.zeta.block.ZetaFenceGateBlock;
-import org.violetmoon.zeta.block.ZetaInheritedPaneBlock;
-import org.violetmoon.zeta.block.ZetaLeavesBlock;
-import org.violetmoon.zeta.block.ZetaPaneBlock;
-import org.violetmoon.zeta.block.ZetaPillarBlock;
-import org.violetmoon.zeta.block.ZetaPressurePlateBlock;
-import org.violetmoon.zeta.block.ZetaSaplingBlock;
-import org.violetmoon.zeta.block.ZetaSlabBlock;
-import org.violetmoon.zeta.block.ZetaStairsBlock;
-import org.violetmoon.zeta.block.ZetaStandingSignBlock;
-import org.violetmoon.zeta.block.ZetaTrapdoorBlock;
-import org.violetmoon.zeta.block.ZetaVineBlock;
-import org.violetmoon.zeta.block.ZetaWallBlock;
-import org.violetmoon.zeta.block.ZetaWallHangingSignBlock;
-import org.violetmoon.zeta.block.ZetaWallSignBlock;
+import org.violetmoon.zeta.block.*;
 import org.violetmoon.zeta.block.ext.IZetaBlockExtensions;
 
 import java.util.Locale;
@@ -145,8 +123,8 @@ public class IZetaBlockMixin_FAKE implements IZetaBlockExtensions, IBlockExtensi
 	}
 
 	@Override
-	public @Nullable BlockState getToolModifiedState(BlockState state, UseOnContext context, ToolAction toolAction, boolean simulate) {
-		String toolActionName = toolAction.name();
+	public @Nullable BlockState getToolModifiedState(BlockState state, UseOnContext context, ItemAbility itemAbility, boolean simulate) {
+		String toolActionName = itemAbility.name();
 		return getToolModifiedStateZeta(state, context, toolActionName, simulate);
 	}
 

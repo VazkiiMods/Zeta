@@ -1,14 +1,7 @@
 package org.violetmoon.zeta.advancement.modifier;
 
-import java.util.Set;
-
-import org.violetmoon.zeta.advancement.AdvancementModifier;
-import org.violetmoon.zeta.api.IMutableAdvancement;
-import org.violetmoon.zeta.module.ZetaModule;
-
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;
-
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.BlockPredicate;
 import net.minecraft.advancements.critereon.ItemPredicate;
@@ -18,6 +11,14 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.storage.loot.LootContext;
+import org.violetmoon.zeta.advancement.AdvancementModifier;
+import org.violetmoon.zeta.api.IMutableAdvancement;
+import org.violetmoon.zeta.mixin.mixins.AccessorContextAwarePredicate;
+import org.violetmoon.zeta.module.ZetaModule;
+
+import java.util.Set;
+import java.util.function.Predicate;
 
 public class WaxModifier extends AdvancementModifier {
 
@@ -45,24 +46,25 @@ public class WaxModifier extends AdvancementModifier {
 	@Override
 	public boolean apply(ResourceLocation res, IMutableAdvancement adv) {
 		String title = res.getPath().replaceAll(".+/", "");
-		Criterion criterion = adv.getCriterion(title);
+		Criterion<?> criterion = adv.getCriterion(title);
 		if(criterion != null && criterion.triggerInstance() instanceof ItemUsedOnLocationTrigger.TriggerInstance iib) {
 			// Yes I know its wordy, yes I know this is stupid. Please forgive me I couldnt make it better.
-			iib.location().get().compositePredicates = (res.equals(TARGET_ON)) ? iib.location().get().compositePredicates //todo: AccessWidener
-					.or(ItemUsedOnLocationTrigger.TriggerInstance.itemUsedOnBlock(
-							LocationPredicate.Builder.location().setBlock(
-									BlockPredicate.Builder.block().of(unwaxed)),
-							ItemPredicate.Builder.item().of(Items.HONEYCOMB))
-							.triggerInstance().location().get().compositePredicates
-			) : iib.location().get().compositePredicates
-					.or(ItemUsedOnLocationTrigger.TriggerInstance.itemUsedOnBlock(
-							LocationPredicate.Builder.location().setBlock(
-									BlockPredicate.Builder.block().of(waxed)),
-							ItemPredicate.Builder.item().of(ItemTags.AXES))
-							.triggerInstance().location().get().compositePredicates);
+
+			Predicate<LootContext> predicate = ((AccessorContextAwarePredicate)iib.location().get()).zeta$getCompositePredicates();
+
+			ItemUsedOnLocationTrigger.TriggerInstance comb = ItemUsedOnLocationTrigger.TriggerInstance.itemUsedOnBlock(
+					LocationPredicate.Builder.location().setBlock(BlockPredicate.Builder.block().of(unwaxed)), ItemPredicate.Builder.item().of(Items.HONEYCOMB)
+			).triggerInstance();
+
+			ItemUsedOnLocationTrigger.TriggerInstance axe = ItemUsedOnLocationTrigger.TriggerInstance.itemUsedOnBlock(
+					LocationPredicate.Builder.location().setBlock(BlockPredicate.Builder.block().of(waxed)), ItemPredicate.Builder.item().of(ItemTags.AXES)
+			).triggerInstance();
+
+			((AccessorContextAwarePredicate)iib.location().get()).zeta$setCompositePredicates((res.equals(TARGET_ON))
+					? predicate.or(((AccessorContextAwarePredicate) comb.location().get()).zeta$getCompositePredicates())
+					: predicate.or(((AccessorContextAwarePredicate) axe.location().get()).zeta$getCompositePredicates())
+			);
 		}
-		
 		return true;
 	}
-
 }

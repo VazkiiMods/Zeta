@@ -1,8 +1,9 @@
 package org.violetmoon.zetaimplforge.mixin.mixins.self;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -13,9 +14,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.LevelReader;
-import net.neoforged.neoforge.common.ToolAction;
-import net.neoforged.neoforge.common.ToolActions;
+import net.neoforged.neoforge.common.ItemAbilities;
+import net.neoforged.neoforge.common.ItemAbility;
+import net.neoforged.neoforge.common.extensions.IItemStackExtension;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -23,8 +26,8 @@ import org.violetmoon.zeta.item.ZetaArmorItem;
 import org.violetmoon.zeta.item.ZetaBlockItem;
 import org.violetmoon.zeta.item.ZetaItem;
 import org.violetmoon.zeta.item.ext.IZetaItemExtensions;
+import org.violetmoon.zeta.mixin.mixins.InvokerIItemStackExtension;
 
-import java.util.Map;
 import java.util.function.Consumer;
 
 // Forge can't actually mixin to interfaces, so we fake it by just... mixing in to everyone inheriting the interface.
@@ -33,74 +36,59 @@ import java.util.function.Consumer;
 	ZetaBlockItem.class,
 	ZetaItem.class,
 })
-//todo: Chat... I think its over for IForgeItem
-public class IZetaItemMixin_FAKE implements IForgeItem, IZetaItemExtensions {
+
+// TODO: getArmorTexture() and getMaxDamage() no longer exist
+public class IZetaItemMixin_FAKE implements IItemStackExtension, IZetaItemExtensions {
+
 	@Override
-	public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext context) {
-		return onItemUseFirstZeta(stack, context);
+	public InteractionResult onItemUseFirst(UseOnContext context) {
+		return onItemUseFirstZeta(context);
 	}
 
 	@Override
-	public boolean isRepairable(ItemStack stack) {
-		return isRepairableZeta(stack);
+	public boolean isRepairable() {
+		return isRepairableZeta();
 	}
 
 	@Override
-	public boolean onEntityItemUpdate(ItemStack stack, ItemEntity entity) {
-		return onEntityItemUpdateZeta(stack, entity);
+	public boolean onEntityItemUpdate(ItemEntity entity) {
+		return onEntityItemUpdateZeta(entity);
 	}
 
 	@Override
-	public boolean doesSneakBypassUse(ItemStack stack, LevelReader level, BlockPos pos, Player player) {
-		return doesSneakBypassUseZeta(stack, level, pos, player);
+	public boolean doesSneakBypassUse(LevelReader level, BlockPos pos, Player player) {
+		return doesSneakBypassUseZeta(level, pos, player);
 	}
 
 	@Override
-	public boolean canEquip(ItemStack stack, EquipmentSlot equipmentSlot, Entity entity) {
-		return canEquipZeta(stack, equipmentSlot, entity);
+	public boolean canEquip(EquipmentSlot armorType, LivingEntity entity) {
+		return canEquipZeta(armorType, entity);
 	}
 
 	@Override
-	public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
-		return isBookEnchantableZeta(stack, book);
+	public boolean isBookEnchantable(ItemStack book) {
+		return isBookEnchantableZeta(book);
 	}
 
 	@Override
-	public @Nullable String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
-		return getArmorTextureZeta(stack, entity, slot, type);
+	public boolean canPerformAction(ItemAbility itemAbility) {
+		ItemStack stack = ((InvokerIItemStackExtension) this).zeta$getSelf();
+		return itemAbility == ItemAbilities.SHEARS_CARVE && canShearZeta(stack);
 	}
 
 	@Override
-	public int getMaxDamage(ItemStack stack) {
-		return getMaxDamageZeta(stack);
+	public int getEnchantmentValue() {
+		return getEnchantmentValueZeta();
 	}
 
 	@Override
-	public boolean canPerformAction(ItemStack stack, ToolAction toolAction) {
-		if(toolAction == ToolActions.SHEARS_CARVE)
-			return canShearZeta(stack);
-		else
-			return false;
+	public int getEnchantmentLevel(Holder<Enchantment> enchantment) {
+		return getEnchantmentLevelZeta(enchantment);
 	}
 
 	@Override
-	public int getEnchantmentValue(ItemStack stack) {
-		return getEnchantmentValueZeta(stack);
-	}
-
-	@Override
-	public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
-		return canApplyAtEnchantingTableZeta(stack, enchantment);
-	}
-
-	@Override
-	public int getEnchantmentLevel(ItemStack stack, Enchantment enchantment) {
-		return getEnchantmentLevelZeta(stack, enchantment);
-	}
-
-	@Override
-	public Map<Enchantment, Integer> getAllEnchantments(ItemStack stack) {
-		return getAllEnchantmentsZeta(stack);
+	public ItemEnchantments getAllEnchantments(ItemStack stack, HolderLookup.RegistryLookup<Enchantment> lookup) {
+		return getAllEnchantmentsZeta(stack, lookup);
 	}
 
 	@Override

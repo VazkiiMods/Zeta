@@ -12,8 +12,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 public interface ZLivingDrops extends IZetaPlayEvent, Cancellable, LivingGetter {
 	DamageSource getSource();
 	Collection<ItemEntity> getDrops();
-	int getLootingLevel();
 	boolean isRecentlyHit();
 
-	interface Lowest extends ZLivingDrops { }
+	interface Lowest extends ZLivingDrops {}
 }

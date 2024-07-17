@@ -1,82 +1,66 @@
 package org.violetmoon.zeta.item.ext;
 
-import java.util.Map;
-import java.util.function.Consumer;
-
-import net.minecraft.world.item.*;
-import net.minecraft.world.item.enchantment.Enchantments;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.EnderMan;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.LevelReader;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-@SuppressWarnings("deprecation") //forge ext
+import java.util.function.Consumer;
+
 public interface IZetaItemExtensions {
 
-	default InteractionResult onItemUseFirstZeta(ItemStack stack, UseOnContext context) {
+	default InteractionResult onItemUseFirstZeta(UseOnContext context) {
 		return InteractionResult.PASS;
 	}
 
-	default boolean isRepairableZeta(ItemStack stack) {
+	default boolean isRepairableZeta() {
 		return false;
 	}
 
-	default boolean onEntityItemUpdateZeta(ItemStack stack, ItemEntity ent) {
+	default boolean onEntityItemUpdateZeta(ItemEntity entity) {
 		return false;
 	}
 
-	default boolean doesSneakBypassUseZeta(ItemStack stack, LevelReader level, BlockPos pos, Player player) {
+	default boolean doesSneakBypassUseZeta(LevelReader level, BlockPos pos, Player player) {
 		return false;
 	}
 
-	default boolean canEquipZeta(ItemStack stack, EquipmentSlot equipmentSlot, Entity ent) {
+	default boolean canEquipZeta(EquipmentSlot armorType, LivingEntity entity) {
 		return false;
 	}
 
-	default boolean isBookEnchantableZeta(ItemStack stack, ItemStack book) {
+	default boolean isBookEnchantableZeta(ItemStack book) {
 		return true;
 	}
 
-	@Nullable
-	default String getArmorTextureZeta(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
-		return null;
-	}
-
-	default int getMaxDamageZeta(ItemStack stack) {
-		return stack.getItem().getMaxDamage();
+	default int getEnchantmentValueZeta() {
+		return stack.getEnchantmentValue();
 	}
 
 	default boolean canShearZeta(ItemStack stack) { //canPerformAction
 		return stack.getItem() instanceof ShearsItem;
 	}
 
-	default int getEnchantmentValueZeta(ItemStack stack) {
-		return stack.getItem().getEnchantmentValue();
-	}
-
-	default boolean canApplyAtEnchantingTableZeta(ItemStack stack, Enchantment enchantment) {
-		return enchantment.category.canEnchant(stack.getItem());
-	}
-
-	default int getEnchantmentLevelZeta(ItemStack stack, Enchantment enchantment) {
+	default int getEnchantmentLevelZeta(Holder<Enchantment> enchantment) {
 		return EnchantmentHelper.getTagEnchantmentLevel(enchantment, stack);
 	}
 
-	default Map<Enchantment, Integer> getAllEnchantmentsZeta(ItemStack stack) {
-		Enchantments
-		return EnchantmentHelper.deserializeEnchantments(stack.getEnchantmentTags());
+	default ItemEnchantments getAllEnchantmentsZeta(ItemStack stack, HolderLookup.RegistryLookup<Enchantment> lookup) {
+		return stack.getAllEnchantments(lookup);
 	}
 
 	default boolean shouldCauseReequipAnimationZeta(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
@@ -105,5 +89,4 @@ public interface IZetaItemExtensions {
 	default int getDefaultTooltipHideFlagsZeta(@NotNull ItemStack stack) {
 		return 0;
 	}
-
 }

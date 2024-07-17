@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.violetmoon.zeta.event.bus.Cancellable;
 import org.violetmoon.zeta.event.bus.IZetaPlayEvent;
+import org.violetmoon.zeta.mixin.mixins.AccessorLootPool;
 import org.violetmoon.zeta.mixin.mixins.AccessorLootTable;
 
 import net.minecraft.resources.ResourceLocation;
@@ -21,14 +22,14 @@ public interface ZLootTableLoad extends IZetaPlayEvent, Cancellable {
 
 		List<LootPool> pools = ((AccessorLootTable) table).zeta$getPools();
 		if (pools != null && !pools.isEmpty()) {
-			LootPool firstPool = pools.get(0);
-			LootPoolEntryContainer[] entries = firstPool.entries;
+			LootPool firstPool = pools.getFirst();
+			LootPoolEntryContainer[] entries = ((AccessorLootPool) firstPool).zeta$getLootPoolEntries().toArray(new LootPoolEntryContainer[0]);
 
 			LootPoolEntryContainer[] newEntries = new LootPoolEntryContainer[entries.length + 1];
 			System.arraycopy(entries, 0, newEntries, 0, entries.length);
 
 			newEntries[entries.length] = entry;
-			firstPool.entries = newEntries;
+			((AccessorLootPool) firstPool).zeta$setLootPoolEntries(List.of(newEntries));
 		}
 	}
 }

@@ -8,6 +8,7 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
+import org.violetmoon.zeta.mixin.mixins.InvokerBlockBehavior;
 
 /**
  * Assortment of Block Related Utilities
@@ -24,9 +25,8 @@ public class BlockUtils {
 				soundType == SoundType.WOOD;
 	}
 
-	public static boolean isGlassBased(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos) { //todo: Access Widener
-		return blockState.getBlock().propagatesSkylightDown(blockState, blockGetter, blockPos) ||
-				blockState.getSoundType() == SoundType.GLASS;
+	public static boolean isGlassBased(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos) {
+		return ((InvokerBlockBehavior) blockState.getBlock()).zeta$propogatesSkylightDown(blockState, blockGetter, blockPos) || blockState.getSoundType() == SoundType.GLASS;
 	}
 
 	public static boolean isStoneBased(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos) {
