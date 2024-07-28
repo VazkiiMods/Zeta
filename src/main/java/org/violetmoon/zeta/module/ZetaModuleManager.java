@@ -1,6 +1,8 @@
 package org.violetmoon.zeta.module;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
@@ -154,10 +156,39 @@ public class ZetaModuleManager {
 		//category upkeep
 		modulesInCategory.computeIfAbsent(module.category, __ -> new ArrayList<>()).add(module);
 
+		populateModuleInstanceField(module);
+
 		//post-construction callback
 		module.postConstruct();
 
 		return module;
+	}
+
+	// feel free to refactor
+	private static void populateModuleInstanceField(ZetaModule module) {
+		try {
+			var clazz = module.getClass();
+			Field[] fields = clazz.getDeclaredFields();
+			Field targetField = null;
+
+			for (Field field : fields) {
+				if (field.isAnnotationPresent(ModuleInstance.class)) {
+					if (targetField != null) {
+						throw new IllegalStateException("Can't have more than one @ModuleInstance field per module class");
+					}
+					if (!Modifier.isStatic(field.getModifiers())) {
+						throw new IllegalStateException("@ModuleInstance annotated field must be static");
+					}
+					targetField = field;
+				}
+			}
+			if(targetField != null) {
+				targetField.setAccessible(true);
+				targetField.set(null, module);
+			}
+		}catch (Exception e){
+			throw new RuntimeException(e);
+		}
 	}
 
 	private <Z extends ZetaModule> Z construct(Class<Z> clazz) {
