@@ -1,9 +1,8 @@
-package org.violetmoon.zeta.event.bus.wip;
+package org.violetmoon.zeta.event.bus;
 
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.IEventBus;
 import org.apache.logging.log4j.Logger;
-import org.checkerframework.checker.units.qual.A;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.zeta.Zeta;
@@ -20,7 +19,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 // this is quite jank. Basically converts all zeta events to forge ones, then delegates to the forge bus directly
-public class ForgeZetaBus<E> extends ZetaBus<E> {
+public class ForgeZetaEventBus<E> extends ZetaEventBus<E> {
 
     private final Map<Class<? extends E>, Function<? extends Event, ? extends E>> forgeToZetaMap = new HashMap<>();
     private final Map<Class<? extends E>, Function<? extends E, ? extends Event>> zetaToForgeMap = new HashMap<>();
@@ -32,14 +31,14 @@ public class ForgeZetaBus<E> extends ZetaBus<E> {
      * @param subscriberAnnotation The annotation that subscribe()/unsubscribe() will pay attention to.
      * @param eventRoot            The superinterface of all events fired on this bus.
      */
-    public ForgeZetaBus(Zeta z, Class<? extends Annotation> subscriberAnnotation, Class<E> eventRoot,
-                        @Nullable Logger logSpam, IEventBus forgeBus) {
-        super(z, subscriberAnnotation, eventRoot, logSpam);
+    public ForgeZetaEventBus(Class<? extends Annotation> subscriberAnnotation, Class<E> eventRoot,
+                             @Nullable Logger logSpam, IEventBus forgeBus) {
+        super(subscriberAnnotation, eventRoot, logSpam);
         this.forgeBus = forgeBus;
     }
 
     @Override
-    protected void addListener(Method method, Object receiver, Class<?> owningClazz) {
+    protected void subscribeMethod(Method method, Object receiver, Class<?> owningClazz) {
         if (method.getParameterCount() != 1)
             throw arityERR(method);
 
@@ -65,7 +64,7 @@ public class ForgeZetaBus<E> extends ZetaBus<E> {
     }
 
     @Override
-    protected void unregisterMethod(Method m, Object receiver, Class<?> owningClazz) {
+    protected void unsubscribeMethod(Method m, Object receiver, Class<?> owningClazz) {
         var handler = convertedHandlers.remove(new Key(m, receiver, owningClazz));
         if (handler != null) {
             forgeBus.unregister(handler);
@@ -82,7 +81,7 @@ public class ForgeZetaBus<E> extends ZetaBus<E> {
     }
 
     @Override
-    public <T extends E> T fire(@NotNull T event, Class<? extends T> firedAs) {
+    public <T extends E> T fire(@NotNull T event, Class<? super T> firedAs) {
         forgeBus.post(remapEvent(event, firedAs));
         return event;
     }

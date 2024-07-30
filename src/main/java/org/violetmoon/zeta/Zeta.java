@@ -11,11 +11,7 @@ import org.violetmoon.zeta.capability.ZetaCapabilityManager;
 import org.violetmoon.zeta.config.ConfigManager;
 import org.violetmoon.zeta.config.IZetaConfigInternals;
 import org.violetmoon.zeta.config.SectionDefinition;
-import org.violetmoon.zeta.event.bus.IZetaLoadEvent;
-import org.violetmoon.zeta.event.bus.IZetaPlayEvent;
-import org.violetmoon.zeta.event.bus.LoadEvent;
-import org.violetmoon.zeta.event.bus.PlayEvent;
-import org.violetmoon.zeta.event.bus.ZetaEventBus;
+import org.violetmoon.zeta.event.bus.*;
 import org.violetmoon.zeta.item.ext.ItemExtensionFactory;
 import org.violetmoon.zeta.module.ModuleFinder;
 import org.violetmoon.zeta.module.ZetaCategory;
@@ -51,13 +47,14 @@ public abstract class Zeta implements IZeta {
 	public static final String ZETA_ID = "zeta";
 	public static final Logger GLOBAL_LOG = LogManager.getLogger(ZETA_ID);
 
-	public Zeta(String modid, Logger log, ZetaSide side) {
+	public Zeta(String modid, Logger log, ZetaSide side, ZetaEventBus<IZetaLoadEvent> loadBus, ZetaEventBus<IZetaPlayEvent> playBus) {
 		this.log = log;
 
 		this.modid = modid;
 		this.side = side;
-		this.loadBus = new ZetaEventBus<>(this, LoadEvent.class, IZetaLoadEvent.class, log);
-		this.playBus = new ZetaEventBus<>(this, PlayEvent.class, IZetaPlayEvent.class, null);	
+
+		this.loadBus = loadBus;
+		this.playBus = playBus;
 
 		this.modules = createModuleManager();
 		this.registry = createRegistry();
