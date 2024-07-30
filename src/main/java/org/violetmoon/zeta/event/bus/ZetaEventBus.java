@@ -169,6 +169,9 @@ public class ZetaEventBus<E> {
 	 * Pausefrogeline
 	 */
 	private class Listeners {
+
+		private final Map<Subscriber, MethodHandle> handles = new LinkedHashMap<>();
+
 		private record Subscriber(@Nullable Object receiver, Class<?> owningClazz, Method method) {
 			@Override
 			public boolean equals(Object object) {
@@ -200,7 +203,6 @@ public class ZetaEventBus<E> {
 			}
 		}
 
-		private final Map<Subscriber, MethodHandle> handles = new LinkedHashMap<>();
 
 		void subscribe(@Nullable Object receiver, Class<?> owningClazz, Method method) {
 			try {
