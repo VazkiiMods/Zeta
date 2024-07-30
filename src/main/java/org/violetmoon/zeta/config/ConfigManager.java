@@ -14,6 +14,7 @@ import org.violetmoon.zeta.event.play.loading.ZGatherAdditionalFlags;
 import org.violetmoon.zeta.module.ZetaCategory;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.module.ZetaModuleManager;
+import org.violetmoon.zetaimplforge.event.play.loading.ForgeZGatherAdditionalFlags;
 
 public class ConfigManager {
 	private final Zeta z;
@@ -109,7 +110,7 @@ public class ConfigManager {
 		}
 
 		//grab any extra flags
-		z.playBus.fire(new ZGatherAdditionalFlags(cfm));
+		z.playBus.fire(new ForgeZGatherAdditionalFlags(cfm));
 
 		//managing module enablement in one go
 		//adding this to the *start* of the list so modules are enabled before anything else runs
@@ -123,7 +124,7 @@ public class ConfigManager {
 			});
 
 			//update extra flags
-			z.playBus.fire(new ZGatherAdditionalFlags(cfm));
+			z.playBus.fire(new ForgeZGatherAdditionalFlags(cfm));
 		});
 
 		this.rootConfig = rootConfigBuilder.build();
