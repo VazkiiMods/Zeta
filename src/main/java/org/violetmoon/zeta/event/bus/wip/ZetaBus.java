@@ -75,11 +75,11 @@ public abstract class ZetaBus<E> {
         }
 
         streamAnnotatedMethods(owningClazz, receiver == null)
-                .forEach(m -> removeListener(m, receiver, owningClazz));
+                .forEach(m -> unregisterMethod(m, receiver, owningClazz));
         return this;
     }
 
-    protected abstract void removeListener(Method m, Object receiver, Class<?> owningClazz);
+    protected abstract void unregisterMethod(Method m, Object receiver, Class<?> owningClazz);
 
     /**
      * Fires an event on the event bus. Each subscriber will be visited in order.

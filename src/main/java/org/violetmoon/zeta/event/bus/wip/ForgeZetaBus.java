@@ -1,9 +1,9 @@
 package org.violetmoon.zeta.event.bus.wip;
 
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.IEventBus;
 import org.apache.logging.log4j.Logger;
+import org.checkerframework.checker.units.qual.A;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.zeta.Zeta;
@@ -11,51 +11,31 @@ import org.violetmoon.zeta.Zeta;
 import java.lang.annotation.Annotation;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+// this is quite jank. Basically converts all zeta events to forge ones, then delegates to the forge bus directly
 public class ForgeZetaBus<E> extends ZetaBus<E> {
 
     private final Map<Class<? extends E>, Function<? extends Event, ? extends E>> forgeToZetaMap = new HashMap<>();
-    private final Map<Class<? extends Event>, Function<? extends E, ? extends Event>> zetaToForgeMap = new HashMap<>();
-    //ForgeZAddReloadListener.class, (Function<AddReloadListenerEvent, IZetaLoadEvent>) ForgeZAddReloadListener::new
+    private final Map<Class<? extends E>, Function<? extends E, ? extends Event>> zetaToForgeMap = new HashMap<>();
 
     private final IEventBus forgeBus;
+    private final Map<Key, Object> convertedHandlers = new HashMap<>();
 
     /**
      * @param subscriberAnnotation The annotation that subscribe()/unsubscribe() will pay attention to.
      * @param eventRoot            The superinterface of all events fired on this bus.
      */
-    public ForgeZetaBus(Zeta z, Class<? extends Annotation> subscriberAnnotation, Class<E> eventRoot, @Nullable Logger logSpam) {
+    public ForgeZetaBus(Zeta z, Class<? extends Annotation> subscriberAnnotation, Class<E> eventRoot,
+                        @Nullable Logger logSpam, IEventBus forgeBus) {
         super(z, subscriberAnnotation, eventRoot, logSpam);
-        this.forgeBus = MinecraftForge.EVENT_BUS;
-    }
-
-    public void registerEventMappings(Class<? extends E> zetaEvent,
-                                      Function<? extends Event, ? extends E> forgeToZeta,
-                                      Class<? extends Event> forgeEvent,
-                                      Function<? extends E, ? extends Event> zetaToForge) {
-        forgeToZetaMap.put(zetaEvent, forgeToZeta);
-        zetaToForgeMap.put(forgeEvent, zetaToForge);
-    }
-
-    // takes a method that takes a zeta event and turns into one that takes a forge event
-    private Consumer<? extends Event> remapMethod(MethodHandle zetaEventConsumer, Class<? extends E> zetaEventClass) {
-        Function<? extends Event, ? extends E> forgeToZetaFunc = forgeToZetaMap.get(zetaEventClass);
-        return createForgeConsumer(zetaEventConsumer, forgeToZetaFunc);
-    }
-
-    private <Z extends E, F extends Event> Consumer<F> createForgeConsumer(MethodHandle zetaEventConsumer, Function<F, Z> forgeToZetaFunc) {
-        return event -> {
-            try {
-                zetaEventConsumer.invoke(forgeToZetaFunc.apply(event));
-            } catch (Throwable e) {
-                throw new RuntimeException(e);
-            }
-        };
+        this.forgeBus = forgeBus;
     }
 
     @Override
@@ -78,32 +58,93 @@ public class ForgeZetaBus<E> extends ZetaBus<E> {
         if (receiver != null)
             handle = handle.bindTo(receiver);
 
-        forgeBus.addListener(remapMethod(handle, (Class<? extends E>) eventType));
+        Consumer<? extends Event> consumer = remapMethod(handle, (Class<? extends E>) eventType);
+        forgeBus.addListener(consumer);
+        //store here so we can unregister later
+        convertedHandlers.put(new Key(method, receiver, owningClazz), consumer);
     }
 
     @Override
-    protected void removeListener(Method m, Object receiver, Class<?> owningClazz) {
-
+    protected void unregisterMethod(Method m, Object receiver, Class<?> owningClazz) {
+        var handler = convertedHandlers.remove(new Key(m, receiver, owningClazz));
+        if (handler != null) {
+            forgeBus.unregister(handler);
+        }
     }
 
+    private record Key(Method method, Object receiver, Class<?> owningClazz) {
+    }
 
     @Override
     public <T extends E> T fire(@NotNull T event) {
-        forgeBus.post(remapEvent(event));
+        forgeBus.post(remapEvent(event, event.getClass()));
         return event;
     }
 
-    private <T extends E> Event remapEvent(@NotNull T event) {
-        Function<? extends E, ? extends Event> zetaToForgeFunc = zetaToForgeMap.get(event.getClass());
+    @Override
+    public <T extends E> T fire(@NotNull T event, Class<? extends T> firedAs) {
+        forgeBus.post(remapEvent(event, firedAs));
+        return event;
+    }
+
+    // reflection hacks below. be warned
+
+    private <T extends E> Event remapEvent(@NotNull T event, Class<?> firedAs) {
+        Function<? extends E, ? extends Event> zetaToForgeFunc = zetaToForgeMap.computeIfAbsent((Class<? extends E>) firedAs, this::findWrappedEvent);
         return createForgeEvent(event, zetaToForgeFunc);
+    }
+
+    // takes a method that takes a zeta event and turns into one that takes a forge event
+    private Consumer<? extends Event> remapMethod(MethodHandle zetaEventConsumer, Class<? extends E> zetaEventClass) {
+        Function<? extends Event, ? extends E> forgeToZetaFunc = forgeToZetaMap.computeIfAbsent(zetaEventClass,this::findWrappingConstructor);
+        return createForgeConsumer(zetaEventConsumer, forgeToZetaFunc);
+    }
+
+
+    private Function<? extends E, ? extends Event> findWrappedEvent(Class<? extends E> zetaEventClass) {
+        for (Field field : zetaEventClass.getDeclaredFields()) {
+            if (Event.class.isAssignableFrom(field.getType())) {
+                return instance -> {
+                    try {
+                        return (Event) field.get(instance);
+                    } catch (IllegalAccessException illegalAccessException) {
+                        throw new RuntimeException(illegalAccessException);
+                    }
+                };
+            }
+        }
+        throw new RuntimeException("No wrapped forge Event found for Zeta event class " + zetaEventClass);
+    }
+
+    private Function<? extends Event,? extends E> findWrappingConstructor(Class<? extends E> zetaEventClass) {
+        // Find the constructor that takes a single parameter of type A
+        for (Constructor<?> constructor : zetaEventClass.getConstructors()) {
+            Class<?>[] parameterTypes = constructor.getParameterTypes();
+            if (parameterTypes.length == 1 && Event.class.isAssignableFrom(parameterTypes[0])) {
+                return event -> {
+                    try {
+                        return (E) constructor.newInstance(event);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                };
+            }
+        }
+        throw new RuntimeException("No forge-Event-wrapping constructor found for Zeta event class " + zetaEventClass);
     }
 
     private <T extends E> Event createForgeEvent(@NotNull E event, Function<T, ? extends Event> function) {
         return function.apply((T) event);
     }
 
-    @Override
-    public <T extends E> T fire(@NotNull T event, Class<? extends T> firedAs) {
-        return null;
+    private <Z extends E, F extends Event> Consumer<F> createForgeConsumer(MethodHandle zetaEventConsumer, Function<F, Z> forgeToZetaFunc) {
+        return event -> {
+            try {
+                zetaEventConsumer.invoke(forgeToZetaFunc.apply(event));
+            } catch (Throwable e) {
+                throw new RuntimeException(e);
+            }
+        };
     }
+
 }
