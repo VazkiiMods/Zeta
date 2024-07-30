@@ -122,4 +122,11 @@ public abstract class ZetaEventBus<E> {
         return new RuntimeException("%s%nMethod class: %s%nMethod name: %s".formatted(
                 problem, method.getDeclaringClass().getName(), method.getName()), cause);
     }
+
+    //TODO or remove entirely. Platform specific behavior should be in fire implementation on each platform bus
+    @Deprecated(forRemoval = true)
+    public <T extends E> T fireExternal(@NotNull T event, Class<? super T> firedAs) {
+
+        return event;
+    }
 }
