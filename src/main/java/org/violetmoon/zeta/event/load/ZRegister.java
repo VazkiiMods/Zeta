@@ -10,36 +10,19 @@ import org.violetmoon.zeta.registry.VariantRegistry;
 import org.violetmoon.zeta.registry.ZetaRegistry;
 
 @SuppressWarnings("ClassCanBeRecord")
-public class ZRegister implements IZetaLoadEvent {
-	public final Zeta zeta;
+public interface ZRegister extends IZetaLoadEvent {
 
-	public ZRegister(Zeta zeta) {
-		this.zeta = zeta;
-	}
+	ZetaRegistry getRegistry();
 
-	public ZetaRegistry getRegistry() {
-		return zeta.registry;
-	}
+	CraftingExtensionsRegistry getCraftingExtensionsRegistry();
 
-	public CraftingExtensionsRegistry getCraftingExtensionsRegistry() {
-		return zeta.craftingExtensions;
-	}
+	BrewingRegistry getBrewingRegistry();
 
-	public BrewingRegistry getBrewingRegistry() {
-		return zeta.brewingRegistry;
-	}
+	RenderLayerRegistry getRenderLayerRegistry();
 
-	public RenderLayerRegistry getRenderLayerRegistry() {
-		return zeta.renderLayerRegistry;
-	}
+	AdvancementModifierRegistry getAdvancementModifierRegistry();
 
-	public AdvancementModifierRegistry getAdvancementModifierRegistry() {
-		return zeta.advancementModifierRegistry;
-	}
+	VariantRegistry getVariantRegistry();
 
-	public VariantRegistry getVariantRegistry() {
-		return zeta.variantRegistry;
-	}
-
-	public static class Post implements IZetaLoadEvent { }
+	interface Post extends IZetaLoadEvent { }
 }
