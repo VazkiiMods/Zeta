@@ -5,7 +5,6 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.violetmoon.zeta.Zeta;
 
 import java.lang.annotation.Annotation;
 import java.lang.invoke.MethodHandle;
@@ -36,6 +35,7 @@ public class ForgeZetaEventBus<E> extends ZetaEventBus<E> {
         super(subscriberAnnotation, eventRoot, logSpam);
         this.forgeBus = forgeBus;
     }
+
 
     @Override
     protected void subscribeMethod(Method method, Object receiver, Class<?> owningClazz) {
@@ -89,33 +89,43 @@ public class ForgeZetaEventBus<E> extends ZetaEventBus<E> {
     // reflection hacks below. be warned
 
     private <T extends E> Event remapEvent(@NotNull T event, Class<?> firedAs) {
-        Function<? extends E, ? extends Event> zetaToForgeFunc = zetaToForgeMap.computeIfAbsent((Class<? extends E>) firedAs, this::findWrappedEvent);
+        Function<? extends E, ? extends Event> zetaToForgeFunc = zetaToForgeMap.get((Class<? extends E>) firedAs);
+        if (zetaToForgeFunc == null) {
+            throw new RuntimeException("No wrapped forge Event found for Zeta event class. You must register its subclass using registerSubclass. " + firedAs);
+        }
         return createForgeEvent(event, zetaToForgeFunc);
     }
 
     // takes a method that takes a zeta event and turns into one that takes a forge event
     private Consumer<? extends Event> remapMethod(MethodHandle zetaEventConsumer, Class<? extends E> zetaEventClass) {
-        Function<? extends Event, ? extends E> forgeToZetaFunc = forgeToZetaMap.computeIfAbsent(zetaEventClass,this::findWrappingConstructor);
+        Function<? extends Event, ? extends E> forgeToZetaFunc = forgeToZetaMap.get(zetaEventClass);
+        if (forgeToZetaFunc == null) {
+            throw new RuntimeException("No forge-Event-wrapping constructor found for Zeta event class. You must register its subclass using registerSubclass. " + zetaEventClass);
+        }
         return createForgeConsumer(zetaEventConsumer, forgeToZetaFunc);
     }
 
-
-    private Function<? extends E, ? extends Event> findWrappedEvent(Class<? extends E> zetaEventClass) {
-        for (Field field : zetaEventClass.getDeclaredFields()) {
-            if (Event.class.isAssignableFrom(field.getType())) {
-                return instance -> {
-                    try {
-                        return (Event) field.get(instance);
-                    } catch (IllegalAccessException illegalAccessException) {
-                        throw new RuntimeException(illegalAccessException);
-                    }
-                };
-            }
-        }
-        throw new RuntimeException("No wrapped forge Event found for Zeta event class " + zetaEventClass);
+    private <T extends E> Event createForgeEvent(@NotNull E event, Function<T, ? extends Event> function) {
+        return function.apply((T) event);
     }
 
-    private Function<? extends Event,? extends E> findWrappingConstructor(Class<? extends E> zetaEventClass) {
+    private <Z extends E, F extends Event> Consumer<F> createForgeConsumer(MethodHandle zetaEventConsumer, Function<F, Z> forgeToZetaFunc) {
+        return event -> {
+            try {
+                zetaEventConsumer.invoke(forgeToZetaFunc.apply(event));
+            } catch (Throwable e) {
+                throw new RuntimeException(e);
+            }
+        };
+    }
+
+
+    public <S extends C, C extends E> void registerSubClass(Class<C> eventClass, Class<S> zetaEventClass) {
+        forgeToZetaMap.put(eventClass, findWrappingConstructor(zetaEventClass));
+        zetaToForgeMap.put(eventClass, findWrappedEvent(zetaEventClass));
+    }
+
+    private Function<? extends Event, ? extends E> findWrappingConstructor(Class<? extends E> zetaEventClass) {
         // Find the constructor that takes a single parameter of type A
         for (Constructor<?> constructor : zetaEventClass.getConstructors()) {
             Class<?>[] parameterTypes = constructor.getParameterTypes();
@@ -132,18 +142,20 @@ public class ForgeZetaEventBus<E> extends ZetaEventBus<E> {
         throw new RuntimeException("No forge-Event-wrapping constructor found for Zeta event class " + zetaEventClass);
     }
 
-    private <T extends E> Event createForgeEvent(@NotNull E event, Function<T, ? extends Event> function) {
-        return function.apply((T) event);
-    }
 
-    private <Z extends E, F extends Event> Consumer<F> createForgeConsumer(MethodHandle zetaEventConsumer, Function<F, Z> forgeToZetaFunc) {
-        return event -> {
-            try {
-                zetaEventConsumer.invoke(forgeToZetaFunc.apply(event));
-            } catch (Throwable e) {
-                throw new RuntimeException(e);
+    private Function<? extends E, ? extends Event> findWrappedEvent(Class<? extends E> zetaEventClass) {
+        for (Field field : zetaEventClass.getDeclaredFields()) {
+            if (Event.class.isAssignableFrom(field.getType())) {
+                return instance -> {
+                    try {
+                        return (Event) field.get(instance);
+                    } catch (IllegalAccessException illegalAccessException) {
+                        throw new RuntimeException(illegalAccessException);
+                    }
+                };
             }
-        };
+        }
+        throw new RuntimeException("No wrapped forge Event found for Zeta event class " + zetaEventClass);
     }
 
 }

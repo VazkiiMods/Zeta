@@ -36,12 +36,12 @@ public class FabricZetaEventBus<E> extends ZetaEventBus<E> {
 	}
 
 	@Override
-	protected void subscribeMethod(Method m, Object receiver, Class owningClazz) {
+	protected void subscribeMethod(Method m, Object receiver, Class<?> owningClazz) {
 		getListenersFor(m).subscribe(receiver, owningClazz, m);
 	}
 
 	@Override
-	protected void unsubscribeMethod(Method m, Object receiver, Class owningClazz) {
+	protected void unsubscribeMethod(Method m, Object receiver, Class<?> owningClazz) {
 		getListenersFor(m).unsubscribe(receiver, owningClazz, m);
 	}
 

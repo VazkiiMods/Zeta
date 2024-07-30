@@ -88,6 +88,62 @@ public class ForgeZeta extends Zeta {
                         MinecraftForge.EVENT_BUS)
         );
 
+        uglyPopulateForgePlayBus();
+        uglyPopulateForgeLoadBus();
+    }
+
+    private void uglyPopulateForgeLoadBus(){
+        var bus = (ForgeZetaEventBus<IZetaLoadEvent>) loadBus;
+        bus.registerSubClass(ZCommonSetup.class, ForgeZCommonSetup.class);
+        bus.registerSubClass(ZAddReloadListener.class, ForgeZAddReloadListener.class);
+        bus.registerSubClass(ZEntityAttributeCreation.class, ForgeZEntityAttributeCreation.class);
+    }
+
+    private void uglyPopulateForgePlayBus() {
+        var bus = (ForgeZetaEventBus<IZetaPlayEvent>) playBus;
+        bus.registerSubClass(ZAnvilRepair.class, ForgeZAnvilRepair.class);
+        bus.registerSubClass(ZBabyEntitySpawn.class, ForgeZBabyEntitySpawn.class);
+        bus.registerSubClass(ZBlock.Break.class, ForgeZBlock.Break.class);
+        bus.registerSubClass(ZBlock.EntityPlace.class, ForgeZBlock.EntityPlace.class);
+        bus.registerSubClass(ZBlock.BlockToolModification.class, ForgeZBlock.BlockToolModification.class);
+        bus.registerSubClass(ZBonemeal.class, ForgeZBonemeal.class);
+        bus.registerSubClass(ZEntityConstruct.class, ForgeZEntityConstruct.class);
+        bus.registerSubClass(ZEntityInteract.class, ForgeZEntityInteract.class);
+        bus.registerSubClass(ZEntityItemPickup.class, ForgeZEntityItemPickup.class);
+        bus.registerSubClass(ZEntityJoinLevel.class, ForgeZEntityJoinLevel.class);
+        bus.registerSubClass(ZEntityMobGriefing.class, ForgeZEntityMobGriefing.class);
+        bus.registerSubClass(ZEntityTeleport.class, ForgeZEntityTeleport.class);
+        bus.registerSubClass(ZItemTooltip.class, ForgeZItemTooltip.class);
+        bus.registerSubClass(ZLivingChangeTarget.class, ForgeZLivingChangeTarget.class);
+        bus.registerSubClass(ZLivingConversion.class, ForgeZLivingConversion.class);
+        bus.registerSubClass(ZLivingConversion.Pre.class, ForgeZLivingConversion.Pre.class);
+        bus.registerSubClass(ZLivingConversion.Post.class, ForgeZLivingConversion.Post.class);
+        bus.registerSubClass(ZLivingDeath.class, ForgeZLivingDeath.class);
+        bus.registerSubClass(ZLivingDeath.Lowest.class, ForgeZLivingDeath.Lowest.class);
+        bus.registerSubClass(ZLivingDrops.class, ForgeZLivingDrops.class);
+        bus.registerSubClass(ZLivingDrops.Lowest.class, ForgeZLivingDrops.Lowest.class);
+        bus.registerSubClass(ZLivingFall.class, ForgeZLivingFall.class);
+        bus.registerSubClass(ZLivingTick.class, ForgeZLivingTick.class);
+        bus.registerSubClass(ZMobSpawnEvent.class, ForgeZMobSpawnEvent.class);
+        bus.registerSubClass(ZMobSpawnEvent.CheckSpawn.class, ForgeZMobSpawnEvent.FinalizeSpawn.class);
+        bus.registerSubClass(ZMobSpawnEvent.CheckSpawn.Lowest.class, ForgeZMobSpawnEvent.FinalizeSpawn.Lowest.class);
+        bus.registerSubClass(ZPlayNoteBlock.class, ForgeZPlayNoteBlock.class);
+        bus.registerSubClass(ZPlayer.class, ForgeZPlayer.class);
+        bus.registerSubClass(ZPlayer.BreakSpeed.class, ForgeZPlayer.BreakSpeed.class);
+        bus.registerSubClass(ZPlayer.Clone.class, ForgeZPlayer.Clone.class);
+        bus.registerSubClass(ZPlayerDestroyItem.class, ForgeZPlayerDestroyItem.class);
+        bus.registerSubClass(ZPlayer.LoggedIn.class, ForgeZPlayer.LoggedIn.class);
+        bus.registerSubClass(ZPlayer.LoggedOut.class, ForgeZPlayer.LoggedOut.class);
+        bus.registerSubClass(ZPlayerTick.Start.class, ForgeZPlayerTick.Start.class);
+        bus.registerSubClass(ZPlayerTick.End.class, ForgeZPlayerTick.End.class);
+        bus.registerSubClass(ZPlayerInteract.class, ForgeZPlayerInteract.class);
+        bus.registerSubClass(ZPlayerInteract.EntityInteractSpecific.class, ForgeZPlayerInteract.EntityInteractSpecific.class);
+        bus.registerSubClass(ZPlayerInteract.EntityInteract.class, ForgeZPlayerInteract.EntityInteract.class);
+        bus.registerSubClass(ZPlayerInteract.RightClickBlock.class, ForgeZPlayerInteract.RightClickBlock.class);
+        bus.registerSubClass(ZPlayerInteract.RightClickItem.class, ForgeZPlayerInteract.RightClickItem.class);
+        bus.registerSubClass(ZRightClickBlock.class, ForgeZRightClickBlock.class);
+        bus.registerSubClass(ZRightClickBlock.Low.class, ForgeZRightClickBlock.Low.class);
+        bus.registerSubClass(ZRightClickItem.class, ForgeZRightClickItem.class);
     }
 
     @Override
