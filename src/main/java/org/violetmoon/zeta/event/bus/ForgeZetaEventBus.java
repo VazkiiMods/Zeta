@@ -1,5 +1,6 @@
 package org.violetmoon.zeta.event.bus;
 
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -16,8 +17,8 @@ import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -25,11 +26,11 @@ import java.util.function.Predicate;
 // this is super jank. Basically converts all zeta events to forge ones, then delegates to the forge bus directly
 public class ForgeZetaEventBus<Z, F extends Event> extends ZetaEventBus<Z> {
 
-    private final Map<Class<? extends Z>, Function<? extends F, ? extends Z>> forgeToZetaMap = new HashMap<>();
-    private final Map<Class<? extends Z>, Function<? extends Z, ? extends F>> zetaToForgeMap = new HashMap<>();
-    private final Map<Class<? extends Z>, Class<?>> zetaToForgeEventClass = new HashMap<>();
-    private final Map<Class<? extends Z>, Class<?>> generics = new HashMap<>();
-    private final Map<Key, Object> convertedHandlers = new HashMap<>();
+    private final Map<Class<? extends Z>, Function<? extends F, ? extends Z>> forgeToZetaMap = new Object2ObjectOpenHashMap<>();
+    private final Map<Class<? extends Z>, Function<? extends Z, ? extends F>> zetaToForgeMap = new Object2ObjectOpenHashMap<>();
+    private final Map<Class<? extends Z>, Class<?>> zetaToForgeEventClass = new Object2ObjectOpenHashMap<>();
+    private final Map<Class<? extends Z>, Class<?>> generics = new Object2ObjectOpenHashMap<>();
+    private final Map<Key, Object> convertedHandlers = new Object2ObjectOpenHashMap<>();
 
     private final IEventBus forgeBus;
     private final Class<F> forgeEventRoot; //if Events should implement IModBusEvent
@@ -72,6 +73,7 @@ public class ForgeZetaEventBus<Z, F extends Event> extends ZetaEventBus<Z> {
         registerListenerToForgeWithPriorityAndGenerics(owningClazz, consumer, zetaEventClass);
         //store here so we can unregister later
         convertedHandlers.put(new Key(method, receiver, owningClazz), consumer);
+
     }
 
 
@@ -127,7 +129,7 @@ public class ForgeZetaEventBus<Z, F extends Event> extends ZetaEventBus<Z> {
             if (forgeEventRoot.isAssignableFrom(zetaEventBaseClass)) {
                 forgeToZetaFunc = event -> (Z) event;
             } else
-                throw new RuntimeException("No forge-Event-wrapping constructor found for Zeta event class. You must register its subclass using registerSubclass. " + zetaEventBaseClass);
+                throw new RuntimeException("Could not convert Zeta event class " + zetaEventBaseClass + " to Forge event. You must register its subclass using registerSubclass.");
         }
         return createForgeConsumer(originalEventConsumer, forgeToZetaFunc, zetaEventBaseClass);
     }
@@ -186,8 +188,7 @@ public class ForgeZetaEventBus<Z, F extends Event> extends ZetaEventBus<Z> {
                 zetaToForgeEventClass.put(baseZetaEventClass, forgeZetaEventClass);
                 constructor = event -> (ZF) event;
                 isNoWrapper = true;
-            }
-            else constructor = findForgeWrapper(forgeZetaEventClass);
+            } else constructor = findForgeWrapper(forgeZetaEventClass);
         }
         if (constructor == null) {
             throw new RuntimeException("No Forge-Event-wrapping constructor found for Zeta event class " + forgeZetaEventClass);
@@ -319,7 +320,7 @@ public class ForgeZetaEventBus<Z, F extends Event> extends ZetaEventBus<Z> {
 
     private void registerListenerToForgeWithPriorityAndGenerics(Class<?> owningClazz, Consumer<? extends Event> consumer, Class<?> zetaEventClass) {
         EventPriority priority = guessPriorityFromClassName(owningClazz);
-        Class<?> gen = generics.get(owningClazz);
+        Class<?> gen = generics.get(zetaEventClass);
         Class eventType = zetaToForgeEventClass.get(zetaEventClass);
         if (eventType == null) {
             throw new RuntimeException("No event type found for " + zetaEventClass);
@@ -348,7 +349,7 @@ public class ForgeZetaEventBus<Z, F extends Event> extends ZetaEventBus<Z> {
     }
 
 
-    private static final Map<Class<?>, EventPriority> CACHE = new HashMap<>();
+    private static final Map<Class<?>, EventPriority> CACHE = new ConcurrentHashMap<>();
 
     private static EventPriority guessPriorityFromClassName(Class<?> zetaEventClass) {
         return CACHE.computeIfAbsent(zetaEventClass, cl -> {

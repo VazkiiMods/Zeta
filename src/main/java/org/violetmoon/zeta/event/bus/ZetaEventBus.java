@@ -5,6 +5,7 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.zeta.Zeta;
+import org.violetmoon.zeta.advancement.AdvancementModifierRegistry;
 import org.violetmoon.zeta.util.handler.RecipeCrawlHandler;
 
 import java.lang.annotation.Annotation;
@@ -47,6 +48,9 @@ public abstract class ZetaEventBus<E> {
         } else {
             receiver = target;
             owningClazz = target.getClass();
+        }
+        if(owningClazz == AdvancementModifierRegistry.class){
+            int aa = 1;
         }
         streamAnnotatedMethods(owningClazz, receiver == null)
                 .forEach(m -> subscribeMethod(m, receiver, owningClazz));

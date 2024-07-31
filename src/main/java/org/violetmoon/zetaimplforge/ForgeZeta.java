@@ -115,7 +115,10 @@ public class ForgeZeta extends Zeta {
     protected ForgeZetaEventBus<IZetaPlayEvent, ?> createPlayBus() {
         var bus = new ForgeZetaEventBus<>(PlayEvent.class, IZetaPlayEvent.class, log, MinecraftForge.EVENT_BUS, Event.class);
         bus.registerSubClass(ZAnvilRepair.class, ForgeZAnvilRepair.class);
+        bus.registerSubClass(ZAnvilUpdate.Highest.class, ForgeZAnvilUpdate.Highest.class);
+        bus.registerSubClass(ZAnvilUpdate.Lowest.class, ForgeZAnvilUpdate.Lowest.class);
         bus.registerSubClass(ZTagsUpdated.class, ForgeZTagsUpdated.class);
+        bus.registerSubClass(ZBabyEntitySpawn.Lowest.class, ForgeZBabyEntitySpawn.Lowest.class);
         bus.registerSubClass(ZBabyEntitySpawn.class, ForgeZBabyEntitySpawn.class);
         bus.registerSubClass(ZBlock.Break.class, ForgeZBlock.Break.class);
         bus.registerSubClass(ZBlock.EntityPlace.class, ForgeZBlock.EntityPlace.class);
@@ -167,6 +170,7 @@ public class ForgeZeta extends Zeta {
         bus.registerSubClass(ZServerTick.End.class, ForgeZServerTick.End.class);
         bus.registerSubClass(ZAddReloadListener.class, ForgeZAddReloadListener.class);
         bus.registerSubClass(ZGatherAdvancementModifiers.class, ForgeZGatherAdvancementModifiers.class);
+        bus.registerSubClass(ZGatherHints.class, ForgeZGatherHints.class);
 
         //Hmm client events here? maybe i should move them
 
@@ -177,18 +181,28 @@ public class ForgeZeta extends Zeta {
         bus.registerSubClass(ZInput.MouseButton.class, ForgeZInput.MouseButton.class);
         bus.registerSubClass(ZInput.Key.class, ForgeZInput.Key.class);
         bus.registerSubClass(ZInputUpdate.class, ForgeZInputUpdate.class);
-        bus.registerSubClass(ZRenderContainerScreen.class, ForgeZRenderContainerScreen.class);
-        bus.registerSubClass(ZRenderLiving.class, ForgeZRenderLiving.class);
-        bus.registerSubClass(ZRenderPlayer.class, ForgeZRenderPlayer.class);
+        bus.registerSubClass(ZRenderContainerScreen.Background.class, ForgeZRenderContainerScreen.Background.class);
+        bus.registerSubClass(ZRenderContainerScreen.Foreground.class, ForgeZRenderContainerScreen.Foreground.class);
+        bus.registerSubClass(ZRenderLiving.PostLowest.class, ForgeZRenderLiving.PostLowest.class);
+        bus.registerSubClass(ZRenderLiving.PreHighest.class, ForgeZRenderLiving.PreHighest.class);
+        bus.registerSubClass(ZRenderPlayer.Post.class, ForgeZRenderPlayer.Post.class);
+        bus.registerSubClass(ZRenderPlayer.Pre.class, ForgeZRenderPlayer.Pre.class);
         bus.registerSubClass(ZRenderTick.class, ForgeZRenderTick.class);
         bus.registerSubClass(ZRenderTooltip.GatherComponents.class, ForgeZRenderTooltip.GatherComponents.class);
+        bus.registerSubClass(ZRenderTooltip.GatherComponents.Low.class, ForgeZRenderTooltip.GatherComponents.Low.class);
         bus.registerSubClass(ZScreen.Opening.class, ForgeZScreen.Opening.class);
-        bus.registerSubClass(ZScreen.CharacterTyped.class, ForgeZScreen.CharacterTyped.class);
-        bus.registerSubClass(ZScreen.Init.class, ForgeZScreen.Init.class);
-        bus.registerSubClass(ZScreen.KeyPressed.class, ForgeZScreen.KeyPressed.class);
-        bus.registerSubClass(ZScreen.MouseScrolled.class, ForgeZScreen.MouseScrolled.class);
-        bus.registerSubClass(ZScreen.MouseButtonPressed.class, ForgeZScreen.MouseButtonPressed.class);
-        bus.registerSubClass(ZScreen.Render.class, ForgeZScreen.Render.class);
+        bus.registerSubClass(ZScreen.CharacterTyped.Pre.class, ForgeZScreen.CharacterTyped.Pre.class);
+        bus.registerSubClass(ZScreen.CharacterTyped.Post.class, ForgeZScreen.CharacterTyped.Post.class);
+        bus.registerSubClass(ZScreen.Init.Post.class, ForgeZScreen.Init.Post.class);
+        bus.registerSubClass(ZScreen.Init.Pre.class, ForgeZScreen.Init.Pre.class);
+        bus.registerSubClass(ZScreen.KeyPressed.Post.class, ForgeZScreen.KeyPressed.Post.class);
+        bus.registerSubClass(ZScreen.KeyPressed.Pre.class, ForgeZScreen.KeyPressed.Pre.class);
+        bus.registerSubClass(ZScreen.MouseScrolled.Post.class, ForgeZScreen.MouseScrolled.Post.class);
+        bus.registerSubClass(ZScreen.MouseScrolled.Pre.class, ForgeZScreen.MouseScrolled.Pre.class);
+        bus.registerSubClass(ZScreen.MouseButtonPressed.Post.class, ForgeZScreen.MouseButtonPressed.Post.class);
+        bus.registerSubClass(ZScreen.MouseButtonPressed.Pre.class, ForgeZScreen.MouseButtonPressed.Pre.class);
+        bus.registerSubClass(ZScreen.Render.Post.class, ForgeZScreen.Render.Post.class);
+        bus.registerSubClass(ZScreen.Render.Pre.class, ForgeZScreen.Render.Pre.class);
         bus.registerSubClass(ZRenderGuiOverlay.ArmorLevel.Pre.class, ForgeZRenderGuiOverlay.ArmorLevel.Pre.class);
         bus.registerSubClass(ZRenderGuiOverlay.ArmorLevel.Post.class, ForgeZRenderGuiOverlay.ArmorLevel.Post.class);
         bus.registerSubClass(ZRenderGuiOverlay.Crosshair.Pre.class, ForgeZRenderGuiOverlay.Crosshair.Post.class);
@@ -204,7 +218,6 @@ public class ForgeZeta extends Zeta {
         bus.registerSubClass(ZRenderGuiOverlay.ChatPanel.Pre.class, ForgeZRenderGuiOverlay.ChatPanel.Pre.class);
         bus.registerSubClass(ZRenderGuiOverlay.ChatPanel.Post.class, ForgeZRenderGuiOverlay.ChatPanel.Post.class);
         bus.registerSubClass(ZScreenshot.class, ForgeZScreenshot.class);
-
 
         //this is ugly. generic events here
         Zeta zeta = this;

@@ -17,6 +17,7 @@ import org.violetmoon.zeta.advancement.modifier.TwoByTwoModifier;
 import org.violetmoon.zeta.advancement.modifier.WaxModifier;
 import org.violetmoon.zeta.api.IAdvancementModifier;
 import org.violetmoon.zeta.api.IAdvancementModifierDelegate;
+import org.violetmoon.zeta.client.event.play.ZScreen;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.bus.PlayEvent;
 import org.violetmoon.zeta.event.load.ZAddReloadListener;
@@ -61,6 +62,15 @@ public class AdvancementModifierRegistry {
 	public void addModifier(IAdvancementModifier mod) {
 		for(ResourceLocation r : mod.getTargets())
 			modifiers.put(r, mod);
+	}
+	@PlayEvent
+	public void test(ZScreen.Init.Post e){
+		int aa = 1;
+	}
+
+	@PlayEvent
+	public void onInitGui(ZScreen.Init.Pre event) {
+int aa = 1;
 	}
 
 	@PlayEvent

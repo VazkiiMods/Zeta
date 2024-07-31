@@ -8,6 +8,7 @@ import org.violetmoon.zeta.event.bus.ZPhase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 
+//TODO: 1.21. replace with minecraft own ticker. Tbh this is legacy already and should be replaced with Minecraft.getPartialTicks()
 public final class ClientTicker {
 	public int ticksInGame = 0;
 	public float partialTicks = 0;
