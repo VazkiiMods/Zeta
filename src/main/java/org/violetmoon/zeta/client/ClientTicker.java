@@ -18,6 +18,7 @@ public final class ClientTicker {
 
     public float partialTicks = 0;
     public float delta = 0;
+    public float total = 0;
 
     public int ticksInGame = 0;
 
@@ -26,6 +27,7 @@ public final class ClientTicker {
     public void onRenderTick(ZRenderTick.Start event) {
         partialTicks = Minecraft.getInstance().getPartialTick();
         delta = Minecraft.getInstance().getDeltaFrameTime();
+        total = ticksInGame + partialTicks;
     }
 
     @ApiStatus.Internal
