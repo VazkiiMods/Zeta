@@ -1,5 +1,6 @@
 package org.violetmoon.zetaimplforge.client.event.play;
 
+import net.minecraftforge.eventbus.api.Event;
 import org.violetmoon.zeta.client.event.play.ZRenderGuiOverlay;
 
 import com.mojang.blaze3d.platform.Window;
@@ -9,7 +10,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraftforge.client.event.RenderGuiOverlayEvent;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 
-public class ForgeZRenderGuiOverlay implements ZRenderGuiOverlay {
+public class ForgeZRenderGuiOverlay extends Event implements ZRenderGuiOverlay {
 	private final RenderGuiOverlayEvent e;
 
 	public ForgeZRenderGuiOverlay(RenderGuiOverlayEvent e) {

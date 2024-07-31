@@ -87,8 +87,6 @@ public abstract class ZetaClient implements IZeta {
 	// The name is unwieldy on purpose, usages of this function should stick out.
 	public abstract @Nullable RegistryAccess hackilyGetCurrentClientLevelRegistryAccess();
 
-	public abstract void start();
-	
 	@Override
 	public Zeta asZeta() {
 		return zeta;

@@ -31,6 +31,7 @@ import org.violetmoon.zeta.client.ClientRegistryExtension;
 import org.violetmoon.zeta.client.ZetaClient;
 import org.violetmoon.zeta.client.event.load.*;
 import org.violetmoon.zeta.client.event.play.*;
+import org.violetmoon.zeta.config.ConfigManager;
 import org.violetmoon.zeta.config.IZetaConfigInternals;
 import org.violetmoon.zeta.config.SectionDefinition;
 import org.violetmoon.zeta.event.bus.*;
@@ -48,6 +49,7 @@ import org.violetmoon.zeta.util.ZetaSide;
 import org.violetmoon.zetaimplforge.api.ForgeZGatherAdvancementModifiers;
 import org.violetmoon.zetaimplforge.block.IForgeBlockBlockExtensions;
 import org.violetmoon.zetaimplforge.capability.ForgeCapabilityManager;
+import org.violetmoon.zetaimplforge.client.ForgeZetaClient;
 import org.violetmoon.zetaimplforge.client.event.load.*;
 import org.violetmoon.zetaimplforge.client.event.play.*;
 import org.violetmoon.zetaimplforge.config.ConfigEventDispatcher;
@@ -80,8 +82,6 @@ public class ForgeZeta extends Zeta {
     protected ZetaEventBus<IZetaLoadEvent> createLoadBus() {
         if (false) return new FabricZetaEventBus<>(LoadEvent.class,
                 IZetaLoadEvent.class, log);
-
-        // thanks forge and your dumb Event + IModEvent classes and hacky runtime generic stuff. I cant get this to work
 
         var bus = new ForgeZetaEventBus<>(LoadEvent.class, IZetaLoadEvent.class, log,
                 FMLJavaModLoadingContext.get().getModEventBus(), Event.class);
@@ -183,7 +183,6 @@ public class ForgeZeta extends Zeta {
         bus.registerSubClass(ZInput.Key.class, ForgeZInput.Key.class);
         bus.registerSubClass(ZInputUpdate.class, ForgeZInputUpdate.class);
         bus.registerSubClass(ZRenderContainerScreen.class, ForgeZRenderContainerScreen.class);
-        //bus.registerSubClass(ZRenderGuiOverlay.class, ForgeZRenderGuiOverlay.class);
         bus.registerSubClass(ZRenderLiving.class, ForgeZRenderLiving.class);
         bus.registerSubClass(ZRenderPlayer.class, ForgeZRenderPlayer.class);
         bus.registerSubClass(ZRenderTick.class, ForgeZRenderTick.class);
@@ -195,20 +194,22 @@ public class ForgeZeta extends Zeta {
         bus.registerSubClass(ZScreen.MouseScrolled.class, ForgeZScreen.MouseScrolled.class);
         bus.registerSubClass(ZScreen.MouseButtonPressed.class, ForgeZScreen.MouseButtonPressed.class);
         bus.registerSubClass(ZScreen.Render.class, ForgeZScreen.Render.class);
+        bus.registerSubClass(ZRenderGuiOverlay.ArmorLevel.Pre.class, ForgeZRenderGuiOverlay.ArmorLevel.Pre.class);
+        bus.registerSubClass(ZRenderGuiOverlay.ArmorLevel.Post.class, ForgeZRenderGuiOverlay.ArmorLevel.Post.class);
 
         //this is ugly. generic events here
         Zeta zeta = this;
-        bus.registerSubClass(ZAttachCapabilities.BlockEntityCaps.class,
+        bus.registerSubClassWithGeneric(ZAttachCapabilities.BlockEntityCaps.class,
                 ForgeZAttachCapabilities.BlockEntityCaps.class,
                 (Function<AttachCapabilitiesEvent<BlockEntity>, ForgeZAttachCapabilities.BlockEntityCaps>) inner ->
                         new ForgeZAttachCapabilities.BlockEntityCaps(zeta.capabilityManager, inner),
                 BlockEntity.class);
-        bus.registerSubClass(ZAttachCapabilities.ItemStackCaps.class,
+        bus.registerSubClassWithGeneric(ZAttachCapabilities.ItemStackCaps.class,
                 ForgeZAttachCapabilities.ItemStackCaps.class,
                 (Function<AttachCapabilitiesEvent<ItemStack>, ForgeZAttachCapabilities.ItemStackCaps>) inner ->
                         new ForgeZAttachCapabilities.ItemStackCaps(zeta.capabilityManager, inner),
                 ItemStack.class);
-        bus.registerSubClass(ZAttachCapabilities.LevelCaps.class,
+        bus.registerSubClassWithGeneric(ZAttachCapabilities.LevelCaps.class,
                 ForgeZAttachCapabilities.LevelCaps.class,
                 (Function<AttachCapabilitiesEvent<Level>, ForgeZAttachCapabilities.LevelCaps>) inner ->
                         new ForgeZAttachCapabilities.LevelCaps(zeta.capabilityManager, inner),
@@ -311,8 +312,6 @@ public class ForgeZeta extends Zeta {
         modbus.addListener(ConfigEventDispatcher::configChanged);
 
         modbus.addListener(EventPriority.HIGHEST, this::registerHighest);
-        //why is this load?
-        //MinecraftForge.EVENT_BUS.addListener(this::addReloadListener);
     }
 
     private boolean registerDone = false;
