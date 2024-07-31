@@ -7,17 +7,13 @@ import java.util.function.Consumer;
 
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
-import org.violetmoon.zeta.Zeta;
-import org.violetmoon.zeta.client.event.play.ZRenderGuiOverlay;
 import org.violetmoon.zeta.event.bus.IZetaPlayEvent;
-import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.bus.PlayEvent;
 import org.violetmoon.zeta.event.load.ZAddReloadListener;
 import org.violetmoon.zeta.event.load.ZTagsUpdated;
 import org.violetmoon.zeta.event.play.ZRecipeCrawl;
 import org.violetmoon.zeta.event.play.ZServerTick;
 import org.violetmoon.zeta.mod.ZetaMod;
-import org.violetmoon.zeta.util.zetalist.ZetaList;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
@@ -36,7 +32,6 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.item.crafting.ShapelessRecipe;
-import org.violetmoon.zetaimplforge.event.play.ForgeZRecipeCrawl;
 
 @ApiStatus.Internal
 public class RecipeCrawlHandler {
@@ -121,9 +116,9 @@ public class RecipeCrawlHandler {
 					fire(event);
 				} catch (Exception e) {
 					if (recipe == null)
-						Zeta.GLOBAL_LOG.error("Encountered null recipe in RecipeManager.getRecipes. This is not good");
+						ZetaMod.LOGGER.error("Encountered null recipe in RecipeManager.getRecipes. This is not good");
 					else
-						Zeta.GLOBAL_LOG.error("Failed to scan recipe " + recipe.getId() + ". This should be reported to " + recipe.getId().getNamespace() + "!", e);
+						ZetaMod.LOGGER.error("Failed to scan recipe " + recipe.getId() + ". This should be reported to " + recipe.getId().getNamespace() + "!", e);
 				}
 			}
 		}

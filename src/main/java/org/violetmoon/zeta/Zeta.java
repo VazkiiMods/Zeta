@@ -1,5 +1,6 @@
 package org.violetmoon.zeta;
 
+import com.google.common.base.Stopwatch;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
@@ -39,14 +40,12 @@ import java.util.function.Supplier;
  */
 public abstract class Zeta implements IZeta {
 
-    public static final String ZETA_ID = "zeta";
-    public static final Logger GLOBAL_LOG = LogManager.getLogger(ZETA_ID);
-
-    public Zeta(String modid, Logger log, ZetaSide side) {
+    public Zeta(String modid, Logger log, ZetaSide side, boolean isProduction) {
         this.log = log;
 
         this.modid = modid;
         this.side = side;
+        this.isProduction = isProduction;
 
 
         this.modules = createModuleManager();
@@ -68,17 +67,10 @@ public abstract class Zeta implements IZeta {
 
         this.entitySpawn = createEntitySpawnHandler();
 
+        Stopwatch stopwatch = Stopwatch.createStarted();
         this.loadBus = this.createLoadBus();
         this.playBus = this.createPlayBus();
-
-        loadBus.subscribe(craftingExtensions)
-                .subscribe(dyeables)
-                .subscribe(brewingRegistry)
-                .subscribe(fuel)
-                .subscribe(entitySpawn);
-
-        playBus.subscribe(fuel)
-                .subscribe(advancementModifierRegistry);
+        long elapsed = stopwatch.stop().elapsed().toMillis();
 
         ZetaList.INSTANCE.register(this);
     }
@@ -87,6 +79,7 @@ public abstract class Zeta implements IZeta {
     public final Logger log;
     public final String modid;
     public final ZetaSide side;
+    public final boolean isProduction;
     public final ZetaEventBus<IZetaLoadEvent> loadBus;
     public final ZetaEventBus<IZetaPlayEvent> playBus;
     public final ZetaModuleManager modules;
@@ -217,7 +210,16 @@ public abstract class Zeta implements IZeta {
     public abstract boolean fireRightClickBlock(Player player, InteractionHand hand, BlockPos pos, BlockHitResult bhr);
 
     // Let's Jump
-    public abstract void start();
+    public void start(){
+        loadBus.subscribe(craftingExtensions)
+                .subscribe(dyeables)
+                .subscribe(brewingRegistry)
+                .subscribe(fuel)
+                .subscribe(entitySpawn);
+
+        playBus.subscribe(fuel)
+                .subscribe(advancementModifierRegistry);
+    }
 
     @Override
     public Zeta asZeta() {

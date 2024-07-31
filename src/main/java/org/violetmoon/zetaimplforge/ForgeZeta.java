@@ -50,6 +50,7 @@ import org.violetmoon.zetaimplforge.client.event.play.*;
 import org.violetmoon.zetaimplforge.config.ConfigEventDispatcher;
 import org.violetmoon.zetaimplforge.config.ForgeBackedConfig;
 import org.violetmoon.zetaimplforge.config.TerribleForgeConfigHackery;
+import org.violetmoon.zetaimplforge.event.ForgeZetaEventBus;
 import org.violetmoon.zetaimplforge.event.load.*;
 import org.violetmoon.zetaimplforge.event.play.*;
 import org.violetmoon.zetaimplforge.event.play.entity.*;
@@ -70,190 +71,18 @@ import java.util.function.Function;
  */
 public class ForgeZeta extends Zeta {
     public ForgeZeta(String modid, Logger log) {
-        super(modid, log, ZetaSide.fromClient(FMLEnvironment.dist.isClient()));
+        super(modid, log, ZetaSide.fromClient(FMLEnvironment.dist.isClient()), FMLEnvironment.production);
     }
 
     @Override
     protected ZetaEventBus<IZetaLoadEvent> createLoadBus() {
         //return new StandaloneZetaEventBus<>(LoadEvent.class, IZetaLoadEvent.class, log);
-
-        var bus = new ForgeZetaEventBus<>(LoadEvent.class, IZetaLoadEvent.class, log,
-                FMLJavaModLoadingContext.get().getModEventBus(), Event.class);
-
-        // adds known events subclasses to the bus
-        bus.registerSubClass(ZCommonSetup.class, ForgeZCommonSetup.class);
-        bus.registerSubClass(ZEntityAttributeCreation.class, ForgeZEntityAttributeCreation.class);
-        bus.registerSubClass(ZModulesReady.class, ForgeZModulesReady.class);
-        bus.registerSubClass(ZRegister.class, ForgeZRegister.class);
-        bus.registerSubClass(ZRegister.Post.class, ForgeZRegister.Post.class);
-        bus.registerSubClass(ZConfigChanged.class, ForgeZConfigChange.class);
-        bus.registerSubClass(ZLoadComplete.class, ForgeZLoadComplete.class);
-
-        // client ones again?
-        bus.registerSubClass(ZAddModels.class, ForgeZAddModels.class);
-        bus.registerSubClass(ZAddModelLayers.class, ForgeZAddModelLayers.class);
-        bus.registerSubClass(ZClientSetup.class, ForgeZClientSetup.class);
-        bus.registerSubClass(ZKeyMapping.class, ForgeZKeyMapping.class);
-        bus.registerSubClass(ZModel.RegisterGeometryLoaders.class, ForgeZModel.RegisterGeometryLoaders.class);
-        bus.registerSubClass(ZModel.RegisterAdditional.class, ForgeZModel.RegisterAdditional.class);
-        bus.registerSubClass(ZModel.BakingCompleted.class, ForgeZModel.BakingCompleted.class);
-        bus.registerSubClass(ZModel.ModifyBakingResult.class, ForgeZModel.ModifyBakingResult.class);
-        bus.registerSubClass(ZRegisterLayerDefinitions.class, ForgeZRegisterLayerDefinitions.class);
-        bus.registerSubClass(ZTooltipComponents.class, ForgeZTooltipComponents.class);
-        bus.registerSubClass(ZRegisterClientReloadListener.class, ForgeZRegisterClientReloadListener.class);
-        bus.registerSubClass(ZFirstClientTick.class, ForgeZFirstClientTick.class);
-
-        bus.registerSubClass(ZAddBlockColorHandlers.class, ForgeZAddBlockColorHandlers.class,
-                (Function<RegisterColorHandlersEvent.Block, ForgeZAddBlockColorHandlers>) inner ->
-                        new ForgeZAddBlockColorHandlers(inner, this.registry));
-        bus.registerSubClass(ZAddItemColorHandlers.class, ForgeZAddItemColorHandlers.class,
-                (Function<RegisterColorHandlersEvent.Item, ForgeZAddItemColorHandlers>) inner ->
-                        new ForgeZAddItemColorHandlers(inner, this.registry));
-        return bus;
+        return ForgeZetaEventBus.ofLoadBus( log, this);
     }
 
     @Override
     protected ForgeZetaEventBus<IZetaPlayEvent, ?> createPlayBus() {
-        var bus = new ForgeZetaEventBus<>(PlayEvent.class, IZetaPlayEvent.class, log, MinecraftForge.EVENT_BUS, Event.class);
-        bus.registerSubClass(ZAnvilRepair.class, ForgeZAnvilRepair.class);
-        bus.registerSubClass(ZAnvilUpdate.Highest.class, ForgeZAnvilUpdate.Highest.class);
-        bus.registerSubClass(ZAnvilUpdate.Lowest.class, ForgeZAnvilUpdate.Lowest.class);
-        bus.registerSubClass(ZTagsUpdated.class, ForgeZTagsUpdated.class);
-        bus.registerSubClass(ZBabyEntitySpawn.Lowest.class, ForgeZBabyEntitySpawn.Lowest.class);
-        bus.registerSubClass(ZBabyEntitySpawn.class, ForgeZBabyEntitySpawn.class);
-        bus.registerSubClass(ZBlock.Break.class, ForgeZBlock.Break.class);
-        bus.registerSubClass(ZBlock.EntityPlace.class, ForgeZBlock.EntityPlace.class);
-        bus.registerSubClass(ZBlock.BlockToolModification.class, ForgeZBlock.BlockToolModification.class);
-        bus.registerSubClass(ZBonemeal.class, ForgeZBonemeal.class);
-        bus.registerSubClass(ZEntityConstruct.class, ForgeZEntityConstruct.class);
-        bus.registerSubClass(ZEntityInteract.class, ForgeZEntityInteract.class);
-        bus.registerSubClass(ZEntityItemPickup.class, ForgeZEntityItemPickup.class);
-        bus.registerSubClass(ZEntityJoinLevel.class, ForgeZEntityJoinLevel.class);
-        bus.registerSubClass(ZEntityMobGriefing.class, ForgeZEntityMobGriefing.class);
-        bus.registerSubClass(ZEntityTeleport.class, ForgeZEntityTeleport.class);
-        bus.registerSubClass(ZItemTooltip.class, ForgeZItemTooltip.class);
-        bus.registerSubClass(ZLivingChangeTarget.class, ForgeZLivingChangeTarget.class);
-        bus.registerSubClass(ZLivingConversion.class, ForgeZLivingConversion.class);
-        bus.registerSubClass(ZLivingConversion.Pre.class, ForgeZLivingConversion.Pre.class);
-        bus.registerSubClass(ZLivingConversion.Post.class, ForgeZLivingConversion.Post.class);
-        bus.registerSubClass(ZLivingDeath.class, ForgeZLivingDeath.class);
-        bus.registerSubClass(ZLivingDeath.Lowest.class, ForgeZLivingDeath.Lowest.class);
-        bus.registerSubClass(ZLivingDrops.class, ForgeZLivingDrops.class);
-        bus.registerSubClass(ZLivingDrops.Lowest.class, ForgeZLivingDrops.Lowest.class);
-        bus.registerSubClass(ZLivingFall.class, ForgeZLivingFall.class);
-        bus.registerSubClass(ZLivingTick.class, ForgeZLivingTick.class);
-        bus.registerSubClass(ZMobSpawnEvent.class, ForgeZMobSpawnEvent.class);
-        bus.registerSubClass(ZMobSpawnEvent.CheckSpawn.class, ForgeZMobSpawnEvent.FinalizeSpawn.class);
-        bus.registerSubClass(ZMobSpawnEvent.CheckSpawn.Lowest.class, ForgeZMobSpawnEvent.FinalizeSpawn.Lowest.class);
-        bus.registerSubClass(ZPlayNoteBlock.class, ForgeZPlayNoteBlock.class);
-        bus.registerSubClass(ZPlayer.class, ForgeZPlayer.class);
-        bus.registerSubClass(ZPlayer.BreakSpeed.class, ForgeZPlayer.BreakSpeed.class);
-        bus.registerSubClass(ZPlayer.Clone.class, ForgeZPlayer.Clone.class);
-        bus.registerSubClass(ZPlayerDestroyItem.class, ForgeZPlayerDestroyItem.class);
-        bus.registerSubClass(ZPlayer.LoggedIn.class, ForgeZPlayer.LoggedIn.class);
-        bus.registerSubClass(ZPlayer.LoggedOut.class, ForgeZPlayer.LoggedOut.class);
-        bus.registerSubClass(ZPlayerTick.Start.class, ForgeZPlayerTick.Start.class);
-        bus.registerSubClass(ZPlayerTick.End.class, ForgeZPlayerTick.End.class);
-        bus.registerSubClass(ZPlayerInteract.class, ForgeZPlayerInteract.class);
-        bus.registerSubClass(ZPlayerInteract.EntityInteractSpecific.class, ForgeZPlayerInteract.EntityInteractSpecific.class);
-        bus.registerSubClass(ZPlayerInteract.EntityInteract.class, ForgeZPlayerInteract.EntityInteract.class);
-        bus.registerSubClass(ZPlayerInteract.RightClickBlock.class, ForgeZPlayerInteract.RightClickBlock.class);
-        bus.registerSubClass(ZPlayerInteract.RightClickItem.class, ForgeZPlayerInteract.RightClickItem.class);
-        bus.registerSubClass(ZRightClickBlock.class, ForgeZRightClickBlock.class);
-        bus.registerSubClass(ZRightClickBlock.Low.class, ForgeZRightClickBlock.Low.class);
-        bus.registerSubClass(ZRightClickItem.class, ForgeZRightClickItem.class);
-        bus.registerSubClass(ZLootTableLoad.class, ForgeZLootTableLoad.class);
-        bus.registerSubClass(ZVillagerTrades.class, ForgeZVillagerTrades.class);
-        bus.registerSubClass(ZWandererTrades.class, ForgeZWandererTrades.class);
-        bus.registerSubClass(ZFurnaceFuelBurnTime.class, ForgeZFurnaceFuelBurnTime.class);
-        bus.registerSubClass(ZGatherAdditionalFlags.class, ForgeZGatherAdditionalFlags.class);
-        bus.registerSubClass(ZServerTick.Start.class, ForgeZServerTick.Start.class);
-        bus.registerSubClass(ZServerTick.End.class, ForgeZServerTick.End.class);
-        bus.registerSubClass(ZAddReloadListener.class, ForgeZAddReloadListener.class);
-        bus.registerSubClass(ZGatherAdvancementModifiers.class, ForgeZGatherAdvancementModifiers.class);
-        bus.registerSubClass(ZGatherHints.class, ForgeZGatherHints.class);
-        bus.registerSubClass(ZSleepingLocationCheck.class, ForgeZSleepingLocationCheck.class);
-        bus.registerSubClass(ZAnimalTame.class, ForgeZAnimalTame.class);
-        bus.registerSubClass(ZLevelTick.End.class, ForgeZLevelTick.End.class);
-        bus.registerSubClass(ZLevelTick.Start.class, ForgeZLevelTick.Start.class);
-
-        //Hmm client events here? maybe i should move them
-
-        bus.registerSubClass(ZClientTick.class, ForgeZClientTick.class);
-        bus.registerSubClass(ZEarlyRender.class, ForgeZEarlyRender.class);
-        bus.registerSubClass(ZGatherTooltipComponents.class, ForgeZGatherTooltipComponents.class);
-        bus.registerSubClass(ZHighlightBlock.class, ForgeZHighlightBlock.class);
-        bus.registerSubClass(ZInput.MouseButton.class, ForgeZInput.MouseButton.class);
-        bus.registerSubClass(ZInput.Key.class, ForgeZInput.Key.class);
-        bus.registerSubClass(ZInputUpdate.class, ForgeZInputUpdate.class);
-        bus.registerSubClass(ZRenderContainerScreen.Background.class, ForgeZRenderContainerScreen.Background.class);
-        bus.registerSubClass(ZRenderContainerScreen.Foreground.class, ForgeZRenderContainerScreen.Foreground.class);
-        bus.registerSubClass(ZRenderLiving.PostLowest.class, ForgeZRenderLiving.PostLowest.class);
-        bus.registerSubClass(ZRenderLiving.PreHighest.class, ForgeZRenderLiving.PreHighest.class);
-        bus.registerSubClass(ZRenderPlayer.Post.class, ForgeZRenderPlayer.Post.class);
-        bus.registerSubClass(ZRenderPlayer.Pre.class, ForgeZRenderPlayer.Pre.class);
-        bus.registerSubClass(ZRenderTick.class, ForgeZRenderTick.class);
-        bus.registerSubClass(ZRenderTooltip.GatherComponents.class, ForgeZRenderTooltip.GatherComponents.class);
-        bus.registerSubClass(ZRenderTooltip.GatherComponents.Low.class, ForgeZRenderTooltip.GatherComponents.Low.class);
-        bus.registerSubClass(ZScreen.Opening.class, ForgeZScreen.Opening.class);
-        bus.registerSubClass(ZScreen.CharacterTyped.Pre.class, ForgeZScreen.CharacterTyped.Pre.class);
-        bus.registerSubClass(ZScreen.CharacterTyped.Post.class, ForgeZScreen.CharacterTyped.Post.class);
-        bus.registerSubClass(ZScreen.Init.Post.class, ForgeZScreen.Init.Post.class);
-        bus.registerSubClass(ZScreen.Init.Pre.class, ForgeZScreen.Init.Pre.class);
-        bus.registerSubClass(ZScreen.KeyPressed.Post.class, ForgeZScreen.KeyPressed.Post.class);
-        bus.registerSubClass(ZScreen.KeyPressed.Pre.class, ForgeZScreen.KeyPressed.Pre.class);
-        bus.registerSubClass(ZScreen.MouseScrolled.Post.class, ForgeZScreen.MouseScrolled.Post.class);
-        bus.registerSubClass(ZScreen.MouseScrolled.Pre.class, ForgeZScreen.MouseScrolled.Pre.class);
-        bus.registerSubClass(ZScreen.MouseButtonPressed.Post.class, ForgeZScreen.MouseButtonPressed.Post.class);
-        bus.registerSubClass(ZScreen.MouseButtonPressed.Pre.class, ForgeZScreen.MouseButtonPressed.Pre.class);
-        bus.registerSubClass(ZScreen.Render.Post.class, ForgeZScreen.Render.Post.class);
-        bus.registerSubClass(ZScreen.Render.Pre.class, ForgeZScreen.Render.Pre.class);
-        bus.registerSubClass(ZRenderGuiOverlay.ArmorLevel.Pre.class, ForgeZRenderGuiOverlay.ArmorLevel.Pre.class);
-        bus.registerSubClass(ZRenderGuiOverlay.ArmorLevel.Post.class, ForgeZRenderGuiOverlay.ArmorLevel.Post.class);
-        bus.registerSubClass(ZRenderGuiOverlay.Crosshair.Pre.class, ForgeZRenderGuiOverlay.Crosshair.Post.class);
-        bus.registerSubClass(ZRenderGuiOverlay.Crosshair.Post.class, ForgeZRenderGuiOverlay.Crosshair.Pre.class);
-        bus.registerSubClass(ZRenderGuiOverlay.DebugText.Pre.class, ForgeZRenderGuiOverlay.DebugText.Pre.class);
-        bus.registerSubClass(ZRenderGuiOverlay.DebugText.Post.class, ForgeZRenderGuiOverlay.DebugText.Post.class);
-        bus.registerSubClass(ZRenderGuiOverlay.Hotbar.Pre.class, ForgeZRenderGuiOverlay.Hotbar.Pre.class);
-        bus.registerSubClass(ZRenderGuiOverlay.Hotbar.Post.class, ForgeZRenderGuiOverlay.Hotbar.Post.class);
-        bus.registerSubClass(ZRenderGuiOverlay.PlayerHealth.Pre.class, ForgeZRenderGuiOverlay.PlayerHealth.Pre.class);
-        bus.registerSubClass(ZRenderGuiOverlay.PlayerHealth.Post.class, ForgeZRenderGuiOverlay.PlayerHealth.Post.class);
-        bus.registerSubClass(ZRenderGuiOverlay.PotionIcons.Pre.class, ForgeZRenderGuiOverlay.PotionIcons.Pre.class);
-        bus.registerSubClass(ZRenderGuiOverlay.PotionIcons.Post.class, ForgeZRenderGuiOverlay.PotionIcons.Post.class);
-        bus.registerSubClass(ZRenderGuiOverlay.ChatPanel.Pre.class, ForgeZRenderGuiOverlay.ChatPanel.Pre.class);
-        bus.registerSubClass(ZRenderGuiOverlay.ChatPanel.Post.class, ForgeZRenderGuiOverlay.ChatPanel.Post.class);
-        bus.registerSubClass(ZScreenshot.class, ForgeZScreenshot.class);
-
-        //this is ugly. generic events here
-        Zeta zeta = this;
-        bus.registerSubClassWithGeneric(ZAttachCapabilities.BlockEntityCaps.class,
-                ForgeZAttachCapabilities.BlockEntityCaps.class,
-                (Function<AttachCapabilitiesEvent<BlockEntity>, ForgeZAttachCapabilities.BlockEntityCaps>) inner ->
-                        new ForgeZAttachCapabilities.BlockEntityCaps(zeta.capabilityManager, inner),
-                BlockEntity.class);
-        bus.registerSubClassWithGeneric(ZAttachCapabilities.ItemStackCaps.class,
-                ForgeZAttachCapabilities.ItemStackCaps.class,
-                (Function<AttachCapabilitiesEvent<ItemStack>, ForgeZAttachCapabilities.ItemStackCaps>) inner ->
-                        new ForgeZAttachCapabilities.ItemStackCaps(zeta.capabilityManager, inner),
-                ItemStack.class);
-        bus.registerSubClassWithGeneric(ZAttachCapabilities.LevelCaps.class,
-                ForgeZAttachCapabilities.LevelCaps.class,
-                (Function<AttachCapabilitiesEvent<Level>, ForgeZAttachCapabilities.LevelCaps>) inner ->
-                        new ForgeZAttachCapabilities.LevelCaps(zeta.capabilityManager, inner),
-                Level.class);
-
-        // zeta specific ones
-
-        bus.registerSubClass(ZRecipeCrawl.Digest.class, ForgeZRecipeCrawl.Digest.class);
-        bus.registerSubClass(ZRecipeCrawl.Reset.class, ForgeZRecipeCrawl.Reset.class);
-        bus.registerSubClass(ZRecipeCrawl.Starting.class, ForgeZRecipeCrawl.Starting.class);
-        bus.registerSubClass(ZRecipeCrawl.Visit.Cooking.class, ForgeZRecipeCrawl.Visit.Cooking.class);
-        bus.registerSubClass(ZRecipeCrawl.Visit.Custom.class, ForgeZRecipeCrawl.Visit.Custom.class);
-        bus.registerSubClass(ZRecipeCrawl.Visit.Misc.class, ForgeZRecipeCrawl.Visit.Misc.class);
-        bus.registerSubClass(ZRecipeCrawl.Visit.Shaped.class, ForgeZRecipeCrawl.Visit.Shaped.class);
-        bus.registerSubClass(ZRecipeCrawl.Visit.Shapeless.class, ForgeZRecipeCrawl.Visit.Shapeless.class);
-
-        return bus;
+        return ForgeZetaEventBus.ofPlayBus(log, this);
     }
 
     @Override
@@ -301,7 +130,7 @@ public class ForgeZeta extends Zeta {
 
     @Override
     public ZetaCapabilityManager createCapabilityManager() {
-        return new ForgeCapabilityManager();
+        return ForgeCapabilityManager.INSTANCE;
     }
 
     @Override
@@ -332,6 +161,7 @@ public class ForgeZeta extends Zeta {
     @SuppressWarnings("duplicates")
     @Override
     public void start() {
+        super.start();
         //load
         IEventBus modbus = FMLJavaModLoadingContext.get().getModEventBus();
 

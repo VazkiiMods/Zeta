@@ -1,5 +1,6 @@
 package org.violetmoon.zeta.client;
 
+import org.jetbrains.annotations.ApiStatus;
 import org.violetmoon.zeta.client.event.play.ZClientTick;
 import org.violetmoon.zeta.client.event.play.ZRenderTick;
 import org.violetmoon.zeta.event.bus.PlayEvent;
@@ -16,11 +17,15 @@ public final class ClientTicker {
 	//no need to have more than 1 instance of this class. Ticks are always the same
 	public static final ClientTicker INSTANCE = new ClientTicker();
 
+	private ClientTicker() {
+	}
+
 	public int ticksInGame = 0;
 	public float partialTicks = 0;
 	public float delta = 0;
 	public float total = 0;
 
+	@ApiStatus.Internal
 	@PlayEvent
 	public void onRenderTick(ZRenderTick event) {
 		if(event.isStartPhase())
@@ -29,8 +34,9 @@ public final class ClientTicker {
 			endRenderTick();
 	}
 
+	@ApiStatus.Internal
 	@PlayEvent
-	public void onEndClientTick(ZClientTick event) {
+	public void onEndClientTick(ZClientTick.Start event) {
 		if(event.getPhase() != ZPhase.END)
 			return;
 
@@ -43,12 +49,7 @@ public final class ClientTicker {
 		endRenderTick();
 	}
 
-	@PlayEvent
-	public void a(ZRecipeCrawl.Digest e){
-		int aa = 1;
-	}
-
-	public void endRenderTick() {
+	private void endRenderTick() {
 		float oldTotal = total;
 		total = ticksInGame + partialTicks;
 		delta = total - oldTotal;

@@ -11,8 +11,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Supplier;
 
-import org.violetmoon.zeta.Zeta;
 import org.violetmoon.zeta.config.ZetaGeneralConfig;
+import org.violetmoon.zeta.mod.ZetaMod;
 import org.violetmoon.zeta.module.IDisableable;
 
 import com.google.common.collect.HashMultimap;
@@ -144,7 +144,7 @@ public class CreativeTabManager {
             		logVerbose(() -> "front empty=" + front.isEmpty() + " / behind empty=" + behind.isEmpty());
             		
             		if(entries.isEmpty()) {
-            			Zeta.GLOBAL_LOG.error("entries map for tab " + tabKey + " is empty, this should never happen");
+						ZetaMod.LOGGER.error("entries map for tab " + tabKey + " is empty, this should never happen");
             			return;
             		}
             		
@@ -235,8 +235,8 @@ public class CreativeTabManager {
 		logVerbose(() -> "target is " + target);
 		
 		if(log) {
-			Zeta.GLOBAL_LOG.error("Creative tab loop found when adding {} next to {}", firstSetItem, target);
-			Zeta.GLOBAL_LOG.error("For more info enable Creative Verbose Logging in the Zeta config, or set Force Creative Tab Appends to true to disable this behavior");
+			ZetaMod.LOGGER.error("Creative tab loop found when adding {} next to {}", firstSetItem, target);
+			ZetaMod.LOGGER.error("For more info enable Creative Verbose Logging in the Zeta config, or set Force Creative Tab Appends to true to disable this behavior");
 		}
 		
 		map.remove(firstSet);
@@ -277,7 +277,7 @@ public class CreativeTabManager {
 	
 	private static void logVerbose(Supplier<String> s) {
 		if(ZetaGeneralConfig.enableCreativeVerboseLogging)
-			Zeta.GLOBAL_LOG.warn(s.get());
+			ZetaMod.LOGGER.warn(s.get());
 	}
 
 	private static class CreativeTabAdditions {

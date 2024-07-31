@@ -7,7 +7,6 @@ import java.util.function.Predicate;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
-import org.violetmoon.zeta.Zeta;
 import org.violetmoon.zeta.api.ICollateralMover;
 import org.violetmoon.zeta.api.ICollateralMover.MoveResult;
 import org.violetmoon.zeta.api.IConditionalSticky;
@@ -27,6 +26,7 @@ import net.minecraft.world.level.block.piston.PistonBaseBlock;
 import net.minecraft.world.level.block.piston.PistonStructureResolver;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.PushReaction;
+import org.violetmoon.zeta.mod.ZetaMod;
 
 public class ZetaPistonStructureResolver extends PistonStructureResolver {
 
@@ -60,9 +60,9 @@ public class ZetaPistonStructureResolver extends PistonStructureResolver {
 			enabled = !wantsEnabled.isEmpty();
 
 			if(!wasEnabled && enabled)
-				Zeta.GLOBAL_LOG.info("'{}' is enabling Zeta's piston structure resolver.", modid);
+				ZetaMod.LOGGER.info("'{}' is enabling Zeta's piston structure resolver.", modid);
 			else if(wasEnabled && !enabled)
-				Zeta.GLOBAL_LOG.info("Zeta's piston structure resolver is now disabled.");
+				ZetaMod.LOGGER.info("Zeta's piston structure resolver is now disabled.");
 		}
 
 		public static void requestPushLimit(String modid, int pushLimitPlease) {
@@ -72,7 +72,7 @@ public class ZetaPistonStructureResolver extends PistonStructureResolver {
 			pushLimit = wantsPushLimit.values().intStream().max().orElse(12);
 
 			if(wasPushLimit < pushLimit)
-				Zeta.GLOBAL_LOG.info("'{}' is raising Zeta's piston structure resolver push limit to {} blocks.", modid, pushLimit);
+				ZetaMod.LOGGER.info("'{}' is raising Zeta's piston structure resolver push limit to {} blocks.", modid, pushLimit);
 		}
 	}
 

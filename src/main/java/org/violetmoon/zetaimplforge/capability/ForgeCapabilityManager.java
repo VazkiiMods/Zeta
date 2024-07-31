@@ -19,6 +19,15 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 
 public class ForgeCapabilityManager implements ZetaCapabilityManager {
+
+	//Why is this a singleton instance?
+	// Because attach capability event fires on the mod-independent PLAY bus and this would have to be passed in the event which just fires once instead of once per mod.
+
+	public static final ForgeCapabilityManager INSTANCE = new ForgeCapabilityManager();
+
+	private ForgeCapabilityManager() {
+	}
+
 	protected Map<ZetaCapability<?>, Capability<?>> toForge = new IdentityHashMap<>();
 
 	@SuppressWarnings("unchecked")

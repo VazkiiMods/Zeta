@@ -47,10 +47,6 @@ public abstract class ZetaClient implements IZeta {
 	public final ClientConfigManager clientConfigManager;
 	public final ClientRegistryExtension clientRegistryExtension;
 
-	public ClientTicker createClientTicker() {
-		return new ClientTicker();
-	}
-
 	public ClientConfigManager createClientConfigManager() {
 		return new ClientConfigManager(this);
 	}

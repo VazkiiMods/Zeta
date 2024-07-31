@@ -5,13 +5,16 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.zeta.Zeta;
-import org.violetmoon.zeta.advancement.AdvancementModifierRegistry;
-import org.violetmoon.zeta.util.handler.RecipeCrawlHandler;
+import org.violetmoon.zeta.client.ClientTicker;
+import org.violetmoon.zeta.mod.ZetaMod;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Stream;
 
 public abstract class ZetaEventBus<E> {
@@ -19,17 +22,21 @@ public abstract class ZetaEventBus<E> {
     protected final Class<? extends Annotation> subscriberAnnotation;
     protected final Class<E> eventRoot;
     protected final @Nullable Logger logSpam;
+    //each bus belongs to a specific zeta. Internally they can however delegate to an internal shared data structure such as to the forge event bus
+    protected final Zeta ofZeta;
 
     /**
      * @param subscriberAnnotation The annotation that subscribe()/unsubscribe() will pay attention to.
      * @param eventRoot            The superinterface of all events fired on this bus.
      */
-    public ZetaEventBus(Class<? extends Annotation> subscriberAnnotation, Class<E> eventRoot, @Nullable Logger logSpam) {
+    public ZetaEventBus(Class<? extends Annotation> subscriberAnnotation, Class<E> eventRoot,
+                        @Nullable Logger logSpam, Zeta ofZeta) {
         Preconditions.checkArgument(eventRoot.isInterface(), "Event roots should be an interface");
 
         this.subscriberAnnotation = subscriberAnnotation;
         this.eventRoot = eventRoot;
         this.logSpam = logSpam;
+        this.ofZeta = ofZeta;
     }
 
     /**
@@ -48,9 +55,6 @@ public abstract class ZetaEventBus<E> {
         } else {
             receiver = target;
             owningClazz = target.getClass();
-        }
-        if(owningClazz == AdvancementModifierRegistry.class){
-            int aa = 1;
         }
         streamAnnotatedMethods(owningClazz, receiver == null)
                 .forEach(m -> subscribeMethod(m, receiver, owningClazz));
@@ -103,9 +107,22 @@ public abstract class ZetaEventBus<E> {
      * annotation; and of the requested staticness.
      */
     private Stream<Method> streamAnnotatedMethods(Class<?> owningClazz, boolean wantStatic) {
-        return Arrays.stream(owningClazz.getMethods())
-                .filter(m -> m.isAnnotationPresent(subscriberAnnotation) && ((m.getModifiers() & Modifier.STATIC) != 0) == wantStatic);
+        Stream<Method> methods;
+        if (ofZeta.isProduction) {
+            // faster
+            methods = Arrays.stream(owningClazz.getMethods());
+        } else {
+            // here for debug purposes as this will catch private stuff too
+            List<Method> list = new ArrayList<>();
+            while (owningClazz != null) {
+                Collections.addAll(list, owningClazz.getDeclaredMethods());
+                owningClazz = owningClazz.getSuperclass();
+            }
+            methods = list.stream();
+        }
+        return methods.filter(m -> m.isAnnotationPresent(subscriberAnnotation) && ((m.getModifiers() & Modifier.STATIC) != 0) == wantStatic);
     }
+
 
     protected RuntimeException arityERR(Method method) {
         return methodProblem("Method annotated with @" + subscriberAnnotation.getSimpleName() +

@@ -1,10 +1,8 @@
 package org.violetmoon.zetaimplforge.client.event.play;
 
 import org.violetmoon.zeta.client.event.play.ZClientTick;
-import org.violetmoon.zeta.event.bus.ZPhase;
 
 import net.minecraftforge.event.TickEvent.ClientTickEvent;
-import net.minecraftforge.event.TickEvent.Phase;
 
 public class ForgeZClientTick implements ZClientTick {
     private final ClientTickEvent e;
@@ -13,22 +11,16 @@ public class ForgeZClientTick implements ZClientTick {
         this.e = e;
     }
 
-    @Override
-    public ZPhase getPhase() {
-        return from(e.phase);
+    public static class Start extends ForgeZClientTick implements ZClientTick.Start {
+        public Start(ClientTickEvent e) {
+            super(e);
+        }
     }
 
-    public static ZPhase from(Phase r) {
-        return switch(r) {
-            case START -> ZPhase.START;
-            case END -> ZPhase.END;
-        };
+    public static class End extends ForgeZClientTick implements ZClientTick.End {
+        public End(ClientTickEvent e) {
+            super(e);
+        }
     }
 
-    public static Phase to(ZPhase r) {
-        return switch(r) {
-            case START -> Phase.START;
-            case END -> Phase.END;
-        };
-    }
 }

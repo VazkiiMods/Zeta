@@ -12,6 +12,7 @@ import java.util.Objects;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.violetmoon.zeta.Zeta;
 
 /**
  * A polymorphic event bus. Events can be fired under one of their supertypes, allowing a sort of API/impl split of events.
@@ -30,8 +31,8 @@ public class StandaloneZetaEventBus<E> extends ZetaEventBus<E> {
 	 * @param eventRoot            The superinterface of all events fired on this bus.
 	 * @param logSpam
 	 */
-	public StandaloneZetaEventBus(Class<? extends Annotation> subscriberAnnotation, Class<E> eventRoot, @Nullable Logger logSpam) {
-		super(subscriberAnnotation, eventRoot, logSpam);
+	public StandaloneZetaEventBus(Class<? extends Annotation> subscriberAnnotation, Class<E> eventRoot, @Nullable Logger logSpam, Zeta ofZeta) {
+		super(subscriberAnnotation, eventRoot, logSpam, ofZeta);
 	}
 
 	@Override
