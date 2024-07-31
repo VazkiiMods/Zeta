@@ -47,6 +47,7 @@ public class StandaloneZetaEventBus<E> extends ZetaEventBus<E> {
 	/**
 	 * Fires an event on the event bus. Each subscriber will be visited in order.
 	 */
+	@Override
 	public <T extends E> T fire(@NotNull T event) {
 		Listeners subs = listenerMap.get(event.getClass());
 		if(subs != null) {
@@ -65,6 +66,7 @@ public class StandaloneZetaEventBus<E> extends ZetaEventBus<E> {
 	 * <p>
 	 * (The generic should be Class&lt;? super T & ? extends E&gt;, but unfortunately, javac.)
 	 */
+	@Override
 	public <T extends E> T fire(@NotNull T event, Class<? super T> firedAs) {
 		Listeners subs = listenerMap.get(firedAs);
 		if(subs != null) {
