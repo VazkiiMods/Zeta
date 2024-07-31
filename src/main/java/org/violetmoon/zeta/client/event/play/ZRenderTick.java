@@ -10,9 +10,10 @@ import org.violetmoon.zeta.event.bus.IZetaPlayEvent;
  */
 public interface ZRenderTick extends IZetaPlayEvent {
 	float getRenderTickTime();
-	boolean isEndPhase();
 
-	default boolean isStartPhase() {
-		return !isEndPhase();
+	interface Start extends ZRenderTick {
+	}
+
+	interface End extends ZRenderTick {
 	}
 }

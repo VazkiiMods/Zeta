@@ -41,7 +41,6 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Method;
 import java.util.Map;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 // this is super jank. Basically converts all zeta events to forge ones, then delegates to the forge bus directly
@@ -104,10 +103,9 @@ public class ForgeZetaEventBus<Z, F extends Event> extends ZetaEventBus<Z> {
         if (receiver != null)
             handle = handle.bindTo(receiver);
 
-        Consumer<? extends F> consumer = remapper.remapMethod(handle, zetaEventClass);
-        remapper.registerListenerToForgeWithPriorityAndGenerics(forgeBus, owningClazz, consumer, zetaEventClass);
+        var converted = remapper.remapAndRegister(forgeBus, owningClazz, handle, zetaEventClass);
         //store here so we can unregister later
-        convertedHandlers.put(new Key(method, receiver, owningClazz), consumer);
+        convertedHandlers.put(new Key(method, receiver, owningClazz), converted);
     }
 
     @Override
@@ -177,7 +175,7 @@ public class ForgeZetaEventBus<Z, F extends Event> extends ZetaEventBus<Z> {
         r.registerSubClass(ZLoadComplete.class, ForgeZLoadComplete.class);
 
         // client ones again?
-        if(FMLEnvironment.dist == Dist.DEDICATED_SERVER) return;
+        if (FMLEnvironment.dist == Dist.DEDICATED_SERVER) return;
 
         r.registerSubClass(ZAddModels.class, ForgeZAddModels.class);
         r.registerSubClass(ZAddModelLayers.class, ForgeZAddModelLayers.class);
@@ -261,7 +259,6 @@ public class ForgeZetaEventBus<Z, F extends Event> extends ZetaEventBus<Z> {
         r.registerSubClass(ZLevelTick.Start.class, ForgeZLevelTick.Start.class);
 
 
-
         //this is ugly. generic events here
         r.registerSubClassWithGeneric(ZAttachCapabilities.BlockEntityCaps.class,
                 ForgeZAttachCapabilities.BlockEntityCaps.class,
@@ -292,7 +289,7 @@ public class ForgeZetaEventBus<Z, F extends Event> extends ZetaEventBus<Z> {
 
 
         //Hmm client events here? maybe i should move them
-        if(FMLEnvironment.dist == Dist.DEDICATED_SERVER) return;
+        if (FMLEnvironment.dist == Dist.DEDICATED_SERVER) return;
 
         r.registerSubClass(ZClientTick.End.class, ForgeZClientTick.End.class);
         r.registerSubClass(ZClientTick.Start.class, ForgeZClientTick.Start.class);
@@ -308,7 +305,8 @@ public class ForgeZetaEventBus<Z, F extends Event> extends ZetaEventBus<Z> {
         r.registerSubClass(ZRenderLiving.PreHighest.class, ForgeZRenderLiving.PreHighest.class);
         r.registerSubClass(ZRenderPlayer.Post.class, ForgeZRenderPlayer.Post.class);
         r.registerSubClass(ZRenderPlayer.Pre.class, ForgeZRenderPlayer.Pre.class);
-        r.registerSubClass(ZRenderTick.class, ForgeZRenderTick.class);
+        r.registerSubClass(ZRenderTick.End.class, ForgeZRenderTick.End.class);
+        r.registerSubClass(ZRenderTick.Start.class, ForgeZRenderTick.Start.class);
         r.registerSubClass(ZRenderTooltip.GatherComponents.class, ForgeZRenderTooltip.GatherComponents.class);
         r.registerSubClass(ZRenderTooltip.GatherComponents.Low.class, ForgeZRenderTooltip.GatherComponents.Low.class);
         r.registerSubClass(ZScreen.Opening.class, ForgeZScreen.Opening.class);
