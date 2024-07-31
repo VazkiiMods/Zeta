@@ -81,13 +81,13 @@ public class ForgeZScreen implements ZScreen {
         }
 
         public static class Pre extends ForgeZScreen.Render implements ZScreen.Render.Pre {
-            public Pre(ScreenEvent.Render e) {
+            public Pre(ScreenEvent.Render.Pre e) {
                 super(e);
             }
         }
 
         public static class Post extends ForgeZScreen.Render implements ZScreen.Render.Post {
-            public Post(ScreenEvent.Render e) {
+            public Post(ScreenEvent.Render.Post e) {
                 super(e);
             }
         }

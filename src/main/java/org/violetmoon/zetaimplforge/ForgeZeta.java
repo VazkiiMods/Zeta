@@ -171,6 +171,8 @@ public class ForgeZeta extends Zeta {
         bus.registerSubClass(ZAddReloadListener.class, ForgeZAddReloadListener.class);
         bus.registerSubClass(ZGatherAdvancementModifiers.class, ForgeZGatherAdvancementModifiers.class);
         bus.registerSubClass(ZGatherHints.class, ForgeZGatherHints.class);
+        bus.registerSubClass(ZSleepingLocationCheck.class, ForgeZSleepingLocationCheck.class);
+        bus.registerSubClass(ZAnimalTame.class, ForgeZAnimalTame.class);
 
         //Hmm client events here? maybe i should move them
 

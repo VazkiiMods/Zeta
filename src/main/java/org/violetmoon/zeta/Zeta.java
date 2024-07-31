@@ -74,11 +74,11 @@ public abstract class Zeta implements IZeta {
         loadBus.subscribe(craftingExtensions)
                 .subscribe(dyeables)
                 .subscribe(brewingRegistry)
-                .subscribe(advancementModifierRegistry)
                 .subscribe(fuel)
                 .subscribe(entitySpawn);
 
-        playBus.subscribe(fuel);
+        playBus.subscribe(fuel)
+                .subscribe(advancementModifierRegistry);
 
         ZetaList.INSTANCE.register(this);
     }

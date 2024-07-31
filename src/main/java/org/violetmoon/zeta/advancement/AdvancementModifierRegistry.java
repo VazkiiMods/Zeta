@@ -63,15 +63,6 @@ public class AdvancementModifierRegistry {
 		for(ResourceLocation r : mod.getTargets())
 			modifiers.put(r, mod);
 	}
-	@PlayEvent
-	public void test(ZScreen.Init.Post e){
-		int aa = 1;
-	}
-
-	@PlayEvent
-	public void onInitGui(ZScreen.Init.Pre event) {
-int aa = 1;
-	}
 
 	@PlayEvent
 	public void addListeners(ZAddReloadListener event) {
@@ -87,7 +78,7 @@ int aa = 1;
 				public IAdvancementModifierDelegate getDelegate() {
 					return delegateImpl;
 				}
-			});
+			}, ZGatherAdvancementModifiers.class);
 
 			gatheredAddons = true;
 		}

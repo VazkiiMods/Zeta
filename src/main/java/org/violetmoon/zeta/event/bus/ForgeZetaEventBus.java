@@ -10,6 +10,7 @@ import org.apache.commons.lang3.text.WordUtils;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.violetmoon.zeta.Zeta;
 
 import java.lang.annotation.Annotation;
 import java.lang.invoke.MethodHandle;
@@ -28,9 +29,13 @@ public class ForgeZetaEventBus<Z, F extends Event> extends ZetaEventBus<Z> {
 
     private final Map<Class<? extends Z>, Function<? extends F, ? extends Z>> forgeToZetaMap = new Object2ObjectOpenHashMap<>();
     private final Map<Class<? extends Z>, Function<? extends Z, ? extends F>> zetaToForgeMap = new Object2ObjectOpenHashMap<>();
-    private final Map<Class<? extends Z>, Class<?>> zetaToForgeEventClass = new Object2ObjectOpenHashMap<>();
     private final Map<Class<? extends Z>, Class<?>> generics = new Object2ObjectOpenHashMap<>();
+
+    // needed so we can unregister later
     private final Map<Key, Object> convertedHandlers = new Object2ObjectOpenHashMap<>();
+    // hack needed to store classes of each Z event to Forge event.
+    // Needed because java has type erasure so forge be able to add listeners to anonymous generic lambdas without being passed an event type class
+    private final Map<Class<? extends Z>, Class<?>> zetaToForgeEventClassHack = new Object2ObjectOpenHashMap<>();
 
     private final IEventBus forgeBus;
     private final Class<F> forgeEventRoot; //if Events should implement IModBusEvent
@@ -185,10 +190,10 @@ public class ForgeZetaEventBus<Z, F extends Event> extends ZetaEventBus<Z> {
         if (constructor == null) {
             // if it's an Event already just returns the no argument constructor
             if (forgeEventRoot.isAssignableFrom(forgeZetaEventClass)) {
-                zetaToForgeEventClass.put(baseZetaEventClass, forgeZetaEventClass);
+                zetaToForgeEventClassHack.put(baseZetaEventClass, forgeZetaEventClass);
                 constructor = event -> (ZF) event;
                 isNoWrapper = true;
-            } else constructor = findForgeWrapper(forgeZetaEventClass);
+            } else constructor = findForgeWrapper(forgeZetaEventClass, baseZetaEventClass);
         }
         if (constructor == null) {
             throw new RuntimeException("No Forge-Event-wrapping constructor found for Zeta event class " + forgeZetaEventClass);
@@ -223,16 +228,19 @@ public class ForgeZetaEventBus<Z, F extends Event> extends ZetaEventBus<Z> {
 
     /**
      * @param zetaEventClass i.e: ForgeZClientSetup.class
+     * @param baseZetaEventClass i.e: ZClientSetup.class
      *                       <p>
      *                       Attempts to find a constructor of zetaEventClass which takes an Event as a parameter. This is used for simple forge Event wrappers
      *                       in this example the one found will be new ForgeZClientSetup(FMLClientSetupEvent event)
      */
-    private <Z2 extends Z, F2 extends F> Function<F2, Z2> findForgeWrapper(Class<Z2> zetaEventClass) {
+    private <Z2 extends Z, F2 extends F> Function<F2, Z2> findForgeWrapper(Class<Z2> zetaEventClass, Class<? extends Z> baseZetaEventClass) {
 
         // Find the constructor that takes a single parameter of type A
         for (Constructor<?> constructor : zetaEventClass.getConstructors()) {
             Class<?>[] parameterTypes = constructor.getParameterTypes();
             if (parameterTypes.length == 1 && forgeEventRoot.isAssignableFrom(parameterTypes[0])) {
+                zetaToForgeEventClassHack.put(baseZetaEventClass, parameterTypes[0]);
+
                 return event -> {
                     try {
                         return (Z2) constructor.newInstance(event);
@@ -283,7 +291,9 @@ public class ForgeZetaEventBus<Z, F extends Event> extends ZetaEventBus<Z> {
         if (eventField != null) {
             //hack
             eventField.setAccessible(true);
-            zetaToForgeEventClass.put(baseZetaEventClass, eventField.getType());
+            if(!zetaToForgeEventClassHack.containsKey(baseZetaEventClass)){
+                zetaToForgeEventClassHack.put(baseZetaEventClass, eventField.getType());
+            }
             return instance -> {
                 try {
                     return (F2) eventField.get(instance);
@@ -295,7 +305,9 @@ public class ForgeZetaEventBus<Z, F extends Event> extends ZetaEventBus<Z> {
 
         //tries to unwrap first. Then if its already a forge event we just keep it
         if (forgeEventRoot.isAssignableFrom(zetaEventClass)) {
-            zetaToForgeEventClass.put(baseZetaEventClass, zetaEventClass);
+            if(!zetaToForgeEventClassHack.containsKey(baseZetaEventClass)){
+                zetaToForgeEventClassHack.put(baseZetaEventClass, zetaEventClass);
+            }
             return null;
         }
 
@@ -321,7 +333,7 @@ public class ForgeZetaEventBus<Z, F extends Event> extends ZetaEventBus<Z> {
     private void registerListenerToForgeWithPriorityAndGenerics(Class<?> owningClazz, Consumer<? extends Event> consumer, Class<?> zetaEventClass) {
         EventPriority priority = guessPriorityFromClassName(owningClazz);
         Class<?> gen = generics.get(zetaEventClass);
-        Class eventType = zetaToForgeEventClass.get(zetaEventClass);
+        Class eventType = zetaToForgeEventClassHack.get(zetaEventClass);
         if (eventType == null) {
             throw new RuntimeException("No event type found for " + zetaEventClass);
         }
