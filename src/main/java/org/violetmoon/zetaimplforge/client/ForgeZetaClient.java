@@ -1,5 +1,6 @@
 package org.violetmoon.zetaimplforge.client;
 
+import net.minecraftforge.client.gui.overlay.NamedGuiOverlay;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.zeta.Zeta;
 import org.violetmoon.zeta.client.ClientRegistryExtension;
@@ -139,116 +140,12 @@ public class ForgeZetaClient extends ZetaClient {
 	public void start() {
 		IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 
-		bus.addListener(this::registerBlockColors);
-		bus.addListener(this::registerItemColors);
-		bus.addListener(this::clientSetup);
-		bus.addListener(this::registerReloadListeners);
-		bus.addListener(this::modelModifyBakingResult);
-		bus.addListener(this::modelBakingCompleted);
-		bus.addListener(this::modelRegisterAdditional);
-		bus.addListener(this::modelRegisterGeometryLoaders);
-		bus.addListener(this::modelLayers);
-		bus.addListener(this::registerKeybinds);
-		bus.addListener(this::registerAdditionalModels);
-		bus.addListener(this::registerClientTooltipComponentFactories);
-		bus.addListener(this::registerLayerDefinitions);
-
-		MinecraftForge.EVENT_BUS.addListener(this::renderTick);
 		MinecraftForge.EVENT_BUS.addListener(this::clientTick);
-		MinecraftForge.EVENT_BUS.addListener(this::inputMouseButton);
-		MinecraftForge.EVENT_BUS.addListener(this::inputKey);
-		MinecraftForge.EVENT_BUS.addListener(this::screenshot);
-		MinecraftForge.EVENT_BUS.addListener(this::movementInputUpdate);
-		MinecraftForge.EVENT_BUS.addListener(this::renderBlockHighlight);
-		MinecraftForge.EVENT_BUS.addListener(this::gatherTooltipComponents);
 
-		MinecraftForge.EVENT_BUS.addListener(this::renderContainerScreenForeground);
-		MinecraftForge.EVENT_BUS.addListener(this::renderContainerScreenBackground);
 
 		MinecraftForge.EVENT_BUS.addListener(this::renderGameOverlayNeitherPreNorPost);
 		MinecraftForge.EVENT_BUS.addListener(this::renderGuiOverlayPre);
 		MinecraftForge.EVENT_BUS.addListener(this::renderGuiOverlayPost);
-		MinecraftForge.EVENT_BUS.addListener(this::renderPlayerPre);
-		MinecraftForge.EVENT_BUS.addListener(this::renderPlayerPost);
-		MinecraftForge.EVENT_BUS.addListener(EventPriority.HIGHEST, this::renderLivingPreHighest);
-		MinecraftForge.EVENT_BUS.addListener(EventPriority.LOWEST, this::renderLivingPostLowest);
-		MinecraftForge.EVENT_BUS.addListener(this::renderTooltipGatherComponents);
-		MinecraftForge.EVENT_BUS.addListener(this::renderTooltipGatherComponentsLow);
-
-		MinecraftForge.EVENT_BUS.addListener(this::screenInitPre);
-		MinecraftForge.EVENT_BUS.addListener(this::screenInitPost);
-		MinecraftForge.EVENT_BUS.addListener(this::screenRenderPre);
-		MinecraftForge.EVENT_BUS.addListener(this::screenRenderPost);
-		MinecraftForge.EVENT_BUS.addListener(this::screenMouseButtonPressedPre);
-		MinecraftForge.EVENT_BUS.addListener(this::screenMouseButtonPressedPost);
-		MinecraftForge.EVENT_BUS.addListener(this::screenMouseScrolledPre);
-		MinecraftForge.EVENT_BUS.addListener(this::screenMouseScrolledPost);
-		MinecraftForge.EVENT_BUS.addListener(this::screenKeyPressedPre);
-		MinecraftForge.EVENT_BUS.addListener(this::screenKeyPressedPost);
-		MinecraftForge.EVENT_BUS.addListener(this::screenCharacterTypedPre);
-		MinecraftForge.EVENT_BUS.addListener(this::screenCharacterTypedPost);
-		MinecraftForge.EVENT_BUS.addListener(this::screenOpening);
-	}
-
-	public void registerBlockColors(RegisterColorHandlersEvent.Block event) {
-		ZAddBlockColorHandlers e = loadBus.fire(new ForgeZAddBlockColorHandlers(event), ZAddBlockColorHandlers.class);
-		loadBus.fire(e.makePostEvent(), ZAddBlockColorHandlers.Post.class);
-	}
-
-	public void registerItemColors(RegisterColorHandlersEvent.Item event) {
-		ZAddItemColorHandlers e = loadBus.fire(new ForgeZAddItemColorHandlers(event), ZAddItemColorHandlers.class);
-		loadBus.fire(e.makePostEvent(), ZAddItemColorHandlers.Post.class);
-	}
-
-	public void clientSetup(FMLClientSetupEvent event) {
-		loadBus.fire(new ForgeZClientSetup(event), ZClientSetup.class);
-	}
-
-	public void registerReloadListeners(RegisterClientReloadListenersEvent event) {
-		loadBus.fire(new ZRegisterReloadListeners(event::registerReloadListener), ZRegisterReloadListeners.class);
-	}
-
-	public void modelModifyBakingResult(ModelEvent.ModifyBakingResult e) {
-		loadBus.fire(new ForgeZModel.ModifyBakingResult(e), ZModel.ModifyBakingResult.class);
-	}
-
-	public void modelBakingCompleted(ModelEvent.BakingCompleted e) {
-		loadBus.fire(new ForgeZModel.BakingCompleted(e), ZModel.BakingCompleted.class);
-	}
-
-	public void modelRegisterAdditional(ModelEvent.RegisterAdditional e) {
-		loadBus.fire(new ForgeZModel.RegisterAdditional(e), ZModel.RegisterAdditional.class);
-	}
-
-	public void modelRegisterGeometryLoaders(ModelEvent.RegisterGeometryLoaders e) {
-		loadBus.fire(new ForgeZModel.RegisterGeometryLoaders(e), ZModel.RegisterGeometryLoaders.class);
-	}
-
-	public void modelLayers(EntityRenderersEvent.AddLayers event) {
-		loadBus.fire(new ForgeZAddModelLayers(event), ZAddModelLayers.class);
-	}
-
-	public void registerKeybinds(RegisterKeyMappingsEvent event) {
-		loadBus.fire(new ForgeZKeyMapping(event), ZKeyMapping.class);
-	}
-
-	public void registerAdditionalModels(ModelEvent.RegisterAdditional event) {
-		loadBus.fire(new ForgeZAddModels(event), ZAddModels.class);
-	}
-
-	public void registerClientTooltipComponentFactories(RegisterClientTooltipComponentFactoriesEvent event) {
-		loadBus.fire(new ForgeZTooltipComponents(event), ZTooltipComponents.class);
-	}
-
-	public void registerLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions e) {
-		loadBus.fire(new ForgeZRegisterLayerDefinitions(e), ZRegisterLayerDefinitions.class);
-	}
-
-	//TODO: move ticker stuff out of forge event handlers, subscribe to them from zeta
-	// Also these events are a mess lol; sometimes there's 2 start/end events, sometimes there's
-	// one event with multiple Phases... bad
-	public void renderTick(TickEvent.RenderTickEvent e) {
-		playBus.fire(new ForgeZRenderTick(e), ZRenderTick.class);
 	}
 
 	boolean clientTicked = false;
@@ -261,37 +158,6 @@ public class ForgeZetaClient extends ZetaClient {
 		playBus.fire(new ForgeZClientTick(e), ZClientTick.class);
 	}
 
-	public void inputMouseButton(InputEvent.MouseButton e) {
-		playBus.fire(new ForgeZInput.MouseButton(e), ZInput.MouseButton.class);
-	}
-
-	public void inputKey(InputEvent.Key e) {
-		playBus.fire(new ForgeZInput.Key(e), ZInput.Key.class);
-	}
-
-	public void screenshot(ScreenshotEvent e) {
-		playBus.fire(new ZScreenshot());
-	}
-
-	public void movementInputUpdate(MovementInputUpdateEvent e) {
-		playBus.fire(new ForgeZInputUpdate(e), ZInputUpdate.class);
-	}
-
-	public void renderBlockHighlight(RenderHighlightEvent.Block e) {
-		playBus.fire(new ForgeZHighlightBlock(e), ZHighlightBlock.class);
-	}
-
-	public void gatherTooltipComponents(RenderTooltipEvent.GatherComponents e) {
-		playBus.fire(new ForgeZGatherTooltipComponents(e), ZGatherTooltipComponents.class);
-	}
-
-	public void renderContainerScreenForeground(ContainerScreenEvent.Render.Foreground e) {
-		playBus.fire(new ForgeZRenderContainerScreen.Foreground(e), ZRenderContainerScreen.Foreground.class);
-	}
-
-	public void renderContainerScreenBackground(ContainerScreenEvent.Render.Background e) {
-		playBus.fire(new ForgeZRenderContainerScreen.Background(e), ZRenderContainerScreen.Background.class);
-	}
 
 	//TODO: This probably should have been a PRE/POST event (just copying quark here)
 	public void renderGameOverlayNeitherPreNorPost(RenderGuiOverlayEvent e) {
@@ -319,95 +185,21 @@ public class ForgeZetaClient extends ZetaClient {
 	}
 
 	public void renderGuiOverlayPost(RenderGuiOverlayEvent.Post e) {
-		if (e.getOverlay() == VanillaGuiOverlay.HOTBAR.type())
+		NamedGuiOverlay overlay = e.getOverlay();
+		if (overlay == VanillaGuiOverlay.HOTBAR.type())
 			playBus.fire(new ForgeZRenderGuiOverlay.Hotbar.Post(e), ZRenderGuiOverlay.Hotbar.Post.class);
-		else if (e.getOverlay() == VanillaGuiOverlay.CROSSHAIR.type())
+		else if (overlay == VanillaGuiOverlay.CROSSHAIR.type())
 			playBus.fire(new ForgeZRenderGuiOverlay.Crosshair.Post(e), ZRenderGuiOverlay.Crosshair.Post.class);
-		else if (e.getOverlay() == VanillaGuiOverlay.PLAYER_HEALTH.type())
+		else if (overlay == VanillaGuiOverlay.PLAYER_HEALTH.type())
 			playBus.fire(new ForgeZRenderGuiOverlay.PlayerHealth.Post(e), ZRenderGuiOverlay.PlayerHealth.Post.class);
-		else if (e.getOverlay() == VanillaGuiOverlay.ARMOR_LEVEL.type())
+		else if (overlay == VanillaGuiOverlay.ARMOR_LEVEL.type())
 			playBus.fire(new ForgeZRenderGuiOverlay.ArmorLevel.Post(e), ZRenderGuiOverlay.ArmorLevel.Post.class);
-		else if (e.getOverlay() == VanillaGuiOverlay.DEBUG_TEXT.type())
+		else if (overlay == VanillaGuiOverlay.DEBUG_TEXT.type())
 			playBus.fire(new ForgeZRenderGuiOverlay.DebugText.Post(e), ZRenderGuiOverlay.DebugText.Post.class);
-		else if (e.getOverlay() == VanillaGuiOverlay.POTION_ICONS.type())
+		else if (overlay == VanillaGuiOverlay.POTION_ICONS.type())
 			playBus.fire(new ForgeZRenderGuiOverlay.PotionIcons.Post(e), ZRenderGuiOverlay.PotionIcons.Post.class);
-		else if (e.getOverlay() == VanillaGuiOverlay.CHAT_PANEL.type())
+		else if (overlay == VanillaGuiOverlay.CHAT_PANEL.type())
 			playBus.fire(new ForgeZRenderGuiOverlay.ChatPanel.Post(e), ZRenderGuiOverlay.ChatPanel.Post.class);
 	}
 
-	public void renderPlayerPre(RenderPlayerEvent.Pre e) {
-		playBus.fire(new ForgeZRenderPlayer.Pre(e), ZRenderPlayer.Pre.class);
-	}
-
-	public void renderPlayerPost(RenderPlayerEvent.Post e) {
-		playBus.fire(new ForgeZRenderPlayer.Post(e), ZRenderPlayer.Post.class);
-	}
-
-	public void renderLivingPreHighest(RenderLivingEvent.Pre<?, ?> e) {
-		playBus.fire(new ForgeZRenderLiving.PreHighest(e), ZRenderLiving.PreHighest.class);
-	}
-
-	public void renderLivingPostLowest(RenderLivingEvent.Post<?, ?> e) {
-		playBus.fire(new ForgeZRenderLiving.PostLowest(e), ZRenderLiving.PostLowest.class);
-	}
-
-	public void renderTooltipGatherComponents(RenderTooltipEvent.GatherComponents e) {
-		playBus.fire(new ForgeZRenderTooltip.GatherComponents(e), ZRenderTooltip.GatherComponents.class);
-	}
-
-	public void renderTooltipGatherComponentsLow(RenderTooltipEvent.GatherComponents e) {
-		playBus.fire(new ForgeZRenderTooltip.GatherComponents.Low(e), ZRenderTooltip.GatherComponents.Low.class);
-	}
-
-	public void screenInitPre(ScreenEvent.Init.Pre e) {
-		playBus.fire(new ForgeZScreen.Init.Pre(e), ZScreen.Init.Pre.class);
-	}
-
-	public void screenInitPost(ScreenEvent.Init.Post e) {
-		playBus.fire(new ForgeZScreen.Init.Post(e), ZScreen.Init.Post.class);
-	}
-
-	public void screenRenderPre(ScreenEvent.Render.Pre e) {
-		playBus.fire(new ForgeZScreen.Render.Pre(e), ZScreen.Render.Pre.class);
-	}
-
-	public void screenRenderPost(ScreenEvent.Render.Post e) {
-		playBus.fire(new ForgeZScreen.Render.Post(e), ZScreen.Render.Post.class);
-	}
-
-	public void screenMouseButtonPressedPre(ScreenEvent.MouseButtonPressed.Pre e) {
-		playBus.fire(new ForgeZScreen.MouseButtonPressed.Pre(e), ZScreen.MouseButtonPressed.Pre.class);
-	}
-
-	public void screenMouseButtonPressedPost(ScreenEvent.MouseButtonPressed.Post e) {
-		playBus.fire(new ForgeZScreen.MouseButtonPressed.Post(e), ZScreen.MouseButtonPressed.Post.class);
-	}
-
-	public void screenMouseScrolledPre(ScreenEvent.MouseScrolled.Pre e) {
-		playBus.fire(new ForgeZScreen.MouseScrolled.Pre(e), ZScreen.MouseScrolled.Pre.class);
-	}
-
-	public void screenMouseScrolledPost(ScreenEvent.MouseScrolled.Post e) {
-		playBus.fire(new ForgeZScreen.MouseScrolled.Post(e), ZScreen.MouseScrolled.Post.class);
-	}
-
-	public void screenKeyPressedPre(ScreenEvent.KeyPressed.Pre e) {
-		playBus.fire(new ForgeZScreen.KeyPressed.Pre(e), ZScreen.KeyPressed.Pre.class);
-	}
-
-	public void screenKeyPressedPost(ScreenEvent.KeyPressed.Post e) {
-		playBus.fire(new ForgeZScreen.KeyPressed.Post(e), ZScreen.KeyPressed.Post.class);
-	}
-
-	public void screenCharacterTypedPre(ScreenEvent.CharacterTyped.Pre e) {
-		playBus.fire(new ForgeZScreen.CharacterTyped.Pre(e), ZScreen.CharacterTyped.Pre.class);
-	}
-
-	public void screenCharacterTypedPost(ScreenEvent.CharacterTyped.Post e) {
-		playBus.fire(new ForgeZScreen.CharacterTyped.Post(e), ZScreen.CharacterTyped.Post.class);
-	}
-
-	public void screenOpening(ScreenEvent.Opening e) {
-		playBus.fire(new ForgeZScreen.Opening(e), ZScreen.Opening.class);
-	}
 }

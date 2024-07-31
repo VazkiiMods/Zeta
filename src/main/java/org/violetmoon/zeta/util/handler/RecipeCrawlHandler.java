@@ -15,6 +15,7 @@ import org.violetmoon.zeta.event.load.ZAddReloadListener;
 import org.violetmoon.zeta.event.load.ZTagsUpdated;
 import org.violetmoon.zeta.event.play.ZRecipeCrawl;
 import org.violetmoon.zeta.event.play.ZServerTick;
+import org.violetmoon.zeta.mod.ZetaMod;
 import org.violetmoon.zeta.util.zetalist.ZetaList;
 
 import com.google.common.collect.HashMultimap;
@@ -34,6 +35,7 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.item.crafting.ShapelessRecipe;
+import org.violetmoon.zetaimplforge.event.play.ForgeZRecipeCrawl;
 
 @ApiStatus.Internal
 public class RecipeCrawlHandler {
@@ -47,7 +49,7 @@ public class RecipeCrawlHandler {
 	private static boolean needsCrawl = false;
 	private static boolean mayCrawl = false;
 
-	@LoadEvent
+	@PlayEvent
 	public static void addListener(ZAddReloadListener event) {
 		event.addListener(new SimplePreparableReloadListener<Void>() {
 			@Override
@@ -63,7 +65,7 @@ public class RecipeCrawlHandler {
 		});
 	}
 
-	@LoadEvent
+	@PlayEvent
 	public static void tagsHaveUpdated(ZTagsUpdated event) {
 		mayCrawl = true;
 	}
@@ -74,7 +76,7 @@ public class RecipeCrawlHandler {
 	}
 
 	private static void fire(IZetaPlayEvent event) {
-		ZetaList.INSTANCE.fireEvent(event);
+		ZetaMod.ZETA.playBus.fire(event);
 	}
 
 	@SuppressWarnings("ConstantValue")
@@ -96,7 +98,8 @@ public class RecipeCrawlHandler {
 					if (recipe.getResultItem(access) == null)
 						throw new IllegalStateException("Recipe getResultItem is null");
 
-					ZRecipeCrawl.Visit<?> event;
+					boolean isMisc = false;
+					IZetaPlayEvent event;
 					if (recipe instanceof ShapedRecipe sr)
 						event = new ZRecipeCrawl.Visit.Shaped(sr, access);
 					else if (recipe instanceof ShapelessRecipe sr)
@@ -105,12 +108,13 @@ public class RecipeCrawlHandler {
 						event = new ZRecipeCrawl.Visit.Custom(cr, access);
 					else if (recipe instanceof AbstractCookingRecipe acr)
 						event = new ZRecipeCrawl.Visit.Cooking(acr, access);
-					else
+					else {
 						event = new ZRecipeCrawl.Visit.Misc(recipe, access);
-
+						isMisc = true;
+					}
 					//misc recipes could have custom logic that we cant make many assumptions on. For example FD cutting board recipes are lossy.
 					//for instance a hanging sign can be cut into a plank. A hanging sign is magnetic but this does not mean planks are
-					if(!(event instanceof ZRecipeCrawl.Visit.Misc)) {
+					if(!isMisc) {
 						vanillaRecipesToLazyDigest.add(recipe);
 					}
 					fire(event);

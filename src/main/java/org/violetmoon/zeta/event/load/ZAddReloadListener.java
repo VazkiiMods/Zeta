@@ -7,7 +7,7 @@ import net.minecraft.server.ReloadableServerResources;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import org.violetmoon.zeta.event.bus.IZetaPlayEvent;
 
-public interface ZAddReloadListener extends IZetaLoadEvent {
+public interface ZAddReloadListener extends IZetaPlayEvent {
 	ReloadableServerResources getServerResources();
 	RegistryAccess getRegistryAccess();
 	void addListener(PreparableReloadListener listener);

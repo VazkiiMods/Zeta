@@ -110,7 +110,7 @@ public class ConfigManager {
 		}
 
 		//grab any extra flags
-		z.playBus.fire(new ForgeZGatherAdditionalFlags(cfm));
+		z.playBus.fire(() -> cfm,ZGatherAdditionalFlags.class);
 
 		//managing module enablement in one go
 		//adding this to the *start* of the list so modules are enabled before anything else runs
@@ -124,7 +124,7 @@ public class ConfigManager {
 			});
 
 			//update extra flags
-			z.playBus.fire(new ForgeZGatherAdditionalFlags(cfm));
+			z.playBus.fire(() -> cfm,ZGatherAdditionalFlags.class);
 		});
 
 		this.rootConfig = rootConfigBuilder.build();

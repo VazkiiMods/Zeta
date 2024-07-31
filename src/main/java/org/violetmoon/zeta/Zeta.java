@@ -213,10 +213,7 @@ public abstract class Zeta implements IZeta {
 
     public abstract ZetaNetworkHandler createNetworkHandler(int protocolVersion);
 
-    // event bus
-    public abstract <E, T extends E> T fireExternalEvent(T impl);
-
-    // ummmmmm why is this here
+    // ummmmmm why is this here??
     public abstract boolean fireRightClickBlock(Player player, InteractionHand hand, BlockPos pos, BlockHitResult bhr);
 
     // Let's Jump

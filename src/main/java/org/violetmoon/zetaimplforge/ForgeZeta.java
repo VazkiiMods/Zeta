@@ -9,18 +9,15 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FlowerPotBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.event.IModBusEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
@@ -30,6 +27,9 @@ import org.jetbrains.annotations.Nullable;
 import org.violetmoon.zeta.Zeta;
 import org.violetmoon.zeta.block.ext.BlockExtensionFactory;
 import org.violetmoon.zeta.capability.ZetaCapabilityManager;
+import org.violetmoon.zeta.client.ClientRegistryExtension;
+import org.violetmoon.zeta.client.ZetaClient;
+import org.violetmoon.zeta.client.event.load.*;
 import org.violetmoon.zeta.client.event.play.*;
 import org.violetmoon.zeta.config.IZetaConfigInternals;
 import org.violetmoon.zeta.config.SectionDefinition;
@@ -45,9 +45,10 @@ import org.violetmoon.zeta.network.ZetaNetworkHandler;
 import org.violetmoon.zeta.registry.*;
 import org.violetmoon.zeta.util.RaytracingUtil;
 import org.violetmoon.zeta.util.ZetaSide;
-import org.violetmoon.zetaimplforge.api.GatherAdvancementModifiersEvent;
+import org.violetmoon.zetaimplforge.api.ForgeZGatherAdvancementModifiers;
 import org.violetmoon.zetaimplforge.block.IForgeBlockBlockExtensions;
 import org.violetmoon.zetaimplforge.capability.ForgeCapabilityManager;
+import org.violetmoon.zetaimplforge.client.event.load.*;
 import org.violetmoon.zetaimplforge.client.event.play.*;
 import org.violetmoon.zetaimplforge.config.ConfigEventDispatcher;
 import org.violetmoon.zetaimplforge.config.ForgeBackedConfig;
@@ -77,10 +78,11 @@ public class ForgeZeta extends Zeta {
 
     @Override
     protected ZetaEventBus<IZetaLoadEvent> createLoadBus() {
-        if (true) return new FabricZetaEventBus<>(LoadEvent.class,
+        if (false) return new FabricZetaEventBus<>(LoadEvent.class,
                 IZetaLoadEvent.class, log);
 
-        // thanks forge and your dumb Event + IModEvent classes and hacky runtime genericst stuff. I cant get this to work
+        // thanks forge and your dumb Event + IModEvent classes and hacky runtime generic stuff. I cant get this to work
+
         var bus = new ForgeZetaEventBus<>(LoadEvent.class, IZetaLoadEvent.class, log,
                 FMLJavaModLoadingContext.get().getModEventBus(), Event.class);
 
@@ -90,10 +92,27 @@ public class ForgeZeta extends Zeta {
         bus.registerSubClass(ZModulesReady.class, ForgeZModulesReady.class);
         bus.registerSubClass(ZRegister.class, ForgeZRegister.class);
         bus.registerSubClass(ZRegister.Post.class, ForgeZRegister.Post.class);
-        bus.registerSubClass(ZTagsUpdated.class, ForgeZTagsUpdated.class);
         bus.registerSubClass(ZConfigChanged.class, ForgeZConfigChange.class);
         bus.registerSubClass(ZLoadComplete.class, ForgeZLoadComplete.class);
 
+        // client ones again?
+        bus.registerSubClass(ZAddModels.class, ForgeZAddModels.class);
+        bus.registerSubClass(ZAddModelLayers.class, ForgeZAddModelLayers.class);
+        bus.registerSubClass(ZClientSetup.class, ForgeZClientSetup.class);
+        bus.registerSubClass(ZKeyMapping.class, ForgeZKeyMapping.class);
+        bus.registerSubClass(ZModel.RegisterGeometryLoaders.class, ForgeZModel.RegisterGeometryLoaders.class);
+        bus.registerSubClass(ZModel.RegisterAdditional.class, ForgeZModel.RegisterAdditional.class);
+        bus.registerSubClass(ZModel.BakingCompleted.class, ForgeZModel.BakingCompleted.class);
+        bus.registerSubClass(ZModel.ModifyBakingResult.class, ForgeZModel.ModifyBakingResult.class);
+        bus.registerSubClass(ZRegisterLayerDefinitions.class, ForgeZRegisterLayerDefinitions.class);
+        bus.registerSubClass(ZTooltipComponents.class, ForgeZTooltipComponents.class);
+
+        bus.registerSubClass(ZAddBlockColorHandlers.class, ForgeZAddBlockColorHandlers.class,
+                (Function<RegisterColorHandlersEvent.Block, ForgeZAddBlockColorHandlers>) inner ->
+                        new ForgeZAddBlockColorHandlers(inner, this.registry));
+        bus.registerSubClass(ZAddItemColorHandlers.class, ForgeZAddItemColorHandlers.class,
+                (Function<RegisterColorHandlersEvent.Item, ForgeZAddItemColorHandlers>) inner ->
+                        new ForgeZAddItemColorHandlers(inner, this.registry));
         return bus;
     }
 
@@ -101,6 +120,7 @@ public class ForgeZeta extends Zeta {
     protected ForgeZetaEventBus<IZetaPlayEvent, ?> createPlayBus() {
         var bus = new ForgeZetaEventBus<>(PlayEvent.class, IZetaPlayEvent.class, log, MinecraftForge.EVENT_BUS, Event.class);
         bus.registerSubClass(ZAnvilRepair.class, ForgeZAnvilRepair.class);
+        bus.registerSubClass(ZTagsUpdated.class, ForgeZTagsUpdated.class);
         bus.registerSubClass(ZBabyEntitySpawn.class, ForgeZBabyEntitySpawn.class);
         bus.registerSubClass(ZBlock.Break.class, ForgeZBlock.Break.class);
         bus.registerSubClass(ZBlock.EntityPlace.class, ForgeZBlock.EntityPlace.class);
@@ -150,6 +170,9 @@ public class ForgeZeta extends Zeta {
         bus.registerSubClass(ZGatherAdditionalFlags.class, ForgeZGatherAdditionalFlags.class);
         bus.registerSubClass(ZServerTick.Start.class, ForgeZServerTick.Start.class);
         bus.registerSubClass(ZServerTick.End.class, ForgeZServerTick.End.class);
+        bus.registerSubClass(ZAddReloadListener.class, ForgeZAddReloadListener.class);
+        bus.registerSubClass(ZGatherAdvancementModifiers.class, ForgeZGatherAdvancementModifiers.class);
+
         //Hmm client events here? maybe i should move them
 
         bus.registerSubClass(ZClientTick.class, ForgeZClientTick.class);
@@ -160,7 +183,7 @@ public class ForgeZeta extends Zeta {
         bus.registerSubClass(ZInput.Key.class, ForgeZInput.Key.class);
         bus.registerSubClass(ZInputUpdate.class, ForgeZInputUpdate.class);
         bus.registerSubClass(ZRenderContainerScreen.class, ForgeZRenderContainerScreen.class);
-        bus.registerSubClass(ZRenderGuiOverlay.class, ForgeZRenderGuiOverlay.class);
+        //bus.registerSubClass(ZRenderGuiOverlay.class, ForgeZRenderGuiOverlay.class);
         bus.registerSubClass(ZRenderLiving.class, ForgeZRenderLiving.class);
         bus.registerSubClass(ZRenderPlayer.class, ForgeZRenderPlayer.class);
         bus.registerSubClass(ZRenderTick.class, ForgeZRenderTick.class);
@@ -278,15 +301,6 @@ public class ForgeZeta extends Zeta {
         return MinecraftForge.EVENT_BUS.post(new PlayerInteractEvent.RightClickBlock(player, hand, pos, bhr));
     }
 
-    //TODO:
-    @Override
-    public <E, T extends E> T fireExternalEvent(T impl) {
-        if (impl instanceof ZGatherAdvancementModifiers advancementModifiers)
-            MinecraftForge.EVENT_BUS.post(new GatherAdvancementModifiersEvent(this, advancementModifiers));
-
-        return impl;
-    }
-
     @SuppressWarnings("duplicates")
     @Override
     public void start() {
@@ -297,12 +311,8 @@ public class ForgeZeta extends Zeta {
         modbus.addListener(ConfigEventDispatcher::configChanged);
 
         modbus.addListener(EventPriority.HIGHEST, this::registerHighest);
-        modbus.addListener(this::commonSetup);
-        modbus.addListener(this::loadComplete);
-        modbus.addListener(this::entityAttributeCreation);
-
         //why is this load?
-        MinecraftForge.EVENT_BUS.addListener(this::addReloadListener);
+        //MinecraftForge.EVENT_BUS.addListener(this::addReloadListener);
     }
 
     private boolean registerDone = false;
@@ -319,21 +329,9 @@ public class ForgeZeta extends Zeta {
     }
 
 
-    public void addReloadListener(AddReloadListenerEvent e) {
-        loadBus.fire(new ForgeZAddReloadListener(e), ZAddReloadListener.class);
-    }
-
-    public void commonSetup(FMLCommonSetupEvent e) {
-        loadBus.fire(new ForgeZCommonSetup(e), ZCommonSetup.class);
-    }
-
-    public void loadComplete(FMLLoadCompleteEvent e) {
-        loadBus.fire(new ForgeZLoadComplete(e), ZLoadComplete.class);
-    }
-
-    public void entityAttributeCreation(EntityAttributeCreationEvent e) {
-        loadBus.fire(new ForgeZEntityAttributeCreation(e), ZEntityAttributeCreation.class);
-    }
+    //public void addReloadListener(AddReloadListenerEvent e) {
+    //    loadBus.fire(new ForgeZAddReloadListener(e), ZAddReloadListener.class);
+    //}
 
     public static ZResult from(Event.Result r) {
         return switch (r) {

@@ -19,14 +19,6 @@ public class ZetaList<T extends IZeta> {
         knownZetas.add(z);
     }
 
-    public <E extends IZetaPlayEvent> void fireEvent(E event) {
-        knownZetas.forEach(z -> z.asZeta().playBus.fire(event));
-    }
-
-    public <E extends IZetaPlayEvent> void fireEvent(E event, Class<E> eventClass) {
-        knownZetas.forEach(z -> z.asZeta().playBus.fire(event, eventClass));
-    }
-
     public <E extends IZetaLoadEvent> void fireEvent(E event) {
         knownZetas.forEach(z -> z.asZeta().loadBus.fire(event));
     }

@@ -84,19 +84,6 @@ public class FabricZetaEventBus<E> extends ZetaEventBus<E> {
 		return split[split.length - 1];
 	}
 
-	public <T extends E> T fireExternal(@NotNull T event, Class<? super T> firedAs) {
-		event = fire(event, firedAs);
-
-		if(event instanceof Cancellable cancellable && cancellable.isCanceled())
-			return event;
-		else{
-			throw new RuntimeException();
-			//TODO: re add. this shuld be put in loader specific bus code
-			//return z.fireExternalEvent(event); // Interfaces with the platform-specific event bus utility
-		}
-
-	}
-
 	/**
 	 * Picks out the "Foo" in "void handleFoo(Foo event)", and gets/creates the Listeners corresponding to that type.
 	 */

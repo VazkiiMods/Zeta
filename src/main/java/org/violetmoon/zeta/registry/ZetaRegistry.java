@@ -6,10 +6,11 @@ import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.zeta.Zeta;
 import org.violetmoon.zeta.item.ZetaBlockItem;
@@ -141,14 +142,45 @@ public abstract class ZetaRegistry {
 		defers.removeAll(resourceLocation);
 	}
 
-	public void finalizeBlockColors(BiConsumer<Block, String> consumer) {
-		blocksToColorProviderName.forEach(consumer);
-		blocksToColorProviderName.clear();
+	@ApiStatus.Internal
+	public void assignBlockColor(String name, Consumer<Block> regFunc) {
+		boolean success = false;
+		var iterator = blocksToColorProviderName.entrySet().iterator();
+		while(iterator.hasNext()) {
+			var entry = iterator.next();
+			if(entry.getValue().equals(name)) {
+				success = true;
+				regFunc.accept(entry.getKey());
+				iterator.remove();
+			}
+		}
+		if (!success)
+			z.log.error("Unknown block color creator {} used on block", name);
 	}
 
-	public void finalizeItemColors(BiConsumer<Item, String> consumer) {
-		itemsToColorProviderName.forEach(consumer);
-		itemsToColorProviderName.clear();
+	@ApiStatus.Internal
+	public void assignItemColor(String name, Consumer<Item> regFunc) {
+		boolean success = false;
+		var iterator = itemsToColorProviderName.entrySet().iterator();
+		while(iterator.hasNext()) {
+			var entry = iterator.next();
+			if(entry.getValue().equals(name)) {
+				success = true;
+				regFunc.accept(entry.getKey());
+				iterator.remove();
+			}
+		}
+		if (!success)
+			z.log.error("Unknown item color creator {} used on item", name);
+	}
+
+	@ApiStatus.Internal
+	public void validateColorsProviders(){
+		if(!blocksToColorProviderName.isEmpty())
+			z.log.error("Block color providers {} were not assigned to any blocks", blocksToColorProviderName.values());
+		if(!itemsToColorProviderName.isEmpty())
+			z.log.error("Item color providers {} were not assigned to any items", itemsToColorProviderName.values());
+
 	}
 
 	/// performing registration (dynamic registry jank - for registering ConfiguredFeature etc through code) ///

@@ -18,6 +18,7 @@ import org.violetmoon.zeta.advancement.modifier.WaxModifier;
 import org.violetmoon.zeta.api.IAdvancementModifier;
 import org.violetmoon.zeta.api.IAdvancementModifierDelegate;
 import org.violetmoon.zeta.event.bus.LoadEvent;
+import org.violetmoon.zeta.event.bus.PlayEvent;
 import org.violetmoon.zeta.event.load.ZAddReloadListener;
 import org.violetmoon.zeta.event.load.ZGatherAdvancementModifiers;
 
@@ -36,7 +37,10 @@ import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
+import org.violetmoon.zetaimplforge.api.ForgeZGatherAdvancementModifiers;
+import org.violetmoon.zetaimplforge.client.event.play.ForgeZEarlyRender;
 
+//TODO: make this zeta-independent
 public class AdvancementModifierRegistry {
 	protected final Zeta zeta;
 	protected final Multimap<ResourceLocation, IAdvancementModifier> modifiers = HashMultimap.create();
@@ -59,11 +63,11 @@ public class AdvancementModifierRegistry {
 			modifiers.put(r, mod);
 	}
 
-	@LoadEvent
+	@PlayEvent
 	public void addListeners(ZAddReloadListener event) {
 		if(!gatheredAddons) {
 			IAdvancementModifierDelegate delegateImpl = new DelegateImpl();
-			zeta.loadBus.fireExternal(new ZGatherAdvancementModifiers() {
+			zeta.playBus.fire(new ZGatherAdvancementModifiers() {
 				@Override
 				public void register(IAdvancementModifier modifier) {
 					addModifier(modifier);
@@ -73,7 +77,7 @@ public class AdvancementModifierRegistry {
 				public IAdvancementModifierDelegate getDelegate() {
 					return delegateImpl;
 				}
-			}, ZGatherAdvancementModifiers.class);
+			});
 
 			gatheredAddons = true;
 		}

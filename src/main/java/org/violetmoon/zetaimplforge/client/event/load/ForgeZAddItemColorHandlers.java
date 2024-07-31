@@ -11,18 +11,16 @@ import net.minecraft.client.color.item.ItemColors;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
+import org.violetmoon.zeta.registry.ZetaRegistry;
 
 public class ForgeZAddItemColorHandlers implements ZAddItemColorHandlers {
 	protected final RegisterColorHandlersEvent.Item e;
-	protected final Map<String, Function<Item, ItemColor>> namedItemColors;
+	protected final Map<String, Function<Item, ItemColor>> namedItemColors = new HashMap<>();
+	private final ZetaRegistry zetaRegistry;
 
-	public ForgeZAddItemColorHandlers(RegisterColorHandlersEvent.Item e) {
-		this(e, new HashMap<>());
-	}
-
-	public ForgeZAddItemColorHandlers(RegisterColorHandlersEvent.Item e, Map<String, Function<Item, ItemColor>> namedItemColors) {
+	public ForgeZAddItemColorHandlers(RegisterColorHandlersEvent.Item e, ZetaRegistry zetaRegistry) {
 		this.e = e;
-		this.namedItemColors = namedItemColors;
+		this.zetaRegistry = zetaRegistry;
 	}
 
 	@Override
@@ -32,8 +30,9 @@ public class ForgeZAddItemColorHandlers implements ZAddItemColorHandlers {
 
 	@Override
 	public void registerNamed(Function<Item, ItemColor> c, String... names) {
-		for(String name : names)
-			namedItemColors.put(name, c);
+		for (String name : names) {
+			zetaRegistry.assignItemColor(name, b -> register(c.apply(b), b));
+		}
 	}
 
 	@Override
@@ -41,19 +40,4 @@ public class ForgeZAddItemColorHandlers implements ZAddItemColorHandlers {
 		return e.getItemColors();
 	}
 
-	@Override
-	public Post makePostEvent() {
-		return new Post(e, namedItemColors);
-	}
-
-	public static class Post extends ForgeZAddItemColorHandlers implements ZAddItemColorHandlers.Post {
-		public Post(RegisterColorHandlersEvent.Item e, Map<String, Function<Item, ItemColor>> namedItemColors) {
-			super(e, namedItemColors);
-		}
-
-		@Override
-		public Map<String, Function<Item, ItemColor>> getNamedItemColors() {
-			return namedItemColors;
-		}
-	}
 }

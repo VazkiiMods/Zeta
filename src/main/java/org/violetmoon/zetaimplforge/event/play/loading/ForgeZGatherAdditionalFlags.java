@@ -5,14 +5,15 @@ import org.violetmoon.zeta.config.ConfigFlagManager;
 import org.violetmoon.zeta.event.play.loading.ZGatherAdditionalFlags;
 
 public class ForgeZGatherAdditionalFlags extends Event implements ZGatherAdditionalFlags {
-    private final ConfigFlagManager flagManager;
 
-    public ForgeZGatherAdditionalFlags(ConfigFlagManager flagManager) {
-        this.flagManager = flagManager;
+    private final ZGatherAdditionalFlags wrapped;
+
+    public ForgeZGatherAdditionalFlags(ZGatherAdditionalFlags wrapped) {
+        this.wrapped = wrapped;
     }
 
     @Override
     public ConfigFlagManager flagManager() {
-        return flagManager;
+        return wrapped.flagManager();
     }
 }
