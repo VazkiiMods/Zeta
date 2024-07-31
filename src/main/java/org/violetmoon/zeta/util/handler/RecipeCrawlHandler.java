@@ -130,11 +130,6 @@ public class RecipeCrawlHandler {
 	}
 
 	@PlayEvent
-	public static void a (ZRenderGuiOverlay.ArmorLevel.Pre aa){
-		int aaa = 1;
-	}
-
-	@PlayEvent
 	public static void onTick(ZServerTick.Start tick) {
 		synchronized (mutex) {
 			if (mayCrawl && needsCrawl) {

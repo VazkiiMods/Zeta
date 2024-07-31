@@ -18,7 +18,6 @@ import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.registries.RegisterEvent;
@@ -27,11 +26,8 @@ import org.jetbrains.annotations.Nullable;
 import org.violetmoon.zeta.Zeta;
 import org.violetmoon.zeta.block.ext.BlockExtensionFactory;
 import org.violetmoon.zeta.capability.ZetaCapabilityManager;
-import org.violetmoon.zeta.client.ClientRegistryExtension;
-import org.violetmoon.zeta.client.ZetaClient;
 import org.violetmoon.zeta.client.event.load.*;
 import org.violetmoon.zeta.client.event.play.*;
-import org.violetmoon.zeta.config.ConfigManager;
 import org.violetmoon.zeta.config.IZetaConfigInternals;
 import org.violetmoon.zeta.config.SectionDefinition;
 import org.violetmoon.zeta.event.bus.*;
@@ -49,7 +45,6 @@ import org.violetmoon.zeta.util.ZetaSide;
 import org.violetmoon.zetaimplforge.api.ForgeZGatherAdvancementModifiers;
 import org.violetmoon.zetaimplforge.block.IForgeBlockBlockExtensions;
 import org.violetmoon.zetaimplforge.capability.ForgeCapabilityManager;
-import org.violetmoon.zetaimplforge.client.ForgeZetaClient;
 import org.violetmoon.zetaimplforge.client.event.load.*;
 import org.violetmoon.zetaimplforge.client.event.play.*;
 import org.violetmoon.zetaimplforge.config.ConfigEventDispatcher;
@@ -80,8 +75,7 @@ public class ForgeZeta extends Zeta {
 
     @Override
     protected ZetaEventBus<IZetaLoadEvent> createLoadBus() {
-        if (false) return new FabricZetaEventBus<>(LoadEvent.class,
-                IZetaLoadEvent.class, log);
+        //return new StandaloneZetaEventBus<>(LoadEvent.class, IZetaLoadEvent.class, log);
 
         var bus = new ForgeZetaEventBus<>(LoadEvent.class, IZetaLoadEvent.class, log,
                 FMLJavaModLoadingContext.get().getModEventBus(), Event.class);
@@ -106,6 +100,7 @@ public class ForgeZeta extends Zeta {
         bus.registerSubClass(ZModel.ModifyBakingResult.class, ForgeZModel.ModifyBakingResult.class);
         bus.registerSubClass(ZRegisterLayerDefinitions.class, ForgeZRegisterLayerDefinitions.class);
         bus.registerSubClass(ZTooltipComponents.class, ForgeZTooltipComponents.class);
+        bus.registerSubClass(ZFirstClientTick.class, ForgeZFirstClientTick.class);
 
         bus.registerSubClass(ZAddBlockColorHandlers.class, ForgeZAddBlockColorHandlers.class,
                 (Function<RegisterColorHandlersEvent.Block, ForgeZAddBlockColorHandlers>) inner ->
@@ -196,6 +191,20 @@ public class ForgeZeta extends Zeta {
         bus.registerSubClass(ZScreen.Render.class, ForgeZScreen.Render.class);
         bus.registerSubClass(ZRenderGuiOverlay.ArmorLevel.Pre.class, ForgeZRenderGuiOverlay.ArmorLevel.Pre.class);
         bus.registerSubClass(ZRenderGuiOverlay.ArmorLevel.Post.class, ForgeZRenderGuiOverlay.ArmorLevel.Post.class);
+        bus.registerSubClass(ZRenderGuiOverlay.Crosshair.Pre.class, ForgeZRenderGuiOverlay.Crosshair.Post.class);
+        bus.registerSubClass(ZRenderGuiOverlay.Crosshair.Post.class, ForgeZRenderGuiOverlay.Crosshair.Pre.class);
+        bus.registerSubClass(ZRenderGuiOverlay.DebugText.Pre.class, ForgeZRenderGuiOverlay.DebugText.Pre.class);
+        bus.registerSubClass(ZRenderGuiOverlay.DebugText.Post.class, ForgeZRenderGuiOverlay.DebugText.Post.class);
+        bus.registerSubClass(ZRenderGuiOverlay.Hotbar.Pre.class, ForgeZRenderGuiOverlay.Hotbar.Pre.class);
+        bus.registerSubClass(ZRenderGuiOverlay.Hotbar.Post.class, ForgeZRenderGuiOverlay.Hotbar.Post.class);
+        bus.registerSubClass(ZRenderGuiOverlay.PlayerHealth.Pre.class, ForgeZRenderGuiOverlay.PlayerHealth.Pre.class);
+        bus.registerSubClass(ZRenderGuiOverlay.PlayerHealth.Post.class, ForgeZRenderGuiOverlay.PlayerHealth.Post.class);
+        bus.registerSubClass(ZRenderGuiOverlay.PotionIcons.Pre.class, ForgeZRenderGuiOverlay.PotionIcons.Pre.class);
+        bus.registerSubClass(ZRenderGuiOverlay.PotionIcons.Post.class, ForgeZRenderGuiOverlay.PotionIcons.Post.class);
+        bus.registerSubClass(ZRenderGuiOverlay.ChatPanel.Pre.class, ForgeZRenderGuiOverlay.ChatPanel.Pre.class);
+        bus.registerSubClass(ZRenderGuiOverlay.ChatPanel.Post.class, ForgeZRenderGuiOverlay.ChatPanel.Post.class);
+        bus.registerSubClass(ZScreenshot.class, ForgeZScreenshot.class);
+
 
         //this is ugly. generic events here
         Zeta zeta = this;

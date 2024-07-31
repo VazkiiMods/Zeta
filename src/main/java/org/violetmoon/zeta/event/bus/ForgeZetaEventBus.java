@@ -9,9 +9,6 @@ import org.apache.commons.lang3.text.WordUtils;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.violetmoon.zeta.event.load.ZModulesReady;
-import org.violetmoon.zetaimplforge.event.NotAForgeWrapper;
-import org.violetmoon.zetaimplforge.event.load.ForgeZConfigChange;
 
 import java.lang.annotation.Annotation;
 import java.lang.invoke.MethodHandle;
@@ -180,7 +177,7 @@ public class ForgeZetaEventBus<Z, F extends Event> extends ZetaEventBus<Z> {
 
     public <ZF extends Z, ZB extends Z> void registerSubClass(Class<ZB> baseZetaEventClass, Class<ZF> forgeZetaEventClass,
                                                               @Nullable Function<? extends F, ZF> constructor) {
-        Object old1 = null;
+        Object old1;
         Object old2 = null;
         boolean isNoWrapper = false;
         if (constructor == null) {
@@ -193,7 +190,7 @@ public class ForgeZetaEventBus<Z, F extends Event> extends ZetaEventBus<Z> {
             else constructor = findForgeWrapper(forgeZetaEventClass);
         }
         if (constructor == null) {
-            throw new RuntimeException("No forge-Event-wrapping constructor found for Zeta event class " + forgeZetaEventClass);
+            throw new RuntimeException("No Forge-Event-wrapping constructor found for Zeta event class " + forgeZetaEventClass);
         } else {
             old1 = forgeToZetaMap.put(baseZetaEventClass, constructor);
         }

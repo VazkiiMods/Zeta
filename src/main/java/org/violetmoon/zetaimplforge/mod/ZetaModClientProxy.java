@@ -5,14 +5,18 @@ import net.minecraftforge.client.gui.overlay.NamedGuiOverlay;
 import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.violetmoon.zeta.Zeta;
 import org.violetmoon.zeta.client.TopLayerTooltipHandler;
 import org.violetmoon.zeta.client.event.play.ZFirstClientTick;
 import org.violetmoon.zeta.client.event.play.ZRenderGuiOverlay;
 import org.violetmoon.zeta.util.handler.RequiredModTooltipHandler;
+import org.violetmoon.zeta.util.handler.ToolInteractionHandler;
 import org.violetmoon.zeta.util.zetalist.ZetaList;
 import org.violetmoon.zetaimplforge.client.ForgeZetaClient;
 import org.violetmoon.zetaimplforge.client.event.play.ForgeZRenderGuiOverlay;
+import org.violetmoon.zetaimplforge.event.load.ForgeZFirstClientTick;
+import org.violetmoon.zetaimplforge.world.ZetaBiomeModifier;
 
 public class ZetaModClientProxy extends ZetaModCommonProxy {
 
@@ -36,7 +40,7 @@ public class ZetaModClientProxy extends ZetaModCommonProxy {
 	boolean clientTicked = false;
 	public void clientTick(TickEvent.ClientTickEvent e) {
 		if(!clientTicked) {
-			ZetaList.INSTANCE.fireLoadEvent(new ZFirstClientTick());
+			ZetaList.INSTANCE.fireLoadEvent(new ForgeZFirstClientTick());
 			clientTicked = true;
 		}
 	}

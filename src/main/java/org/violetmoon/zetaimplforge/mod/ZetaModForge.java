@@ -13,11 +13,11 @@ public class ZetaModForge {
 	
 	public ZetaModForge() {
 		ForgeZeta zeta = new ForgeZeta(Zeta.ZETA_ID, LogManager.getLogger(Zeta.ZETA_ID + "-internal"));
+		ZetaMod.start(zeta);
 
 		// creates 2 dist specific objects that will handle zeta specific & loader specific events needed for zeta to work
 		DistExecutor.runForDist(() -> () -> new ZetaModClientProxy(zeta), () -> () -> new ZetaModCommonProxy(zeta));
 
-		ZetaMod.start(zeta);
 	}
 
 	
