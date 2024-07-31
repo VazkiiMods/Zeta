@@ -23,22 +23,18 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 
 public abstract class ZetaClient implements IZeta {
+
 	public ZetaClient(Zeta zeta) {
 		this.zeta = zeta;
 		this.loadBus = zeta.loadBus;
 		this.playBus = zeta.playBus;
 
-		this.ticker = createClientTicker();
 		this.clientConfigManager = createClientConfigManager();
-		this.topLayerTooltipHandler = createTopLayerTooltipHandler();
 		this.clientRegistryExtension = createClientRegistryExtension();
 
 		loadBus.subscribe(clientRegistryExtension)
 			.subscribe(clientConfigManager);
 
-		playBus.subscribe(ticker)
-			.subscribe(topLayerTooltipHandler);
-		
 		ZetaClientList.INSTANCE.register(this);
 	}
 
@@ -48,9 +44,7 @@ public abstract class ZetaClient implements IZeta {
 
 	public ResourceLocation generalIcons = new ResourceLocation("zeta", "textures/gui/general_icons.png");
 
-	public final ClientTicker ticker;
 	public final ClientConfigManager clientConfigManager;
-	public final TopLayerTooltipHandler topLayerTooltipHandler;
 	public final ClientRegistryExtension clientRegistryExtension;
 
 	public ClientTicker createClientTicker() {
@@ -59,10 +53,6 @@ public abstract class ZetaClient implements IZeta {
 
 	public ClientConfigManager createClientConfigManager() {
 		return new ClientConfigManager(this);
-	}
-
-	public TopLayerTooltipHandler createTopLayerTooltipHandler() {
-		return new TopLayerTooltipHandler();
 	}
 
 	//ummm ??

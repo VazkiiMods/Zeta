@@ -100,6 +100,7 @@ public class ForgeZeta extends Zeta {
         bus.registerSubClass(ZModel.ModifyBakingResult.class, ForgeZModel.ModifyBakingResult.class);
         bus.registerSubClass(ZRegisterLayerDefinitions.class, ForgeZRegisterLayerDefinitions.class);
         bus.registerSubClass(ZTooltipComponents.class, ForgeZTooltipComponents.class);
+        bus.registerSubClass(ZRegisterClientReloadListener.class, ForgeZRegisterClientReloadListener.class);
         bus.registerSubClass(ZFirstClientTick.class, ForgeZFirstClientTick.class);
 
         bus.registerSubClass(ZAddBlockColorHandlers.class, ForgeZAddBlockColorHandlers.class,
@@ -173,6 +174,8 @@ public class ForgeZeta extends Zeta {
         bus.registerSubClass(ZGatherHints.class, ForgeZGatherHints.class);
         bus.registerSubClass(ZSleepingLocationCheck.class, ForgeZSleepingLocationCheck.class);
         bus.registerSubClass(ZAnimalTame.class, ForgeZAnimalTame.class);
+        bus.registerSubClass(ZLevelTick.End.class, ForgeZLevelTick.End.class);
+        bus.registerSubClass(ZLevelTick.Start.class, ForgeZLevelTick.Start.class);
 
         //Hmm client events here? maybe i should move them
 
