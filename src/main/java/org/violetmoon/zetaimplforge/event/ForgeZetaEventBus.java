@@ -174,6 +174,9 @@ public class ForgeZetaEventBus<Z, F extends Event> extends ZetaEventBus<Z> {
         r.registerSubClass(ZConfigChanged.class, ForgeZConfigChange.class);
         r.registerSubClass(ZLoadComplete.class, ForgeZLoadComplete.class);
 
+        //zeta own
+        r.registerSubClass(ZGatherAdvancementModifiers.class, ForgeZGatherAdvancementModifiers.class);
+
         // client ones again?
         if (FMLEnvironment.dist == Dist.DEDICATED_SERVER) return;
 
@@ -251,7 +254,6 @@ public class ForgeZetaEventBus<Z, F extends Event> extends ZetaEventBus<Z> {
         r.registerSubClass(ZServerTick.Start.class, ForgeZServerTick.Start.class);
         r.registerSubClass(ZServerTick.End.class, ForgeZServerTick.End.class);
         r.registerSubClass(ZAddReloadListener.class, ForgeZAddReloadListener.class);
-        r.registerSubClass(ZGatherAdvancementModifiers.class, ForgeZGatherAdvancementModifiers.class);
         r.registerSubClass(ZGatherHints.class, ForgeZGatherHints.class);
         r.registerSubClass(ZSleepingLocationCheck.class, ForgeZSleepingLocationCheck.class);
         r.registerSubClass(ZAnimalTame.class, ForgeZAnimalTame.class);

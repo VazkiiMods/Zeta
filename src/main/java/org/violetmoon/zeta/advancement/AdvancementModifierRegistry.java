@@ -68,7 +68,7 @@ public class AdvancementModifierRegistry {
 	public void addListeners(ZAddReloadListener event) {
 		if(!gatheredAddons) {
 			IAdvancementModifierDelegate delegateImpl = new DelegateImpl();
-			zeta.playBus.fire(new ZGatherAdvancementModifiers() {
+			zeta.loadBus.fire(new ZGatherAdvancementModifiers() {
 				@Override
 				public void register(IAdvancementModifier modifier) {
 					addModifier(modifier);

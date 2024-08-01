@@ -1,5 +1,6 @@
 package org.violetmoon.zetaimplforge.api;
 
+import net.minecraftforge.fml.event.IModBusEvent;
 import org.violetmoon.zeta.Zeta;
 import org.violetmoon.zeta.api.IAdvancementModifier;
 import org.violetmoon.zeta.api.IAdvancementModifierDelegate;
@@ -7,7 +8,7 @@ import org.violetmoon.zeta.event.load.ZGatherAdvancementModifiers;
 
 import net.minecraftforge.eventbus.api.Event;
 
-public class ForgeZGatherAdvancementModifiers extends Event implements ZGatherAdvancementModifiers {
+public class ForgeZGatherAdvancementModifiers extends Event implements ZGatherAdvancementModifiers, IModBusEvent {
 	private final ZGatherAdvancementModifiers wrapped;
 
 	public ForgeZGatherAdvancementModifiers(ZGatherAdvancementModifiers inner) {

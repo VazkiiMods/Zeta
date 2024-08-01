@@ -16,7 +16,7 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import org.violetmoon.zeta.event.bus.IZetaPlayEvent;
 
-public interface ZGatherAdvancementModifiers extends IZetaPlayEvent {
+public interface ZGatherAdvancementModifiers extends IZetaLoadEvent {
 	void register(IAdvancementModifier modifier);
 
 	IAdvancementModifierDelegate getDelegate();
