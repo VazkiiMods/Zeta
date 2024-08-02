@@ -16,7 +16,6 @@ public interface ZPlayerInteract extends IZetaPlayEvent, Cancellable {
     InteractionHand getHand();
     BlockPos getPos();
     Level getLevel();
-    void setCancellationResult(InteractionResult result);
 
     interface EntityInteractSpecific extends ZPlayerInteract {
         Entity getTarget();

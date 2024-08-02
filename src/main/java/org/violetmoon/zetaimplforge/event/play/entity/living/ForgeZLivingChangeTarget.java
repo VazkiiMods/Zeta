@@ -18,7 +18,7 @@ public class ForgeZLivingChangeTarget implements ZLivingChangeTarget {
 
     @Override
     public LivingEntity getNewTarget() {
-        return e.getNewTarget();
+        return e.getNewAboutToBeSetTarget();
     }
 
     @Override

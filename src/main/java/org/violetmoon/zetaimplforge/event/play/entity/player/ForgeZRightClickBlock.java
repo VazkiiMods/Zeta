@@ -77,7 +77,7 @@ public class ForgeZRightClickBlock implements ZRightClickBlock {
 	}
 
 	@Override
-	public boolean getResult() {
+	public InteractionResult getResult() {
 		return e.getCancellationResult();
 	}
 

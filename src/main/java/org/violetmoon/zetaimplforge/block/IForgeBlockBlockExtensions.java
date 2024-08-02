@@ -96,6 +96,7 @@ public class IForgeBlockBlockExtensions implements IZetaBlockExtensions {
 		return state.shouldDisplayFluidOverlay(level, pos, fluidState);
 	}
 
+
 	@Override
 	public @Nullable BlockState getToolModifiedStateZeta(BlockState state, UseOnContext context, ItemAbility ability, boolean simulate) {
 		return ability == null ? null : state.getToolModifiedState(context, ability, simulate);

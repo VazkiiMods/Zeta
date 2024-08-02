@@ -5,6 +5,7 @@
   "refmap": "zeta.mixins.refmap.json",
   "package": "org.violetmoon.zeta.mixin.mixins",
   "mixins": [
+    "AccessorAdvancement",
     "AccessorBlock",
     "AccessorContextAwarePredicate",
     "AccessorItem",
@@ -13,6 +14,7 @@
     "AccessorPistonStructureResolver",
     "InvokerBlockBehavior",
     "InvokerIItemStackExtension",
+    "InvokerSpawnPlacements",
     "PistonBaseBlockMixin",
     "RegistryDataLoaderMixin",
     "StructurePieceMixin",

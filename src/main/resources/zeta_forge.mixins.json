@@ -6,9 +6,11 @@
   "package": "org.violetmoon.zetaimplforge.mixin.mixins",
   "plugin": "org.violetmoon.zeta.mixin.plugin.InterfaceDelegateMixinPlugin",
   "mixins": [
+    "AccessorEvent",
+    "AccessorModConfig",
+    "AccessorPotionBrewing",
     "IngredientMixin",
     "WeatheringCopperMixin",
-    "AccessorPotionBrewing",
     "self.IZetaBlockMixin_FAKE",
     "self.IZetaItemMixin_FAKE"
   ],

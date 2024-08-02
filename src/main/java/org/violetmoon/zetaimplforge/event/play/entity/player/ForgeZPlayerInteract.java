@@ -9,6 +9,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import org.violetmoon.zeta.event.play.entity.player.ZPlayerInteract;
+import org.violetmoon.zetaimplforge.mixin.mixins.AccessorEvent;
 
 public class ForgeZPlayerInteract implements ZPlayerInteract {
     private final PlayerInteractEvent e;
@@ -39,18 +40,12 @@ public class ForgeZPlayerInteract implements ZPlayerInteract {
 
     @Override
     public boolean isCanceled() {
-        return e.isCanceled();
+        return ((AccessorEvent)e).zeta$isCanceled();
     }
 
     @Override
     public void setCanceled(boolean cancel) {
-        e.setCanceled(cancel);
-    }
-
-
-    @Override
-    public void setCancellationResult(InteractionResult result) {
-        e.setCancellationResult(result);
+        ((AccessorEvent)e).zeta$setCanceled(cancel);
     }
 
     public static class EntityInteractSpecific extends ForgeZPlayerInteract implements ZPlayerInteract.EntityInteractSpecific {
@@ -64,6 +59,11 @@ public class ForgeZPlayerInteract implements ZPlayerInteract {
         @Override
         public Entity getTarget() {
             return e.getTarget();
+        }
+
+        @Override
+        public void setCancellationResult(InteractionResult result) {
+            e.setCancellationResult(result);
         }
     }
 
