@@ -5,6 +5,7 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.neoforged.neoforge.client.event.ScreenEvent;
 import org.violetmoon.zeta.client.event.play.ZScreen;
+import org.violetmoon.zetaimplforge.mixin.mixins.AccessorEvent;
 
 import java.util.List;
 
@@ -122,12 +123,12 @@ public class ForgeZScreen implements ZScreen {
             
             @Override
             public boolean isCanceled() {
-                return e.isCanceled();
+                return ((AccessorEvent)e).zeta$isCanceled();
             }
 
             @Override
-            public void setCanceled(boolean cancel) {
-                e.setCanceled(cancel);
+            public void setCanceled(boolean canceled) {
+                ((AccessorEvent)e).zeta$setCanceled(canceled);
             }
         }
 
@@ -147,18 +148,23 @@ public class ForgeZScreen implements ZScreen {
         }
 
         @Override
-        public double getScrollDelta() {
-            return e.getScrollDelta();
+        public double getScrollDeltaX() {
+            return e.getScrollDeltaX();
+        }
+
+        @Override
+        public double getScrollDeltaY() {
+            return e.getScrollDeltaY();
         }
 
         @Override
         public boolean isCanceled() {
-            return e.isCanceled();
+            return ((AccessorEvent)e).zeta$isCanceled();
         }
 
         @Override
         public void setCanceled(boolean cancel) {
-            e.setCanceled(cancel);
+            ((AccessorEvent)e).zeta$setCanceled(cancel);
         }
 
         public static class Pre extends ForgeZScreen.MouseScrolled implements ZScreen.MouseScrolled.Pre {
@@ -199,12 +205,12 @@ public class ForgeZScreen implements ZScreen {
 
         @Override
         public boolean isCanceled() {
-            return e.isCanceled();
+            return ((AccessorEvent)e).zeta$isCanceled();
         }
 
         @Override
         public void setCanceled(boolean cancel) {
-            e.setCanceled(cancel);
+            ((AccessorEvent)e).zeta$setCanceled(cancel);
         }
 
         public static class Pre extends ForgeZScreen.KeyPressed implements ZScreen.KeyPressed.Pre {
@@ -240,12 +246,12 @@ public class ForgeZScreen implements ZScreen {
 
         @Override
         public boolean isCanceled() {
-            return e.isCanceled();
+            return ((AccessorEvent)e).zeta$isCanceled();
         }
 
         @Override
         public void setCanceled(boolean cancel) {
-            e.setCanceled(true);
+            ((AccessorEvent)e).zeta$setCanceled(cancel);
         }
 
         public static class Pre extends ForgeZScreen.CharacterTyped implements ZScreen.CharacterTyped.Pre {

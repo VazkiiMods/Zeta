@@ -40,7 +40,8 @@ public interface ZScreen extends IZetaPlayEvent {
     }
 
     interface MouseScrolled extends ZScreen, Cancellable {
-        double getScrollDelta();
+        double getScrollDeltaX();
+        double getScrollDeltaY();
 
         interface Pre extends MouseScrolled { }
         interface Post extends MouseScrolled { }

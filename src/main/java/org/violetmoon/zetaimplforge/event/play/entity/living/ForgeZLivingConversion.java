@@ -4,6 +4,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.neoforge.event.entity.living.LivingConversionEvent;
 import org.violetmoon.zeta.event.play.entity.living.ZLivingConversion;
+import org.violetmoon.zetaimplforge.mixin.mixins.AccessorEvent;
 
 public class ForgeZLivingConversion implements ZLivingConversion {
     private final LivingConversionEvent e;
@@ -19,12 +20,12 @@ public class ForgeZLivingConversion implements ZLivingConversion {
 
     @Override
     public boolean isCanceled() {
-        return e.isCanceled();
+        return ((AccessorEvent)e).zeta$isCanceled();
     }
 
     @Override
     public void setCanceled(boolean cancel) {
-        e.setCanceled(cancel);
+        ((AccessorEvent)e).zeta$setCanceled(cancel);
     }
 
     public static class Pre extends ForgeZLivingConversion implements ZLivingConversion.Pre {
