@@ -12,12 +12,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 
-public class ForgeZItemTooltip implements ZItemTooltip {
-	private final ItemTooltipEvent e;
-
-	public ForgeZItemTooltip(ItemTooltipEvent e) {
-		this.e = e;
-	}
+public record ForgeZItemTooltip(ItemTooltipEvent e) implements ZItemTooltip {
 
 	@Override
 	public TooltipFlag getFlags() {return e.getFlags();}

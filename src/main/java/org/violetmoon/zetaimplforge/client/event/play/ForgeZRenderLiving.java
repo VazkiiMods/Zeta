@@ -8,7 +8,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraftforge.client.event.RenderLivingEvent;
 
 public abstract class ForgeZRenderLiving implements ZRenderLiving {
-	protected final RenderLivingEvent<?, ?> e;
+	public final RenderLivingEvent<?, ?> e;
 
 	public ForgeZRenderLiving(RenderLivingEvent<?, ?> e) {
 		this.e = e;

@@ -5,7 +5,7 @@ import org.violetmoon.zeta.client.event.play.ZClientTick;
 import net.minecraftforge.event.TickEvent.ClientTickEvent;
 
 public class ForgeZClientTick implements ZClientTick {
-    private final ClientTickEvent e;
+    public final ClientTickEvent e;
 
     public ForgeZClientTick(ClientTickEvent e) {
         this.e = e;

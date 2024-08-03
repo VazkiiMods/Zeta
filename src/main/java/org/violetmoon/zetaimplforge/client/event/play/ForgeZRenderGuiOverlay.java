@@ -10,8 +10,8 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraftforge.client.event.RenderGuiOverlayEvent;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 
-public class ForgeZRenderGuiOverlay extends Event implements ZRenderGuiOverlay {
-	private final RenderGuiOverlayEvent e;
+public class ForgeZRenderGuiOverlay  implements ZRenderGuiOverlay {
+	public final RenderGuiOverlayEvent e;
 
 	public ForgeZRenderGuiOverlay(RenderGuiOverlayEvent e) {
 		this.e = e;

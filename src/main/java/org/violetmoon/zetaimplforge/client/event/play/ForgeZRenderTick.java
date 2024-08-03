@@ -7,7 +7,7 @@ import net.minecraftforge.event.TickEvent;
 import java.util.Objects;
 
 public class ForgeZRenderTick implements ZRenderTick {
-    private final TickEvent.RenderTickEvent e;
+    public final TickEvent.RenderTickEvent e;
 
     public ForgeZRenderTick(TickEvent.RenderTickEvent e) {
         this.e = e;

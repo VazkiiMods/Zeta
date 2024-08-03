@@ -10,7 +10,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraftforge.client.event.ScreenEvent;
 
 public class ForgeZScreen implements ZScreen {
-    private final ScreenEvent e;
+    public final ScreenEvent e;
 
     public ForgeZScreen(ScreenEvent e) {
         this.e = e;
@@ -58,7 +58,7 @@ public class ForgeZScreen implements ZScreen {
     }
 
     public static class Render extends ForgeZScreen implements ZScreen.Render {
-        private final ScreenEvent.Render e;
+        public final ScreenEvent.Render e;
 
         public Render(ScreenEvent.Render e) {
             super(e);

@@ -1,6 +1,8 @@
 package org.violetmoon.zetaimplforge.event;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import net.minecraftforge.client.event.RenderGuiOverlayEvent;
+import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -88,17 +90,41 @@ public class ForgeEventsRemapper<Z, F extends Event> {
     // Creates the Forge Event Consumer that will be registered with Forge Event Bus
     private <F2 extends F, Z2 extends Z> Consumer<F2> createForgeConsumer(
             MethodHandle zetaEventConsumer, Function<F2, Z2> forgeToZetaFunc, Class<?> zetaEventBaseClass, Class<?> forgeEventClass) {
+
+        //special cases fo forge events that are to be sub divided into phases
+
+        // for gui overlay event
+        VanillaGuiOverlay overlay = guessGuiOverlayFromClassName(zetaEventBaseClass, forgeEventClass.getSuperclass());
+        if (overlay != null) {
+            //here we know that phase must not be null
+            return event -> {
+                try {
+                    RenderGuiOverlayEvent rge = (RenderGuiOverlayEvent) event;
+                    if (rge.getOverlay() != overlay.type()) return;
+                    zetaEventConsumer.invoke(forgeToZetaFunc.apply(event));
+                } catch (Throwable e) {
+                    throw new RuntimeException(e);
+                }
+            };
+        }
+
         //hack for tick events
         Phase phase = Phase.guessFromClassName(zetaEventBaseClass, forgeEventClass);
+        if (phase != Phase.NONE) {
+            return event -> {
+                try {
+                    //luckily this phase madness will go away with new neoforge
+                    TickEvent te = (TickEvent) event;
+                    if ((phase == Phase.START) ^ (te.phase == TickEvent.Phase.START)) return;
+                    zetaEventConsumer.invoke(forgeToZetaFunc.apply(event));
+                } catch (Throwable e) {
+                    throw new RuntimeException(e);
+                }
+            };
+        }
 
         return event -> {
             try {
-                //luckily this phase madness will go away with new neoforge
-                if (phase != Phase.NONE) {
-                    TickEvent te = (TickEvent) event;
-                    if (phase == Phase.START && te.phase != TickEvent.Phase.START) return;
-                    if (phase == Phase.END && te.phase != TickEvent.Phase.END) return;
-                }
                 zetaEventConsumer.invoke(forgeToZetaFunc.apply(event));
             } catch (Throwable e) {
                 throw new RuntimeException(e);
@@ -107,24 +133,47 @@ public class ForgeEventsRemapper<Z, F extends Event> {
     }
 
     // for generic events
-    public <S extends Z, C extends Z> void registerSubClassWithGeneric(Class<C> baseZetaEventClass, Class<S> forgeZetaEventClass, Class<?> genericClass) {
-        registerSubClass(baseZetaEventClass, forgeZetaEventClass);
+    // auto register ones are deprecated. Register manually, its faster and requires no reflection hacks
+    @Deprecated
+    public <S extends Z, C extends Z> void registerWrapperWithGeneric(Class<C> baseZetaEventClass, Class<S> forgeZetaEventClass, Class<?> genericClass) {
+        registerWrapper(baseZetaEventClass, forgeZetaEventClass);
         generics.put(baseZetaEventClass, genericClass);
     }
 
-    public <ZF extends Z, ZB extends Z> void registerSubClass(Class<ZB> baseZetaEventClass, Class<ZF> forgeZetaEventClass) {
+    @Deprecated
+    public <ZF extends Z, ZB extends Z> void registerWrapper(Class<ZB> baseZetaEventClass, Class<ZF> forgeZetaEventClass) {
 
-        registerSubClass(baseZetaEventClass, forgeZetaEventClass, null);
+        registerWrapper(baseZetaEventClass, forgeZetaEventClass, null);
     }
 
-    public <ZF extends Z, ZB extends Z> void registerSubClassWithGeneric(Class<ZB> baseZetaEventClass, Class<ZF> forgeZetaEventClass,
-                                                                         Function<? extends F, ZF> constructor, Class<?> genericClass) {
-        registerSubClass(baseZetaEventClass, forgeZetaEventClass, constructor);
+    @Deprecated
+    public <ZF extends Z, ZB extends Z> void registerWrapperWithGeneric(Class<ZB> baseZetaEventClass, Class<ZF> forgeZetaEventClass,
+                                                                        Function<? extends F, ZF> constructor, Class<?> genericClass) {
+        registerWrapper(baseZetaEventClass, forgeZetaEventClass, constructor);
         generics.put(baseZetaEventClass, genericClass);
     }
 
-    public <ZF extends Z, ZB extends Z> void registerSubClass(Class<ZB> baseZetaEventClass, Class<ZF> forgeZetaEventClass,
-                                                              @Nullable Function<? extends F, ZF> constructor) {
+    //register known ones
+    public <ZF extends Z, ZB extends Z, F2 extends F> void registerWrapper(Class<ZB> baseZetaEventClass, Class<F2> forgeEventClass,
+                                                                           Function<F2, ZF> constructor, Function<ZF, ? extends F> unwrapper) {
+        zetaToForgeEventClassHack.put(baseZetaEventClass, forgeEventClass);
+        forgeToZetaMap.put(baseZetaEventClass, constructor);
+        zetaToForgeMap.put(baseZetaEventClass, unwrapper);
+    }
+
+    public <ZF extends Z, ZB extends Z, F2 extends F> void registerWrapperWithGenerics(Class<ZB> baseZetaEventClass, Class<F2> forgeEventClass,
+                                                                                       Function<F2, ZF> constructor, Function<ZF, ? extends F> unwrapper,
+                                                                                       Class<?> genericClass) {
+        zetaToForgeEventClassHack.put(baseZetaEventClass, forgeEventClass);
+        forgeToZetaMap.put(baseZetaEventClass, constructor);
+        zetaToForgeMap.put(baseZetaEventClass, unwrapper);
+        generics.put(baseZetaEventClass, genericClass);
+    }
+
+
+    @Deprecated
+    public <ZF extends Z, ZB extends Z> void registerWrapper(Class<ZB> baseZetaEventClass, Class<ZF> forgeZetaEventClass,
+                                                             @Nullable Function<? extends F, ZF> constructor) {
         Object old1;
         Object old2 = null;
         boolean isNoWrapper = false;
@@ -268,7 +317,7 @@ public class ForgeEventsRemapper<Z, F extends Event> {
             return null;
         }
 
-        throw new RuntimeException("No wrapped forge Event found for Zeta event class " + zetaEventClass);
+        throw new RuntimeException("No e forge Event found for Zeta event class " + zetaEventClass);
     }
 
     private <Z2 extends Z, F2 extends F> Function<F2, Z2> findWrappedZetaEvent(Class<Z2> zetaEventClass, Class<? extends Z> baseZetaEventClass) {
@@ -285,7 +334,7 @@ public class ForgeEventsRemapper<Z, F extends Event> {
             };
         }
 
-        throw new RuntimeException("No wrapped Zeta Event found for Zeta event class " + zetaEventClass);
+        throw new RuntimeException("No e Zeta Event found for Zeta event class " + zetaEventClass);
     }
 
     public static Field findFieldInClassHierarchy(Class<?> clazz, Predicate<Field> predicate) {
@@ -345,12 +394,28 @@ public class ForgeEventsRemapper<Z, F extends Event> {
         }
     }
 
+    private static final Map<Class<?>, VanillaGuiOverlay> GUI_OVERLAY_CACHE = new ConcurrentHashMap<>();
 
-    private static final Map<Class<?>, EventPriority> CACHE = new ConcurrentHashMap<>();
+    @Nullable
+    private static VanillaGuiOverlay guessGuiOverlayFromClassName(Class<?> zetaEventClass, Class<?> forgeClass) {
+        if (forgeClass.isAssignableFrom(RenderGuiOverlayEvent.class)) return null;
+        return GUI_OVERLAY_CACHE.computeIfAbsent(zetaEventClass, zec -> {
+            String simpleName = zec.getSimpleName();
+            for (VanillaGuiOverlay overlay : VanillaGuiOverlay.values()) {
+                if (simpleName.toUpperCase().equals(overlay.name().replace("_", ""))) {
+                    return overlay;
+                }
+            }
+            return null;
+        });
+    }
+
+
+    private static final Map<Class<?>, EventPriority> PRIORITY_CACHE = new ConcurrentHashMap<>();
 
     private static EventPriority guessPriorityFromClassName(Class<?> zetaEventClass) {
-        return CACHE.computeIfAbsent(zetaEventClass, cl -> {
-            String simpleName = zetaEventClass.getSimpleName();
+        return PRIORITY_CACHE.computeIfAbsent(zetaEventClass, zec -> {
+            String simpleName = zec.getSimpleName();
             for (EventPriority p : EventPriority.values()) {
                 String name = WordUtils.capitalizeFully(p.name().toLowerCase());
                 if (simpleName.endsWith(name)) {
