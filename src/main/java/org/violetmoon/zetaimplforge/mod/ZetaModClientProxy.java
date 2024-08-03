@@ -1,6 +1,5 @@
 package org.violetmoon.zetaimplforge.mod;
 
-import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderGuiOverlayEvent;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
@@ -8,7 +7,6 @@ import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.Event;
-import net.minecraftforge.fml.loading.FMLEnvironment;
 import org.violetmoon.zeta.Zeta;
 import org.violetmoon.zeta.client.ClientTicker;
 import org.violetmoon.zeta.client.event.load.*;
@@ -26,7 +24,7 @@ import org.violetmoon.zetaimplforge.event.play.ForgeZScreenshot;
 
 public class ZetaModClientProxy extends ZetaModCommonProxy {
 
-
+    @Override
     public void registerEvents(Zeta zeta){
         zeta.playBus
                 .subscribe(ClientTicker.INSTANCE)
