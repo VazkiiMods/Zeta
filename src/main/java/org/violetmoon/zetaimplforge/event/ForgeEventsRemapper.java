@@ -11,6 +11,7 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import org.apache.commons.lang3.text.WordUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.violetmoon.zeta.client.event.play.ZRenderGuiOverlay;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.reflect.Constructor;
@@ -20,6 +21,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.regex.Pattern;
 
 //@SuppressWarnings({"unchecked","rawtypes"})
 public class ForgeEventsRemapper<Z, F extends Event> {
@@ -94,7 +96,7 @@ public class ForgeEventsRemapper<Z, F extends Event> {
         //special cases fo forge events that are to be sub divided into phases
 
         // for gui overlay event
-        VanillaGuiOverlay overlay = guessGuiOverlayFromClassName(zetaEventBaseClass, forgeEventClass.getSuperclass());
+        VanillaGuiOverlay overlay = guessGuiOverlayFromClassName(zetaEventBaseClass, forgeEventClass);
         if (overlay != null) {
             //here we know that phase must not be null
             return event -> {
@@ -382,7 +384,7 @@ public class ForgeEventsRemapper<Z, F extends Event> {
         NONE, START, END;
 
         private static Phase guessFromClassName(Class<?> zetaEventClass, Class<?> forgeClass) {
-            if (forgeClass.isAssignableFrom(TickEvent.class)) return NONE;
+            if (!TickEvent.class.isAssignableFrom(forgeClass)) return NONE;
             String simpleName = zetaEventClass.getSimpleName();
             if (simpleName.equals("Start")) {
                 return START;
@@ -395,12 +397,15 @@ public class ForgeEventsRemapper<Z, F extends Event> {
     }
 
     private static final Map<Class<?>, VanillaGuiOverlay> GUI_OVERLAY_CACHE = new ConcurrentHashMap<>();
+    private static final Pattern INNER_CLASS_PATTERN = Pattern.compile("\\$([^$]+)\\$");
 
     @Nullable
-    private static VanillaGuiOverlay guessGuiOverlayFromClassName(Class<?> zetaEventClass, Class<?> forgeClass) {
-        if (forgeClass.isAssignableFrom(RenderGuiOverlayEvent.class)) return null;
+    private static VanillaGuiOverlay guessGuiOverlayFromClassName(Class<?> zetaEventClass, Class<?> forgeEventClass) {
+        if (!RenderGuiOverlayEvent.class.isAssignableFrom(forgeEventClass)) return null;
         return GUI_OVERLAY_CACHE.computeIfAbsent(zetaEventClass, zec -> {
-            String simpleName = zec.getSimpleName();
+            var match = INNER_CLASS_PATTERN.matcher(zetaEventClass.getName());
+            if (!match.find()) return null;
+            String simpleName = match.group(1);
             for (VanillaGuiOverlay overlay : VanillaGuiOverlay.values()) {
                 if (simpleName.toUpperCase().equals(overlay.name().replace("_", ""))) {
                     return overlay;

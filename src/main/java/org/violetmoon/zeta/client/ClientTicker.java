@@ -3,6 +3,7 @@ package org.violetmoon.zeta.client;
 import net.minecraft.client.Minecraft;
 import org.jetbrains.annotations.ApiStatus;
 import org.violetmoon.zeta.client.event.play.ZClientTick;
+import org.violetmoon.zeta.client.event.play.ZRenderGuiOverlay;
 import org.violetmoon.zeta.client.event.play.ZRenderTick;
 import org.violetmoon.zeta.event.bus.PlayEvent;
 
@@ -36,5 +37,10 @@ public final class ClientTicker {
         if (!Minecraft.getInstance().isPaused()) {
             ticksInGame++;
         }
+    }
+
+    @PlayEvent
+    public void pre(ZRenderGuiOverlay.ChatPanel.Pre event) {
+        int aa = 1;
     }
 }

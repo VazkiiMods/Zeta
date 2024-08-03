@@ -310,7 +310,7 @@ public class ForgeZetaEventBus<Z, F extends Event> extends ZetaEventBus<Z> {
 
         // zeta specific ones
 
-        r.registerWrapper(ZRecipeCrawl.class, ForgeZRecipeCrawl.Digest.class,
+        r.registerWrapper(ZRecipeCrawl.Digest.class, ForgeZRecipeCrawl.Digest.class,
                 ForgeZRecipeCrawl::get, ForgeZRecipeCrawl.Digest::new);
         r.registerWrapper(ZRecipeCrawl.Reset.class, ForgeZRecipeCrawl.Reset.class,
                 ForgeZRecipeCrawl::get, ForgeZRecipeCrawl.Reset::new);
