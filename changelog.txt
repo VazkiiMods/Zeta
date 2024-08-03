@@ -1,3 +1,4 @@
+(sorry for double release i messed up dedicated server stuff)
 - Major overhaul of zeta event system
 - Zeta events now directly delegate to forge events and the forge bus itself instead of having their own bus implementation
 - No longer are events fired by forge, intercepted by zeta, and then fired again by zeta, some time multiple times per event
