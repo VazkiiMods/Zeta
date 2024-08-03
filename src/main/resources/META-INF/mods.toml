@@ -20,5 +20,5 @@ description='''A fully featured Library designed around loading highly configura
 [[dependencies.zeta]]
     modId="quark"
     mandatory=false
-    versionRange="[4.0-460,)"
+    versionRange="[4.0-459,)"
     side="BOTH"
