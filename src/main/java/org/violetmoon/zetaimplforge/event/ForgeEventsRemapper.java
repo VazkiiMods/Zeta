@@ -407,7 +407,7 @@ public class ForgeEventsRemapper<Z, F extends Event> {
             if (!match.find()) return null;
             String simpleName = match.group(1);
             for (VanillaGuiOverlay overlay : VanillaGuiOverlay.values()) {
-                if (simpleName.toUpperCase().equals(overlay.name().replace("_", ""))) {
+                if (simpleName.equalsIgnoreCase(overlay.name().replace("_", ""))) {
                     return overlay;
                 }
             }
