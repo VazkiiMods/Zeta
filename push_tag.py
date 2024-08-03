@@ -21,9 +21,15 @@ def main():
 
 		content = content.replace('"', '\'');
 		changelog = changelog + re.sub(r'(- .+)\n?', '-m "\g<1>" ', content)
+
+	print('Changelog', changelog)
 	
-	os.system('git tag -a release-{}-{}-{} {}'.format(mc_version, version, build_number, changelog))
-	
+	tag_success = os.system('git tag -a release-{}-{}-{} "{}"'.format(mc_version, version, build_number, changelog))
+
+	if tag_success != 0:
+		print('Failed to create tag')
+		return
+
 	build['build_number'] = str(int(build_number) + 1)
 	with open("build.properties", "wb") as f:
 	    build.store(f, encoding="utf-8")
