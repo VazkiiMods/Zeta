@@ -1,58 +1,40 @@
 package org.violetmoon.zetaimplforge.client.event.load;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Function;
-
-import org.violetmoon.zeta.client.event.load.ZAddBlockColorHandlers;
-
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
+import org.violetmoon.zeta.Zeta;
+import org.violetmoon.zeta.client.event.load.ZAddBlockColorHandlers;
+import org.violetmoon.zeta.registry.ZetaRegistry;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Function;
 
 public class ForgeZAddBlockColorHandlers implements ZAddBlockColorHandlers {
-	protected final RegisterColorHandlersEvent.Block e;
-	protected final Map<String, Function<Block, BlockColor>> namedBlockColors;
+    protected final RegisterColorHandlersEvent.Block e;
 
-	public ForgeZAddBlockColorHandlers(RegisterColorHandlersEvent.Block e) {
-		this(e, new HashMap<>());
-	}
+    public ForgeZAddBlockColorHandlers(RegisterColorHandlersEvent.Block e) {
+        this.e = e;
+    }
 
-	protected ForgeZAddBlockColorHandlers(RegisterColorHandlersEvent.Block e, Map<String, Function<Block, BlockColor>> namedBlockColors) {
-		this.e = e;
-		this.namedBlockColors = namedBlockColors;
-	}
+    @Override
+    public void register(BlockColor blockColor, Block... blocks) {
+        e.register(blockColor, blocks);
+    }
 
-	@Override
-	public void register(BlockColor blockColor, Block... blocks) {
-		e.register(blockColor, blocks);
-	}
+    // yes passing zeta like this here is terribly ugly but i cant add more params to this event since it's a forge event wrapper
+    @Override
+    public void registerNamed(Zeta myZeta, Function<Block, BlockColor> c, String... names) {
+        for (String name : names) {
+            myZeta.registry.assignBlockColor(name, b -> register(c.apply(b), b));
+        }
+    }
 
-	@Override
-	public void registerNamed(Function<Block, BlockColor> c, String... names) {
-		for(String name : names)
-			namedBlockColors.put(name, c);
-	}
+    @Override
+    public BlockColors getBlockColors() {
+        return e.getBlockColors();
+    }
 
-	@Override
-	public BlockColors getBlockColors() {
-		return e.getBlockColors();
-	}
-
-	@Override
-	public ZAddBlockColorHandlers.Post makePostEvent() {
-		return new Post(e, namedBlockColors);
-	}
-
-	public static class Post extends ForgeZAddBlockColorHandlers implements ZAddBlockColorHandlers.Post {
-		public Post(RegisterColorHandlersEvent.Block e, Map<String, Function<Block, BlockColor>> namedBlockColors) {
-			super(e, namedBlockColors);
-		}
-
-		@Override
-		public Map<String, Function<Block, BlockColor>> getNamedBlockColors() {
-			return namedBlockColors;
-		}
-	}
 }

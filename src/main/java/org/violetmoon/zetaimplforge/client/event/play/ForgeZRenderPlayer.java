@@ -8,9 +8,10 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.event.RenderPlayerEvent;
+import org.violetmoon.zeta.event.bus.IZetaPlayEvent;
 
 public abstract class ForgeZRenderPlayer implements ZRenderPlayer {
-	private final RenderPlayerEvent e;
+	public final RenderPlayerEvent e;
 
 	public ForgeZRenderPlayer(RenderPlayerEvent e) {
 		this.e = e;
@@ -35,12 +36,14 @@ public abstract class ForgeZRenderPlayer implements ZRenderPlayer {
 	public Player getEntity() {return e.getEntity();}
 
 	public static class Pre extends ForgeZRenderPlayer implements ZRenderPlayer.Pre {
+
 		public Pre(RenderPlayerEvent.Pre e) {
 			super(e);
 		}
 	}
 
-	public static class Post extends ForgeZRenderPlayer implements ZRenderPlayer.Post {
+	public static class Post extends ForgeZRenderPlayer implements ZRenderPlayer.Post, IZetaPlayEvent {
+
 		public Post(RenderPlayerEvent.Post e) {
 			super(e);
 		}

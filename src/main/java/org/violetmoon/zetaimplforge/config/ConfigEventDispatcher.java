@@ -4,6 +4,7 @@ import net.minecraftforge.fml.event.config.ModConfigEvent;
 import org.violetmoon.zeta.Zeta;
 import org.violetmoon.zeta.event.load.ZConfigChanged;
 import org.violetmoon.zeta.util.zetalist.ZetaList;
+import org.violetmoon.zetaimplforge.event.load.ForgeZConfigChange;
 
 public class ConfigEventDispatcher {
 	public static void configChanged(ModConfigEvent event) {
@@ -16,6 +17,7 @@ public class ConfigEventDispatcher {
 			// "The Forge config api writes to the config file on every single change
 			//  to the config, which would cause the file watcher to trigger
 			//  a config reload while the config gui is committing changes."
+			//TODO: investigate. this doesnt look that sound
 			if(System.currentTimeMillis() - z.configInternals.debounceTime() > 20)
 				handleConfigChange(z);
 		}
@@ -28,7 +30,7 @@ public class ConfigEventDispatcher {
 	
 	private static void handleConfigChange(Zeta z) {
 		z.configManager.onReload();
-		z.loadBus.fire(new ZConfigChanged());
+		z.loadBus.fire(new ForgeZConfigChange());
 	}
 	
 }

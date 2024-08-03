@@ -4,14 +4,30 @@ import org.violetmoon.zeta.client.event.play.ZRenderTick;
 
 import net.minecraftforge.event.TickEvent;
 
-public record ForgeZRenderTick(TickEvent.RenderTickEvent e) implements ZRenderTick {
-	@Override
-	public float getRenderTickTime() {
-		return e.renderTickTime;
+import java.util.Objects;
+
+public class ForgeZRenderTick implements ZRenderTick {
+    public final TickEvent.RenderTickEvent e;
+
+    public ForgeZRenderTick(TickEvent.RenderTickEvent e) {
+        this.e = e;
+    }
+
+    @Override
+    public float getRenderTickTime() {
+        return e.renderTickTime;
+    }
+
+	public static class Start extends ForgeZRenderTick implements ZRenderTick.Start {
+		public Start(TickEvent.RenderTickEvent e) {
+			super(e);
+		}
 	}
 
-	@Override
-	public boolean isEndPhase() {
-		return e.phase == TickEvent.Phase.END;
+	public static class End extends ForgeZRenderTick implements ZRenderTick.End {
+		public End(TickEvent.RenderTickEvent e) {
+			super(e);
+		}
 	}
+
 }

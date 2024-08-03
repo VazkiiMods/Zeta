@@ -11,7 +11,7 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraftforge.event.entity.living.MobSpawnEvent;
 
 public class ForgeZMobSpawnEvent implements ZMobSpawnEvent {
-    private final MobSpawnEvent e;
+    public final MobSpawnEvent e;
 
     public ForgeZMobSpawnEvent(MobSpawnEvent e) {
         this.e = e;
@@ -53,7 +53,7 @@ public class ForgeZMobSpawnEvent implements ZMobSpawnEvent {
     }
 
     public static class FinalizeSpawn extends ForgeZMobSpawnEvent implements ZMobSpawnEvent.CheckSpawn {
-        private final MobSpawnEvent.FinalizeSpawn e;
+        public final MobSpawnEvent.FinalizeSpawn e;
 
         public FinalizeSpawn(MobSpawnEvent.FinalizeSpawn e) {
             super(e);

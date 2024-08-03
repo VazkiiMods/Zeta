@@ -9,6 +9,7 @@ import org.violetmoon.zeta.client.event.load.ZAddBlockColorHandlers;
 import org.violetmoon.zeta.client.event.load.ZAddItemColorHandlers;
 import org.violetmoon.zeta.client.event.load.ZClientSetup;
 import org.violetmoon.zeta.event.bus.LoadEvent;
+import org.violetmoon.zeta.event.load.ZLoadComplete;
 import org.violetmoon.zeta.registry.DyeablesRegistry;
 import org.violetmoon.zeta.registry.RenderLayerRegistry;
 import org.violetmoon.zeta.registry.ZetaRegistry;
@@ -56,32 +57,16 @@ public abstract class ClientRegistryExtension {
 		}
 	}
 
-	//these are in Post events to give other listeners a chance to populate .registerNamed
-	@LoadEvent
-	public void registerBlockColorsPost(ZAddBlockColorHandlers.Post event) {
-		registry.finalizeBlockColors((block, name) -> {
-			Function<Block, BlockColor> blockColorCreator = event.getNamedBlockColors().get(name);
-			if(blockColorCreator == null)
-				z.log.error("Unknown block color creator {} used on block {}", name, block);
-			else
-				event.register(blockColorCreator.apply(block), block);
-		});
-	}
-
-	@LoadEvent
-	public void registerItemColorsPost(ZAddItemColorHandlers.Post event) {
-		registry.finalizeItemColors((item, name) -> {
-			Function<Item, ItemColor> itemColorCreator = event.getNamedItemColors().get(name);
-			if(itemColorCreator == null)
-				z.log.error("Unknown item color creator {} used on item {}", name, item);
-			else
-				event.register(itemColorCreator.apply(item), item);
-		});
-	}
-
 	@LoadEvent
 	public void registerRenderLayers(ZClientSetup event) {
 		z.renderLayerRegistry.finalize(this::doSetRenderLayer);
+	}
+
+
+	//I hope this won't run on dedicated servers
+	@LoadEvent
+	public void onLoadComplete(ZLoadComplete event){
+		z.registry.validateColorsProviders();
 	}
 
 	protected abstract void doSetRenderLayer(Block block, RenderLayerRegistry.Layer layer);

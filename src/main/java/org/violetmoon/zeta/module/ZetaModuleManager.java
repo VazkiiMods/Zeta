@@ -15,6 +15,7 @@ import java.util.Optional;
 import org.violetmoon.zeta.Zeta;
 import org.violetmoon.zeta.event.load.ZModulesReady;
 import org.violetmoon.zeta.util.ZetaSide;
+import org.violetmoon.zetaimplforge.event.load.ForgeZModulesReady;
 
 /**
  * TODO: other forms of module discovery and replacement (like a Forge-only module, or other types of 'replacement' modules)
@@ -129,7 +130,7 @@ public class ZetaModuleManager {
 
 		z.log.info("Constructed {} modules.", modulesByKey.size());
 
-		z.loadBus.fire(new ZModulesReady());
+		z.loadBus.fire(new ForgeZModulesReady());
 	}
 
 	private ZetaModule constructAndSetup(TentativeModule t) {

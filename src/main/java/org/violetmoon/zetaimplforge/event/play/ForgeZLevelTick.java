@@ -7,7 +7,7 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.event.TickEvent;
 
 public class ForgeZLevelTick implements ZLevelTick {
-    private final TickEvent.LevelTickEvent e;
+    public final TickEvent.LevelTickEvent e;
 
     public ForgeZLevelTick(TickEvent.LevelTickEvent e) {
         this.e = e;

@@ -1,5 +1,6 @@
 package org.violetmoon.zetaimplforge.event.play.loading;
 
+import org.violetmoon.zeta.Zeta;
 import org.violetmoon.zeta.capability.ZetaCapability;
 import org.violetmoon.zeta.capability.ZetaCapabilityManager;
 import org.violetmoon.zeta.event.play.loading.ZAttachCapabilities;

@@ -10,7 +10,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 
 public class ForgeZLivingDrops implements ZLivingDrops {
-	private final LivingDropsEvent e;
+	public final LivingDropsEvent e;
 
 	public ForgeZLivingDrops(LivingDropsEvent e) {
 		this.e = e;

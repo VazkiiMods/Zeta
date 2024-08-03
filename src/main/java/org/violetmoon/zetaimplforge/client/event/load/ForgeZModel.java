@@ -12,6 +12,7 @@ import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.client.model.geometry.IGeometryLoader;
 
 public class ForgeZModel implements ZModel {
+
     public static class ModifyBakingResult extends ForgeZModel implements ZModel.ModifyBakingResult {
         private final ModelEvent.ModifyBakingResult e;
 

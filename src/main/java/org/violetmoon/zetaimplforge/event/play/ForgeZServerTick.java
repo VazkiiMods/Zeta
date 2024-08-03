@@ -6,7 +6,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.event.TickEvent;
 
 public class ForgeZServerTick implements ZServerTick {
-    private final TickEvent.ServerTickEvent e;
+    public final TickEvent.ServerTickEvent e;
 
     public ForgeZServerTick(TickEvent.ServerTickEvent e) {
         this.e = e;

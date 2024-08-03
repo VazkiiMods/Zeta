@@ -6,7 +6,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.TickEvent;
 
 public abstract class ForgeZPlayerTick implements ZPlayerTick {
-	private final TickEvent.PlayerTickEvent e;
+	public final TickEvent.PlayerTickEvent e;
 
 	protected ForgeZPlayerTick(TickEvent.PlayerTickEvent e) {
 		this.e = e;

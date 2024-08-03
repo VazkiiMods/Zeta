@@ -7,12 +7,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 
-public class ForgeZEntityAttributeCreation implements ZEntityAttributeCreation {
-	private final EntityAttributeCreationEvent e;
-
-	public ForgeZEntityAttributeCreation(EntityAttributeCreationEvent e) {
-		this.e = e;
-	}
+public record ForgeZEntityAttributeCreation(EntityAttributeCreationEvent e) implements ZEntityAttributeCreation {
 
 	@Override
 	public void put(EntityType<? extends LivingEntity> entity, AttributeSupplier map) {

@@ -5,12 +5,7 @@ import org.violetmoon.zeta.event.play.entity.living.ZLivingChangeTarget;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.event.entity.living.LivingChangeTargetEvent;
 
-public class ForgeZLivingChangeTarget implements ZLivingChangeTarget {
-    private final LivingChangeTargetEvent e;
-
-    public ForgeZLivingChangeTarget(LivingChangeTargetEvent e) {
-        this.e = e;
-    }
+public record ForgeZLivingChangeTarget(LivingChangeTargetEvent e) implements ZLivingChangeTarget {
 
     @Override
     public LivingEntity getEntity() {

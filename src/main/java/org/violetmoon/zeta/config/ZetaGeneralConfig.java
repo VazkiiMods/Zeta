@@ -5,6 +5,7 @@ import java.util.List;
 import org.violetmoon.zeta.Zeta;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.load.ZConfigChanged;
+import org.violetmoon.zeta.mod.ZetaMod;
 import org.violetmoon.zeta.piston.ZetaPistonStructureResolver;
 
 import com.google.common.collect.Lists;
@@ -59,8 +60,8 @@ public class ZetaGeneralConfig {
 
 	@LoadEvent
 	public static void configChanged(ZConfigChanged e) {
-		ZetaPistonStructureResolver.GlobalSettings.requestEnabled(Zeta.ZETA_ID, usePistonLogicRepl);
-		ZetaPistonStructureResolver.GlobalSettings.requestPushLimit(Zeta.ZETA_ID, pistonPushLimit);
+		ZetaPistonStructureResolver.GlobalSettings.requestEnabled(ZetaMod.ZETA_ID, usePistonLogicRepl);
+		ZetaPistonStructureResolver.GlobalSettings.requestPushLimit(ZetaMod.ZETA_ID, pistonPushLimit);
 	}
 	
 }
