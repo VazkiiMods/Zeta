@@ -38,9 +38,4 @@ public final class ClientTicker {
             ticksInGame++;
         }
     }
-
-    @PlayEvent
-    public void pre(ZRenderGuiOverlay.ChatPanel.Pre event) {
-        int aa = 1;
-    }
 }
