@@ -26,6 +26,7 @@ public class ZetaModClientProxy extends ZetaModCommonProxy {
 
     @Override
     public void registerEvents(Zeta zeta){
+        super.registerEvents(zeta);
         zeta.playBus
                 .subscribe(ClientTicker.INSTANCE)
                 .subscribe(new RequiredModTooltipHandler.Client(zeta));

@@ -23,7 +23,7 @@ def main():
 		for line in lines:
 			changelog = changelog + '-m "'+line+'" '
 
-	tag_success = os.system('git tag -a release-{}-{}-{} {}'.format(mc_version, version, build_number, changelog))
+	tag_success = os.system('git tag -a release-{}-{}-{}b {}'.format(mc_version, version, build_number, changelog))
 
 	if tag_success != 0:
 		print('Failed to create tag')
