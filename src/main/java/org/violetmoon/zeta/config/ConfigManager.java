@@ -2,7 +2,7 @@ package org.violetmoon.zeta.config;
 
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.zeta.Zeta;
-import org.violetmoon.zeta.event.play.loading.ZGatherAdditionalFlags;
+import org.violetmoon.zeta.event.load.ZGatherAdditionalFlags;
 import org.violetmoon.zeta.module.ZetaCategory;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.module.ZetaModuleManager;
@@ -103,8 +103,8 @@ public class ConfigManager {
             }));
         }
 
-        //grab any extra flags
-        z.playBus.fire(() -> cfm, ZGatherAdditionalFlags.class);
+        //grab any extra flags. Fires on the load event of that mod
+        z.loadBus.fire(() -> cfm, ZGatherAdditionalFlags.class);
 
         //managing module enablement in one go
         //adding this to the *start* of the list so modules are enabled before anything else runs
@@ -118,7 +118,7 @@ public class ConfigManager {
             });
 
             //update extra flags
-            z.playBus.fire(() -> cfm, ZGatherAdditionalFlags.class);
+            z.loadBus.fire(() -> cfm, ZGatherAdditionalFlags.class);
         });
 
         this.rootConfig = rootConfigBuilder.build();

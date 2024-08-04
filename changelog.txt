@@ -1,1 +1,1 @@
-- fixed an issue with biome modifier serializers not being registered (issue from very last release)
+moved gather additional flag event to the mod specific load bus. Unknown flags will also now return true

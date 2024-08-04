@@ -80,8 +80,9 @@ public abstract class Zeta implements IZeta {
     public final String modid;
     public final ZetaSide side;
     public final boolean isProduction;
-    public final ZetaEventBus<IZetaLoadEvent> loadBus;
-    public final ZetaEventBus<IZetaPlayEvent> playBus;
+    public final ZetaEventBus<IZetaLoadEvent> loadBus; //zeta specific bus
+    // Be careful when using this. Load bus will only fire stuff to this zeta events. Play bus however will not as it delegate to forge bus
+    public final ZetaEventBus<IZetaPlayEvent> playBus; //common mod event bus. Each zeta will have their own object for now but internally they all delegate to the same internal bus
     public final ZetaModuleManager modules;
 
     //registry

@@ -1,10 +1,9 @@
-package org.violetmoon.zetaimplforge.event.play.loading;
+package org.violetmoon.zetaimplforge.event.load;
 
 import net.minecraftforge.eventbus.api.Event;
 import org.violetmoon.zeta.config.ConfigFlagManager;
-import org.violetmoon.zeta.event.play.loading.ZGatherAdditionalFlags;
+import org.violetmoon.zeta.event.load.ZGatherAdditionalFlags;
 
-@Deprecated(forRemoval = true)
 public class ForgeZGatherAdditionalFlags extends Event implements ZGatherAdditionalFlags {
 
     private final ZGatherAdditionalFlags wrapped;

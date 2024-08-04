@@ -2,50 +2,16 @@ package org.violetmoon.zetaimplforge.event;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.Util;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RenderGuiOverlayEvent;
-import net.minecraftforge.client.event.RenderLivingEvent;
-import net.minecraftforge.client.event.RenderPlayerEvent;
-import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
-import net.minecraftforge.event.entity.living.*;
-import net.minecraftforge.event.entity.player.ItemTooltipEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.loading.FMLEnvironment;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.zeta.Zeta;
-import org.violetmoon.zeta.client.event.load.*;
-import org.violetmoon.zeta.client.event.play.*;
 import org.violetmoon.zeta.event.bus.*;
-import org.violetmoon.zeta.event.load.*;
-import org.violetmoon.zeta.event.play.*;
-import org.violetmoon.zeta.event.play.entity.*;
-import org.violetmoon.zeta.event.play.entity.living.*;
-import org.violetmoon.zeta.event.play.entity.player.*;
-import org.violetmoon.zeta.event.play.loading.*;
-import org.violetmoon.zetaimplforge.api.ForgeZGatherAdvancementModifiers;
-import org.violetmoon.zetaimplforge.capability.ForgeCapabilityManager;
-import org.violetmoon.zetaimplforge.client.event.load.*;
-import org.violetmoon.zetaimplforge.client.event.play.*;
-import org.violetmoon.zetaimplforge.event.load.*;
-import org.violetmoon.zetaimplforge.event.play.*;
-import org.violetmoon.zetaimplforge.event.play.entity.*;
-import org.violetmoon.zetaimplforge.event.play.entity.living.*;
-import org.violetmoon.zetaimplforge.event.play.entity.player.*;
-import org.violetmoon.zetaimplforge.event.play.loading.*;
-import org.violetmoon.zetaimplforge.mod.ZetaModClientProxy;
+import org.violetmoon.zeta.event.play.loading.ZGatherAdditionalFlags;
 import org.violetmoon.zetaimplforge.mod.ZetaModForge;
 
 import java.lang.annotation.Annotation;
@@ -82,14 +48,14 @@ public class ForgeZetaEventBus<Z, F extends Event> extends ZetaEventBus<Z> {
         return new ForgeZetaEventBus<>(
                 LoadEvent.class, IZetaLoadEvent.class,
                 logSpam, FMLJavaModLoadingContext.get().getModEventBus(), Event.class,
-                ofZeta, LOAD_EVENTS_REMAPPER);
+                ofZeta, DEFAULT_LOAD_EVENTS_REMAPPER);
     }
 
     public static ForgeZetaEventBus<IZetaPlayEvent, Event> ofPlayBus(@Nullable Logger logSpam, Zeta ofZeta) {
         return new ForgeZetaEventBus<>(
                 PlayEvent.class, IZetaPlayEvent.class,
                 logSpam, MinecraftForge.EVENT_BUS, Event.class,
-                ofZeta, PLAY_EVENTS_REMAPPER);
+                ofZeta, DEFAULT_PLAY_EVENTS_REMAPPER);
     }
 
 
@@ -101,8 +67,9 @@ public class ForgeZetaEventBus<Z, F extends Event> extends ZetaEventBus<Z> {
         Class<?> zetaEventClass = method.getParameterTypes()[0];
 
         //check if it's already a forge event, or it's a zeta event
-        if (!eventRoot.isAssignableFrom(zetaEventClass) && !forgeEventRoot.isAssignableFrom(zetaEventClass))
+        if (!eventRoot.isAssignableFrom(zetaEventClass) && !forgeEventRoot.isAssignableFrom(zetaEventClass)) {
             throw typeERR(method);
+        }
 
         MethodHandle handle;
         try {
@@ -172,14 +139,28 @@ public class ForgeZetaEventBus<Z, F extends Event> extends ZetaEventBus<Z> {
         }
     }
 
+    public <ZF extends Z, ZB extends Z, F2 extends F> void registerWrapper(Class<ZB> baseZetaEventClass, Class<F2> forgeEventClass,
+                                                                           Function<F2, ZF> constructor, Function<ZF, ? extends F> unwrapper) {
+        synchronized (remapper) {
+            remapper.registerWrapper(baseZetaEventClass, forgeEventClass, constructor, unwrapper);
+        }
+    }
+
+    public <ZF extends Z, ZB extends Z, F2 extends F> void registerWrapperWithGenerics(Class<ZB> baseZetaEventClass, Class<F2> forgeEventClass,
+                                                                                       Function<F2, ZF> constructor, Function<ZF, ? extends F> unwrapper, Class<?> generic) {
+        synchronized (remapper) {
+            remapper.registerWrapperWithGenerics(baseZetaEventClass, forgeEventClass, constructor, unwrapper, generic);
+        }
+    }
+
     // I would love to put this code in the mod proxy but that needs to do event setup stuff which requires these busses to be fully initialized
 
     // instances so we don't create multiple as reflections take time and memory
-    private static final ForgeEventsRemapper<IZetaLoadEvent, Event> LOAD_EVENTS_REMAPPER = Util.make(
+    private static final ForgeEventsRemapper<IZetaLoadEvent, Event> DEFAULT_LOAD_EVENTS_REMAPPER = Util.make(
             new ForgeEventsRemapper<>(IZetaLoadEvent.class, Event.class), ZetaModForge.PROXY::addKnownZetaLoadEvents
     );
 
-    private static final ForgeEventsRemapper<IZetaPlayEvent, Event> PLAY_EVENTS_REMAPPER = Util.make(
+    private static final ForgeEventsRemapper<IZetaPlayEvent, Event> DEFAULT_PLAY_EVENTS_REMAPPER = Util.make(
             new ForgeEventsRemapper<>(IZetaPlayEvent.class, Event.class), ZetaModForge.PROXY::addKnownZetaPlayEvents
     );
 
