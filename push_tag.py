@@ -23,7 +23,7 @@ def main():
 		for line in lines:
 			changelog = changelog + '-m "'+line+'" '
 
-	tag_success = os.system('git tag -a release-{}-{}-{}c {}'.format(mc_version, version, build_number, changelog))
+	tag_success = os.system('git tag -a release-{}-{}-{} {}'.format(mc_version, version, build_number, changelog))
 
 	if tag_success != 0:
 		print('Failed to create tag')
@@ -36,7 +36,7 @@ def main():
 	    build.store(f, encoding="utf-8")
 
 	os.system('git commit -a -m build')
-	os.system('git push origin main release-{}-{}-{}c'.format(mc_version, version, build_number))
+	os.system('git push origin main release-{}-{}-{}'.format(mc_version, version, build_number))
 
 if __name__ == '__main__':
 	main()
