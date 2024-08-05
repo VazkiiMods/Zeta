@@ -1,1 +1,1 @@
-moved gather additional flag event to the mod specific load bus. Unknown flags will also now return true
+fixed missing anvil event. Added workaround to prevent invalidly placed client events from crashing server
