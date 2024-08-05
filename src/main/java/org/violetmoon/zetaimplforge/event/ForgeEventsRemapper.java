@@ -11,7 +11,7 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import org.apache.commons.lang3.text.WordUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.violetmoon.zeta.client.event.play.ZRenderGuiOverlay;
+import org.violetmoon.zeta.mod.ZetaMod;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.reflect.Constructor;
@@ -64,6 +64,7 @@ public class ForgeEventsRemapper<Z, F extends Event> {
     /**
      * Given a MethodHandle of a method which takes a Zeta event, remaps it to a method which takes a Forge event, so we can register it with Forge event bus
      */
+    @Nullable
     protected Consumer<? extends F> remapMethod(MethodHandle originalEventConsumer, Class<?> zetaEventBaseClass, Class<?> forgeEventClass) {
         Function<? extends F, ? extends Z> forgeToZetaFunc = forgeToZetaMap.get(zetaEventBaseClass);
         if (forgeToZetaFunc == null) {
@@ -76,8 +77,9 @@ public class ForgeEventsRemapper<Z, F extends Event> {
                         throw new RuntimeException(e);
                     }
                 };
-            } else
-                throw new RuntimeException("Could not convert Zeta event class " + zetaEventBaseClass + " to Forge event. You must register its subclass using registerSubclass.");
+            } else {
+                return null;
+            }
         }
         return createForgeConsumer(originalEventConsumer, forgeToZetaFunc, zetaEventBaseClass, forgeEventClass);
     }
@@ -374,9 +376,31 @@ public class ForgeEventsRemapper<Z, F extends Event> {
 
         Consumer<? extends F> consumer = this.remapMethod(handle, zetaEventClass, forgeEventClass);
 
+        if (consumer == null) {
+
+            //check for client hack
+            if (isClientEvent(zetaEventClass)) {
+                if (ZetaMod.ZETA.isProduction) {
+                    ZetaMod.LOGGER.error("Client event {} was found in a non client only class!", zetaEventClass);
+                    return new Object();
+                }
+                throw new RuntimeException("Client event " + zetaEventClass + " was found in a non client only class!");
+            }
+
+            throw new RuntimeException("Could not convert Zeta event class " + zetaEventClass + " to Forge event " +
+                    "(in class " + owningClazz + "). You must register its subclass using registerSubclass.");
+        }
+
         registerListenerToForgeWithPriorityAndGenerics(forgeBus, owningClazz, consumer, zetaEventClass, forgeEventClass);
 
         return consumer;
+    }
+
+    //remove once all zeta client events are moved to client replacement module as they should
+    @Deprecated(forRemoval = true)
+    private boolean isClientEvent(Class<?> zetaEventClass) {
+        String path = zetaEventClass.getPackageName();
+        return path.startsWith("org.violetmoon.zeta.client.event");
     }
 
 

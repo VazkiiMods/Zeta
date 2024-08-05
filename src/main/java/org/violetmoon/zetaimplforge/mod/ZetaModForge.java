@@ -1,6 +1,7 @@
 package org.violetmoon.zetaimplforge.mod;
 
 import org.violetmoon.zeta.mod.ZetaMod;
+import org.violetmoon.zetaimplforge.EventTest;
 import org.violetmoon.zetaimplforge.ForgeZeta;
 
 import net.minecraftforge.fml.DistExecutor;
@@ -23,6 +24,11 @@ public class ZetaModForge extends ZetaMod{
 
 		// creates 2 dist specific objects that will handle zeta specific & loader specific events needed for zeta to work
 		PROXY.registerEvents(ZETA);
+
+		if(!ZETA.isProduction) {
+			ZETA.loadBus.subscribe(EventTest.class);
+			ZETA.playBus.subscribe(EventTest.class);
+		}
 	}
 
 	

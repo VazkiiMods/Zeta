@@ -99,6 +99,7 @@ public class ZetaModCommonProxy {
     public void addKnownZetaPlayEvents(ForgeEventsRemapper<IZetaPlayEvent, Event> r) {
 
         r.registerWrapper(ZAnvilRepair.class, ForgeZAnvilRepair.class);
+        r.registerWrapper(ZAnvilUpdate.class, ForgeZAnvilUpdate.class);
         r.registerWrapper(ZAnvilUpdate.Highest.class, ForgeZAnvilUpdate.Highest.class);
         r.registerWrapper(ZAnvilUpdate.Lowest.class, ForgeZAnvilUpdate.Lowest.class);
         r.registerWrapper(ZTagsUpdated.class, ForgeZTagsUpdated.class);
