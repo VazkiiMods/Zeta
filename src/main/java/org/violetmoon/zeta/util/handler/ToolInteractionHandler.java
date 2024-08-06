@@ -75,7 +75,7 @@ public final class ToolInteractionHandler {
 				}
 
 				//TODO: what
-				module.zeta.advancementModifierRegistry.addModifier(new WaxModifier(module, unwaxed, waxed));
+				module.zeta().advancementModifierRegistry.addModifier(new WaxModifier(module, unwaxed, waxed));
 			}
 		});
 	}

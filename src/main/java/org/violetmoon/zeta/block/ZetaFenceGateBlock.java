@@ -38,7 +38,7 @@ public class ZetaFenceGateBlock extends FenceGateBlock implements IZetaBlock {
 		if(module == null) //auto registration below this line
 			return;
 
-		module.zeta.registry.registerBlock(this, regname, true);
+		module.zeta().registry.registerBlock(this, regname, true);
 	}
 
 	@Override

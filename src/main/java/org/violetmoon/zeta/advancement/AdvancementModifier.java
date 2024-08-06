@@ -25,7 +25,7 @@ public abstract class AdvancementModifier implements IAdvancementModifier {
 
 	@Override
 	public boolean isActive() {
-		return (module == null || module.enabled) && cond.getAsBoolean() && ZetaGeneralConfig.enableAdvancementModification;
+		return (module == null || module.isEnabled()) && cond.getAsBoolean() && ZetaGeneralConfig.enableAdvancementModification;
 	}
 
 }

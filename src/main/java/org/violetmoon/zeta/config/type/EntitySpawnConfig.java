@@ -32,7 +32,7 @@ public class EntitySpawnConfig implements IConfigType {
 
 	@Override
 	public void onReload(ZetaModule module, ConfigFlagManager flagManager) {
-		enabled = (module != null && module.enabled);
+		enabled = (module != null && module.isEnabled());
 	}
 
 	public boolean isEnabled() {

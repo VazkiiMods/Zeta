@@ -71,7 +71,7 @@ public class DyeablesRegistry {
 	}
 
 	public void register(Item item, ZetaModule module) {
-		register(item, () -> module.enabled);
+		register(item, module::isEnabled);
 	}
 
 	public void register(Item item, BooleanSupplier cond) {

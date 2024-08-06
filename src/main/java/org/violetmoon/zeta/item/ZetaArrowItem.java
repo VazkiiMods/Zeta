@@ -28,7 +28,7 @@ public abstract class ZetaArrowItem extends ArrowItem implements IZetaItem {
 		if(module == null) //auto registration below this line
 			return;
 
-		module.zeta.registry.registerItem(this, name);
+		module.zeta().registry.registerItem(this, name);
 		CreativeTabManager.addToCreativeTab(CreativeModeTabs.COMBAT, this);
 	}
 

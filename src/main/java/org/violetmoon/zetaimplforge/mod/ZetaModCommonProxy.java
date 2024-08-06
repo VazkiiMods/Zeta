@@ -27,6 +27,7 @@ import org.violetmoon.zeta.event.play.entity.*;
 import org.violetmoon.zeta.event.play.entity.living.*;
 import org.violetmoon.zeta.event.play.entity.player.*;
 import org.violetmoon.zeta.event.play.loading.*;
+import org.violetmoon.zeta.event.play.loading.ZGatherHints;
 import org.violetmoon.zeta.util.handler.RecipeCrawlHandler;
 import org.violetmoon.zeta.util.handler.ToolInteractionHandler;
 import org.violetmoon.zeta.world.EntitySpawnHandler;
@@ -42,6 +43,7 @@ import org.violetmoon.zetaimplforge.event.play.entity.*;
 import org.violetmoon.zetaimplforge.event.play.entity.living.*;
 import org.violetmoon.zetaimplforge.event.play.entity.player.*;
 import org.violetmoon.zetaimplforge.event.play.loading.*;
+import org.violetmoon.zetaimplforge.event.play.loading.ForgeZGatherHints;
 import org.violetmoon.zetaimplforge.world.ZetaBiomeModifier;
 
 import java.util.function.Function;
@@ -93,6 +95,8 @@ public class ZetaModCommonProxy {
         //zeta own
         r.registerWrapper(ZGatherAdvancementModifiers.class, ForgeZGatherAdvancementModifiers.class);
         r.registerWrapper(ZGatherAdditionalFlags.class, ForgeZGatherAdditionalFlags.class);
+        r.registerWrapper(org.violetmoon.zeta.event.load.ZGatherHints.class, org.violetmoon.zetaimplforge.event.load.ForgeZGatherHints.class);
+
 
     }
 

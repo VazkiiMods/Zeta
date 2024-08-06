@@ -23,9 +23,7 @@ public class ZetaBlock extends Block implements IZetaBlock {
         if(module == null) //auto registration below this line
             return;
 
-        module.zeta.registry.registerBlock(this, regname);
-        if(module.category.isAddon())
-            module.zeta.requiredModTooltipHandler.map(this, module.category.requiredMod);
+        module.zeta().registry.registerBlock(this, regname);
     }
     
     @Override

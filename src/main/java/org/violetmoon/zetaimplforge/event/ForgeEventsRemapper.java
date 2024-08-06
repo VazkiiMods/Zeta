@@ -137,6 +137,7 @@ public class ForgeEventsRemapper<Z, F extends Event> {
     }
 
     // for generic events
+
     // auto register ones are deprecated. Register manually, its faster and requires no reflection hacks
     @Deprecated
     public <S extends Z, C extends Z> void registerWrapperWithGeneric(Class<C> baseZetaEventClass, Class<S> forgeZetaEventClass, Class<?> genericClass) {

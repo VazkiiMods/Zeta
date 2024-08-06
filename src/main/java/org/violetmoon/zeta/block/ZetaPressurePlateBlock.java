@@ -27,7 +27,7 @@ public class ZetaPressurePlateBlock extends PressurePlateBlock implements IZetaB
 		if(module == null) //auto registration below this line
 			return;
 
-		module.zeta.registry.registerBlock(this, regname, true);
+		module.zeta().registry.registerBlock(this, regname, true);
 		setCreativeTab(CreativeModeTabs.REDSTONE_BLOCKS, Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE, false);
 	}
 

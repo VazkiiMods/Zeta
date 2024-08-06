@@ -29,7 +29,7 @@ public class ZetaMobBucketItem extends MobBucketItem implements IZetaItem {
 		if(module == null) //auto registration below this line
 			return;
 
-		module.zeta.registry.registerItem(this, name);
+		module.zeta().registry.registerItem(this, name);
 		CreativeTabManager.addToCreativeTabNextTo(CreativeModeTabs.TOOLS_AND_UTILITIES, this, Items.AXOLOTL_BUCKET, false);
 	}
 

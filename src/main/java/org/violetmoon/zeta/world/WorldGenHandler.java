@@ -87,7 +87,7 @@ public class WorldGenHandler {
 			for(WeightedGenerator wgen : set) {
 				Generator gen = wgen.generator();
 
-				if(wgen.module().enabled && gen.canGenerate(region)) {
+				if(wgen.module().isEnabled() && gen.canGenerate(region)) {
 					if(ZetaGeneralConfig.enableWorldgenWatchdog) {
 						final int finalStageNum = stageNum;
 						stageNum = watchdogRun(gen, () -> gen.generate(finalStageNum, seed, stage, region, generator, random, pos), 1, TimeUnit.MINUTES);

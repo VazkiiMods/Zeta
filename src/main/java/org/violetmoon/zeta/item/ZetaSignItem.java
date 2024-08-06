@@ -24,8 +24,8 @@ public class ZetaSignItem extends SignItem implements IZetaItem {
 		if(module == null) //auto registration below this line
 			return;
 
-		String resloc = module.zeta.registryUtil.inherit(sign, "%s");
-		module.zeta.registry.registerItem(this, resloc);
+		String resloc = module.zeta().registryUtil.inherit(sign, "%s");
+		module.zeta().registry.registerItem(this, resloc);
 		setCreativeTab(CreativeModeTabs.FUNCTIONAL_BLOCKS, Blocks.CHEST, true);
 	}
 

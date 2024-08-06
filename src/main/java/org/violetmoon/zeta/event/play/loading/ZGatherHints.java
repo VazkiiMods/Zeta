@@ -22,6 +22,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
 
+@Deprecated(forRemoval = true)
 public interface ZGatherHints extends IZetaPlayEvent {
 
 	void accept(ItemLike itemLike, Component extra);
@@ -47,7 +48,7 @@ public interface ZGatherHints extends IZetaPlayEvent {
 	}
 
 	default void gatherHintsFromModule(ZetaModule module, ConfigFlagManager cfm) {
-		if(!module.enabled)
+		if(!module.isEnabled())
 			return;
 
 		List<Field> fields = ConfigObjectMapper.walkModuleFields(module.getClass());
@@ -91,11 +92,11 @@ public interface ZGatherHints extends IZetaPlayEvent {
 
 				//Application
 				if(target instanceof TagKey<?> tkey)
-					applyTag(module.zeta, tkey, key, extra);
+					applyTag(module.zeta(), tkey, key, extra);
 				else if(target instanceof Iterable<?> iter)
-					applyIterable(module.zeta, iter, key, extra);
+					applyIterable(module.zeta(), iter, key, extra);
 				else
-					applyObject(module.zeta, target, key, extra);
+					applyObject(module.zeta(), target, key, extra);
 
 			} catch (Exception e) {
 				throw new RuntimeException("Problem applying annotation hint " + f.getName() +

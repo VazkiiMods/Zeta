@@ -5,7 +5,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.BlockHitResult;
-import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.zeta.advancement.AdvancementModifierRegistry;
@@ -28,7 +27,6 @@ import org.violetmoon.zeta.util.RaytracingUtil;
 import org.violetmoon.zeta.util.RegistryUtil;
 import org.violetmoon.zeta.util.ZetaSide;
 import org.violetmoon.zeta.util.handler.FuelHandler;
-import org.violetmoon.zeta.util.handler.RequiredModTooltipHandler;
 import org.violetmoon.zeta.util.zetalist.IZeta;
 import org.violetmoon.zeta.util.zetalist.ZetaList;
 import org.violetmoon.zeta.world.EntitySpawnHandler;
@@ -45,7 +43,7 @@ public abstract class Zeta implements IZeta {
 
         this.modid = modid;
         this.side = side;
-        this.isProduction = isProduction;
+        this.isProduction = isProduction; //TODO: either have all these constants or static helpers here or in Utils. Not both
 
 
         this.modules = createModuleManager();
@@ -87,14 +85,13 @@ public abstract class Zeta implements IZeta {
 
     //registry
     public final ZetaRegistry registry;
-    public final RegistryUtil registryUtil = new RegistryUtil(this); //TODO: Delete this, only needed cause there's no way to get early registry names.
+    public final RegistryUtil registryUtil = new RegistryUtil(this); //TODO: !!Delete this, only needed cause there's no way to get early registry names.
     public final RenderLayerRegistry renderLayerRegistry;
     public final DyeablesRegistry dyeables;
     public final CraftingExtensionsRegistry craftingExtensions;
     public final BrewingRegistry brewingRegistry;
     public final AdvancementModifierRegistry advancementModifierRegistry;
     public final PottedPlantRegistry pottedPlantRegistry;
-    public final RequiredModTooltipHandler requiredModTooltipHandler = new RequiredModTooltipHandler(); //TODO, find better spot or remove this.
     public final VariantRegistry variantRegistry = new VariantRegistry(this);
 
     //extensions

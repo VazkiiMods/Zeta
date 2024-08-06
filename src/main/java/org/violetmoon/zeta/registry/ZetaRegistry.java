@@ -10,6 +10,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import org.checkerframework.checker.units.qual.A;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.zeta.Zeta;
@@ -38,6 +39,8 @@ public abstract class ZetaRegistry {
 
 	// the keys of this are things like "minecraft:block", "minecraft:item" and so on
 	private final Multimap<ResourceLocation, Supplier<Object>> defers = ArrayListMultimap.create();
+	// my registered entries
+	private final Map<ResourceKey<Registry<?>>, List<Holder<?>>> myRegisteredObjects = new HashMap<>();
 	
 	// to support calling getRegistryName before the object actually gets registered for real
 	protected final Map<Object, ResourceLocation> internalNames = new IdentityHashMap<>();
@@ -272,5 +275,16 @@ public abstract class ZetaRegistry {
 			if(entry.lateBound != null)
 				entry.lateBound.bind(thing, writable);
 		});
+	}
+
+	protected <O> void trackRegisteredObject(ResourceKey<Registry<O>> keyGeneric, Holder<O> entry) {
+		myRegisteredObjects.computeIfAbsent((ResourceKey) keyGeneric, __ -> new ArrayList<>()).add(entry);
+	}
+
+	/**
+	 * Gets all the registered objects from this Zeta
+	 */
+	public <O> Collection<Holder<O>> getRegisteredObjects(ResourceKey<Registry<O>> registry) {
+		return (Collection<Holder<O>>) (Collection) myRegisteredObjects.get((ResourceKey) registry);
 	}
 }

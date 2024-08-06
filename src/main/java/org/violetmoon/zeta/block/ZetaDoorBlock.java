@@ -29,8 +29,8 @@ public class ZetaDoorBlock extends DoorBlock implements IZetaBlock, IZetaBlockIt
 		if(module == null) //auto registration below this line
 			return;
 
-		module.zeta.renderLayerRegistry.put(this, RenderLayerRegistry.Layer.CUTOUT);
-		module.zeta.registry.registerBlock(this, regname, true);
+		module.zeta().renderLayerRegistry.put(this, RenderLayerRegistry.Layer.CUTOUT);
+		module.zeta().registry.registerBlock(this, regname, true);
 		CreativeTabManager.addToCreativeTab(CreativeModeTabs.BUILDING_BLOCKS, this);
 		CreativeTabManager.addToCreativeTab(CreativeModeTabs.REDSTONE_BLOCKS, this);
 	}

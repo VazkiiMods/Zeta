@@ -30,11 +30,15 @@ public class ForgeZetaRegistry extends ZetaRegistry {
 			for(Supplier<Object> supplier : ourEntries) {
 				Object entry = supplier.get();
 				ResourceLocation name = internalNames.get(entry);
-				z.log.debug("Registering to " + registryRes + " - " + name);
+                z.log.debug("Registering to {} - {}", registryRes, name);
 				event.register(keyGeneric, e-> e.register(name, entry));
+
+				trackRegisteredObject(keyGeneric, event.getVanillaRegistry().wrapAsHolder(entry));
 			}
 
 			clearDeferCache(registryRes);
 		}
 	}
+
+
 }

@@ -18,7 +18,8 @@ public class ConfigManager {
     //for updating the values of @Config annotations to match the current state of the config
     // and other "listening for config load" purposes
     private final List<Consumer<IZetaConfigInternals>> databindings = new ArrayList<>();
-    private Consumer<IZetaConfigInternals> onConfigReloadJEI;
+    // its a map so it can work when adding stuff multiple time from game reloads
+    private final Map<String, Consumer<IZetaConfigInternals>> onReloadListeners = new HashMap<>();
 
     //ummmmmmm i think my abstraction isn't very good
     private final @Nullable SectionDefinition generalSection;
@@ -69,29 +70,30 @@ public class ConfigManager {
 
                     // module enablement option
                     moduleEnabledOptions.put(module, categorySectionBuilder.addValue(moduleEnabledOptionBuilder -> moduleEnabledOptionBuilder
-                            .name(module.displayName)
-                            .englishDisplayName(module.displayName)
-                            .comment(module.description)
-                            .defaultValue(module.enabledByDefault)));
+                            .name(module.displayName())
+                            .englishDisplayName(module.displayName())
+                            .comment(module.description())
+                            .defaultValue(module.enabledByDefault())));
 
                     // per-module options
                     categorySectionBuilder.addSubsection(moduleSectionBuilder -> {
                         moduleSectionBuilder
-                                .name(module.lowercaseName)
-                                .englishDisplayName(module.displayName)
-                                .comment(module.description);
+                                .name(module.lowerCaseName())
+                                .englishDisplayName(module.displayName())
+                                .comment(module.description());
 
                         // @Config options
                         ConfigObjectMapper.readInto(moduleSectionBuilder, module, databindings, cfm);
 
                         // anti overlap option
-                        if (!module.antiOverlap.isEmpty()) {
+                        var antiOverlap = module.antiOverlap();
+                        if (!antiOverlap.isEmpty()) {
                             ignoreAntiOverlapOptions.put(module, moduleSectionBuilder.addValue(antiOverlapOptionBuilder -> {
                                 antiOverlapOptionBuilder.name("Ignore Anti Overlap")
                                         .comment("This feature disables itself if any of the following mods are loaded:")
                                         .defaultValue(false);
 
-                                for (String modid : module.antiOverlap)
+                                for (String modid : antiOverlap)
                                     antiOverlapOptionBuilder.comment(" - " + modid);
 
                                 antiOverlapOptionBuilder.comment("This is done to prevent content overlap.")
@@ -111,7 +113,7 @@ public class ConfigManager {
         //Its Janky !
         databindings.add(0, i -> {
             categoryEnabledOptions.forEach((category, option) -> setCategoryEnabled(category, i.get(option)));
-            ignoreAntiOverlapOptions.forEach((module, option) -> module.ignoreAntiOverlap = !ZetaGeneralConfig.useAntiOverlap || i.get(option));
+            ignoreAntiOverlapOptions.forEach((module, option) -> module.setIgnoreAntiOverlap(!ZetaGeneralConfig.useAntiOverlap || i.get(option)));
             moduleEnabledOptions.forEach((module, option) -> {
                 setModuleEnabled(module, i.get(option));
                 cfm.putModuleFlag(module);
@@ -157,7 +159,7 @@ public class ConfigManager {
 
         //TODO: hacky, just forcing setEnabled to rerun since it checks category enablement
         for (ZetaModule mod : z.modules.modulesInCategory(cat)) {
-            mod.setEnabled(z, mod.enabled);
+            mod.setEnabled(z, mod.isEnabled());
         }
     }
 
@@ -179,12 +181,11 @@ public class ConfigManager {
         IZetaConfigInternals internals = z.configInternals;
         databindings.forEach(c -> c.accept(internals));
 
-        if (onConfigReloadJEI != null)
-            onConfigReloadJEI.accept(internals);
+        onReloadListeners.values().forEach(r -> r.accept(internals));
     }
 
-    public void setJeiReloadListener(Consumer<IZetaConfigInternals> consumer) {
-        this.onConfigReloadJEI = consumer;
+    public void addOnReloadListener(String id, Consumer<IZetaConfigInternals> consumer) {
+        this.onReloadListeners.put(id, consumer);
         consumer.accept(z.configInternals); //run it now as well
     }
 }

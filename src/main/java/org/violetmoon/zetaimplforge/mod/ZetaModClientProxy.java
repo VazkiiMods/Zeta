@@ -1,5 +1,7 @@
 package org.violetmoon.zetaimplforge.mod;
 
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
 import net.minecraftforge.client.event.RenderGuiOverlayEvent;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
@@ -7,13 +9,18 @@ import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.Event;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.violetmoon.zeta.Zeta;
+import org.violetmoon.zeta.block.IZetaBlock;
 import org.violetmoon.zeta.client.ClientTicker;
 import org.violetmoon.zeta.client.event.load.*;
 import org.violetmoon.zeta.client.event.play.*;
 import org.violetmoon.zeta.event.bus.IZetaLoadEvent;
 import org.violetmoon.zeta.event.bus.IZetaPlayEvent;
-import org.violetmoon.zeta.util.handler.RequiredModTooltipHandler;
+import org.violetmoon.zeta.event.bus.PlayEvent;
+import org.violetmoon.zeta.event.play.ZItemTooltip;
+import org.violetmoon.zeta.item.IZetaItem;
+import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.util.zetalist.ZetaList;
 import org.violetmoon.zetaimplforge.client.event.load.*;
 import org.violetmoon.zetaimplforge.client.event.play.*;
@@ -27,20 +34,39 @@ public class ZetaModClientProxy extends ZetaModCommonProxy {
     @Override
     public void registerEvents(Zeta zeta){
         super.registerEvents(zeta);
-        zeta.playBus
-                .subscribe(ClientTicker.INSTANCE)
-                .subscribe(new RequiredModTooltipHandler.Client(zeta));
+        zeta.playBus.subscribe(ClientTicker.INSTANCE)
+                .subscribe(this);
 
-        MinecraftForge.EVENT_BUS.addListener(this::clientTick);
+        MinecraftForge.EVENT_BUS.register(this);
     }
+
+    //TODO: move these 2 events to a common class
 
     // added once per zeta. Its fine as we then fire it on zeta load bos which is one per zeta too.
     boolean clientTicked = false;
 
+    @SubscribeEvent
     public void clientTick(TickEvent.ClientTickEvent e) {
         if (!clientTicked) {
             ZetaList.INSTANCE.fireLoadEvent(new ForgeZFirstClientTick());
             clientTicked = true;
+        }
+    }
+
+    @PlayEvent
+    public void onTooltip(ZItemTooltip event) {
+        Item item = event.getItemStack().getItem();
+
+        ZetaModule module = null;
+        if (item instanceof IZetaItem zi) {
+            module = zi.getModule();
+        }
+        if (item instanceof BlockItem bi && bi.getBlock() instanceof IZetaBlock zb) {
+            zb.getModule();
+        }
+
+        if (module != null && !module.isEnabled() && module.category().isAddon()) {
+            event.getToolTip().add(module.category().getDisabledTooltip());
         }
     }
 

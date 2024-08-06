@@ -26,11 +26,11 @@ public class ZetaInheritedPaneBlock extends ZetaPaneBlock implements IZetaBlock,
 		if(module == null || parent.getModule() == null) //auto registration below this line
 			return;
 
-		parent.getModule().zeta.renderLayerRegistry.mock(this, parent.getBlock());
+		parent.getModule().zeta().renderLayerRegistry.mock(this, parent.getBlock());
 	}
 
 	public ZetaInheritedPaneBlock(IZetaBlock parent, Block.Properties properties) {
-		this(parent, Objects.requireNonNull(parent.getModule(), "Can only use this constructor on blocks with a ZetaModule").zeta.registryUtil.inheritQuark(parent, "%s_pane"), properties);
+		this(parent, Objects.requireNonNull(parent.getModule(), "Can only use this constructor on blocks with a ZetaModule").zeta().registryUtil.inheritQuark(parent, "%s_pane"), properties);
 	}
 
 	public ZetaInheritedPaneBlock(IZetaBlock parent) {
@@ -46,7 +46,7 @@ public class ZetaInheritedPaneBlock extends ZetaPaneBlock implements IZetaBlock,
 	@Override
 	public float[] getBeaconColorMultiplierZeta(BlockState state, LevelReader world, BlockPos pos, BlockPos beaconPos) {
 		BlockState parentState = parent.getBlock().defaultBlockState();
-		return parent.getModule().zeta.blockExtensions.get(parentState).getBeaconColorMultiplierZeta(parentState, world, pos, beaconPos);
+		return parent.getModule().zeta().blockExtensions.get(parentState).getBeaconColorMultiplierZeta(parentState, world, pos, beaconPos);
 	}
 
 	@Override

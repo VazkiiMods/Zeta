@@ -25,7 +25,7 @@ public class ZetaSpawnEggItem extends ForgeSpawnEggItem implements IZetaItem {
 		if(module == null) //auto registration below this line
 			return;
 
-		module.zeta.registry.registerItem(this, regname);
+		module.zeta().registry.registerItem(this, regname);
 		CreativeTabManager.addToCreativeTab(CreativeModeTabs.SPAWN_EGGS, this);
 	}
 

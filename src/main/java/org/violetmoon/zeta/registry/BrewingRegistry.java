@@ -54,9 +54,9 @@ public abstract class BrewingRegistry {
 			String baseName = loc.getPath();
 			boolean hasStrong = strongTime > 0;
 
-			Potion normalType = registerPotion(new MobEffectInstance(effect, normalTime), baseName, baseName);
-			Potion longType = registerPotion(new MobEffectInstance(effect, longTime), baseName, "long_" + baseName);
-			Potion strongType = !hasStrong ? null : registerPotion(new MobEffectInstance(effect, strongTime, 1), baseName, "strong_" + baseName);
+			Potion normalType = registerPotion(new MobEffectInstance(effect, normalTime), baseName, baseName, flag);
+			Potion longType = registerPotion(new MobEffectInstance(effect, longTime), baseName, "long_" + baseName, flag);
+			Potion strongType = !hasStrong ? null : registerPotion(new MobEffectInstance(effect, strongTime, 1), baseName, "strong_" + baseName, flag);
 
 			addPotionMix(flag, reagent, normalType, longType, strongType);
 
@@ -65,9 +65,9 @@ public abstract class BrewingRegistry {
 				if (negationLoc != null) {
 					String negationBaseName = negationLoc.getPath();
 
-					Potion normalNegationType = registerPotion(new MobEffectInstance(negation, normalTime), negationBaseName, negationBaseName);
-					Potion longNegationType = registerPotion(new MobEffectInstance(negation, longTime), negationBaseName, "long_" + negationBaseName);
-					Potion strongNegationType = !hasStrong ? null : registerPotion(new MobEffectInstance(negation, strongTime, 1), negationBaseName, "strong_" + negationBaseName);
+					Potion normalNegationType = registerPotion(new MobEffectInstance(negation, normalTime), negationBaseName, negationBaseName, flag);
+					Potion longNegationType = registerPotion(new MobEffectInstance(negation, longTime), negationBaseName, "long_" + negationBaseName, flag);
+					Potion strongNegationType = !hasStrong ? null : registerPotion(new MobEffectInstance(negation, strongTime, 1), negationBaseName, "strong_" + negationBaseName, flag);
 
 					addNegation(flag, normalType, longType, strongType, normalNegationType, longNegationType, strongNegationType);
 				}
@@ -102,10 +102,10 @@ public abstract class BrewingRegistry {
 
 	}
 
-	protected final Map<Potion, String> flaggedPotions = Maps.newHashMap();
+	// uglyyy
+	protected final Map<Potion, String> modPotionsToConfigFlag = Maps.newHashMap();
 
 	protected void addFlaggedRecipe(String flag, Potion potion, Supplier<Ingredient> reagent, Potion to) {
-		flaggedPotions.put(to, flag);
 		Supplier<Ingredient> flagIngredientSupplier = () -> new FlagIngredient(
 			reagent.get(),
 			flag,
@@ -116,17 +116,19 @@ public abstract class BrewingRegistry {
 		addBrewingRecipe(potion, flagIngredientSupplier, to);
 	}
 
-	protected Potion registerPotion(MobEffectInstance eff, String baseName, String name) {
-		Potion effect = new Potion(zeta.modid + "." + baseName, eff);
-		zeta.registry.register(effect, name, Registries.POTION);
+	protected Potion registerPotion(MobEffectInstance eff, String baseName, String name, String configFlag) {
+		Potion potion = new Potion(zeta.modid + "." + baseName, eff);
+		zeta.registry.register(potion, name, Registries.POTION);
 
-		return effect;
+		modPotionsToConfigFlag.put(potion, configFlag);
+
+		return potion;
 	}
 
 	public boolean isEnabled(Potion potion) {
-		if (!flaggedPotions.containsKey(potion))
-			return true;
-		return zeta.configManager.getConfigFlagManager().getFlag(flaggedPotions.get(potion));
+		String flag = modPotionsToConfigFlag.get(potion);
+		if (flag == null) return true;
+		return zeta.configManager.getConfigFlagManager().getFlag(flag);
 	}
 
 	public static Ingredient redstone() {

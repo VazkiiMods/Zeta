@@ -21,7 +21,7 @@ public class ZetaStandingSignBlock extends StandingSignBlock implements IZetaBlo
 		if(module == null) //auto registration below this line
 			return;
 
-		module.zeta.registry.registerBlock(this, regname, false);
+		module.zeta().registry.registerBlock(this, regname, false);
 	}
 
 	@Override

@@ -32,7 +32,7 @@ public class ZetaGlassBlock extends ZetaBlock {
 		if(module == null) //auto registration below this line
 			return;
 
-		module.zeta.renderLayerRegistry.put(this, translucent ? RenderLayerRegistry.Layer.TRANSLUCENT : RenderLayerRegistry.Layer.CUTOUT);
+		module.zeta().renderLayerRegistry.put(this, translucent ? RenderLayerRegistry.Layer.TRANSLUCENT : RenderLayerRegistry.Layer.CUTOUT);
 	}
 
 	@Override

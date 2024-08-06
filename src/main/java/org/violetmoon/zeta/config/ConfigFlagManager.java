@@ -55,14 +55,14 @@ public final class ConfigFlagManager {
 	}
 
 	public void putFlag(ZetaModule module, String flag, boolean value) {
-		flags.put(flag, value && module.enabled);
+		flags.put(flag, value && module.isEnabled());
 		if(!allFlags.contains(flag)) {
 			allFlags.add(flag);
 		}
 	}
 
 	public void putModuleFlag(ZetaModule module) {
-		putFlag(module, module.lowercaseName, true);
+		putFlag(module, module.lowerCaseName(), true);
 	}
 
 	public boolean isValidFlag(String flag) {

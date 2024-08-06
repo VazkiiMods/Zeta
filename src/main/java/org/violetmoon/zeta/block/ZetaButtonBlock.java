@@ -30,7 +30,7 @@ public abstract class ZetaButtonBlock extends ButtonBlock implements IZetaBlock 
 		if(module == null) //auto registration below this line
 			return;
 
-		module.zeta.registry.registerBlock(this, regname, true);
+		module.zeta().registry.registerBlock(this, regname, true);
 		CreativeTabManager.addToCreativeTabNextTo(CreativeModeTabs.REDSTONE_BLOCKS, this, Blocks.STONE_BUTTON, false);
 	}
 
