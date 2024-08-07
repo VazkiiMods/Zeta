@@ -38,4 +38,10 @@ public @interface Config {
 		boolean exclusive() default false;
 	}
 
+	@Target(ElementType.TYPE)
+	@Retention(RetentionPolicy.RUNTIME)
+	@interface RootComment {
+		String value();
+	}
+
 }
