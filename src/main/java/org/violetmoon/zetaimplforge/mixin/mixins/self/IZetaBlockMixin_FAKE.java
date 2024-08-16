@@ -124,8 +124,7 @@ public class IZetaBlockMixin_FAKE implements IZetaBlockExtensions, IBlockExtensi
 
 	@Override
 	public @Nullable BlockState getToolModifiedState(BlockState state, UseOnContext context, ItemAbility itemAbility, boolean simulate) {
-		String toolActionName = itemAbility.name();
-		return getToolModifiedStateZeta(state, context, toolActionName, simulate);
+		return getToolModifiedStateZeta(state, context, itemAbility, simulate);
 	}
 
 	@Override

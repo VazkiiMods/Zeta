@@ -13,6 +13,7 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
+import net.neoforged.neoforge.common.ItemAbility;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -95,13 +96,13 @@ public interface IZetaBlockExtensions {
 	}
 
 	@Nullable
-	default BlockState getToolModifiedStateZeta(BlockState state, UseOnContext context, String itemAbility, boolean simulate) {
+	default BlockState getToolModifiedStateZeta(BlockState state, UseOnContext context, ItemAbility ability, boolean simulate) {
 		//TODO, check i copied forge correctly
 
 		//ItemStack itemStack = context.getItemInHand();
 		//if (!itemStack.canPerformAction(toolAction)) //Forge extension, TODO when i make an IZetaItemExtensions
 		//	return null;
-		return switch(itemAbility) {
+		return switch(ability.toString()) {
 			case "axe_strip" -> AxeItem.getAxeStrippingState(state); //TODO forge extension
 			case "axe_scrape" -> WeatheringCopper.getPrevious(state).orElse(null);
 			case "axe_wax_off" -> Optional.ofNullable(HoneycombItem.WAX_OFF_BY_BLOCK.get().get(state.getBlock())).map(block -> block.withPropertiesOf(state)).orElse(null);

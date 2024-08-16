@@ -18,7 +18,7 @@ public class ScrollableWidgetList<S extends Screen, E extends ScrollableWidgetLi
 	public final S parent;
 
 	public ScrollableWidgetList(S parent) {
-		super(Minecraft.getInstance(), parent.width, parent.height, 40, parent.height - 40, 30);
+		super(Minecraft.getInstance(), parent.width, parent.height - 80, 40, 30);
 		this.parent = parent;
 	}
 
@@ -42,11 +42,11 @@ public class ScrollableWidgetList<S extends Screen, E extends ScrollableWidgetLi
 	//protected -> public, and made more convenient (takes index instead of Entry)
 	public void ensureVisible2(int index) {
 		int i = this.getRowTop(index);
-		int j = i - this.y0 - 4 - this.itemHeight;
+		int j = i - this.getY() - 4 - this.itemHeight;
 		if (j < 0)
 			this.scroll2(j);
 
-		int k = this.y1 - i - this.itemHeight - this.itemHeight;
+		int k = this.getBottom() - i - this.itemHeight - this.itemHeight;
 		if (k < 0)
 			this.scroll2(-k);
 	}

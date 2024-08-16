@@ -2,6 +2,9 @@ package org.violetmoon.zeta.advancement.modifier;
 
 import java.util.Set;
 
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.Registries;
 import org.violetmoon.zeta.advancement.AdvancementModifier;
 import org.violetmoon.zeta.api.IMutableAdvancement;
 import org.violetmoon.zeta.module.ZetaModule;
@@ -35,12 +38,12 @@ public class AdventuringTimeModifier extends AdvancementModifier {
 	public boolean apply(ResourceLocation res, IMutableAdvancement adv) {
 		for(ResourceKey<Biome> key : locations) {
 			String name = key.location().toString();
-			
-			Criterion criterion = new Criterion(PlayerTrigger.TriggerInstance.located(
-					LocationPredicate.inBiome(key))); //todo: I dunno how to do codec
-			adv.addRequiredCriterion(name, criterion);
+			/* TODO: event.getRegistryAccess() IN AdvancementModifierRegistry, pass to here?
+			Criterion<?> criterion = PlayerTrigger.TriggerInstance.located(
+					LocationPredicate.Builder.inBiome(access.registry(Registries.BIOME).get().getHolderOrThrow(key)));
+			 adv.addRequiredCriterion(name, criterion);
+			 */
 		}
-		
 		return true;
 	}
 
