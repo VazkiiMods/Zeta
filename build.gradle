@@ -83,6 +83,13 @@ repositories {
             includeGroup "curse.maven"
         }
     }
+    maven {
+        name "blamejared"
+        url "https://maven.blamejared.com"
+        content {
+            includeGroup "mezz.jei"
+        }
+    }
 
     maven {
         name "jitpack"
@@ -100,8 +107,12 @@ dependencies {
     }
 
     // deps
-    implementation fg.deobf("curse.maven:jei-238222:${deps.jei}")
 
+    // compile against the JEI API but do not include it at runtime
+    compileOnly fg.deobf("mezz.jei:jei-${config.mc_version}-common-api:${deps.jei}")
+    compileOnly fg.deobf("mezz.jei:jei-${config.mc_version}-forge-api:${deps.jei}")
+    // at runtime, use the full JEI jar for Forge
+    runtimeOnly fg.deobf("mezz.jei:jei-${config.mc_version}-forge:${deps.jei}")
 
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 }
