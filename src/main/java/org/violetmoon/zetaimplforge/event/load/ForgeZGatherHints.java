@@ -4,7 +4,6 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.eventbus.api.Event;
-import org.violetmoon.zeta.Zeta;
 import org.violetmoon.zeta.config.ConfigFlagManager;
 import org.violetmoon.zeta.event.load.ZGatherHints;
 import org.violetmoon.zeta.module.ZetaModule;
@@ -34,5 +33,10 @@ public class ForgeZGatherHints extends Event implements ZGatherHints {
     @Override
     public void gatherHintsFromModule(ZetaModule module, ConfigFlagManager cfm) {
         wrapped.gatherHintsFromModule(module, cfm);
+    }
+
+    @Override
+    public RegistryAccess getRegistryAccess() {
+        return wrapped.getRegistryAccess();
     }
 }

@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-class InfoRecipeBuilder implements ZGatherHints {
+class JeiGatherHints implements ZGatherHints {
 
 	private final IRecipeRegistration registration;
 	private final String modId;
@@ -31,7 +31,7 @@ class InfoRecipeBuilder implements ZGatherHints {
 	private final List<Item> blacklist;
 	private final MutableComponent externalPreamble;
 
-	public InfoRecipeBuilder(IRecipeRegistration registration, String modId, RegistryAccess registryAccess, List<Item> blacklist) {
+	public JeiGatherHints(IRecipeRegistration registration, String modId, RegistryAccess registryAccess, List<Item> blacklist) {
 		this.registration = registration;
 		this.modId = modId;
 		this.registryAccess = registryAccess;
@@ -168,5 +168,10 @@ class InfoRecipeBuilder implements ZGatherHints {
 					": " + e.getMessage(), e);
 			}
 		}
+	}
+
+	@Override
+	public RegistryAccess getRegistryAccess() {
+		return registryAccess;
 	}
 }

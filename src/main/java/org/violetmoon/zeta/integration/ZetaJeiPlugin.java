@@ -110,7 +110,7 @@ public class ZetaJeiPlugin implements IModPlugin {
 
         List<Item> blacklist = RegistryUtil.massRegistryGet(ZetaGeneralConfig.suppressedInfo, BuiltInRegistries.ITEM);
         for (Zeta z : ZetaList.INSTANCE.getZetas()) {
-            z.loadBus.fire(new InfoRecipeBuilder(registration, z.modid, registryAccess, blacklist), ZGatherHints.class);
+            z.loadBus.fire(new JeiGatherHints(registration, z.modid, registryAccess, blacklist), ZGatherHints.class);
         }
     }
 
