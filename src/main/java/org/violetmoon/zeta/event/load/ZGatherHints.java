@@ -1,5 +1,6 @@
 package org.violetmoon.zeta.event.load;
 
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.ItemLike;
 import org.violetmoon.zeta.config.ConfigFlagManager;
@@ -17,4 +18,5 @@ public interface ZGatherHints extends IZetaLoadEvent {
 
     void gatherHintsFromModule(ZetaModule module, ConfigFlagManager cfm);
 
+    RegistryAccess getRegistryAccess();
 }
