@@ -4,11 +4,12 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.eventbus.api.Event;
+import net.minecraftforge.fml.event.IModBusEvent;
 import org.violetmoon.zeta.config.ConfigFlagManager;
 import org.violetmoon.zeta.event.load.ZGatherHints;
 import org.violetmoon.zeta.module.ZetaModule;
 
-public class ForgeZGatherHints extends Event implements ZGatherHints {
+public class ForgeZGatherHints extends Event implements ZGatherHints, IModBusEvent {
     private final ZGatherHints wrapped;
 
     public ForgeZGatherHints(ZGatherHints e) {
