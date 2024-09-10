@@ -285,6 +285,6 @@ public abstract class ZetaRegistry {
 	 * Gets all the registered objects from this Zeta
 	 */
 	public <O> Collection<Holder<O>> getRegisteredObjects(ResourceKey<Registry<O>> registry) {
-		return (Collection<Holder<O>>) (Collection) myRegisteredObjects.get((ResourceKey) registry);
+		return (Collection<Holder<O>>) (Collection) myRegisteredObjects.getOrDefault((ResourceKey) registry, List.of());
 	}
 }
