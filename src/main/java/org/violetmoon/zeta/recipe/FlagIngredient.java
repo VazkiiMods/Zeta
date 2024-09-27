@@ -1,7 +1,9 @@
 package org.violetmoon.zeta.recipe;
 
+import java.util.Arrays;
 import java.util.stream.Stream;
 
+import net.neoforged.neoforge.common.crafting.ICustomIngredient;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.zeta.Zeta;
@@ -19,7 +21,7 @@ import net.minecraft.world.item.crafting.Ingredient;
  * @author WireSegal
  * Created at 3:44 PM on 10/20/19.
  */
-public class FlagIngredient extends Ingredient implements IZetaIngredient<FlagIngredient> { //AccessWidener? Idk I think this is cooked.
+public class FlagIngredient implements ICustomIngredient, IZetaIngredient<FlagIngredient> { //AccessWidener? Idk I think this is cooked.
 
 	private final Ingredient parent;
 
@@ -28,7 +30,6 @@ public class FlagIngredient extends Ingredient implements IZetaIngredient<FlagIn
 	private final IZetaIngredientSerializer<FlagIngredient> serializer;
 
 	public FlagIngredient(Ingredient parent, String flag, ConfigFlagManager cfm, IZetaIngredientSerializer<FlagIngredient> serializer) {
-		super(Stream.of());
 		this.parent = parent;
 		this.cfm = cfm;
 		this.flag = flag;
@@ -36,19 +37,10 @@ public class FlagIngredient extends Ingredient implements IZetaIngredient<FlagIn
 	}
 
 	@Override
-	@NotNull
-	public ItemStack[] getItems() {
+	public Stream<ItemStack> getItems() {
 		if (!cfm.getFlag(flag))
-			return new ItemStack[0];
-		return parent.getItems();
-	}
-
-	@Override
-	@NotNull
-	public IntList getStackingIds() {
-		if (!cfm.getFlag(flag))
-			return IntLists.EMPTY_LIST;
-		return parent.getStackingIds();
+			return Stream.empty();
+		return Arrays.stream(parent.getItems());
 	}
 
 	@Override
@@ -57,11 +49,6 @@ public class FlagIngredient extends Ingredient implements IZetaIngredient<FlagIn
 			return false;
 
 		return parent.test(target);
-	}
-
-	@Override
-	protected void invalidate() {
-		// The invalidate method will collect our parent as well
 	}
 
 	@Override
