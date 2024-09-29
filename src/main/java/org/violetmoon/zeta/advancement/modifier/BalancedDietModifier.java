@@ -36,10 +36,9 @@ public class BalancedDietModifier extends AdvancementModifier {
     @Override
     public boolean apply(ResourceLocation res, IMutableAdvancement adv) {
         ItemLike[] array = items.toArray(ItemLike[]::new);
-        Criterion criterion = ConsumeItemTrigger.TriggerInstance.usedItem(ItemPredicate.Builder.item().of(array));
+        Criterion<ConsumeItemTrigger.TriggerInstance> criterion = ConsumeItemTrigger.TriggerInstance.usedItem(ItemPredicate.Builder.item().of(array));
         String name = BuiltInRegistries.ITEM.getKey(array[0].asItem()).toString();
         adv.addRequiredCriterion(name, criterion);
         return true;
     }
-
 }

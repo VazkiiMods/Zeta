@@ -3,6 +3,7 @@ package org.violetmoon.zeta.event.load;
 import java.util.Set;
 import java.util.function.BooleanSupplier;
 
+import net.minecraft.core.Holder;
 import org.violetmoon.zeta.api.IAdvancementModifier;
 import org.violetmoon.zeta.api.IAdvancementModifierDelegate;
 import org.violetmoon.zeta.event.bus.IZetaLoadEvent;
@@ -26,7 +27,7 @@ public interface ZGatherAdvancementModifiers extends IZetaLoadEvent {
 	default IAdvancementModifier createBalancedDietMod(Set<ItemLike> items) {
 		return getDelegate().createBalancedDietMod(items);
 	}
-	default IAdvancementModifier createFuriousCocktailMod(BooleanSupplier isPotion, Set<MobEffect> effects) {
+	default IAdvancementModifier createFuriousCocktailMod(BooleanSupplier isPotion, Set<Holder<MobEffect>> effects) {
 		return getDelegate().createFuriousCocktailMod(isPotion, effects);
 	}
 	default IAdvancementModifier createMonsterHunterMod(Set<EntityType<?>> types) {

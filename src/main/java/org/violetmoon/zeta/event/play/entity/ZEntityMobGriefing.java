@@ -5,6 +5,8 @@ import org.violetmoon.zeta.event.bus.Resultable;
 
 import net.minecraft.world.entity.Entity;
 
-public interface ZEntityMobGriefing extends IZetaPlayEvent, Resultable {
+public interface ZEntityMobGriefing extends IZetaPlayEvent {
     Entity getEntity();
+    void setCanGrief(boolean canGrief);
+    boolean canGrief();
 }

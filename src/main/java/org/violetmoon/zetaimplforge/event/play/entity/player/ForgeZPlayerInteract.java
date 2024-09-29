@@ -79,6 +79,11 @@ public class ForgeZPlayerInteract implements ZPlayerInteract {
         public Entity getTarget() {
             return e.getTarget();
         }
+
+        @Override
+        public void setCancellationResult(InteractionResult result) {
+            e.setCancellationResult(result);
+        }
     }
 
     public static class RightClickBlock extends ForgeZPlayerInteract implements ZPlayerInteract.RightClickBlock {
@@ -87,6 +92,11 @@ public class ForgeZPlayerInteract implements ZPlayerInteract {
         public RightClickBlock(PlayerInteractEvent.RightClickBlock e) {
             super(e);
             this.e = e;
+        }
+
+        @Override
+        public void setCancellationResult(InteractionResult result) {
+            e.setCancellationResult(result);
         }
     }
 
@@ -101,6 +111,11 @@ public class ForgeZPlayerInteract implements ZPlayerInteract {
         @Override
         public ItemStack getItemStack() {
             return e.getItemStack();
+        }
+
+        @Override
+        public void setCancellationResult(InteractionResult result) {
+            e.setCancellationResult(result);
         }
     }
 }

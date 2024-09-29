@@ -33,14 +33,11 @@ public class ASeedyPlaceModifier extends AdvancementModifier {
 
 	@Override
 	public boolean apply(ResourceLocation res, IMutableAdvancement adv) {
-		for(var block : seeds) {
-			Criterion criterion = EnterBlockTrigger.TriggerInstance.entersBlock(block);
-			
+		for(Block block : seeds) {
+			Criterion<EnterBlockTrigger.TriggerInstance> criterion = EnterBlockTrigger.TriggerInstance.entersBlock(block);
 			String name = BuiltInRegistries.BLOCK.getKey(block).toString();
 			adv.addOrCriterion(name, criterion);
 		}
-		
 		return true;
 	}
-
 }

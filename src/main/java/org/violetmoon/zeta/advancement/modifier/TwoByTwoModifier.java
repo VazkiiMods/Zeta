@@ -38,15 +38,11 @@ public class TwoByTwoModifier extends AdvancementModifier {
 
 	@Override
 	public boolean apply(ResourceLocation res, IMutableAdvancement adv) {
-		for(EntityType<?> type : entityTypes) {
-			Criterion criterion = BredAnimalsTrigger.TriggerInstance
-					.bredAnimals(EntityPredicate.Builder.entity().entityType(EntityTypePredicate.of(type)));
-			
+		for (EntityType<?> type : entityTypes) {
+			Criterion<BredAnimalsTrigger.TriggerInstance> criterion = BredAnimalsTrigger.TriggerInstance.bredAnimals(EntityPredicate.Builder.entity().entityType(EntityTypePredicate.of(type)));
 			String name = BuiltInRegistries.ENTITY_TYPE.getKey(type).toString();
 			adv.addRequiredCriterion(name, criterion);
 		}
-		
 		return true;
 	}
-
 }

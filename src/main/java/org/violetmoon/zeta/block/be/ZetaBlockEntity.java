@@ -29,20 +29,20 @@ public abstract class ZetaBlockEntity extends BlockEntity {
 	@Override
 	protected void saveAdditional(CompoundTag tag, HolderLookup.Provider provider) {
 		super.saveAdditional(tag, provider);
-		writeSharedNBT(tag);
+		writeSharedNBT(tag, provider);
 	}
 
 	@Override
 	protected void loadAdditional(CompoundTag tag, HolderLookup.Provider provider) {
 		super.loadAdditional(tag, provider);
-		readSharedNBT(tag);
+		readSharedNBT(tag, provider);
 	}
 
-	public void writeSharedNBT(CompoundTag cmp) {
+	public void writeSharedNBT(CompoundTag cmp, HolderLookup.Provider provider) {
 		// NO-OP
 	}
 
-	public void readSharedNBT(CompoundTag cmp) {
+	public void readSharedNBT(CompoundTag cmp, HolderLookup.Provider provider) {
 		// NO-OP
 	}
 	
@@ -55,13 +55,13 @@ public abstract class ZetaBlockEntity extends BlockEntity {
 	@Override
 	public CompoundTag getUpdateTag(HolderLookup.Provider provider) {
 		CompoundTag tag = new CompoundTag();
-		writeSharedNBT(tag);
+		writeSharedNBT(tag, provider);
 		return tag;
 	}
 
 	@Override
 	public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket packet, HolderLookup.Provider provider) {
 		super.onDataPacket(net, packet, provider);
-        readSharedNBT(packet.getTag());
+        readSharedNBT(packet.getTag(), provider);
 	}
 }

@@ -23,9 +23,9 @@ public class ZetaForgeMod {
 		ForgeZeta zeta = new ForgeZeta(Zeta.ZETA_ID, LogManager.getLogger(Zeta.ZETA_ID + "-internal"));
 		
 		ZetaModProxy proxy = Env.unsafeRunForDist(() -> ZetaClientProxy::new, () -> ZetaModProxy::new);
-		Object zetaClient = Env.unsafeRunForDist(() -> () -> new ForgeZetaClient(zeta), () -> () -> new Object());
+		Object zetaClient = Env.unsafeRunForDist(() -> () -> new ForgeZetaClient(zeta), () -> Object::new);
 		
-		ZetaMod.start(zeta, proxy);
+		ZetaMod.start(zeta, proxy, bus);
 		ZetaMod.proxy.setClientZeta(zetaClient);
 		
 		NeoForge.EVENT_BUS.register(ToolInteractionHandler.class);

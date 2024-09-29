@@ -25,7 +25,6 @@ public class MonsterHunterModifier extends AdvancementModifier {
 	
 	public MonsterHunterModifier(ZetaModule module, Set<EntityType<?>> entityTypes) {
 		super(module);
-		
 		this.entityTypes = entityTypes;
 	}
 
@@ -36,18 +35,16 @@ public class MonsterHunterModifier extends AdvancementModifier {
 
 	@Override
 	public boolean apply(ResourceLocation res, IMutableAdvancement adv) {
-		boolean all = res.equals(TARGET_ALL);
-		
 		for(EntityType<?> type : entityTypes) {
-			Criterion criterion = KilledTrigger.TriggerInstance.playerKilledEntity(EntityPredicate.Builder.entity().entityType(EntityTypePredicate.of(type)));
-			
+			Criterion<KilledTrigger.TriggerInstance> criterion = KilledTrigger.TriggerInstance.playerKilledEntity(EntityPredicate.Builder.entity().entityType(EntityTypePredicate.of(type)));
 			String name = BuiltInRegistries.ENTITY_TYPE.getKey(type).toString();
-			if(all)
+
+			if (res.equals(TARGET_ALL)) {
 				adv.addRequiredCriterion(name, criterion);
-			else adv.addOrCriterion(name, criterion);
+			} else {
+				adv.addOrCriterion(name, criterion);
+			}
 		}
-		
 		return true;
 	}
-
 }

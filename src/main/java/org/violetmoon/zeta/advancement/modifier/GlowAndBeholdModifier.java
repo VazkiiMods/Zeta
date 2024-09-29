@@ -40,7 +40,7 @@ public class GlowAndBeholdModifier extends AdvancementModifier {
     public boolean apply(ResourceLocation res, IMutableAdvancement adv) {
 
         Block[] array = blocks.toArray(Block[]::new);
-        Criterion criterion = ItemUsedOnLocationTrigger.TriggerInstance.itemUsedOnBlock(
+        Criterion<ItemUsedOnLocationTrigger.TriggerInstance> criterion = ItemUsedOnLocationTrigger.TriggerInstance.itemUsedOnBlock(
                 LocationPredicate.Builder.location().setBlock(
                         BlockPredicate.Builder.block()
                                 .of(array)),
