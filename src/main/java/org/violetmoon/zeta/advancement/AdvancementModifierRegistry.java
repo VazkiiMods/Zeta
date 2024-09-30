@@ -5,6 +5,7 @@ import java.util.Set;
 import java.util.function.BooleanSupplier;
 
 import net.minecraft.advancements.AdvancementHolder;
+import net.minecraft.core.Holder;
 import org.violetmoon.zeta.Zeta;
 import org.violetmoon.zeta.advancement.modifier.ASeedyPlaceModifier;
 import org.violetmoon.zeta.advancement.modifier.AdventuringTimeModifier;
@@ -121,7 +122,7 @@ public class AdvancementModifierRegistry {
 		}
 
 		@Override
-		public IAdvancementModifier createFuriousCocktailMod(BooleanSupplier isPotion, Set<MobEffect> effects) {
+		public IAdvancementModifier createFuriousCocktailMod(BooleanSupplier isPotion, Set<Holder<MobEffect>> effects) {
 			return new FuriousCocktailModifier(null, isPotion, effects);
 		}
 

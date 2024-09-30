@@ -5,7 +5,6 @@
   "refmap": "zeta.mixins.refmap.json",
   "package": "org.violetmoon.zeta.mixin.mixins",
   "mixins": [
-    "AccessorAdvancement",
     "AccessorBlock",
     "AccessorContextAwarePredicate",
     "AccessorItem",

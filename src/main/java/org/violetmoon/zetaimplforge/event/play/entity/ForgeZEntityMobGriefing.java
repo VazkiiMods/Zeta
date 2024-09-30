@@ -19,12 +19,12 @@ public class ForgeZEntityMobGriefing implements ZEntityMobGriefing {
     }
 
     @Override
-    public boolean getResult() {
-        return true; //todo: FIX
+    public void setCanGrief(boolean canGrief) {
+        e.setCanGrief(canGrief);
     }
 
     @Override
-    public void setResult(ZResult value) {
-        e.setResult(ForgeZeta.to(value));
+    public boolean canGrief() {
+        return e.canGrief();
     }
 }

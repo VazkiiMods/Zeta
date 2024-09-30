@@ -3,6 +3,8 @@ package org.violetmoon.zeta.advancement.modifier;
 import java.util.Set;
 import java.util.function.BooleanSupplier;
 
+import net.minecraft.advancements.critereon.MobEffectsPredicate;
+import net.minecraft.core.Holder;
 import org.violetmoon.zeta.advancement.AdvancementModifier;
 import org.violetmoon.zeta.api.IMutableAdvancement;
 import org.violetmoon.zeta.module.ZetaModule;
@@ -20,9 +22,9 @@ public class FuriousCocktailModifier extends AdvancementModifier {
 	private static final ResourceLocation TARGET_AE = ResourceLocation.withDefaultNamespace("nether/all_effects");
 
 	final BooleanSupplier isPotion;
-	final Set<MobEffect> effects;
+	final Set<Holder<MobEffect>> effects;
 	
-	public FuriousCocktailModifier(ZetaModule module, BooleanSupplier isPotion, Set<MobEffect> effects) {
+	public FuriousCocktailModifier(ZetaModule module, BooleanSupplier isPotion, Set<Holder<MobEffect>> effects) {
 		super(module);
 		
 		this.isPotion = isPotion;
@@ -36,20 +38,15 @@ public class FuriousCocktailModifier extends AdvancementModifier {
 
 	@Override
 	public boolean apply(ResourceLocation res, IMutableAdvancement adv) {
-		if(!isPotion.getAsBoolean() && res.equals(TARGET_AP))
-			return false;
+		if (!isPotion.getAsBoolean() && res.equals(TARGET_AP)) return false;
 		
-		Criterion crit = adv.getCriterion("all_effects");
-		if(crit != null && crit.triggerInstance() instanceof EffectsChangedTrigger.TriggerInstance ect)  {
-
-			for(MobEffect e : effects)
-				ect.effects().and(e);
-
-			
+		Criterion<?> crit = adv.getCriterion("all_effects");
+		if (crit != null && crit.triggerInstance() instanceof EffectsChangedTrigger.TriggerInstance ect && ect.effects().isPresent()) {
+			for(Holder<MobEffect> e : effects) {
+				ect.effects().get().effectMap().put(e, new MobEffectsPredicate.MobEffectInstancePredicate());
+			}
 			return true;
 		}
-		
 		return false;
 	}
-
 }
