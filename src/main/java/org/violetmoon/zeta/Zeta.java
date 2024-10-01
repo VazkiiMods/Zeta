@@ -14,23 +14,12 @@ import org.violetmoon.zeta.block.ext.BlockExtensionFactory;
 import org.violetmoon.zeta.config.ConfigManager;
 import org.violetmoon.zeta.config.IZetaConfigInternals;
 import org.violetmoon.zeta.config.SectionDefinition;
-import org.violetmoon.zeta.event.bus.IZetaLoadEvent;
-import org.violetmoon.zeta.event.bus.IZetaPlayEvent;
-import org.violetmoon.zeta.event.bus.LoadEvent;
-import org.violetmoon.zeta.event.bus.PlayEvent;
-import org.violetmoon.zeta.event.bus.ZetaEventBus;
+import org.violetmoon.zeta.event.bus.*;
 import org.violetmoon.zeta.item.ext.ItemExtensionFactory;
 import org.violetmoon.zeta.module.ModuleFinder;
 import org.violetmoon.zeta.module.ZetaCategory;
 import org.violetmoon.zeta.module.ZetaModuleManager;
-import org.violetmoon.zeta.network.ZetaNetworkHandler;
-import org.violetmoon.zeta.registry.BrewingRegistry;
-import org.violetmoon.zeta.registry.CraftingExtensionsRegistry;
-import org.violetmoon.zeta.registry.DyeablesRegistry;
-import org.violetmoon.zeta.registry.PottedPlantRegistry;
-import org.violetmoon.zeta.registry.RenderLayerRegistry;
-import org.violetmoon.zeta.registry.VariantRegistry;
-import org.violetmoon.zeta.registry.ZetaRegistry;
+import org.violetmoon.zeta.registry.*;
 import org.violetmoon.zeta.util.NameChanger;
 import org.violetmoon.zeta.util.RaytracingUtil;
 import org.violetmoon.zeta.util.RegistryUtil;
@@ -123,9 +112,6 @@ public abstract class Zeta implements IZeta {
 	//config (which isn't set in the constructor b/c module loading has to happen first)
 	public ConfigManager configManager;
 	public IZetaConfigInternals configInternals;
-
-	//network (which isn't set in the constructor b/c it has a user-specified protocol version TODO this isnt good api design, imo)
-	public ZetaNetworkHandler network;
 	
 	// worldgen
 	public EntitySpawnHandler entitySpawn;
@@ -197,8 +183,6 @@ public abstract class Zeta implements IZeta {
 	public EntitySpawnHandler createEntitySpawnHandler() {
 		return new EntitySpawnHandler(this);
 	}
-
-	public abstract ZetaNetworkHandler createNetworkHandler(int protocolVersion);
 
 	// event bus
 	public abstract <E, T extends E> T fireExternalEvent(T impl);
