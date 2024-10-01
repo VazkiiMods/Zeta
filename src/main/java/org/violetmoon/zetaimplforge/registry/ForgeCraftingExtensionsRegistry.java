@@ -1,6 +1,7 @@
 package org.violetmoon.zetaimplforge.registry;
 
 import com.google.gson.JsonObject;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.network.FriendlyByteBuf;
@@ -8,6 +9,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.neoforge.common.conditions.ICondition;
+import net.neoforged.neoforge.common.crafting.CraftingHelper;
 import org.violetmoon.zeta.recipe.IZetaCondition;
 import org.violetmoon.zeta.recipe.IZetaConditionSerializer;
 import org.violetmoon.zeta.recipe.IZetaIngredientSerializer;
@@ -69,15 +71,16 @@ public class ForgeCraftingExtensionsRegistry implements CraftingExtensionsRegist
 
 	//ZETA icondition to FORGE icondition
 	public record Zeta2ForgeCondition<T extends IZetaCondition>(T zeta) implements ICondition {
-		@Override
-		public ResourceLocation getID() {
-			return zeta.getID();
-		}
 
 		@Override
 		public boolean test(ICondition.IContext context) {
 			//Wrap the IContext in a class Zeta can refer to, before passing it to Zeta
 			return zeta.test(new Forge2ZetaContext(context));
+		}
+
+		@Override
+		public MapCodec<? extends ICondition> codec() {
+			return null;
 		}
 	}
 

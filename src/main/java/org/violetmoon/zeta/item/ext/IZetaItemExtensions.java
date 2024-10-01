@@ -13,50 +13,55 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.LevelReader;
-import org.jetbrains.annotations.NotNull;
+import net.neoforged.neoforge.registries.datamaps.builtin.FurnaceFuel;
+import net.neoforged.neoforge.registries.datamaps.builtin.NeoForgeDataMaps;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
 public interface IZetaItemExtensions {
 
-	default InteractionResult onItemUseFirstZeta(UseOnContext context) {
+	private Item self() {
+		return (Item)this;
+	}
+
+	default InteractionResult onItemUseFirstZeta(ItemStack stack, UseOnContext context) {
 		return InteractionResult.PASS;
 	}
 
-	default boolean isRepairableZeta() {
+	default boolean isRepairableZeta(ItemStack stack) {
 		return false;
 	}
 
-	default boolean onEntityItemUpdateZeta(ItemEntity entity) {
+	default boolean onEntityItemUpdateZeta(ItemStack stack, ItemEntity entity) {
 		return false;
 	}
 
-	default boolean doesSneakBypassUseZeta(LevelReader level, BlockPos pos, Player player) {
+	default boolean doesSneakBypassUseZeta(ItemStack stack, LevelReader level, BlockPos pos, Player player) {
 		return false;
 	}
 
-	default boolean canEquipZeta(EquipmentSlot armorType, LivingEntity entity) {
+	default boolean canEquipZeta(ItemStack stack, EquipmentSlot armorType, LivingEntity entity) {
 		return false;
 	}
 
-	default boolean isBookEnchantableZeta(ItemStack book) {
+	default boolean isBookEnchantableZeta(ItemStack stack, ItemStack book) {
 		return true;
 	}
 
-	default int getEnchantmentValueZeta() {
-		return stack.getEnchantmentValue();
+	default int getEnchantmentValueZeta(ItemStack stack) {
+		return this.self().getEnchantmentValue();
 	}
 
 	default boolean canShearZeta(ItemStack stack) { //canPerformAction
 		return stack.getItem() instanceof ShearsItem;
 	}
 
-	default int getEnchantmentLevelZeta(Holder<Enchantment> enchantment) {
-		return EnchantmentHelper.getTagEnchantmentLevel(enchantment, stack);
+	default int getEnchantmentLevelZeta(ItemStack stack, Holder<Enchantment> enchantment) {
+		ItemEnchantments itemenchantments = stack.getTagEnchantments();
+		return itemenchantments.getLevel(enchantment);
 	}
 
 	default ItemEnchantments getAllEnchantmentsZeta(ItemStack stack, HolderLookup.RegistryLookup<Enchantment> lookup) {
@@ -67,10 +72,10 @@ public interface IZetaItemExtensions {
 		return !oldStack.equals(newStack);
 	}
 
-	//TODO: initCapabilities
-
+	// IItemExtension#getBurnTime is annotated as OverrideOnly for some reason, hardcode to be safe for now
 	default int getBurnTimeZeta(ItemStack stack, @Nullable RecipeType<?> recipeType) {
-		return 0;
+		FurnaceFuel furnaceFuel = this.self().builtInRegistryHolder().getData(NeoForgeDataMaps.FURNACE_FUELS);
+		return furnaceFuel == null ? 0 : furnaceFuel.burnTime();
 	}
 
 	default <T extends LivingEntity> int damageItemZeta(ItemStack stack, int amount, T entity, Consumer<Item> onBroken) {
@@ -82,11 +87,6 @@ public interface IZetaItemExtensions {
 	}
 
 	default boolean canElytraFlyZeta(ItemStack stack, LivingEntity entity) {
-		//forge has a funky little extension for this
 		return stack.getItem() instanceof ElytraItem && ElytraItem.isFlyEnabled(stack);
-	}
-
-	default int getDefaultTooltipHideFlagsZeta(@NotNull ItemStack stack) {
-		return 0;
 	}
 }

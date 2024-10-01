@@ -12,7 +12,6 @@
     "AccessorLootTable",
     "AccessorPistonStructureResolver",
     "InvokerBlockBehavior",
-    "InvokerIItemStackExtension",
     "InvokerSpawnPlacements",
     "PistonBaseBlockMixin",
     "RegistryDataLoaderMixin",

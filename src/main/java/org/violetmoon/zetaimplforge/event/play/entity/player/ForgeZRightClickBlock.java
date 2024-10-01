@@ -15,6 +15,7 @@ import org.violetmoon.zeta.event.play.entity.player.ZRightClickBlock;
 import org.violetmoon.zetaimplforge.ForgeZeta;
 
 public class ForgeZRightClickBlock implements ZRightClickBlock {
+
 	private final PlayerInteractEvent.RightClickBlock e;
 
 	public ForgeZRightClickBlock(PlayerInteractEvent.RightClickBlock e) {
@@ -62,28 +63,27 @@ public class ForgeZRightClickBlock implements ZRightClickBlock {
 	}
 
 	@Override
-	public void setCancellationResult(InteractionResult result) {
-		e.setCancellationResult(result);
-	}
-
-	@Override
 	public boolean isCanceled() {
 		return e.isCanceled();
 	}
 
 	@Override
-	public void setCanceled(boolean cancel) {
-		e.setCanceled(cancel);
+	public void setCanceled(boolean canceled) {
+		e.setCanceled(canceled);
+		if (canceled) {
+			e.setUseBlock(TriState.FALSE);
+			e.setUseItem(TriState.FALSE);
+		}
 	}
 
 	@Override
-	public InteractionResult getResult() {
+	public InteractionResult getCancellationResult() {
 		return e.getCancellationResult();
 	}
 
 	@Override
-	public void setResult(ZResult value) {
-		e.setResult(ForgeZeta.to(value));
+	public void setCancellationResult(InteractionResult result) {
+		e.setCancellationResult(result);
 	}
 
 	public static class Low extends ForgeZRightClickBlock implements ZRightClickBlock.Low {

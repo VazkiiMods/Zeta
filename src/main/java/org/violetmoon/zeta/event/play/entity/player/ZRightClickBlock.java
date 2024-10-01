@@ -15,16 +15,15 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 
-public interface ZRightClickBlock extends IZetaPlayEvent, Cancellable, Resultable, PlayerGetter {
+public interface ZRightClickBlock extends IZetaPlayEvent, Cancellable, PlayerGetter {
 	Level getLevel();
 	BlockPos getPos();
 	InteractionHand getHand();
 	ItemStack getItemStack();
 	BlockHitResult getHitVec();
 	Direction getFace();
-
 	TriState getUseBlock();
-
+	InteractionResult getCancellationResult();
 	void setCancellationResult(InteractionResult result);
 
 	interface Low extends IZetaPlayEvent, ZRightClickBlock { }

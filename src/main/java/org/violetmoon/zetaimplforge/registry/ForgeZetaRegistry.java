@@ -13,25 +13,22 @@ import java.util.function.Supplier;
 public class ForgeZetaRegistry extends ZetaRegistry {
 	public ForgeZetaRegistry(ForgeZeta z) {
 		super(z);
-
-		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onRegisterEvent);
+		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onRegisterEvent);	// TODO: Is there a reason we can't do this in ForgeZeta#start?
 	}
 
 	private void onRegisterEvent(RegisterEvent event) {
 		var key = event.getRegistryKey();
 		ResourceLocation registryRes = key.location();
 		ResourceKey<Registry<Object>> keyGeneric = ResourceKey.createRegistryKey(registryRes);
-
 		Collection<Supplier<Object>> ourEntries = getDefers(registryRes);
-		if(ourEntries != null && !ourEntries.isEmpty()) {
 
+		if(ourEntries != null && !ourEntries.isEmpty()) {
 			for(Supplier<Object> supplier : ourEntries) {
 				Object entry = supplier.get();
 				ResourceLocation name = internalNames.get(entry);
 				z.log.debug("Registering to " + registryRes + " - " + name);
 				event.register(keyGeneric, e-> e.register(name, entry));
 			}
-
 			clearDeferCache(registryRes);
 		}
 	}

@@ -37,16 +37,11 @@ public class FishyBusinessModifier extends AdvancementModifier {
 
     @Override
     public boolean apply(ResourceLocation res, IMutableAdvancement adv) {
-
         ItemLike[] array = fishes.toArray(ItemLike[]::new);
-        Criterion criterion = FishingRodHookedTrigger.
-                TriggerInstance.fishedItem(
-                        Optional.empty(), Optional.empty(), Optional.of(ItemPredicate.Builder.item().of(array).build()));
-
+        Criterion<FishingRodHookedTrigger.TriggerInstance> criterion = FishingRodHookedTrigger.TriggerInstance.fishedItem(
+                Optional.empty(), Optional.empty(), Optional.of(ItemPredicate.Builder.item().of(array).build()));
         String name = BuiltInRegistries.ITEM.getKey(array[0].asItem()).toString();
         adv.addOrCriterion(name, criterion);
-
         return true;
     }
-
 }

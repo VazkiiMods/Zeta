@@ -7,10 +7,6 @@ public interface ItemExtensionFactory {
 	IZetaItemExtensions getInternal(ItemStack stack);
 
 	default IZetaItemExtensions get(ItemStack stack) {
-		if(stack.getItem() instanceof IZetaItemExtensions ext)
-			return ext;
-		else
-			return getInternal(stack);
+		return stack.getItem() instanceof IZetaItemExtensions ext ? ext : getInternal(stack);
 	}
-
 }

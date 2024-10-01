@@ -12,6 +12,7 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import net.neoforged.neoforge.common.ItemAbility;
+import net.neoforged.neoforge.common.util.TriState;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.zeta.block.ext.IZetaBlockExtensions;
 
@@ -37,8 +38,8 @@ public class IForgeBlockBlockExtensions implements IZetaBlockExtensions {
 	}
 
 	@Override
-	public boolean canSustainPlantZeta(BlockState state, BlockGetter level, BlockPos pos, Direction facing, String plantabletype) {
-		return false; //TODO thread the IPlantable through
+	public TriState canSustainPlantZeta(BlockState state, BlockGetter level, BlockPos soilPosition, Direction facing, BlockState plant) {
+		return TriState.DEFAULT;
 	}
 
 	@Override
