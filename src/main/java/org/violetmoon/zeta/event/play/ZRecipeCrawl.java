@@ -10,7 +10,6 @@ import com.google.common.collect.Sets;
 import com.google.common.collect.Streams;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.crafting.*;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.zeta.event.bus.IZetaPlayEvent;
 

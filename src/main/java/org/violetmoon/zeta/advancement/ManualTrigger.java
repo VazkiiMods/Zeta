@@ -1,9 +1,6 @@
 package org.violetmoon.zeta.advancement;
 
 import com.mojang.serialization.Codec;
-import org.jetbrains.annotations.NotNull;
-
-import com.google.gson.JsonObject;
 
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.advancements.critereon.SimpleCriterionTrigger;

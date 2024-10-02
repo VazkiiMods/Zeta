@@ -1,7 +1,6 @@
 package org.violetmoon.zeta.item;
 
 import java.util.function.BooleanSupplier;
-import java.util.function.Supplier;
 
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.zeta.module.ZetaModule;

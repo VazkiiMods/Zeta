@@ -1,12 +1,5 @@
 package org.violetmoon.zeta.capability;
 
-import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
-
 @Deprecated(forRemoval = true)
 public interface ZetaCapabilityManager {
 	/**

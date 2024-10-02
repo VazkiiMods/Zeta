@@ -2,18 +2,12 @@ package org.violetmoon.zeta.advancement.modifier;
 
 import java.util.Set;
 
-import net.minecraft.core.HolderLookup;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.core.registries.Registries;
 import org.violetmoon.zeta.advancement.AdvancementModifier;
 import org.violetmoon.zeta.api.IMutableAdvancement;
 import org.violetmoon.zeta.module.ZetaModule;
 
 import com.google.common.collect.ImmutableSet;
 
-import net.minecraft.advancements.Criterion;
-import net.minecraft.advancements.critereon.LocationPredicate;
-import net.minecraft.advancements.critereon.PlayerTrigger;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.biome.Biome;

@@ -1,13 +1,11 @@
 package org.violetmoon.zeta.registry;
 
 import java.util.Map;
-import java.util.function.Supplier;
 
 import net.minecraft.core.Holder;
 import net.minecraft.world.item.Item;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.zeta.Zeta;
-import org.violetmoon.zeta.recipe.FlagIngredient;
 
 import com.google.common.collect.Maps;
 
@@ -19,7 +17,6 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.Potions;
-import net.minecraft.world.item.crafting.Ingredient;
 
 /**
  * @author WireSegal

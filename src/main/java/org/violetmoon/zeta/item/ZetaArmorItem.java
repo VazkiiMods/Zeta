@@ -1,7 +1,6 @@
 package org.violetmoon.zeta.item;
 
 import net.minecraft.core.Holder;
-import org.checkerframework.checker.units.qual.A;
 import org.violetmoon.zeta.item.ext.IZetaItemExtensions;
 
 import net.minecraft.world.item.ArmorItem;

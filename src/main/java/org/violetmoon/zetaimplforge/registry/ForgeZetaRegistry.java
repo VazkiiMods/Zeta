@@ -3,6 +3,7 @@ package org.violetmoon.zetaimplforge.registry;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.RegisterEvent;
 import org.violetmoon.zeta.registry.ZetaRegistry;
 import org.violetmoon.zetaimplforge.ForgeZeta;
@@ -11,9 +12,10 @@ import java.util.Collection;
 import java.util.function.Supplier;
 
 public class ForgeZetaRegistry extends ZetaRegistry {
-	public ForgeZetaRegistry(ForgeZeta z) {
+
+	public ForgeZetaRegistry(ForgeZeta z, IEventBus bus) {
 		super(z);
-		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onRegisterEvent);	// TODO: Is there a reason we can't do this in ForgeZeta#start?
+		bus.addListener(this::onRegisterEvent);	// Temporary; move ForgeZetaRegistry#onRegisterEvent() into start?
 	}
 
 	private void onRegisterEvent(RegisterEvent event) {

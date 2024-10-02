@@ -49,7 +49,6 @@ public class MutableAdvancement implements IMutableAdvancement {
 	}
 	
 	public void commit() {
-		// advancement.criteria = ImmutableMap.copyOf(criteria); Replace entirely?
 		advancement.criteria().clear();
 		advancement.criteria().putAll(ImmutableMap.copyOf(criteria));
 		

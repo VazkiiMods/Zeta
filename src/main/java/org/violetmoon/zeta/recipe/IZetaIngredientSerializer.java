@@ -7,7 +7,6 @@ import com.google.gson.JsonObject;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.crafting.Ingredient;
 
 // Copy of Forge IIngredientSerializer
 public interface IZetaIngredientSerializer<T extends ICustomIngredient> {

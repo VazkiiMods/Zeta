@@ -59,9 +59,7 @@ public interface IZetaBlockExtensions {
 	}
 
 	default Integer getBeaconColorMultiplierZeta(BlockState state, LevelReader level, BlockPos pos, BlockPos beaconPos) {
-		if(state.getBlock() instanceof BeaconBeamBlock bbeam)
-			return bbeam.getColor().getTextureDiffuseColor();
-		return null;
+		return state.getBlock() instanceof BeaconBeamBlock bbeam ? bbeam.getColor().getTextureDiffuseColor() : null;
 	}
 
 	default boolean isStickyBlockZeta(BlockState state) {

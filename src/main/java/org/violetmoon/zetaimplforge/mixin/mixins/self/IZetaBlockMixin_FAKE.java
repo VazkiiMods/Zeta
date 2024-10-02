@@ -19,8 +19,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.violetmoon.zeta.block.*;
 import org.violetmoon.zeta.block.ext.IZetaBlockExtensions;
 
-import java.util.Locale;
-
 // Forge can't actually mixin to interfaces, so we fake it by just... mixing in to everyone inheriting the interface.
 @Mixin({
 	ZetaBlock.class,

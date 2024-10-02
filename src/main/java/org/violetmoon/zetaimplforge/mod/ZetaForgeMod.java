@@ -20,7 +20,7 @@ import org.violetmoon.zetaimplforge.world.ZetaBiomeModifier;
 public class ZetaForgeMod {
 	
 	public ZetaForgeMod(IEventBus bus) {
-		ForgeZeta zeta = new ForgeZeta(Zeta.ZETA_ID, LogManager.getLogger(Zeta.ZETA_ID + "-internal"));
+		ForgeZeta zeta = new ForgeZeta(Zeta.ZETA_ID, LogManager.getLogger(Zeta.ZETA_ID + "-internal"), bus);
 		
 		ZetaModProxy proxy = Env.unsafeRunForDist(() -> ZetaClientProxy::new, () -> ZetaModProxy::new);
 		Object zetaClient = Env.unsafeRunForDist(() -> () -> new ForgeZetaClient(zeta), () -> Object::new);
@@ -37,5 +37,4 @@ public class ZetaForgeMod {
 	public void setup(FMLCommonSetupEvent event) {
 		event.enqueueWork(ConfigEventDispatcher::dispatchAllInitialLoads);
 	}
-	
 }

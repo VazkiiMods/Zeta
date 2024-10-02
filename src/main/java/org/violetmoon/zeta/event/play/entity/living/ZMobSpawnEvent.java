@@ -1,7 +1,6 @@
 package org.violetmoon.zeta.event.play.entity.living;
 
 import org.violetmoon.zeta.event.bus.IZetaPlayEvent;
-import org.violetmoon.zeta.event.bus.Resultable;
 
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobSpawnType;

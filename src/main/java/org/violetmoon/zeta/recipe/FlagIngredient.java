@@ -11,8 +11,6 @@ import org.violetmoon.zeta.config.ConfigFlagManager;
 
 import com.google.gson.JsonObject;
 
-import it.unimi.dsi.fastutil.ints.IntList;
-import it.unimi.dsi.fastutil.ints.IntLists;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;

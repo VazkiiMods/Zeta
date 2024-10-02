@@ -74,8 +74,12 @@ import org.violetmoon.zetaimplforge.util.ForgeRaytracingUtil;
  * ideally do not touch quark from this package, it will later be split off
  */
 public class ForgeZeta extends Zeta {
-	public ForgeZeta(String modid, Logger log) {
+
+	public final IEventBus bus; // Temporary; move ForgeZetaRegistry#onRegisterEvent() into start?
+
+	public ForgeZeta(String modid, Logger log, IEventBus bus) {
 		super(modid, log, ZetaSide.fromClient(FMLEnvironment.dist.isClient()));
+		this.bus = bus;
 	}
 
 	@Override
@@ -103,7 +107,7 @@ public class ForgeZeta extends Zeta {
 
 	@Override
 	public ZetaRegistry createRegistry() {
-		return new ForgeZetaRegistry(this);
+		return new ForgeZetaRegistry(this, bus);
 	}
 
 	@Override
