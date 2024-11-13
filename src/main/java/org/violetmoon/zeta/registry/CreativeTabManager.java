@@ -117,7 +117,7 @@ public class CreativeTabManager {
 				final int logThreshold = maxFails - 10;
 				int failedAttempts = 0;
 
-                while (failedAttempts < 100) {
+                while ((!front.isEmpty() && !behind.isEmpty()) || failedAttempts < 100) {
 					if (!front.isEmpty()) {
 						failedAttempts = addItems(event, front, false, failedAttempts > logThreshold) ? failedAttempts : failedAttempts + 1;
 					}
