@@ -20,7 +20,7 @@ public class CategoryButton extends Button {
 	}
 
 	@Override
-	public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) { //Todo: Are we able to fix this on Neoforge?
+	public void renderWidget(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
 		super.render(guiGraphics, mouseX, mouseY, partialTicks);
 
 		if(!active)

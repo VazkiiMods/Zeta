@@ -86,14 +86,14 @@ public class ScrollableWidgetList<S extends Screen, E extends ScrollableWidgetLi
 	// list.reenableVisibleWidgets();
 
 	@Override
-	public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+	public void renderWidget(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
 		//turn off wasOnScreen, then render widget - minecraft does some simple culling when rendering,
 		//and as a side effect of Entry.render, wasOnScreen will be turned back on
 		forEachWidgetWrapper(w -> {
 			w.widget.visible = false;
 			w.wasOnScreen = false;
 		});
-		super.render(guiGraphics, mouseX, mouseY, partialTicks);
+		super.renderWidget(guiGraphics, mouseX, mouseY, partialTicks);
 	}
 
 	public void reenableVisibleWidgets() {
