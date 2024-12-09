@@ -15,7 +15,7 @@ public class ForgeClientRegistryExtension extends ClientRegistryExtension {
 	//Forge has some weirdo extension, they want you to use json or something.
 	//Doing it from java is easier and more akin to how it happens on Fabric.
 	@Override
-	@SuppressWarnings("removal")
+	@SuppressWarnings("deprecation")
 	protected void doSetRenderLayer(Block block, RenderLayerRegistry.Layer layer) {
 		ItemBlockRenderTypes.setRenderLayer(block, resolvedTypes.get(layer));
 	}

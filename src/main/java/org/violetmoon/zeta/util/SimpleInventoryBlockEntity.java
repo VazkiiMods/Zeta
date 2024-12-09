@@ -132,23 +132,17 @@ public abstract class SimpleInventoryBlockEntity extends ZetaBlockEntity impleme
 	}
 
 	@Override
-	public void startOpen(@NotNull Player player) {
-		// NO-OP
-	}
+	public abstract void startOpen(@NotNull Player player);
 
 	@Override
-	public void stopOpen(@NotNull Player player) {
-		// NO-OP
-	}
+	public abstract void stopOpen(@NotNull Player player);
 
 	@Override
 	public void clearContent() {
 		inventorySlots = NonNullList.withSize(getContainerSize(), ItemStack.EMPTY);
 	}
 
-	public void inventoryChanged(int i) {
-		// NO-OP
-	}
+	abstract void inventoryChanged(int i);
 
 	public boolean isAutomationEnabled() {
 		return true;

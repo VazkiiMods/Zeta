@@ -9,7 +9,6 @@
     "AccessorEvent",
     "AccessorModConfig",
     "AccessorPotionBrewing",
-    "IngredientMixin",
     "WeatheringCopperMixin",
     "self.IZetaBlockMixin_FAKE",
     "self.IZetaItemMixin_FAKE"

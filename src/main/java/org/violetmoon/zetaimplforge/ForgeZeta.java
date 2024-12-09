@@ -45,7 +45,10 @@ import org.violetmoon.zeta.event.play.loading.ZLootTableLoad;
 import org.violetmoon.zeta.event.play.loading.ZVillagerTrades;
 import org.violetmoon.zeta.event.play.loading.ZWandererTrades;
 import org.violetmoon.zeta.item.ext.ItemExtensionFactory;
-import org.violetmoon.zeta.registry.*;
+import org.violetmoon.zeta.registry.BrewingRegistry;
+import org.violetmoon.zeta.registry.CreativeTabManager;
+import org.violetmoon.zeta.registry.PottedPlantRegistry;
+import org.violetmoon.zeta.registry.ZetaRegistry;
 import org.violetmoon.zeta.util.RaytracingUtil;
 import org.violetmoon.zeta.util.ZetaSide;
 import org.violetmoon.zetaimplforge.api.GatherAdvancementModifiersEvent;
@@ -66,7 +69,6 @@ import org.violetmoon.zetaimplforge.event.play.loading.ForgeZVillagerTrades;
 import org.violetmoon.zetaimplforge.event.play.loading.ForgeZWandererTrades;
 import org.violetmoon.zetaimplforge.item.IForgeItemItemExtensions;
 import org.violetmoon.zetaimplforge.registry.ForgeBrewingRegistry;
-import org.violetmoon.zetaimplforge.registry.ForgeCraftingExtensionsRegistry;
 import org.violetmoon.zetaimplforge.registry.ForgeZetaRegistry;
 import org.violetmoon.zetaimplforge.util.ForgeRaytracingUtil;
 
@@ -108,11 +110,6 @@ public class ForgeZeta extends Zeta {
 	@Override
 	public ZetaRegistry createRegistry() {
 		return new ForgeZetaRegistry(this, bus);
-	}
-
-	@Override
-	public CraftingExtensionsRegistry createCraftingExtensionsRegistry() {
-		return new ForgeCraftingExtensionsRegistry();
 	}
 
 	@Override

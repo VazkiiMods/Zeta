@@ -21,7 +21,7 @@ public class CategoryButton extends Button {
 
 	@Override
 	public void renderWidget(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-		super.render(guiGraphics, mouseX, mouseY, partialTicks);
+		super.renderWidget(guiGraphics, mouseX, mouseY, partialTicks);
 
 		if(!active)
 			setTooltip(Tooltip.create(Component.translatable("quark.gui.config.missingaddon"))); // todo: QUARK REFERENCE

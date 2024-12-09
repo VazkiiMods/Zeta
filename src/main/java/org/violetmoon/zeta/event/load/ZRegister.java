@@ -4,7 +4,6 @@ import org.violetmoon.zeta.Zeta;
 import org.violetmoon.zeta.advancement.AdvancementModifierRegistry;
 import org.violetmoon.zeta.event.bus.IZetaLoadEvent;
 import org.violetmoon.zeta.registry.BrewingRegistry;
-import org.violetmoon.zeta.registry.CraftingExtensionsRegistry;
 import org.violetmoon.zeta.registry.RenderLayerRegistry;
 import org.violetmoon.zeta.registry.VariantRegistry;
 import org.violetmoon.zeta.registry.ZetaRegistry;
@@ -19,10 +18,6 @@ public class ZRegister implements IZetaLoadEvent {
 
 	public ZetaRegistry getRegistry() {
 		return zeta.registry;
-	}
-
-	public CraftingExtensionsRegistry getCraftingExtensionsRegistry() {
-		return zeta.craftingExtensions;
 	}
 
 	public BrewingRegistry getBrewingRegistry() {

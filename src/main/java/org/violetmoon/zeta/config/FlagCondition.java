@@ -1,14 +1,10 @@
 package org.violetmoon.zeta.config;
 
-import java.util.function.BooleanSupplier;
-
-import org.violetmoon.zeta.recipe.IZetaCondition;
-import org.violetmoon.zeta.recipe.IZetaConditionSerializer;
-import org.violetmoon.zeta.util.BooleanSuppliers;
-
-import com.google.gson.JsonObject;
-
+import com.mojang.serialization.MapCodec;
 import net.minecraft.resources.ResourceLocation;
+import org.violetmoon.zeta.recipe.IZetaCondition;
+
+import java.util.function.BooleanSupplier;
 
 /**
  * @author WireSegal
@@ -17,8 +13,8 @@ import net.minecraft.resources.ResourceLocation;
 public record FlagCondition(ConfigFlagManager cfm, String flag, ResourceLocation loc, BooleanSupplier extraCondition) implements IZetaCondition {
 
 	@Override
-	public ResourceLocation getID() {
-		return loc;
+	public MapCodec<? extends IZetaCondition> codec() {
+		return null;
 	}
 
 	@Override
@@ -27,11 +23,12 @@ public record FlagCondition(ConfigFlagManager cfm, String flag, ResourceLocation
 			throw new RuntimeException("Illegal flag: " + flag);
 
 		if(!cfm.isValidFlag(flag))
-			cfm.zeta.log.warn("Non-existent flag " + flag + " being used");
+            cfm.zeta.log.warn("Non-existent flag {} being used", flag);
 
 		return extraCondition.getAsBoolean() && cfm.getFlag(flag);
 	}
 
+	/*
 	public static class Serializer implements IZetaConditionSerializer<FlagCondition> {
 		private final ConfigFlagManager cfm;
 		private final ResourceLocation location;
@@ -62,4 +59,5 @@ public record FlagCondition(ConfigFlagManager cfm, String flag, ResourceLocation
 			return location;
 		}
 	}
+	 */
 }

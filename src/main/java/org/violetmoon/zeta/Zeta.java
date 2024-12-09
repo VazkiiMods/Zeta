@@ -52,7 +52,6 @@ public abstract class Zeta implements IZeta {
 		this.registry = createRegistry();
 		this.renderLayerRegistry = createRenderLayerRegistry();
 		this.dyeables = createDyeablesRegistry();
-		this.craftingExtensions = createCraftingExtensionsRegistry();
 		this.brewingRegistry = createBrewingRegistry();
 		this.advancementModifierRegistry = createAdvancementModifierRegistry();
 		this.pottedPlantRegistry = createPottedPlantRegistry();
@@ -67,8 +66,7 @@ public abstract class Zeta implements IZeta {
 		
 		this.entitySpawn = createEntitySpawnHandler();
 
-		loadBus.subscribe(craftingExtensions)
-			.subscribe(dyeables)
+		loadBus.subscribe(dyeables)
 			.subscribe(brewingRegistry)
 			.subscribe(advancementModifierRegistry)
 			.subscribe(fuel)
@@ -92,7 +90,6 @@ public abstract class Zeta implements IZeta {
 	public final RegistryUtil registryUtil = new RegistryUtil(this); //TODO: Delete this, only needed cause there's no way to get early registry names.
 	public final RenderLayerRegistry renderLayerRegistry;
 	public final DyeablesRegistry dyeables;
-	public final CraftingExtensionsRegistry craftingExtensions;
 	public final BrewingRegistry brewingRegistry;
 	public final AdvancementModifierRegistry advancementModifierRegistry;
 	public final PottedPlantRegistry pottedPlantRegistry;
@@ -159,7 +156,7 @@ public abstract class Zeta implements IZeta {
 	public RenderLayerRegistry createRenderLayerRegistry() {
 		return new RenderLayerRegistry();
 	}
-	public abstract CraftingExtensionsRegistry createCraftingExtensionsRegistry();
+
 	public DyeablesRegistry createDyeablesRegistry() {
 		return new DyeablesRegistry();
 	}

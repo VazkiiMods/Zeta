@@ -14,6 +14,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ForgeBrewingRegistry extends BrewingRegistry {
+
+	private List<DelayedPotion> delayedPotions = new ArrayList<>();
+	private boolean okToRegisterImmediately = false;
+
 	public ForgeBrewingRegistry(ForgeZeta zeta) {
 		super(zeta);
 	}
@@ -23,17 +27,16 @@ public class ForgeBrewingRegistry extends BrewingRegistry {
 			new PotionBrewing.Builder(FeatureFlagSet.of()).addMix(input, reagentSupplier, output);
 		}
 	}
-	private List<DelayedPotion> delayedPotions = new ArrayList<>();
-	private boolean okToRegisterImmediately = false;
 
 	@Override
 	public void addBrewingRecipe(Potion input, Item reagentSupplier, Potion output) {
 		DelayedPotion d = new DelayedPotion(Holder.direct(input), reagentSupplier, Holder.direct(output));
 
-		if(okToRegisterImmediately)
+		if(okToRegisterImmediately) {
 			d.register();
-		else
+		} else {
 			delayedPotions.add(d);
+		}
 	}
 
 	@LoadEvent
