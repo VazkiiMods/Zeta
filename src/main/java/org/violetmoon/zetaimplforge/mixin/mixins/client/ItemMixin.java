@@ -9,19 +9,22 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.violetmoon.zeta.client.HumanoidArmorModelGetter;
 import org.violetmoon.zetaimplforge.client.IZetaForgeItemStuff;
+
 @Mixin(Item.class)
 public class ItemMixin implements IZetaForgeItemStuff {
-	@Shadow(remap = false) private Object renderProperties;
+
+	@Unique
+	private Object zeta$renderProperties;
 
 	@Override
 	public void zeta$setBlockEntityWithoutLevelRenderer(BlockEntityWithoutLevelRenderer bewlr) {
-		if(renderProperties != null)
+		if(zeta$renderProperties != null)
 			throw new IllegalStateException("Cannot set both BlockEntityWithoutLevelRenderer and HumanoidArmorModel because zeta's api is bad");
 
-		renderProperties = new IClientItemExtensions() {
+		zeta$renderProperties = new IClientItemExtensions() {
 			@Override
 			public BlockEntityWithoutLevelRenderer getCustomRenderer() {
 				return bewlr;
@@ -31,10 +34,10 @@ public class ItemMixin implements IZetaForgeItemStuff {
 
 	@Override
 	public void zeta$setHumanoidArmorModel(HumanoidArmorModelGetter getter) {
-		if(renderProperties != null)
+		if(zeta$renderProperties != null)
 			throw new IllegalStateException("Cannot set both BlockEntityWithoutLevelRenderer and HumanoidArmorModel because zeta's api is bad");
 
-		renderProperties = new IClientItemExtensions() {
+		zeta$renderProperties = new IClientItemExtensions() {
 			@Override
 			public @NotNull HumanoidModel<?> getHumanoidArmorModel(LivingEntity livingEntity, ItemStack itemStack, EquipmentSlot equipmentSlot, HumanoidModel<?> original) {
 				return getter.getHumanoidArmorModel(livingEntity, itemStack, equipmentSlot, original);

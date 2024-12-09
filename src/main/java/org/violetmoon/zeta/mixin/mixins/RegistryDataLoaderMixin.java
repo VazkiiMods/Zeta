@@ -10,7 +10,6 @@ import org.violetmoon.zeta.util.RegisterDynamicUtil;
 
 import com.mojang.serialization.Decoder;
 
-import net.minecraft.core.Registry;
 import net.minecraft.core.WritableRegistry;
 import net.minecraft.resources.RegistryDataLoader;
 import net.minecraft.resources.RegistryOps;
@@ -21,9 +20,8 @@ import net.minecraft.server.packs.resources.ResourceManager;
 @Mixin(RegistryDataLoader.class)
 public class RegistryDataLoaderMixin {
 
-	@Inject(method = "loadRegistryContents", at = @At("RETURN"))
-	private static <E> void zeta$onLoadRegistryContents(RegistryOps.RegistryInfoLookup registryInfoLookup, ResourceManager mgr, ResourceKey<? extends Registry<E>> registryId, WritableRegistry<E> registry, Decoder<E> whereWereGoingWeDontNeedParsers, Map<ResourceKey<?>, Exception> failed, CallbackInfo ci) {
-		RegisterDynamicUtil.onRegisterDynamic(registryInfoLookup, registryId, registry);
+	@Inject(method = "loadContentsFromManager", at = @At("RETURN"))
+	private static <E> void zeta$onLoadRegistryContents(ResourceManager manager, RegistryOps.RegistryInfoLookup lookup, WritableRegistry<E> registry, Decoder<E> whereWereGoingWeDontNeedParsers, Map<ResourceKey<?>, Exception> failed, CallbackInfo ci) {
+		RegisterDynamicUtil.onRegisterDynamic(lookup, registry.key(), registry);
 	}
-
 }
