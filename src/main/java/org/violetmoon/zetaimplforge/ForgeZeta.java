@@ -1,6 +1,9 @@
 package org.violetmoon.zetaimplforge;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Blocks;
@@ -72,6 +75,9 @@ import org.violetmoon.zetaimplforge.registry.ForgeBrewingRegistry;
 import org.violetmoon.zetaimplforge.registry.ForgeZetaRegistry;
 import org.violetmoon.zetaimplforge.util.ForgeRaytracingUtil;
 
+import java.util.Collection;
+import java.util.function.Supplier;
+
 /**
  * ideally do not touch quark from this package, it will later be split off
  */
@@ -109,7 +115,7 @@ public class ForgeZeta extends Zeta {
 
 	@Override
 	public ZetaRegistry createRegistry() {
-		return new ForgeZetaRegistry(this, bus);
+		return new ForgeZetaRegistry(this);
 	}
 
 	@Override
@@ -165,6 +171,7 @@ public class ForgeZeta extends Zeta {
 		modbus.addListener(this::commonSetup);
 		modbus.addListener(this::loadComplete);
 		modbus.addListener(this::entityAttributeCreation);
+		modbus.addListener(this::onRegisterEvent);
 		NeoForge.EVENT_BUS.addListener(this::addReloadListener);
 		NeoForge.EVENT_BUS.addListener(this::tagsUpdated);
 
@@ -181,7 +188,6 @@ public class ForgeZeta extends Zeta {
 		//NeoForge.EVENT_BUS.addListener(this::livingTick);
 		NeoForge.EVENT_BUS.addListener(this::playNoteBlock);
 		NeoForge.EVENT_BUS.addListener(this::lootTableLoad);
-		NeoForge.EVENT_BUS.addListener(this::livingConversion);
 		NeoForge.EVENT_BUS.addListener(this::livingConversionPre);
 		NeoForge.EVENT_BUS.addListener(this::livingConversionPost);
 		NeoForge.EVENT_BUS.addListener(this::anvilUpdate);
@@ -206,25 +212,22 @@ public class ForgeZeta extends Zeta {
 		NeoForge.EVENT_BUS.addListener(this::serverTickEnd);
 		NeoForge.EVENT_BUS.addListener(this::levelTickStart);
 		NeoForge.EVENT_BUS.addListener(this::levelTickEnd);
-		NeoForge.EVENT_BUS.addListener(this::playerInteract);
 		NeoForge.EVENT_BUS.addListener(this::playerInteractEntityInteractSpecific);
 		NeoForge.EVENT_BUS.addListener(this::playerInteractEntityInteract);
 		NeoForge.EVENT_BUS.addListener(this::playerInteractRightClickBlock);
 		NeoForge.EVENT_BUS.addListener(this::playerInteractRightClickItem);
 		NeoForge.EVENT_BUS.addListener(this::playerDestroyItem);
-		NeoForge.EVENT_BUS.addListener(this::mobSpawn);
 		//NeoForge.EVENT_BUS.addListener(this::mobSpawnFinalizeSpawn);
 		//NeoForge.EVENT_BUS.addListener(this::mobSpawnFinalizeSpawnLowest);
 		NeoForge.EVENT_BUS.addListener(this::livingChangeTarget);
 		//NeoForge.EVENT_BUS.addListener(this::sleepingLocationCheck);
 		NeoForge.EVENT_BUS.addListener(this::villagerTrades);
 		NeoForge.EVENT_BUS.addListener(this::anvilRepair);
-		NeoForge.EVENT_BUS.addListener(this::player);
 		NeoForge.EVENT_BUS.addListener(this::playerBreakSpeed);
 		NeoForge.EVENT_BUS.addListener(this::playerClone);
 		NeoForge.EVENT_BUS.addListener(this::playerLoggedIn);
 		NeoForge.EVENT_BUS.addListener(this::playerLoggedOut);
-		NeoForge.EVENT_BUS.addListener(this::entityItemPickup);
+		// NeoForge.EVENT_BUS.addListener(this::entityItemPickup); TODO: USE ItemEntityPickupEvent.PRE OR ItemEntityPickupEvent.POST INSTEAD
 		NeoForge.EVENT_BUS.addListener(this::blockBreak);
 		NeoForge.EVENT_BUS.addListener(this::blockEntityPlace);
 		//NeoForge.EVENT_BUS.addListener(this::blockToolModification);
@@ -259,6 +262,24 @@ public class ForgeZeta extends Zeta {
 
 	public void entityAttributeCreation(EntityAttributeCreationEvent e) {
 		loadBus.fire(new ForgeZEntityAttributeCreation(e), ZEntityAttributeCreation.class);
+	}
+
+	// TODO: Put this back inside ZetaForgeMod, or get rid of it
+	public void onRegisterEvent(RegisterEvent event) {
+		var key = event.getRegistryKey();
+		ResourceLocation registryRes = key.location();
+		ResourceKey<Registry<Object>> keyGeneric = ResourceKey.createRegistryKey(registryRes);
+		Collection<Supplier<Object>> ourEntries = registry.getDefers(registryRes);
+
+		if(ourEntries != null && !ourEntries.isEmpty()) {
+			for(Supplier<Object> supplier : ourEntries) {
+				Object entry = supplier.get();
+				ResourceLocation name = registry.internalNames.get(entry);
+				registry.z.log.debug("Registering to " + registryRes + " - " + name);
+				event.register(keyGeneric, e-> e.register(name, entry));
+			}
+			registry.clearDeferCache(registryRes);
+		}
 	}
 
 	public void addReloadListener(AddReloadListenerEvent e) {
@@ -301,10 +322,6 @@ public class ForgeZeta extends Zeta {
 		playBus.fire(new ForgeZLootTableLoad(e), ZLootTableLoad.class);
 	}
 
-	public void livingConversion(LivingConversionEvent e) {
-		playBus.fire(new ForgeZLivingConversion(e), ZLivingConversion.class);
-	}
-
 	public void livingConversionPre(LivingConversionEvent.Pre e) {
 		playBus.fire(new ForgeZLivingConversion.Pre(e), ZLivingConversion.Pre.class);
 	}
@@ -345,14 +362,12 @@ public class ForgeZeta extends Zeta {
 		playBus.fire(new ForgeZLivingDrops.Lowest(e), ZLivingDrops.Lowest.class);
 	}
 
-	public void playerTickStart(PlayerTickEvent e) {
-		if (e instanceof PlayerTickEvent.Pre)
-			playBus.fire(new ForgeZPlayerTick.Pre(e), ZPlayerTick.Start.class);
+	public void playerTickStart(PlayerTickEvent.Pre e) {
+		playBus.fire(new ForgeZPlayerTick.Pre(e), ZPlayerTick.Start.class);
 	}
 
-	public void playerTickEnd(PlayerTickEvent e) {
-		if (e instanceof PlayerTickEvent.Post)
-			playBus.fire(new ForgeZPlayerTick.Post(e), ZPlayerTick.End.class);
+	public void playerTickEnd(PlayerTickEvent.Post e) {
+		playBus.fire(new ForgeZPlayerTick.Post(e), ZPlayerTick.End.class);
 	}
 
 	public void babyEntitySpawn(BabyEntitySpawnEvent e) {
@@ -379,28 +394,20 @@ public class ForgeZeta extends Zeta {
 		playBus.fire(new ForgeZAttachCapabilities.LevelCaps(capabilityManager, e), ZAttachCapabilities.LevelCaps.class);
 	}*/
 
-	public void serverTickStart(ServerTickEvent e) {
-		if (e instanceof ServerTickEvent.Pre)
-			playBus.fire(new ForgeZServerTick.Pre(e), ZServerTick.Start.class);
+	public void serverTickStart(ServerTickEvent.Pre e) {
+		playBus.fire(new ForgeZServerTick.Pre(e), ZServerTick.Start.class);
 	}
 
-	public void serverTickEnd(ServerTickEvent e) {
-		if (e instanceof ServerTickEvent.Post)
-			playBus.fire(new ForgeZServerTick.Post(e), ZServerTick.End.class);
+	public void serverTickEnd(ServerTickEvent.Post e) {
+		playBus.fire(new ForgeZServerTick.Post(e), ZServerTick.End.class);
 	}
 
-	public void levelTickStart(LevelTickEvent e) {
-		if (e instanceof LevelTickEvent.Pre)
-			playBus.fire(new ForgeZLevelTick.Start(e), ZLevelTick.Start.class);
+	public void levelTickStart(LevelTickEvent.Pre e) {
+		playBus.fire(new ForgeZLevelTick.Start(e), ZLevelTick.Start.class);
 	}
 
-	public void levelTickEnd(LevelTickEvent e) {
-		if (e instanceof LevelTickEvent.Post)
-			playBus.fire(new ForgeZLevelTick.End(e), ZLevelTick.End.class);
-	}
-
-	public void playerInteract(PlayerInteractEvent e) {
-		playBus.fire(new ForgeZPlayerInteract(e), ZPlayerInteract.class);
+	public void levelTickEnd(LevelTickEvent.Post e) {
+		playBus.fire(new ForgeZLevelTick.End(e), ZLevelTick.End.class);
 	}
 
 	public void playerInteractEntityInteractSpecific(PlayerInteractEvent.EntityInteractSpecific e) {
@@ -423,17 +430,15 @@ public class ForgeZeta extends Zeta {
 		playBus.fire(new ForgeZPlayerDestroyItem(e), ZPlayerDestroyItem.class);
 	}
 
-	public void mobSpawn(MobSpawnEvent e) {
-		playBus.fire(new ForgeZMobSpawnEvent(e), ZMobSpawnEvent.class);
-	}
-
-	/*public void mobSpawnFinalizeSpawn(MobSpawnEvent.FinalizeSpawn e) {
+	/*
+	public void mobSpawnFinalizeSpawn(MobSpawnEvent.FinalizeSpawn e) {
 		playBus.fire(new ForgeZMobSpawnEvent.FinalizeSpawn(e), ZMobSpawnEvent.CheckSpawn.class);
 	}
 
 	public void mobSpawnFinalizeSpawnLowest(MobSpawnEvent.FinalizeSpawn e) {
 		playBus.fire(new ForgeZMobSpawnEvent.FinalizeSpawn.Lowest(e), ZMobSpawnEvent.CheckSpawn.Lowest.class);
-	}*/
+	}
+	 */
 
 	public void livingChangeTarget(LivingChangeTargetEvent e) {
 		playBus.fire(new ForgeZLivingChangeTarget(e), ZLivingChangeTarget.class);
@@ -443,9 +448,11 @@ public class ForgeZeta extends Zeta {
 		playBus.fire(new ForgeZSleepingLocationCheck(e), ZSleepingLocationCheck.class);
 	}*/
 
+	/*
 	public void entityItemPickup(ItemEntityPickupEvent e) {
 		playBus.fire(new ForgeZEntityItemPickup(e), ZItemEntityPickup.class);
 	}
+	 */
 
 	public void blockBreak(BlockEvent.BreakEvent e) {
 		playBus.fire(new ForgeZBlock.Break(e), ZBlock.Break.class);
@@ -469,10 +476,6 @@ public class ForgeZeta extends Zeta {
 
 	public void anvilRepair(AnvilRepairEvent e) {
 		playBus.fire(new ForgeZAnvilRepair(e), ZAnvilRepair.class);
-	}
-
-	public void player(PlayerEvent e) {
-		playBus.fire(new ForgeZPlayer(e), ZPlayer.class);
 	}
 
 	public void playerBreakSpeed(PlayerEvent.BreakSpeed e) {

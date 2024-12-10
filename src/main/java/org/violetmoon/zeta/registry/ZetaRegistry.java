@@ -29,13 +29,13 @@ import net.minecraft.world.level.block.Block;
 //Mash of arl's RegistryHelper and its ModData innerclass.
 //You're expected to create one of these per modid instead, avoiding a dependency on Forge's "current mod id" notion.
 public abstract class ZetaRegistry {
-	protected final Zeta z;
+	public final Zeta z;
 
 	// the keys of this are things like "minecraft:block", "minecraft:item" and so on
 	private final Multimap<ResourceLocation, Supplier<Object>> defers = ArrayListMultimap.create();
 	
 	// to support calling getRegistryName before the object actually gets registered for real
-	protected final Map<Object, ResourceLocation> internalNames = new IdentityHashMap<>();
+	public final Map<Object, ResourceLocation> internalNames = new IdentityHashMap<>();
 	
 	// "named color provider" system allows blocks and items to choose their own color providers in a side-safe way
 	// TODO: should this go somewhere else and not be so tightly-integrated? (yes - i think a Registrate-like system would be a great spot for this)

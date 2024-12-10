@@ -51,15 +51,6 @@ public class MutableAdvancement implements IMutableAdvancement {
 	public void commit() {
 		advancement.criteria().clear();
 		advancement.criteria().putAll(ImmutableMap.copyOf(criteria));
-		
-		List<String[]> requirementArrays = new ArrayList<>();
-		for(List<String> list : requirements) {
-			String[] arr = list.toArray(new String[list.size()]);
-			requirementArrays.add(arr);
-		}
-
-		// Can't replace this yet
-		String[][] arr = requirementArrays.toArray(new String[0][requirementArrays.size()]);
-		advancement.requirements = arr;
+		advancement.requirements().requirements().addAll(requirements);
 	}
 }
