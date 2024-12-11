@@ -13,7 +13,7 @@ public class ZetaMod {
 		ZetaMod.proxy = proxy;
 
 		ZETA.start(bus);
-		ZETA.loadModules(null, null);
+		ZETA.loadModules(null, null, null);
 
 		proxy.registerEvents(zeta);
 	}

@@ -15,6 +15,7 @@ import net.neoforged.fml.ModList;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.neoforged.fml.loading.FMLEnvironment;
+import net.neoforged.neoforge.common.ModConfigSpec;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.event.AnvilUpdateEvent;
@@ -36,6 +37,8 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.zeta.Zeta;
 import org.violetmoon.zeta.block.ext.BlockExtensionFactory;
+import org.violetmoon.zeta.config.IZetaConfigInternals;
+import org.violetmoon.zeta.config.SectionDefinition;
 import org.violetmoon.zeta.event.load.*;
 import org.violetmoon.zeta.event.play.*;
 import org.violetmoon.zeta.event.play.entity.*;
@@ -54,6 +57,8 @@ import org.violetmoon.zeta.util.ZetaSide;
 import org.violetmoon.zetaimplforge.api.GatherAdvancementModifiersEvent;
 import org.violetmoon.zetaimplforge.block.IForgeBlockBlockExtensions;
 import org.violetmoon.zetaimplforge.config.ConfigEventDispatcher;
+import org.violetmoon.zetaimplforge.config.ForgeBackedConfig;
+import org.violetmoon.zetaimplforge.config.TerribleForgeConfigHackery;
 import org.violetmoon.zetaimplforge.event.load.ForgeZAddReloadListener;
 import org.violetmoon.zetaimplforge.event.load.ForgeZCommonSetup;
 import org.violetmoon.zetaimplforge.event.load.ForgeZEntityAttributeCreation;
@@ -92,6 +97,17 @@ public class ForgeZeta extends Zeta {
 		return ModList.get().getModContainerById(modid)
 			.map(c -> c.getModInfo().getDisplayName())
 			.orElse(null);
+	}
+
+	@Override
+	public IZetaConfigInternals makeConfigInternals(SectionDefinition rootSection) {
+		ModConfigSpec.Builder bob = new ModConfigSpec.Builder();
+		ForgeBackedConfig forge = new ForgeBackedConfig(rootSection, bob);
+		ModConfigSpec spec = bob.build();
+
+		TerribleForgeConfigHackery.registerAndLoadConfigEarlierThanUsual(spec);
+
+		return forge;
 	}
 
 	@Override
