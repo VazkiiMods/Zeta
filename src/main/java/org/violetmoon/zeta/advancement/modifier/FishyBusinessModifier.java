@@ -3,6 +3,7 @@ package org.violetmoon.zeta.advancement.modifier;
 import java.util.Optional;
 import java.util.Set;
 
+import net.minecraft.core.RegistryAccess;
 import org.violetmoon.zeta.advancement.AdvancementModifier;
 import org.violetmoon.zeta.api.IMutableAdvancement;
 import org.violetmoon.zeta.module.ZetaModule;
@@ -35,7 +36,7 @@ public class FishyBusinessModifier extends AdvancementModifier {
     }
 
     @Override
-    public boolean apply(ResourceLocation res, IMutableAdvancement adv) {
+    public boolean apply(ResourceLocation res, IMutableAdvancement adv, RegistryAccess registry) {
         ItemLike[] array = fishes.toArray(ItemLike[]::new);
         Criterion<FishingRodHookedTrigger.TriggerInstance> criterion = FishingRodHookedTrigger.TriggerInstance.fishedItem(
                 Optional.empty(), Optional.empty(), Optional.of(ItemPredicate.Builder.item().of(array).build()));

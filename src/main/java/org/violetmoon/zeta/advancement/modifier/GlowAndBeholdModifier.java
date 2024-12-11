@@ -2,6 +2,7 @@ package org.violetmoon.zeta.advancement.modifier;
 
 import java.util.Set;
 
+import net.minecraft.core.RegistryAccess;
 import org.violetmoon.zeta.advancement.AdvancementModifier;
 import org.violetmoon.zeta.api.IMutableAdvancement;
 import org.violetmoon.zeta.module.ZetaModule;
@@ -37,7 +38,7 @@ public class GlowAndBeholdModifier extends AdvancementModifier {
     }
 
     @Override
-    public boolean apply(ResourceLocation res, IMutableAdvancement adv) {
+    public boolean apply(ResourceLocation res, IMutableAdvancement adv, RegistryAccess registry) {
 
         Block[] array = blocks.toArray(Block[]::new);
         Criterion<ItemUsedOnLocationTrigger.TriggerInstance> criterion = ItemUsedOnLocationTrigger.TriggerInstance.itemUsedOnBlock(

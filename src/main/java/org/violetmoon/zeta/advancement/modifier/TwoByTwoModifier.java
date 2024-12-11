@@ -1,21 +1,20 @@
 package org.violetmoon.zeta.advancement.modifier;
 
-import java.util.Set;
-
-import org.violetmoon.zeta.advancement.AdvancementModifier;
-import org.violetmoon.zeta.api.IMutableAdvancement;
-import org.violetmoon.zeta.module.ZetaModule;
-
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;
-
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.BredAnimalsTrigger;
 import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.EntityTypePredicate;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
+import org.violetmoon.zeta.advancement.AdvancementModifier;
+import org.violetmoon.zeta.api.IMutableAdvancement;
+import org.violetmoon.zeta.module.ZetaModule;
+
+import java.util.Set;
 
 public class TwoByTwoModifier extends AdvancementModifier {
 
@@ -25,10 +24,8 @@ public class TwoByTwoModifier extends AdvancementModifier {
 	
 	public TwoByTwoModifier(ZetaModule module, Set<EntityType<?>> entityTypes) {
 		super(module);
-		
 		this.entityTypes = entityTypes;
 		Preconditions.checkArgument(!entityTypes.isEmpty(), "Advancement modifier list cant be empty");
-
 	}
 
 	@Override
@@ -37,7 +34,7 @@ public class TwoByTwoModifier extends AdvancementModifier {
 	}
 
 	@Override
-	public boolean apply(ResourceLocation res, IMutableAdvancement adv) {
+	public boolean apply(ResourceLocation res, IMutableAdvancement adv, RegistryAccess registry) {
 		for (EntityType<?> type : entityTypes) {
 			Criterion<BredAnimalsTrigger.TriggerInstance> criterion = BredAnimalsTrigger.TriggerInstance.bredAnimals(EntityPredicate.Builder.entity().entityType(EntityTypePredicate.of(type)));
 			String name = BuiltInRegistries.ENTITY_TYPE.getKey(type).toString();

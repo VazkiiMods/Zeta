@@ -7,6 +7,7 @@ import net.minecraft.advancements.critereon.BlockPredicate;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.advancements.critereon.ItemUsedOnLocationTrigger;
 import net.minecraft.advancements.critereon.LocationPredicate;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
@@ -44,7 +45,7 @@ public class WaxModifier extends AdvancementModifier {
 	}
 
 	@Override
-	public boolean apply(ResourceLocation res, IMutableAdvancement adv) {
+	public boolean apply(ResourceLocation res, IMutableAdvancement adv, RegistryAccess registry) {
 		String title = res.getPath().replaceAll(".+/", "");
 		Criterion<?> criterion = adv.getCriterion(title);
 		if(criterion != null && criterion.triggerInstance() instanceof ItemUsedOnLocationTrigger.TriggerInstance iib) {

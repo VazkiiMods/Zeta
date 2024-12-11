@@ -2,6 +2,7 @@ package org.violetmoon.zeta.advancement.modifier;
 
 import java.util.Set;
 
+import net.minecraft.core.RegistryAccess;
 import org.violetmoon.zeta.advancement.AdvancementModifier;
 import org.violetmoon.zeta.api.IMutableAdvancement;
 import org.violetmoon.zeta.module.ZetaModule;
@@ -34,7 +35,7 @@ public class MonsterHunterModifier extends AdvancementModifier {
 	}
 
 	@Override
-	public boolean apply(ResourceLocation res, IMutableAdvancement adv) {
+	public boolean apply(ResourceLocation res, IMutableAdvancement adv, RegistryAccess registry) {
 		for(EntityType<?> type : entityTypes) {
 			Criterion<KilledTrigger.TriggerInstance> criterion = KilledTrigger.TriggerInstance.playerKilledEntity(EntityPredicate.Builder.entity().entityType(EntityTypePredicate.of(type)));
 			String name = BuiltInRegistries.ENTITY_TYPE.getKey(type).toString();

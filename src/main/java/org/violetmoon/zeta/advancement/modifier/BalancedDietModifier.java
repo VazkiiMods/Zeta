@@ -2,6 +2,7 @@ package org.violetmoon.zeta.advancement.modifier;
 
 import java.util.Set;
 
+import net.minecraft.core.RegistryAccess;
 import org.violetmoon.zeta.advancement.AdvancementModifier;
 import org.violetmoon.zeta.api.IMutableAdvancement;
 import org.violetmoon.zeta.module.ZetaModule;
@@ -34,7 +35,7 @@ public class BalancedDietModifier extends AdvancementModifier {
     }
 
     @Override
-    public boolean apply(ResourceLocation res, IMutableAdvancement adv) {
+    public boolean apply(ResourceLocation res, IMutableAdvancement adv, RegistryAccess registry) {
         ItemLike[] array = items.toArray(ItemLike[]::new);
         Criterion<ConsumeItemTrigger.TriggerInstance> criterion = ConsumeItemTrigger.TriggerInstance.usedItem(ItemPredicate.Builder.item().of(array));
         String name = BuiltInRegistries.ITEM.getKey(array[0].asItem()).toString();

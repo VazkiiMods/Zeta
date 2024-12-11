@@ -5,6 +5,7 @@ import java.util.function.BooleanSupplier;
 
 import net.minecraft.advancements.critereon.MobEffectsPredicate;
 import net.minecraft.core.Holder;
+import net.minecraft.core.RegistryAccess;
 import org.violetmoon.zeta.advancement.AdvancementModifier;
 import org.violetmoon.zeta.api.IMutableAdvancement;
 import org.violetmoon.zeta.module.ZetaModule;
@@ -37,7 +38,7 @@ public class FuriousCocktailModifier extends AdvancementModifier {
 	}
 
 	@Override
-	public boolean apply(ResourceLocation res, IMutableAdvancement adv) {
+	public boolean apply(ResourceLocation res, IMutableAdvancement adv, RegistryAccess registry) {
 		if (!isPotion.getAsBoolean() && res.equals(TARGET_AP)) return false;
 		
 		Criterion<?> crit = adv.getCriterion("all_effects");

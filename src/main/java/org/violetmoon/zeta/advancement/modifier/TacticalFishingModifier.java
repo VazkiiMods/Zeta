@@ -2,6 +2,7 @@ package org.violetmoon.zeta.advancement.modifier;
 
 import java.util.Set;
 
+import net.minecraft.core.RegistryAccess;
 import org.violetmoon.zeta.advancement.AdvancementModifier;
 import org.violetmoon.zeta.api.IMutableAdvancement;
 import org.violetmoon.zeta.module.ZetaModule;
@@ -20,7 +21,6 @@ import net.minecraft.world.level.ItemLike;
 public class TacticalFishingModifier extends AdvancementModifier {
 
     private static final ResourceLocation TARGET = ResourceLocation.withDefaultNamespace("husbandry/tactical_fishing");
-
     final Set<BucketItem> bucketItems;
 
     public TacticalFishingModifier(ZetaModule module, Set<BucketItem> buckets) {
@@ -35,7 +35,7 @@ public class TacticalFishingModifier extends AdvancementModifier {
     }
 
     @Override
-    public boolean apply(ResourceLocation res, IMutableAdvancement adv) {
+    public boolean apply(ResourceLocation res, IMutableAdvancement adv, RegistryAccess registry) {
 
         ItemLike[] array = bucketItems.toArray(ItemLike[]::new);
         Criterion<FilledBucketTrigger.TriggerInstance> criterion = FilledBucketTrigger.TriggerInstance.filledBucket(

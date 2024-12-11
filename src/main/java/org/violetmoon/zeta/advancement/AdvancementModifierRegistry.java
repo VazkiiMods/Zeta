@@ -6,6 +6,7 @@ import java.util.function.BooleanSupplier;
 
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.core.Holder;
+import net.minecraft.core.RegistryAccess;
 import org.violetmoon.zeta.Zeta;
 import org.violetmoon.zeta.advancement.modifier.ASeedyPlaceModifier;
 import org.violetmoon.zeta.advancement.modifier.AdventuringTimeModifier;
@@ -80,11 +81,11 @@ public class AdvancementModifierRegistry {
 		}
 
 		ServerAdvancementManager advancements = event.getServerResources().getAdvancements();
-		event.addListener((ResourceManagerReloadListener) mgr -> onAdvancementsLoaded(advancements));
+		event.addListener((ResourceManagerReloadListener) mgr -> onAdvancementsLoaded(advancements, event.getRegistryAccess()));
 
 	}
 
-	private void onAdvancementsLoaded(ServerAdvancementManager manager) {
+	private void onAdvancementsLoaded(ServerAdvancementManager manager, RegistryAccess registry) {
 		for(ResourceLocation res : modifiers.keySet()) {
 			AdvancementHolder advHolder = manager.get(res);
 
@@ -96,7 +97,7 @@ public class AdvancementModifierRegistry {
 					MutableAdvancement mutable = new MutableAdvancement(advHolder.value());
 
 					for(IAdvancementModifier mod : found)
-						if(mod.isActive() && mod.apply(res, mutable))
+						if(mod.isActive() && mod.apply(res, mutable, registry))
 							modifications++;
 
 					if(modifications > 0) {

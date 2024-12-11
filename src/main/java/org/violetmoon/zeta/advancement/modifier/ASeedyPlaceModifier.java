@@ -2,6 +2,7 @@ package org.violetmoon.zeta.advancement.modifier;
 
 import java.util.Set;
 
+import net.minecraft.core.RegistryAccess;
 import org.violetmoon.zeta.advancement.AdvancementModifier;
 import org.violetmoon.zeta.api.IMutableAdvancement;
 import org.violetmoon.zeta.module.ZetaModule;
@@ -23,7 +24,6 @@ public class ASeedyPlaceModifier extends AdvancementModifier {
 	public ASeedyPlaceModifier(ZetaModule module, Set<Block> seeds) {
 		super(module);
 		this.seeds = seeds;
-
 	}
 
 	@Override
@@ -32,7 +32,7 @@ public class ASeedyPlaceModifier extends AdvancementModifier {
 	}
 
 	@Override
-	public boolean apply(ResourceLocation res, IMutableAdvancement adv) {
+	public boolean apply(ResourceLocation res, IMutableAdvancement adv, RegistryAccess registry) {
 		for(Block block : seeds) {
 			Criterion<EnterBlockTrigger.TriggerInstance> criterion = EnterBlockTrigger.TriggerInstance.entersBlock(block);
 			String name = BuiltInRegistries.BLOCK.getKey(block).toString();
