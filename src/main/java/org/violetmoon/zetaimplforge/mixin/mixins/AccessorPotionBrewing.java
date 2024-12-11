@@ -11,8 +11,6 @@ import net.minecraft.world.item.alchemy.PotionBrewing;
 @Mixin(PotionBrewing.class)
 public interface AccessorPotionBrewing {
 
-	@Accessor("potionMixes")
-	static List<PotionBrewing.Mix<Potion>> zeta$getPotionMixes() {
-		throw new UnsupportedOperationException();
-	}
+	@Accessor
+	List<PotionBrewing.Mix<Potion>> getPotionMixes();
 }
