@@ -12,7 +12,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-import org.violetmoon.zeta.config.ZetaGeneralConfig;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.load.ZRegister;
 import org.violetmoon.zeta.mod.ZetaMod;
@@ -88,11 +87,14 @@ public class WorldGenHandler {
 				Generator gen = wgen.generator();
 
 				if(wgen.module().enabled && gen.canGenerate(region)) {
-					if(ZetaGeneralConfig.enableWorldgenWatchdog) {
+
+					/* CONFIG FLAG
+					if (ZetaGeneralConfig.enableWorldgenWatchdog) {
 						final int finalStageNum = stageNum;
 						stageNum = watchdogRun(gen, () -> gen.generate(finalStageNum, seed, stage, region, generator, random, pos), 1, TimeUnit.MINUTES);
 					} else
-						stageNum = gen.generate(stageNum, seed, stage, region, generator, random, pos);
+					 */
+					stageNum = gen.generate(stageNum, seed, stage, region, generator, random, pos);
 				}
 			}
 		}

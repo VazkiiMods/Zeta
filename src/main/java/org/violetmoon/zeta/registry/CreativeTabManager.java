@@ -9,7 +9,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import org.violetmoon.zeta.Zeta;
-import org.violetmoon.zeta.config.ZetaGeneralConfig;
 import org.violetmoon.zeta.module.IDisableable;
 
 import java.util.*;
@@ -100,6 +99,7 @@ public class CreativeTabManager {
 					acceptItem(event, item);
 				}
 
+				/* CONFIG FLAG
 				if(ZetaGeneralConfig.forceCreativeTabAppends) {
 					for(ItemSet itemset : add.appendInFront.keySet())
 						for(ItemLike item : itemset.items)
@@ -110,6 +110,7 @@ public class CreativeTabManager {
 							acceptItem(event, item);
 					return;
 				}
+				 */
 
 				Map<ItemSet, ItemLike> front = new LinkedHashMap<>(add.appendInFront);
 				Map<ItemSet, ItemLike> behind = new LinkedHashMap<>(add.appendBehind);
@@ -196,8 +197,10 @@ public class CreativeTabManager {
 	}
 
 	private static void logVerbose(Supplier<String> s) {
-		if(ZetaGeneralConfig.enableCreativeVerboseLogging)
+		/*
+		if(ZetaGeneralConfig.enableCreativeVerboseLogging) CONFIG FLAG
 			Zeta.GLOBAL_LOG.warn(s.get());
+		 */
 	}
 
 	private static class CreativeTabAdditions {

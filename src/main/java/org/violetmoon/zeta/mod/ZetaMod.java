@@ -2,7 +2,6 @@ package org.violetmoon.zeta.mod;
 
 import net.neoforged.bus.api.IEventBus;
 import org.violetmoon.zeta.Zeta;
-import org.violetmoon.zeta.config.ZetaGeneralConfig;
 
 public class ZetaMod {
 
@@ -14,7 +13,7 @@ public class ZetaMod {
 		ZetaMod.proxy = proxy;
 
 		ZETA.start(bus);
-		ZETA.loadModules(null, null, ZetaGeneralConfig.INSTANCE);
+		ZETA.loadModules(null, null);
 
 		proxy.registerEvents(zeta);
 	}

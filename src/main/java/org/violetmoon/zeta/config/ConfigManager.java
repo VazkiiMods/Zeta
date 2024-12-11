@@ -116,7 +116,8 @@ public class ConfigManager {
 		//Its Janky !
 		databindings.add(0, i -> {
 			categoryEnabledOptions.forEach((category, option) -> setCategoryEnabled(category, i.get(option)));
-			ignoreAntiOverlapOptions.forEach((module, option) -> module.ignoreAntiOverlap = !ZetaGeneralConfig.useAntiOverlap || i.get(option));
+			// ignoreAntiOverlapOptions.forEach((module, option) -> module.ignoreAntiOverlap = !ZetaGeneralConfig.useAntiOverlap || i.get(option)); CONFIG FLAG
+			ignoreAntiOverlapOptions.forEach((module, option) -> module.ignoreAntiOverlap = i.get(option));
 			moduleEnabledOptions.forEach((module, option) -> {
 				setModuleEnabled(module, i.get(option));
 				cfm.putModuleFlag(module);

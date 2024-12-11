@@ -7,11 +7,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.fml.ModList;
 import org.violetmoon.zeta.Zeta;
-import org.violetmoon.zeta.config.ZetaGeneralConfig;
 import org.violetmoon.zeta.event.bus.PlayEvent;
 import org.violetmoon.zeta.event.play.ZItemTooltip;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,8 +29,7 @@ public class RequiredModTooltipHandler {
 	}
 
 	public List<ItemStack> disabledItems() {
-		if(!ZetaGeneralConfig.hideDisabledContent)
-			return new ArrayList<>();
+		// if(!ZetaGeneralConfig.hideDisabledContent) return new ArrayList<>(); CONFIG FLAG
 		
 		return items.entrySet().stream()
 				.filter((entry) -> !ModList.get().isLoaded(entry.getValue()))

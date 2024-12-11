@@ -13,7 +13,6 @@ import org.violetmoon.zeta.advancement.AdvancementModifierRegistry;
 import org.violetmoon.zeta.block.ext.BlockExtensionFactory;
 import org.violetmoon.zeta.config.ConfigManager;
 import org.violetmoon.zeta.config.IZetaConfigInternals;
-import org.violetmoon.zeta.config.SectionDefinition;
 import org.violetmoon.zeta.event.bus.*;
 import org.violetmoon.zeta.item.ext.ItemExtensionFactory;
 import org.violetmoon.zeta.module.ModuleFinder;
@@ -116,9 +115,8 @@ public abstract class Zeta implements IZeta {
 	/**
 	 * @param categories List of module categories in this mod, if null, will not load Modules but still load general config
 	 * @param finder Module finder instance to locate the modules this Zeta will load, if null, will not load Modules but still load general config
-	 * @param rootPojo General config object root
 	 */
-	public void loadModules(@Nullable Iterable<ZetaCategory> categories, @Nullable ModuleFinder finder, Object rootPojo) {
+	public void loadModules(@Nullable Iterable<ZetaCategory> categories, @Nullable ModuleFinder finder) {
 		if(categories != null && finder != null) {
 			modules.initCategories(categories);
 			modules.load(finder);
@@ -129,9 +127,11 @@ public abstract class Zeta implements IZeta {
 		// - The platform-specific configInternals loads the actual values, from the platform-specfic config file
 		// - Only then can ConfigManager do the initial config load
 
+		/* CONFIG REMOVE
 		this.configManager = new ConfigManager(this, rootPojo);
 		this.configInternals = makeConfigInternals(configManager.getRootConfig());
 		this.configManager.onReload();
+		 */
 	}
 
 	// modloader services
@@ -144,9 +144,6 @@ public abstract class Zeta implements IZeta {
 			throw new RuntimeException("Zeta: " + modid + " threw exception initializing compat with " + compatWith, e);
 		}
 	}
-
-	// config
-	public abstract IZetaConfigInternals makeConfigInternals(SectionDefinition rootSection);
 
 	// general xplat stuff
 	public ZetaModuleManager createModuleManager() {

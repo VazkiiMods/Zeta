@@ -2,7 +2,6 @@ package org.violetmoon.zeta.world.generator.multichunk;
 
 import java.util.Random;
 
-import org.violetmoon.zeta.config.ZetaGeneralConfig;
 import org.violetmoon.zeta.config.type.ClusterSizeConfig;
 
 import com.google.common.collect.ImmutableList;
@@ -25,8 +24,11 @@ public record ClusterShape(BlockPos src, Vec3 radius,
 		double r = dx * dx + dy * dy + dz * dz;
 		if(r > 1)
 			return false;
-		if(ZetaGeneralConfig.useFastWorldgen)
+
+		/*
+		if(ZetaGeneralConfig.useFastWorldgen) CONFIG FLAG
 			return true;
+		 */
 
 		r = Math.sqrt(r);
 
