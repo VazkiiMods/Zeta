@@ -1,13 +1,10 @@
 package org.violetmoon.zeta.util.handler;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.function.Consumer;
 
 import net.minecraft.world.item.crafting.*;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.Nullable;
 import org.violetmoon.zeta.Zeta;
 import org.violetmoon.zeta.event.bus.IZetaPlayEvent;
 import org.violetmoon.zeta.event.bus.LoadEvent;
@@ -92,19 +89,15 @@ public class RecipeCrawlHandler {
 					if (recipe.getResultItem(access) == null)
 						throw new IllegalStateException("Recipe getResultItem is null");
 
-					ZRecipeCrawl.Visit<?> event;
-					if (recipe instanceof ShapedRecipe)
-						event = new ZRecipeCrawl.Visit.Shaped((RecipeHolder<ShapedRecipe>) recipeHolder, access);
-					else if (recipe instanceof ShapelessRecipe)
-						event = new ZRecipeCrawl.Visit.Shapeless((RecipeHolder<ShapelessRecipe>) recipeHolder, access);
-					else if (recipe instanceof CustomRecipe)
-						event = new ZRecipeCrawl.Visit.Custom((RecipeHolder<CustomRecipe>) recipeHolder, access);
-					else if (recipe instanceof AbstractCookingRecipe)
-						event = new ZRecipeCrawl.Visit.Cooking((RecipeHolder<ShapelessRecipe>) recipeHolder, access);
-					else
-						event = new ZRecipeCrawl.Visit.Misc((RecipeHolder<Recipe<?>>) recipeHolder, access);
+					ZRecipeCrawl.Visit<?> event = switch (recipe) {
+                        case ShapedRecipe shaped -> new ZRecipeCrawl.Visit.Shaped((RecipeHolder<ShapedRecipe>) recipeHolder, access);
+                        case ShapelessRecipe shapeless -> new ZRecipeCrawl.Visit.Shapeless((RecipeHolder<ShapelessRecipe>) recipeHolder, access);
+                        case CustomRecipe custom -> new ZRecipeCrawl.Visit.Custom((RecipeHolder<CustomRecipe>) recipeHolder, access);
+                        case AbstractCookingRecipe cooking -> new ZRecipeCrawl.Visit.Cooking((RecipeHolder<ShapelessRecipe>) recipeHolder, access);
+                        default -> new ZRecipeCrawl.Visit.Misc((RecipeHolder<Recipe<?>>) recipeHolder, access);
+                    };
 
-					//misc recipes could have custom logic that we cant make many assumptions on. For example FD cutting board recipes are lossy.
+                    //misc recipes could have custom logic that we cant make many assumptions on. For example FD cutting board recipes are lossy.
 					//for instance a hanging sign can be cut into a plank. A hanging sign is magnetic but this does not mean planks are
 					if(!(event instanceof ZRecipeCrawl.Visit.Misc)) {
 						vanillaRecipesToLazyDigest.add(recipe);
@@ -114,7 +107,7 @@ public class RecipeCrawlHandler {
 					if (recipeHolder == null)
 						Zeta.GLOBAL_LOG.error("Encountered null recipe in RecipeManager.getRecipes. This is not good");
 					else
-						Zeta.GLOBAL_LOG.error("Failed to scan recipe " + recipeHolder.id() + ". This should be reported to " + recipeHolder.id().getNamespace() + "!", e);
+                        Zeta.GLOBAL_LOG.error("Failed to scan recipe {}. This should be reported to {}!", recipeHolder.id(), recipeHolder.id().getNamespace(), e);
 				}
 			}
 		}
@@ -158,14 +151,5 @@ public class RecipeCrawlHandler {
 				}
 			}
 		}
-	}
-
-	//delete this if you see it. Just here so this update doesnt crash with an old quark version
-	@Deprecated(forRemoval = true)
-	public void recursivelyFindCraftedItemsFromStrings(@Nullable Collection<String> derivationList, @Nullable Collection<String> whitelist, @Nullable Collection<String> blacklist, Consumer<Item> callback) {
-	}
-
-	@Deprecated(forRemoval = true)
-	public void recursivelyFindCraftedItems(@Nullable Collection<Item> derivationList, @Nullable Collection<Item> whitelist, @Nullable Collection<Item> blacklist, Consumer<Item> callback) {
 	}
 }
