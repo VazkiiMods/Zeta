@@ -91,7 +91,9 @@ public class ForgeZetaEventBus<Z, F extends Event> extends ZetaEventBus<Z> {
     protected void unsubscribeMethod(Method m, Object receiver, Class<?> owningClazz) {
         var handler = convertedHandlers.remove(new Key(m, receiver, owningClazz));
         if (handler != null) {
-            forgeBus.unregister(handler);
+            synchronized (forgeBus) {
+                forgeBus.unregister(handler);
+            }
         }
     }
 
