@@ -167,31 +167,41 @@ public class ZetaModuleManager {
 
     // feel free to refactor
     private static void populateModuleInstanceField(ZetaModule module) {
-        try {
-            var clazz = module.getClass();
-            Field[] fields = clazz.getDeclaredFields();
-            Field targetField = null;
+        var clazz = module.getClass();
 
-            for (Field field : fields) {
-                if (field.isAnnotationPresent(ModuleInstance.class)) {
-                    if (targetField != null) {
-                        throw new IllegalStateException("Can't have more than one @ModuleInstance field per module class");
-                    }
-                    if (!Modifier.isStatic(field.getModifiers())) {
-                        throw new IllegalStateException("@ModuleInstance annotated field must be static");
-                    }
-                    if (field.getType() != module.getClass()) {
-                        throw new IllegalStateException("@ModuleInstance annotated field must be of the same type as the module class. Expected: " + module.getClass() + ", got: " + field.getType());
-                    }
-                    targetField = field;
+
+        List<Field> fields = new ArrayList<>();
+        fields.addAll(Arrays.asList(clazz.getDeclaredFields()));
+
+        //if module is a client one, look at superclasstoo
+        if (module.getClass().isAnnotationPresent(ZetaLoadModule.class)) {
+            ZetaLoadModule annotation = module.getClass().getAnnotation(ZetaLoadModule.class);
+            if (annotation.clientReplacement()) {
+                fields.addAll(Arrays.asList(clazz.getSuperclass().getDeclaredFields()));
+            }
+        }
+
+        List<Field> targetFields = new ArrayList<>();
+
+        for (Field field : fields) {
+            if (field.isAnnotationPresent(ModuleInstance.class)) {
+                if (!Modifier.isStatic(field.getModifiers())) {
+                    throw new IllegalStateException("@ModuleInstance annotated field must be static");
                 }
+                //make sure the module class can be assigned to the fields
+                if (!field.getType().isAssignableFrom(clazz)) {
+                    throw new IllegalStateException("@ModuleInstance annotated field must be assignable from the module class. Expected: " + field.getType() + ", got: " + clazz);
+                }
+                targetFields.add(field);
             }
-            if (targetField != null) {
-                targetField.setAccessible(true);
+        }
+        for (Field targetField : targetFields) {
+            targetField.setAccessible(true);
+            try {
                 targetField.set(null, module);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
             }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
         }
     }
 
