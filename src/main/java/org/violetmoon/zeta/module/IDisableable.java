@@ -17,7 +17,7 @@ public interface IDisableable<SELF> {
 
 	default boolean isEnabled() {
 		ZetaModule module = getModule();
-		return module != null && module.enabled && doesConditionApply();
+		return module != null && module.isEnabled() && doesConditionApply();
 	}
 
 	//Covers non-ZetaItems as well

@@ -10,23 +10,33 @@ import java.util.Set;
 
 public class ZetaModule {
 
-    //all these deprecated are just so one knows that these will become protected soon
+    //all these are just to notify that these will go package private soon. Should be read only! Cant make them final because module is initialized with reflections
     @Deprecated(forRemoval = true)
     protected Zeta zeta;
+    @Deprecated(forRemoval = true)
     protected ZetaCategory category;
 
+    //package protected
+    @Deprecated(forRemoval = true)
     protected String displayName = "";
+    @Deprecated(forRemoval = true)
     protected String lowercaseName = "";
+    @Deprecated(forRemoval = true)
     protected String description = "";
 
     protected Set<String> antiOverlap = Set.of();
 
-    //TODO: make these protected and provide accessors
+    @Deprecated(forRemoval = true)
     protected boolean enabled = false;
+    @Deprecated(forRemoval = true)
     protected boolean enabledByDefault = false;
+    @Deprecated(forRemoval = true)
     protected boolean disabledByOverlap = false;
+    @Deprecated(forRemoval = true)
     protected boolean ignoreAntiOverlap = false;
 
+    //hack. Just needed so we can load this, then unload if need in configs and ONLY touch the bus when we know in which state we want to be
+    boolean finalized = false;
 
     public void postConstruct() {
         // NO-OP
@@ -46,18 +56,19 @@ public class ZetaModule {
         } else
             disabledByOverlap = false;
 
-        setEnabledAndManageSubscriptions(z, willEnable);
+        if (this.enabled == willEnable)
+            return;
+        this.enabled = willEnable;
+
+        if (finalized) updateBusSubscriptions(z);
     }
 
-    private void setEnabledAndManageSubscriptions(Zeta z, boolean nowEnabled) {
-        if (this.enabled == nowEnabled)
-            return;
-        this.enabled = nowEnabled;
-
-        if (nowEnabled)
+    void updateBusSubscriptions(Zeta z) {
+        if (enabled)
             z.playBus.subscribe(this.getClass()).subscribe(this);
-        else
+        else {
             z.playBus.unsubscribe(this.getClass()).unsubscribe(this);
+        }
     }
 
     //TODO: why is this here
@@ -73,17 +84,17 @@ public class ZetaModule {
         return zeta;
     }
 
-	public List<String> antiOverlap() {
-		return List.copyOf(antiOverlap);
-	}
+    public List<String> antiOverlap() {
+        return List.copyOf(antiOverlap);
+    }
 
-	public boolean disabledByOverlap() {
-		return disabledByOverlap;
-	}
+    public boolean disabledByOverlap() {
+        return disabledByOverlap;
+    }
 
-	public boolean ignoreAntiOverlap() {
-		return ignoreAntiOverlap;
-	}
+    public boolean ignoreAntiOverlap() {
+        return ignoreAntiOverlap;
+    }
 
     public ZetaCategory category() {
         return category;
@@ -105,9 +116,13 @@ public class ZetaModule {
         return enabled;
     }
 
-	public boolean enabledByDefault() {
-		return enabledByDefault;
-	}
+    public boolean enabledByDefault() {
+        return enabledByDefault;
+    }
+
+    public void setEnabledByDefault(boolean enabledByDefault) {
+        this.enabledByDefault = enabledByDefault;
+    }
 
     @ApiStatus.Internal
     public void setIgnoreAntiOverlap(boolean b) {

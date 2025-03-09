@@ -22,10 +22,7 @@ import org.violetmoon.zeta.module.ZetaCategory;
 import org.violetmoon.zeta.module.ZetaModuleManager;
 import org.violetmoon.zeta.network.ZetaNetworkHandler;
 import org.violetmoon.zeta.registry.*;
-import org.violetmoon.zeta.util.NameChanger;
-import org.violetmoon.zeta.util.RaytracingUtil;
-import org.violetmoon.zeta.util.RegistryUtil;
-import org.violetmoon.zeta.util.ZetaSide;
+import org.violetmoon.zeta.util.*;
 import org.violetmoon.zeta.util.handler.FuelHandler;
 import org.violetmoon.zeta.util.zetalist.IZeta;
 import org.violetmoon.zeta.util.zetalist.ZetaList;
@@ -44,7 +41,6 @@ public abstract class Zeta implements IZeta {
         this.modid = modid;
         this.side = side;
         this.isProduction = isProduction; //TODO: either have all these constants or static helpers here or in Utils. Not both
-
 
         this.modules = createModuleManager();
         this.registry = createRegistry();
@@ -123,7 +119,8 @@ public abstract class Zeta implements IZeta {
      * @param finder     Module finder instance to locate the modules this Zeta will load, if null, will not load Modules but still load general config
      * @param rootPojo   General config object root
      */
-    public void loadModules(@Nullable Iterable<ZetaCategory> categories, @Nullable ModuleFinder finder, Object rootPojo) {
+    // call this in mod init otherwise zeta won't do much
+    public final void loadModules(@Nullable Iterable<ZetaCategory> categories, @Nullable ModuleFinder finder, Object rootPojo) {
         if (categories != null && finder != null) {
             modules.initCategories(categories);
             modules.load(finder);
@@ -137,6 +134,8 @@ public abstract class Zeta implements IZeta {
         this.configManager = new ConfigManager(this, rootPojo);
         this.configInternals = makeConfigInternals(configManager.getRootConfig());
         this.configManager.onReload();
+
+        this.modules.doFinalize();
     }
 
     // modloader services
