@@ -12,28 +12,28 @@ public class ZetaModule {
 
     //all these are just to notify that these will go package private soon. Should be read only! Cant make them final because module is initialized with reflections
     @Deprecated(forRemoval = true)
-    protected Zeta zeta;
+    public Zeta zeta;
     @Deprecated(forRemoval = true)
-    protected ZetaCategory category;
+    public ZetaCategory category;
 
     //package protected
     @Deprecated(forRemoval = true)
-    protected String displayName = "";
+    public String displayName = "";
     @Deprecated(forRemoval = true)
-    protected String lowercaseName = "";
+    public String lowercaseName = "";
     @Deprecated(forRemoval = true)
-    protected String description = "";
+    public String description = "";
 
     protected Set<String> antiOverlap = Set.of();
 
     @Deprecated(forRemoval = true)
-    protected boolean enabled = false;
+    public boolean enabled = false;
     @Deprecated(forRemoval = true)
-    protected boolean enabledByDefault = false;
+    public boolean enabledByDefault = false;
     @Deprecated(forRemoval = true)
-    protected boolean disabledByOverlap = false;
+    public boolean disabledByOverlap = false;
     @Deprecated(forRemoval = true)
-    protected boolean ignoreAntiOverlap = false;
+    public boolean ignoreAntiOverlap = false;
 
     //hack. Just needed so we can load this, then unload if need in configs and ONLY touch the bus when we know in which state we want to be
     boolean finalized = false;
