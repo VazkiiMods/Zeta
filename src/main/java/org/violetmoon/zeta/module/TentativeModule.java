@@ -1,11 +1,13 @@
 package org.violetmoon.zeta.module;
 
+import java.util.List;
+import java.util.Locale;
+import java.util.SortedSet;
+import java.util.TreeSet;
+import java.util.function.Function;
+
 import org.apache.commons.lang3.text.WordUtils;
 import org.violetmoon.zeta.util.ZetaSide;
-
-import java.util.Locale;
-import java.util.Set;
-import java.util.function.Function;
 
 /**
  * performs some common data-munging of the data straight off a ZetaLoadModule annotation
@@ -18,7 +20,7 @@ public record TentativeModule(
         String displayName,
         String lowercaseName,
         String description,
-        Set<String> antiOverlap,
+        SortedSet<String> antiOverlap,
         boolean enabledByDefault,
 
         boolean clientReplacement,
@@ -62,7 +64,7 @@ public record TentativeModule(
                 displayName,
                 lowercaseName,
                 data.description(),
-                Set.of(data.antiOverlap()),
+                new TreeSet<>(List.of(data.antiOverlap())),
                 data.enabledByDefault(),
                 clientReplacement,
                 data.loadPhase()
