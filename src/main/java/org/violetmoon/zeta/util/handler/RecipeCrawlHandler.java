@@ -156,7 +156,15 @@ public class RecipeCrawlHandler {
 		for (Ingredient ingredient : ingredients) {
 			for (ItemStack inStack : ingredient.getItems()) {
 				//don't include catalyst items. This includes partial ones like buckets and such
-				if (inStack.getCraftingRemainingItem().isEmpty()) {
+				ItemStack remaining = inStack.getCraftingRemainingItem();
+
+				if(remaining == null) {
+					//sigh. let's at least not make this into our problem
+					ZetaMod.LOGGER.error("Item {} returned NULL from getCraftingRemainingItem. This is wrong and will cause problems down the line", inStack.getItem());
+					continue;
+				}
+
+				if (remaining.isEmpty()) {
 					vanillaRecipeDigestion.put(inStack.getItem(), out);
 					backwardsVanillaDigestion.put(outItem, inStack);
 				}
