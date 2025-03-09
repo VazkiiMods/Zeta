@@ -25,7 +25,13 @@ public abstract class ZetaScreen extends Screen {
 		this(zc, Component.empty(), parent);
 	}
 
-	public void returnToParent() {
+	@Override
+	public void onClose() {
 		minecraft.setScreen(parent);
+	}
+
+	@Deprecated(forRemoval = true) //unnecessary distinction, vanilla screens return to parent on onClose as well
+	public void returnToParent() {
+		onClose();
 	}
 }
