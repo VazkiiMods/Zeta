@@ -1,5 +1,10 @@
-- Implement `@ModuleInstance` (NehVahdJukaar)
+- Implement `@ModuleInstance` (MehVahdJukaar)
 - Complain when mods return null from `IForgeItem#getCraftingRemainingItem` and try to move on instead of crashing b/c I'm sick of fielding issue reports about it lol (quat)
 - Pressing Escape backs up only 1 level from config screens instead of kicking you out (quat)
 - Try and fix the Quark config being perpetually "incorrect"; had to do with anti-overlap comments (quat)
 - Change how config loading works; ensure everything is loaded on the correct threads at the correct times, ignore config change requests that happen too early, lots of verbose logging. (quat)
+
+Changes from older versions (which were mistakenly uploaded as 1.20.0 so you might not have seen them)
+
+- fixed an issue with piston and sticky blocks (MehVahdJukaar)
+- Some fixes for the config loading race condition (MehVahdJukaar)
