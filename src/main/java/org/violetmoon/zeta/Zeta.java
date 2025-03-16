@@ -74,12 +74,14 @@ public abstract class Zeta implements IZeta {
     public final String modid;
     public final ZetaSide side;
     public final boolean isProduction;
-    public final ZetaEventBus<IZetaLoadEvent> loadBus; //zeta specific bus
+    public final ZetaEventBus<IZetaLoadEvent> loadBus; //zeta specific bus. The "this mod" bus
     // Be careful when using this. Load bus will only fire stuff to this zeta events. Play bus however will not as it delegate to forge bus
     public final ZetaEventBus<IZetaPlayEvent> playBus; //common mod event bus. Each zeta will have their own object for now but internally they all delegate to the same internal bus
     public final ZetaModuleManager modules;
 
     //registry
+    //TODO: make private
+    @Deprecated(forRemoval = true)
     public final ZetaRegistry registry;
     public final RegistryUtil registryUtil = new RegistryUtil(this); //TODO: !!Delete this, only needed cause there's no way to get early registry names.
     public final RenderLayerRegistry renderLayerRegistry;

@@ -6,6 +6,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import org.violetmoon.zeta.Zeta;
 import org.violetmoon.zeta.client.event.load.ZAddBlockColorHandlers;
+import org.violetmoon.zeta.event.load.ZGatherHints;
 import org.violetmoon.zeta.registry.ZetaRegistry;
 
 import java.util.HashMap;
@@ -13,7 +14,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 public class ForgeZAddBlockColorHandlers implements ZAddBlockColorHandlers {
-    protected final RegisterColorHandlersEvent.Block e;
+    public final RegisterColorHandlersEvent.Block e;
 
     public ForgeZAddBlockColorHandlers(RegisterColorHandlersEvent.Block e) {
         this.e = e;
@@ -28,6 +29,7 @@ public class ForgeZAddBlockColorHandlers implements ZAddBlockColorHandlers {
     @Override
     public void registerNamed(Zeta myZeta, Function<Block, BlockColor> c, String... names) {
         for (String name : names) {
+            //why the need for an event? cant we just call this directly?
             myZeta.registry.assignBlockColor(name, b -> register(c.apply(b), b));
         }
     }

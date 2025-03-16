@@ -70,7 +70,7 @@ public class ZetaPistonStructureResolver extends PistonStructureResolver {
             pushLimit = wantsPushLimit.values().intStream().max().orElse(12);
 
             if (wasPushLimit < pushLimit)
-                ZetaMod.LOGGER.info("'{}' is raising Zeta's piston structure resolver push limit to {} blocks.", modid, pushLimit);
+                ZetaMod.LOGGER.info("'{}' is raising Zeta's piston structure resolver push limit to {} blocks.", modid,""+ pushLimit);
         }
     }
 
