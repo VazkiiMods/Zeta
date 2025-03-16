@@ -12,7 +12,6 @@ import net.minecraftforge.common.ForgeConfigSpec;
 
 public class ForgeBackedConfig implements IZetaConfigInternals {
 	private final Map<ValueDefinition<?>, ForgeConfigSpec.ConfigValue<?>> definitionsToValues = new HashMap<>();
-	private long debounceTime = System.currentTimeMillis();
 
 	public ForgeBackedConfig(SectionDefinition rootSection, ForgeConfigSpec.Builder forgeBuilder) {
 		walkSection(rootSection, forgeBuilder, true);
@@ -57,20 +56,13 @@ public class ForgeBackedConfig implements IZetaConfigInternals {
 	@SuppressWarnings("unchecked")
 	public <T> void set(ValueDefinition<T> definition, T value) {
 		ForgeConfigSpec.ConfigValue<T> forge = (ForgeConfigSpec.ConfigValue<T>) definitionsToValues.get(definition);
-		debounceTime = System.currentTimeMillis();
 		forge.set(value);
 	}
 
 	@Override
 	public void flush() {
-		debounceTime = 0; //force ConfigChangedEvent to not debounce this, it's important
-
 		//just pick one; they all point to the same FileConfig anyway
+		//this dispatches a forge ModConfigEvent.Reloading
 		definitionsToValues.values().iterator().next().save();
-	}
-
-	@Override
-	public long debounceTime() {
-		return debounceTime;
 	}
 }

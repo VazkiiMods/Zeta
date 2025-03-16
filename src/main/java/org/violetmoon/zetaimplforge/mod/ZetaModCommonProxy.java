@@ -52,7 +52,6 @@ public class ZetaModCommonProxy {
 
     public void registerEvents(Zeta zeta) {
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
-        bus.addListener(this::onSetup);
 
         zeta.loadBus
                 .subscribe(RecipeCrawlHandler.class)
@@ -70,11 +69,6 @@ public class ZetaModCommonProxy {
         MinecraftForge.EVENT_BUS.register(ToolInteractionHandler.class);
         ZetaBiomeModifier.registerBiomeModifier(FMLJavaModLoadingContext.get().getModEventBus());
 
-    }
-
-
-    public void onSetup(FMLCommonSetupEvent event) {
-        event.enqueueWork(ConfigEventDispatcher::dispatchAllInitialLoads);
     }
 
     public void addKnownZetaLoadEvents(ForgeEventsRemapper<IZetaLoadEvent, Event> r) {

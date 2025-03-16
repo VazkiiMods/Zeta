@@ -149,9 +149,14 @@ public class ForgeZeta extends Zeta {
         //load
         IEventBus modbus = FMLJavaModLoadingContext.get().getModEventBus();
 
-        modbus.addListener(EventPriority.LOWEST, CreativeTabManager::buildContents);
-        modbus.addListener(ConfigEventDispatcher::configChanged);
+        //hook up config events
+        ConfigEventDispatcher configEventDispatcher = new ConfigEventDispatcher(this);
+        modbus.addListener(configEventDispatcher::modConfigReloading);
+        modbus.addListener(configEventDispatcher::commonSetup);
+        MinecraftForge.EVENT_BUS.addListener(configEventDispatcher::serverAboutToStart);
 
+        //other stuff
+        modbus.addListener(EventPriority.LOWEST, CreativeTabManager::buildContents);
         modbus.addListener(EventPriority.HIGHEST, this::registerHighest);
     }
 

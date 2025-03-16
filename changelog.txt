@@ -1,1 +1,2 @@
 - this update should fix a (not so) rare concurrency issue during modules init when having disabled modules
+- Try and load config files in a more principled way with a lot of verbose logging about when and where things are happening
