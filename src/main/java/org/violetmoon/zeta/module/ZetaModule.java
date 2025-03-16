@@ -1,12 +1,13 @@
 package org.violetmoon.zeta.module;
 
+import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
+
 import org.jetbrains.annotations.ApiStatus;
 import org.violetmoon.zeta.Zeta;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.load.ZGatherHints;
-
-import java.util.List;
-import java.util.Set;
 
 public class ZetaModule {
 
@@ -24,7 +25,8 @@ public class ZetaModule {
     @Deprecated(forRemoval = true)
     public String description = "";
 
-    protected Set<String> antiOverlap = Set.of();
+    //This gets dumped into a config comment; ordering must be consistent lest Forge complain the config file is "incorrect"
+    protected SortedSet<String> antiOverlap = new TreeSet<>();
 
     @Deprecated(forRemoval = true)
     public boolean enabled = false;

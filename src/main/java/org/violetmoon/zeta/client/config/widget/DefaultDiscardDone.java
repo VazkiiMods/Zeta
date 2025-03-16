@@ -49,6 +49,6 @@ public class DefaultDiscardDone {
 	}
 
 	public void done(Button b) {
-		screen.returnToParent();
+		screen.onClose();
 	}
 }

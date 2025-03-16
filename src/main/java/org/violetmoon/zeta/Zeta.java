@@ -1,5 +1,7 @@
 package org.violetmoon.zeta;
 
+import java.util.function.Supplier;
+
 import com.google.common.base.Stopwatch;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
@@ -21,14 +23,22 @@ import org.violetmoon.zeta.module.ModuleFinder;
 import org.violetmoon.zeta.module.ZetaCategory;
 import org.violetmoon.zeta.module.ZetaModuleManager;
 import org.violetmoon.zeta.network.ZetaNetworkHandler;
-import org.violetmoon.zeta.registry.*;
-import org.violetmoon.zeta.util.*;
+import org.violetmoon.zeta.registry.BrewingRegistry;
+import org.violetmoon.zeta.registry.CraftingExtensionsRegistry;
+import org.violetmoon.zeta.registry.DyeablesRegistry;
+import org.violetmoon.zeta.registry.PottedPlantRegistry;
+import org.violetmoon.zeta.registry.RenderLayerRegistry;
+import org.violetmoon.zeta.registry.VariantRegistry;
+import org.violetmoon.zeta.registry.ZetaRegistry;
+import org.violetmoon.zeta.util.NameChanger;
+import org.violetmoon.zeta.util.RaytracingUtil;
+import org.violetmoon.zeta.util.RegistryUtil;
+import org.violetmoon.zeta.util.ZetaCommonProxy;
+import org.violetmoon.zeta.util.ZetaSide;
 import org.violetmoon.zeta.util.handler.FuelHandler;
 import org.violetmoon.zeta.util.zetalist.IZeta;
 import org.violetmoon.zeta.util.zetalist.ZetaList;
 import org.violetmoon.zeta.world.EntitySpawnHandler;
-
-import java.util.function.Supplier;
 
 /**
  * do not touch forge OR quark from this package, it will later be split off
@@ -41,6 +51,7 @@ public abstract class Zeta implements IZeta {
         this.modid = modid;
         this.side = side;
         this.isProduction = isProduction; //TODO: either have all these constants or static helpers here or in Utils. Not both
+        this.proxy = createProxy(side);
 
         this.modules = createModuleManager();
         this.registry = createRegistry();
@@ -78,6 +89,7 @@ public abstract class Zeta implements IZeta {
     // Be careful when using this. Load bus will only fire stuff to this zeta events. Play bus however will not as it delegate to forge bus
     public final ZetaEventBus<IZetaPlayEvent> playBus; //common mod event bus. Each zeta will have their own object for now but internally they all delegate to the same internal bus
     public final ZetaModuleManager modules;
+    public final ZetaCommonProxy proxy;
 
     //registry
     //TODO: make private
@@ -135,6 +147,7 @@ public abstract class Zeta implements IZeta {
 
         this.configManager = new ConfigManager(this, rootPojo);
         this.configInternals = makeConfigInternals(configManager.getRootConfig());
+        asZeta().log.info("Doing super early config setup for {}", asZeta().modid);
         this.configManager.onReload();
 
         this.modules.doFinalize();
@@ -150,6 +163,18 @@ public abstract class Zeta implements IZeta {
             return (isModLoaded(compatWith) ? yes : no).get().get();
         } catch (Exception e) {
             throw new RuntimeException("Zeta: " + modid + " threw exception initializing compat with " + compatWith, e);
+        }
+    }
+
+    // proxy
+    public ZetaCommonProxy createProxy(ZetaSide effectiveSide) {
+        try {
+            if(effectiveSide == ZetaSide.CLIENT)
+	            return (ZetaCommonProxy) Class.forName("org.violetmoon.zeta.client.ZetaClientProxy")
+                .getConstructor(Zeta.class).newInstance(this);
+            else return new ZetaCommonProxy(this);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to construct proxy", e);
         }
     }
 

@@ -19,7 +19,6 @@ import org.violetmoon.zeta.Zeta;
 import org.violetmoon.zeta.client.ClientRegistryExtension;
 import org.violetmoon.zeta.client.HumanoidArmorModelGetter;
 import org.violetmoon.zeta.client.ZetaClient;
-import org.violetmoon.zeta.event.bus.StandaloneZetaEventBus;
 import org.violetmoon.zetaimplforge.mixin.mixins.client.AccessorBlockColors;
 import org.violetmoon.zetaimplforge.mixin.mixins.client.AccessorItemColors;
 

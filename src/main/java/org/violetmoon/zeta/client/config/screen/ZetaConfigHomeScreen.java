@@ -120,7 +120,7 @@ public class ZetaConfigHomeScreen extends ZetaScreen {
 
 	public void commit(Button button) {
 		changeSet.applyAllChanges();
-		returnToParent();
+		onClose();
 	}
 
 	@Override
