@@ -1,5 +1,7 @@
 package org.violetmoon.zeta.module;
 
+import org.jetbrains.annotations.ApiStatus;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -9,6 +11,7 @@ import java.util.Map;
  *
  * @see org.violetmoon.zeta.module.ZetaLoadModule
  */
+@ApiStatus.Internal
 public record ZetaLoadModuleAnnotationData(
 	Class<?> clazz,
 

@@ -5,4 +5,7 @@ public interface IZetaConfigInternals {
 	<T> void set(ValueDefinition<T> definition, T value);
 
 	void flush();
+
+    default void onZetaReady(){
+	}
 }

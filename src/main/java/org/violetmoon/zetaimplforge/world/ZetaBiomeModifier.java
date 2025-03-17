@@ -25,7 +25,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 public class ZetaBiomeModifier implements BiomeModifier {
 
-	public static final ResourceLocation RESOURCE = new ResourceLocation(ZetaMod.ZETA_ID, "biome_modifier");
+	public static final ResourceLocation RESOURCE = ZetaMod.id("biome_modifier");
 	private static final RegistryObject<Codec<? extends BiomeModifier>> SERIALIZER = RegistryObject.create(RESOURCE, ForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS, ZetaMod.ZETA_ID);
 
 	@Override

@@ -1,41 +1,31 @@
 package org.violetmoon.zeta.module;
 
-import java.util.List;
-import java.util.SortedSet;
-import java.util.TreeSet;
-
 import org.jetbrains.annotations.ApiStatus;
 import org.violetmoon.zeta.Zeta;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.load.ZGatherHints;
 
+import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
+
 public class ZetaModule {
 
-    //all these are just to notify that these will go package private soon. Should be read only! Cant make them final because module is initialized with reflections
-    @Deprecated(forRemoval = true)
-    public Zeta zeta;
-    @Deprecated(forRemoval = true)
-    public ZetaCategory category;
+    // all these are package private as we cannot guarantee they are final and null since the module is constructed with reflections
+    Zeta zeta;
+    ZetaCategory category;
 
-    //package protected
-    @Deprecated(forRemoval = true)
-    public String displayName = "";
-    @Deprecated(forRemoval = true)
-    public String lowercaseName = "";
-    @Deprecated(forRemoval = true)
-    public String description = "";
+    String displayName = "";
+    String lowercaseName = "";
+    String description = "";
 
     //This gets dumped into a config comment; ordering must be consistent lest Forge complain the config file is "incorrect"
     protected SortedSet<String> antiOverlap = new TreeSet<>();
 
-    @Deprecated(forRemoval = true)
-    public boolean enabled = false;
-    @Deprecated(forRemoval = true)
-    public boolean enabledByDefault = false;
-    @Deprecated(forRemoval = true)
-    public boolean disabledByOverlap = false;
-    @Deprecated(forRemoval = true)
-    public boolean ignoreAntiOverlap = false;
+    boolean enabled = false;
+    boolean enabledByDefault = false;
+    boolean disabledByOverlap = false;
+    boolean ignoreAntiOverlap = false;
 
     //hack. Just needed so we can load this, then unload if need in configs and ONLY touch the bus when we know in which state we want to be
     boolean finalized = false;
@@ -46,7 +36,8 @@ public class ZetaModule {
 
     public final void setEnabled(Zeta z, boolean willEnable) {
         //TODO: is this the right approach for handling category enablement :woozy_face:
-        if (z.configManager != null && !z.configManager.isCategoryEnabled(category))
+        //no it isn't
+        if (!z.configManager.isCategoryEnabled(category))
             willEnable = false;
 
         if (category != null && !category.requiredModsLoaded())
@@ -62,14 +53,14 @@ public class ZetaModule {
             return;
         this.enabled = willEnable;
 
-        if (finalized) updateBusSubscriptions(z);
+        if (finalized) updatePlayBusSubscriptions();
     }
-
-    void updateBusSubscriptions(Zeta z) {
+//TODO: change
+    void updatePlayBusSubscriptions() {
         if (enabled)
-            z.playBus.subscribe(this.getClass()).subscribe(this);
+            zeta.playBus.subscribe(this.getClass()).subscribe(this);
         else {
-            z.playBus.unsubscribe(this.getClass()).unsubscribe(this);
+            zeta.playBus.unsubscribe(this.getClass()).unsubscribe(this);
         }
     }
 
@@ -78,9 +69,6 @@ public class ZetaModule {
     public final void addAnnotationHints(ZGatherHints event) {
         event.gatherHintsFromModule(this, zeta.configManager.getConfigFlagManager());
     }
-
-    // new accessors. Use these and later make all fields protected. Mods aren't supposed to change those fileds at runtime..
-
 
     public Zeta zeta() {
         return zeta;
@@ -120,10 +108,6 @@ public class ZetaModule {
 
     public boolean enabledByDefault() {
         return enabledByDefault;
-    }
-
-    public void setEnabledByDefault(boolean enabledByDefault) {
-        this.enabledByDefault = enabledByDefault;
     }
 
     @ApiStatus.Internal

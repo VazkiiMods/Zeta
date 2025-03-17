@@ -1,12 +1,6 @@
 package org.violetmoon.zeta;
 
-import java.util.function.Supplier;
-
-import com.google.common.base.Stopwatch;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.resources.ResourceLocation;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.zeta.advancement.AdvancementModifierRegistry;
@@ -23,34 +17,29 @@ import org.violetmoon.zeta.module.ModuleFinder;
 import org.violetmoon.zeta.module.ZetaCategory;
 import org.violetmoon.zeta.module.ZetaModuleManager;
 import org.violetmoon.zeta.network.ZetaNetworkHandler;
-import org.violetmoon.zeta.registry.BrewingRegistry;
-import org.violetmoon.zeta.registry.CraftingExtensionsRegistry;
-import org.violetmoon.zeta.registry.DyeablesRegistry;
-import org.violetmoon.zeta.registry.PottedPlantRegistry;
-import org.violetmoon.zeta.registry.RenderLayerRegistry;
-import org.violetmoon.zeta.registry.VariantRegistry;
-import org.violetmoon.zeta.registry.ZetaRegistry;
-import org.violetmoon.zeta.util.NameChanger;
-import org.violetmoon.zeta.util.RaytracingUtil;
-import org.violetmoon.zeta.util.RegistryUtil;
-import org.violetmoon.zeta.util.ZetaCommonProxy;
-import org.violetmoon.zeta.util.ZetaSide;
+import org.violetmoon.zeta.registry.*;
+import org.violetmoon.zeta.util.*;
 import org.violetmoon.zeta.util.handler.FuelHandler;
+import org.violetmoon.zeta.util.handler.LoaderSpecificEventsHandler;
 import org.violetmoon.zeta.util.zetalist.IZeta;
 import org.violetmoon.zeta.util.zetalist.ZetaList;
 import org.violetmoon.zeta.world.EntitySpawnHandler;
+
+import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * do not touch forge OR quark from this package, it will later be split off
  */
 public abstract class Zeta implements IZeta {
 
-    public Zeta(String modid, Logger log, ZetaSide side, boolean isProduction) {
+    public Zeta(String modid, Logger log, ZetaSide side, boolean isProduction, Object configPojo,
+                ModuleFinder finder, List<ZetaCategory> categories, int networkProtocol) {
         this.log = log;
 
         this.modid = modid;
         this.side = side;
-        this.isProduction = isProduction; //TODO: either have all these constants or static helpers here or in Utils. Not both
+        this.isProduction = isProduction;
         this.proxy = createProxy(side);
 
         this.modules = createModuleManager();
@@ -71,14 +60,50 @@ public abstract class Zeta implements IZeta {
         this.fuel = createFuelHandler();
 
         this.entitySpawn = createEntitySpawnHandler();
+        this.loaderSpecificEvents = createLoaderEventsHandler();
 
-        Stopwatch stopwatch = Stopwatch.createStarted();
         this.loadBus = this.createLoadBus();
         this.playBus = this.createPlayBus();
-        long elapsed = stopwatch.stop().elapsed().toMillis();
+
+        this.network = createNetworkHandler(networkProtocol);
+        this.creativeTabs = this.createCreativeTabHandler();
+
+
+        //manage subscriptions
+        this.loadBus.subscribe(craftingExtensions)
+                .subscribe(dyeables)
+                .subscribe(brewingRegistry)
+                .subscribe(fuel)
+                .subscribe(entitySpawn)
+                .subscribe(creativeTabs)
+                .subscribe(configPojo).subscribe(configPojo.getClass());
+
+        this.playBus.subscribe(fuel)
+                .subscribe(advancementModifierRegistry)
+                .subscribe(configPojo).subscribe(configPojo.getClass());
+
+        //load modules
+
+        //things need to happen in order:
+        // - load modules
+        // - load config
+        // - fire config bindings (on reload) so we can set up module enabled stuff inside the modules
+        // - subscribe module to bus
+        // - fire initial config loaded event
+        this.modules.initialize(finder, categories);
+
+        this.configManager = new ConfigManager(this, configPojo, this::createConfigInternals);
+        // set initial state for modules based off configs
+        this.configManager.onReload();
+        // hooks modules up to the now available configs which will immediately be queried to see which module is enabled
+        this.modules.setupBusSubscriptions();
+        // fire the initial config loaded event which will trigger events for each mod
+        this.configManager.onZetaReady();
 
         ZetaList.INSTANCE.register(this);
+
     }
+
 
     //core
     public final Logger log;
@@ -92,8 +117,7 @@ public abstract class Zeta implements IZeta {
     public final ZetaCommonProxy proxy;
 
     //registry
-    //TODO: make private
-    @Deprecated(forRemoval = true)
+    //we handle registration
     public final ZetaRegistry registry;
     public final RegistryUtil registryUtil = new RegistryUtil(this); //TODO: !!Delete this, only needed cause there's no way to get early registry names.
     public final RenderLayerRegistry renderLayerRegistry;
@@ -113,44 +137,19 @@ public abstract class Zeta implements IZeta {
     public final RaytracingUtil raytracingUtil;
     public final NameChanger nameChanger;
     public final FuelHandler fuel;
+    public final LoaderSpecificEventsHandler loaderSpecificEvents;
 
-    //config (which isn't set in the constructor b/c module loading has to happen first)
-    public ConfigManager configManager;
-    public IZetaConfigInternals configInternals;
-
-    //network (which isn't set in the constructor b/c it has a user-specified protocol version TODO this isnt good api design, imo)
-    public ZetaNetworkHandler network;
-
+    public final ConfigManager configManager;
+    public final ZetaNetworkHandler network;
+    public final CreativeTabHandler creativeTabs;
     // worldgen
-    public EntitySpawnHandler entitySpawn;
+    public final EntitySpawnHandler entitySpawn;
 
-    protected abstract ZetaEventBus<IZetaPlayEvent> createPlayBus();
-
-    protected abstract ZetaEventBus<IZetaLoadEvent> createLoadBus();
-
-    /**
-     * @param categories List of module categories in this mod, if null, will not load Modules but still load general config
-     * @param finder     Module finder instance to locate the modules this Zeta will load, if null, will not load Modules but still load general config
-     * @param rootPojo   General config object root
-     */
-    // call this in mod init otherwise zeta won't do much
-    public final void loadModules(@Nullable Iterable<ZetaCategory> categories, @Nullable ModuleFinder finder, Object rootPojo) {
-        if (categories != null && finder != null) {
-            modules.initCategories(categories);
-            modules.load(finder);
-        }
-
-        //The reason why there's a circular dependency between configManager and configInternals:
-        // - ConfigManager determines the shape and layout of the config file
-        // - The platform-specific configInternals loads the actual values, from the platform-specfic config file
-        // - Only then can ConfigManager do the initial config load
-
-        this.configManager = new ConfigManager(this, rootPojo);
-        this.configInternals = makeConfigInternals(configManager.getRootConfig());
-        asZeta().log.info("Doing super early config setup for {}", asZeta().modid);
-        this.configManager.onReload();
-
-        this.modules.doFinalize();
+    public ResourceLocation makeId(String name) {
+        //You know how `new ResourceLocation(String)` prepends "minecraft" if there's no prefix?
+        //This method is like that, except it prepends *your* modid
+        if (name.indexOf(':') == -1) return new ResourceLocation(this.modid, name);
+        else return new ResourceLocation(name);
     }
 
     // modloader services
@@ -166,83 +165,81 @@ public abstract class Zeta implements IZeta {
         }
     }
 
-    // proxy
-    public ZetaCommonProxy createProxy(ZetaSide effectiveSide) {
+    public abstract boolean hasCompletedRegistration();
+
+    // proxy madness
+    protected ZetaCommonProxy createProxy(ZetaSide effectiveSide) {
         try {
-            if(effectiveSide == ZetaSide.CLIENT)
-	            return (ZetaCommonProxy) Class.forName("org.violetmoon.zeta.client.ZetaClientProxy")
-                .getConstructor(Zeta.class).newInstance(this);
+            if (effectiveSide == ZetaSide.CLIENT)
+                return (ZetaCommonProxy) Class.forName("org.violetmoon.zeta.client.ZetaClientProxy")
+                        .getConstructor(Zeta.class).newInstance(this);
             else return new ZetaCommonProxy(this);
         } catch (Exception e) {
             throw new RuntimeException("Failed to construct proxy", e);
         }
     }
 
+    // Inheritance loader specific stuff
+
+    protected abstract ZetaEventBus<IZetaPlayEvent> createPlayBus();
+
+    protected abstract ZetaEventBus<IZetaLoadEvent> createLoadBus();
+
     // config
-    public abstract IZetaConfigInternals makeConfigInternals(SectionDefinition rootSection);
+    protected abstract IZetaConfigInternals createConfigInternals(SectionDefinition rootSection);
 
     // general xplat stuff
-    public ZetaModuleManager createModuleManager() {
+
+    protected abstract ZetaRegistry createRegistry();
+
+    protected abstract CraftingExtensionsRegistry createCraftingExtensionsRegistry();
+
+    protected abstract BrewingRegistry createBrewingRegistry();
+
+    protected abstract PottedPlantRegistry createPottedPlantRegistry();
+
+    protected abstract ZetaCapabilityManager createCapabilityManager();
+
+    protected abstract ItemExtensionFactory createItemExtensionFactory();
+
+    protected abstract RaytracingUtil createRaytracingUtil();
+
+    protected abstract ZetaNetworkHandler createNetworkHandler(int protocolVersion);
+
+    protected abstract LoaderSpecificEventsHandler createLoaderEventsHandler();
+
+    protected abstract CreativeTabHandler createCreativeTabHandler();
+
+    protected ZetaModuleManager createModuleManager() {
         return new ZetaModuleManager(this);
     }
 
-    public abstract ZetaRegistry createRegistry();
-
-    public RenderLayerRegistry createRenderLayerRegistry() {
-        return new RenderLayerRegistry();
-    }
-
-    public abstract CraftingExtensionsRegistry createCraftingExtensionsRegistry();
-
-    public DyeablesRegistry createDyeablesRegistry() {
-        return new DyeablesRegistry();
-    }
-
-    public abstract BrewingRegistry createBrewingRegistry();
-
-    public AdvancementModifierRegistry createAdvancementModifierRegistry() {
+    protected AdvancementModifierRegistry createAdvancementModifierRegistry() {
         return new AdvancementModifierRegistry(this);
     }
 
-    public abstract PottedPlantRegistry createPottedPlantRegistry();
+    protected DyeablesRegistry createDyeablesRegistry() {
+        return new DyeablesRegistry(this);
+    }
 
-    public abstract ZetaCapabilityManager createCapabilityManager();
-
-    public BlockExtensionFactory createBlockExtensionFactory() {
+    protected BlockExtensionFactory createBlockExtensionFactory() {
         return BlockExtensionFactory.DEFAULT;
     }
 
-    public abstract ItemExtensionFactory createItemExtensionFactory();
-
-    public abstract RaytracingUtil createRaytracingUtil();
-
-    public NameChanger createNameChanger() {
+    protected NameChanger createNameChanger() {
         return new NameChanger();
     }
 
-    public FuelHandler createFuelHandler() {
+    protected FuelHandler createFuelHandler() {
         return new FuelHandler(this);
     }
 
-    public EntitySpawnHandler createEntitySpawnHandler() {
+    protected EntitySpawnHandler createEntitySpawnHandler() {
         return new EntitySpawnHandler(this);
     }
 
-    public abstract ZetaNetworkHandler createNetworkHandler(int protocolVersion);
-
-    // ummmmmm why is this here??
-    public abstract boolean fireRightClickBlock(Player player, InteractionHand hand, BlockPos pos, BlockHitResult bhr);
-
-    // Let's Jump
-    public void start(){
-        loadBus.subscribe(craftingExtensions)
-                .subscribe(dyeables)
-                .subscribe(brewingRegistry)
-                .subscribe(fuel)
-                .subscribe(entitySpawn);
-
-        playBus.subscribe(fuel)
-                .subscribe(advancementModifierRegistry);
+    protected RenderLayerRegistry createRenderLayerRegistry() {
+        return new RenderLayerRegistry();
     }
 
     @Override

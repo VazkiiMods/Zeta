@@ -3,6 +3,7 @@ package org.violetmoon.zeta.block;
 import java.util.function.BooleanSupplier;
 
 import org.jetbrains.annotations.Nullable;
+import org.violetmoon.zeta.Zeta;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.registry.RenderLayerRegistry;
 import org.violetmoon.zeta.util.BooleanSuppliers;
@@ -20,13 +21,15 @@ public class ZetaBushBlock extends BushBlock implements IZetaBlock {
 		super(properties);
 		this.module = module;
 
-		if(module == null) //auto registration below this line
+		if (module == null) //auto registration below this line
 			return;
 
-		module.zeta().registry.registerBlock(this, regname, true);
-		module.zeta().renderLayerRegistry.put(this, RenderLayerRegistry.Layer.CUTOUT);
-		if(tab != null)
-			setCreativeTab(tab);
+		Zeta zeta = module.zeta();
+		zeta.registry.registerBlock(this, regname, true);
+		zeta.renderLayerRegistry.put(this, RenderLayerRegistry.Layer.CUTOUT);
+		if (tab != null) {
+			zeta.creativeTabs.addToCreativeTab(tab, this);
+		}
 	}
 
 	@Override

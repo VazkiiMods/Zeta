@@ -3,9 +3,10 @@ package org.violetmoon.zeta.block;
 import java.util.function.BooleanSupplier;
 
 import org.jetbrains.annotations.Nullable;
+import org.violetmoon.zeta.Zeta;
 import org.violetmoon.zeta.item.ZetaDoubleHighBlockItem;
 import org.violetmoon.zeta.module.ZetaModule;
-import org.violetmoon.zeta.registry.CreativeTabManager;
+import org.violetmoon.zeta.registry.CreativeTabHandler;
 import org.violetmoon.zeta.registry.IZetaBlockItemProvider;
 import org.violetmoon.zeta.registry.RenderLayerRegistry;
 import org.violetmoon.zeta.util.BooleanSuppliers;
@@ -29,10 +30,11 @@ public class ZetaDoorBlock extends DoorBlock implements IZetaBlock, IZetaBlockIt
 		if(module == null) //auto registration below this line
 			return;
 
-		module.zeta().renderLayerRegistry.put(this, RenderLayerRegistry.Layer.CUTOUT);
-		module.zeta().registry.registerBlock(this, regname, true);
-		CreativeTabManager.addToCreativeTab(CreativeModeTabs.BUILDING_BLOCKS, this);
-		CreativeTabManager.addToCreativeTab(CreativeModeTabs.REDSTONE_BLOCKS, this);
+		Zeta zeta = module.zeta();
+		zeta.renderLayerRegistry.put(this, RenderLayerRegistry.Layer.CUTOUT);
+		zeta.registry.registerBlock(this, regname, true);
+		zeta.creativeTabs.addToCreativeTab(CreativeModeTabs.BUILDING_BLOCKS, this);
+		zeta.creativeTabs.addToCreativeTab(CreativeModeTabs.REDSTONE_BLOCKS, this);
 	}
 
 	@Override

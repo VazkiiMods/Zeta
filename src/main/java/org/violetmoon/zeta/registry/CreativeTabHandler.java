@@ -9,7 +9,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.common.util.MutableHashedLinkedMap;
-import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import org.violetmoon.zeta.config.ZetaGeneralConfig;
 import org.violetmoon.zeta.mod.ZetaMod;
 import org.violetmoon.zeta.module.IDisableable;
@@ -18,28 +17,27 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.function.Supplier;
 
-public class CreativeTabManager {
+public abstract class CreativeTabHandler {
 
-    private static final Object MUTEX = new Object();
     private static final Map<ItemLike, Item> itemLikeCache = new HashMap<>();
 
-    private static final Map<ResourceKey<CreativeModeTab>, CreativeTabAdditions> additions = new HashMap<>();
-    private static final Multimap<ItemLike, ResourceKey<CreativeModeTab>> mappedItems = HashMultimap.create();
+    protected final Map<ResourceKey<CreativeModeTab>, CreativeTabAdditions> additions = new HashMap<>();
+    protected final Multimap<ItemLike, ResourceKey<CreativeModeTab>> mappedItems = HashMultimap.create();
 
-    private static boolean daisyChainMode = false;
-    private static ItemSet daisyChainedSet = null;
+    private boolean daisyChainMode = false;
+    private ItemSet daisyChainedSet = null;
 
-    public static void daisyChain() {
+    public void daisyChain() {
         daisyChainMode = true;
         daisyChainedSet = null;
     }
 
-    public static void endDaisyChain() {
+    public void endDaisyChain() {
         daisyChainMode = false;
         daisyChainedSet = null;
     }
 
-    public static void addToCreativeTab(ResourceKey<CreativeModeTab> tab, ItemLike item) {
+    public void addToCreativeTab(ResourceKey<CreativeModeTab> tab, ItemLike item) {
         if (daisyChainMode) {
             if (daisyChainedSet == null)
                 throw new IllegalArgumentException("Must start daisy chain with addToCreativeTabNextTo");
@@ -51,7 +49,7 @@ public class CreativeTabManager {
         mappedItems.put(item, tab);
     }
 
-    public static void addToCreativeTabNextTo(ResourceKey<CreativeModeTab> tab, ItemLike item, ItemLike target, boolean behind) {
+    public void addToCreativeTabNextTo(ResourceKey<CreativeModeTab> tab, ItemLike item, ItemLike target, boolean behind) {
         tab = guessTab(target, tab);
         CreativeTabAdditions additions = getForTab(tab);
         Map<ItemSet, ItemLike> map = (behind ? additions.appendBehind : additions.appendInFront);
@@ -73,7 +71,7 @@ public class CreativeTabManager {
         mappedItems.put(item, tab);
     }
 
-    private static ItemSet addToDaisyChain(ItemLike item) {
+    private ItemSet addToDaisyChain(ItemLike item) {
         if (daisyChainMode && daisyChainedSet != null) {
             daisyChainedSet.items.add(item);
             return daisyChainedSet;
@@ -86,110 +84,24 @@ public class CreativeTabManager {
         return set;
     }
 
-    private static ResourceKey<CreativeModeTab> guessTab(ItemLike parent, ResourceKey<CreativeModeTab> tab) {
+    private ResourceKey<CreativeModeTab> guessTab(ItemLike parent, ResourceKey<CreativeModeTab> tab) {
         if (parent != null && mappedItems.containsKey(parent))
             tab = mappedItems.get(parent).iterator().next();
 
         return tab;
     }
 
-    private static CreativeTabAdditions getForTab(ResourceKey<CreativeModeTab> tab) {
+    protected CreativeTabAdditions getForTab(ResourceKey<CreativeModeTab> tab) {
         return additions.computeIfAbsent(tab, tabRk -> new CreativeTabAdditions());
     }
 
-    public static void buildContents(BuildCreativeModeTabContentsEvent event) {
-        synchronized (MUTEX) {
-            ResourceKey<CreativeModeTab> tabKey = event.getTabKey();
-            MutableHashedLinkedMap<ItemStack, CreativeModeTab.TabVisibility> entries = event.getEntries();
-
-            if (additions.containsKey(tabKey)) {
-                CreativeTabAdditions add = additions.get(tabKey);
-
-                for (ItemLike item : add.appendToEnd)
-                    acceptItem(event, item);
-
-                if (ZetaGeneralConfig.forceCreativeTabAppends) {
-                    for (ItemSet itemset : add.appendInFront.keySet())
-                        for (ItemLike item : itemset.items)
-                            acceptItem(event, item);
-                    for (ItemSet itemset : add.appendBehind.keySet())
-                        for (ItemLike item : itemset.items)
-                            acceptItem(event, item);
-
-                    return;
-                }
-
-                Map<ItemSet, ItemLike> front = new LinkedHashMap<>(add.appendInFront);
-                Map<ItemSet, ItemLike> behind = new LinkedHashMap<>(add.appendBehind);
-
-                final int failsafe = 100;
-                final int printThreshold = failsafe - 10;
-
-                int misses = 0;
-                boolean failsafing = false;
-
-                while (true) {
-                    boolean missed = false;
-                    logVerbose(() -> "front empty=" + front.isEmpty() + " / behind empty=" + behind.isEmpty());
-
-                    if (entries.isEmpty()) {
-                        ZetaMod.LOGGER.error("entries map for tab {} is empty, this should never happen", tabKey);
-                        return;
-                    }
-
-                    if (!front.isEmpty())
-                        missed = appendNextTo(tabKey, entries, front, false, failsafing);
-                    if (!behind.isEmpty())
-                        missed |= appendNextTo(tabKey, entries, behind, true, failsafing);
-
-                    if (missed) {
-                        int fMisses = misses;
-                        logVerbose(() -> "Missed " + fMisses + "times out of " + failsafe);
-
-                        misses++;
-                    }
-
-                    // arbitrary failsafe, should never happen
-                    if (misses > failsafe) {
-                        logVerbose(() -> {
-                            StringBuilder sb = new StringBuilder();
-                            for (Entry<ItemStack, TabVisibility> entry : entries) {
-                                sb.append(entry.getKey());
-                                sb.append("; ");
-                            }
-                            return sb.toString();
-                        });
-                        new RuntimeException("Creative tab placement misses exceeded failsafe, aborting logic").printStackTrace();
-                        return;
-                    }
-                    if (misses > printThreshold)
-                        failsafing = true;
-
-                    if (front.isEmpty() && behind.isEmpty())
-                        return;
-                }
-            }
-        }
-    }
-
-    private static boolean isItemEnabled(ItemLike item) {
+    protected boolean isItemEnabled(ItemLike item) {
         if (item instanceof IDisableable<?> id)
             return id.isEnabled();
-
         return true;
     }
 
-    private static void acceptItem(BuildCreativeModeTabContentsEvent event, ItemLike item) {
-        if (!isItemEnabled(item))
-            return;
-
-        if (item instanceof AppendsUniquely au)
-            event.acceptAll(au.appendItemsToCreativeTab());
-        else
-            event.accept(item);
-    }
-
-    private static void addToEntries(ItemStack target, MutableHashedLinkedMap<ItemStack, CreativeModeTab.TabVisibility> entries, ItemLike item, boolean behind) {
+    protected void addToEntries(ItemStack target, MutableHashedLinkedMap<ItemStack, CreativeModeTab.TabVisibility> entries, ItemLike item, boolean behind) {
         logVerbose(() -> "adding target=" + target + " next to " + item + " with behind=" + behind);
         if (!isItemEnabled(item))
             return;
@@ -212,7 +124,7 @@ public class CreativeTabManager {
     /**
      * Returns true if the item needs to be tried again later
      */
-    private static boolean appendNextTo(ResourceKey<CreativeModeTab> tabKey, MutableHashedLinkedMap<ItemStack, CreativeModeTab.TabVisibility> entries, Map<ItemSet, ItemLike> map, boolean behind, boolean log) {
+    protected boolean appendNextTo(ResourceKey<CreativeModeTab> tabKey, MutableHashedLinkedMap<ItemStack, CreativeModeTab.TabVisibility> entries, Map<ItemSet, ItemLike> map, boolean behind, boolean log) {
         logVerbose(() -> "appendNextTo " + tabKey + " / behind=" + behind);
         Collection<ItemSet> coll = map.keySet();
         if (coll.isEmpty())
@@ -264,22 +176,22 @@ public class CreativeTabManager {
         return true;
     }
 
-    private static void logVerbose(Supplier<String> s) {
+    protected void logVerbose(Supplier<String> s) {
         if (ZetaGeneralConfig.enableCreativeVerboseLogging)
             ZetaMod.LOGGER.warn(s.get());
     }
 
-    private static class CreativeTabAdditions {
+    protected static class CreativeTabAdditions {
 
-        private final List<ItemLike> appendToEnd = new ArrayList<>();
-        private final Map<ItemSet, ItemLike> appendInFront = new LinkedHashMap<>();
-        private final Map<ItemSet, ItemLike> appendBehind = new LinkedHashMap<>();
+        public final List<ItemLike> appendToEnd = new ArrayList<>();
+        public final Map<ItemSet, ItemLike> appendInFront = new LinkedHashMap<>();
+        public final Map<ItemSet, ItemLike> appendBehind = new LinkedHashMap<>();
 
     }
 
-    private static class ItemSet {
+    protected static class ItemSet {
 
-        List<ItemLike> items = new ArrayList<>();
+        public List<ItemLike> items = new ArrayList<>();
 
         public ItemSet(ItemLike item) {
             items.add(item);

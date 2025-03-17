@@ -1,7 +1,5 @@
 package org.violetmoon.zeta.registry;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
 import com.mojang.serialization.Lifecycle;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
@@ -22,20 +20,14 @@ import org.violetmoon.zeta.util.RegisterDynamicUtil;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
-//Mash of arl's RegistryHelper and its ModData innerclass.
+//Mash of arl's RegistryHelper and its ModData inner class.
 //You're expected to create one of these per modid instead, avoiding a dependency on Forge's "current mod id" notion.
 public abstract class ZetaRegistry {
     protected final Zeta z;
 
-    // the keys of this are things like "minecraft:block", "minecraft:item" and so on
-    private final Multimap<ResourceLocation, Supplier<Object>> defers = ArrayListMultimap.create();
     // my registered entries
     private final Map<ResourceKey<Registry<?>>, List<Holder<?>>> myRegisteredObjects = new HashMap<>();
-
-    // to support calling getRegistryName before the object actually gets registered for real
-    protected final Map<Object, ResourceLocation> internalNames = new IdentityHashMap<>();
 
     // "named color provider" system allows blocks and items to choose their own color providers in a side-safe way
     // TODO: should this go somewhere else and not be so tightly-integrated? (yes - i think a Registrate-like system would be a great spot for this)
@@ -53,17 +45,12 @@ public abstract class ZetaRegistry {
         this.z = z;
     }
 
+    //MEGA DUMB
     public <T> ResourceLocation getRegistryName(T obj, Registry<T> registry) {
-        ResourceLocation internal = internalNames.get(obj);
-        return internal == null ? registry.getKey(obj) : internal;
+        return registry.getKey(obj);
     }
 
-    //You know how `new ResourceLocation(String)` prepends "minecraft" if there's no prefix?
-    //This method is like that, except it prepends *your* modid
-    public ResourceLocation newResourceLocation(String in) {
-        if (in.indexOf(':') == -1) return new ResourceLocation(z.modid, in);
-        else return new ResourceLocation(in);
-    }
+    protected abstract <T> void odRegisterInternal(T obj, ResourceLocation id, ResourceKey<Registry<T>> registry);
 
     //Root registration method
     public <T> void register(T obj, ResourceLocation id, ResourceKey<Registry<T>> registry) {
@@ -76,12 +63,11 @@ public abstract class ZetaRegistry {
         if (obj instanceof Item item && obj instanceof IZetaItemColorProvider provider && provider.getItemColorProviderName() != null)
             itemsToColorProviderName.put(item, provider.getItemColorProviderName());
 
-        internalNames.put(obj, id);
-        defers.put(registry.location(), () -> obj);
+        this.odRegisterInternal(obj, id, registry);
     }
 
     public <T> void register(T obj, String resloc, ResourceKey<Registry<T>> registry) {
-        register(obj, newResourceLocation(resloc), registry);
+        register(obj, z.makeId(resloc), registry);
     }
 
     public void registerItem(Item item, ResourceLocation id) {
@@ -89,18 +75,20 @@ public abstract class ZetaRegistry {
     }
 
     public void registerItem(Item item, String resloc) {
-        register(item, newResourceLocation(resloc), Registries.ITEM);
+        register(item, z.makeId(resloc), Registries.ITEM);
     }
 
     public void registerBlock(Block block, ResourceLocation id, boolean hasBlockItem) {
         register(block, id, Registries.BLOCK);
 
-        if (hasBlockItem)
-            defers.put(Registries.ITEM.location(), () -> createItemBlock(block));
+        if (hasBlockItem) {
+            Item i = createItemBlock(block);
+            register(i, id, Registries.ITEM);
+        }
     }
 
     public void registerBlock(Block block, String resloc, boolean hasBlockItem) {
-        registerBlock(block, newResourceLocation(resloc), hasBlockItem);
+        registerBlock(block, z.makeId(resloc), hasBlockItem);
     }
 
     public void registerBlock(Block block, ResourceLocation id) {
@@ -113,32 +101,22 @@ public abstract class ZetaRegistry {
 
     private Item createItemBlock(Block block) {
         Item.Properties props = new Item.Properties();
-        ResourceLocation registryName = internalNames.get(block);
 
         if (block instanceof IZetaItemPropertiesFiller filler)
             filler.fillItemProperties(props);
 
         BlockItem blockitem;
-        if (block instanceof IZetaBlockItemProvider)
-            blockitem = ((IZetaBlockItemProvider) block).provideItemBlock(block, props);
+        if (block instanceof IZetaBlockItemProvider zp)
+            blockitem = zp.provideItemBlock(block, props);
         else blockitem = new ZetaBlockItem(block, props);
 
         if (block instanceof IZetaItemColorProvider prov && prov.getItemColorProviderName() != null)
             itemsToColorProviderName.put(blockitem, prov.getItemColorProviderName());
 
-        internalNames.put(blockitem, registryName);
         return blockitem;
     }
 
     /// performing registration (regular startup entries) ///
-
-    public Collection<Supplier<Object>> getDefers(ResourceLocation registryId) {
-        return defers.get(registryId);
-    }
-
-    public void clearDeferCache(ResourceLocation resourceLocation) {
-        defers.removeAll(resourceLocation);
-    }
 
     @ApiStatus.Internal
     public void assignBlockColor(String name, Consumer<Block> regFunc) {
@@ -180,6 +158,8 @@ public abstract class ZetaRegistry {
             z.log.error("Item color providers {} were not assigned to any items", itemsToColorProviderName.values());
 
     }
+
+    //TODO: is this part even needed?
 
     /// performing registration (dynamic registry jank - for registering ConfiguredFeature etc through code) ///
     /// check out the vanilla RegistryDataLoader.WORLDGEN_REGISTRIES for a list of registries this works on. ///
@@ -231,7 +211,7 @@ public abstract class ZetaRegistry {
     }
 
     public <T> LateBoundHolder<T> registerDynamicF(Function<RegistryOps.RegistryInfoLookup, T> objCreator, String regname, ResourceKey<? extends Registry<T>> registry) {
-        return registerDynamicF(objCreator, newResourceLocation(regname), registry);
+        return registerDynamicF(objCreator, z.makeId(regname), registry);
     }
 
     /**
@@ -251,7 +231,7 @@ public abstract class ZetaRegistry {
     }
 
     public <T> Holder.Direct<T> registerDynamic(T obj, String regname, ResourceKey<? extends Registry<T>> registry) {
-        return registerDynamic(obj, newResourceLocation(regname), registry);
+        return registerDynamic(obj, z.makeId(regname), registry);
     }
 
     @SuppressWarnings("unchecked")

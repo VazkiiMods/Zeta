@@ -4,8 +4,9 @@ import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 import org.jetbrains.annotations.Nullable;
+import org.violetmoon.zeta.Zeta;
 import org.violetmoon.zeta.module.ZetaModule;
-import org.violetmoon.zeta.registry.CreativeTabManager;
+import org.violetmoon.zeta.registry.CreativeTabHandler;
 import org.violetmoon.zeta.util.BooleanSuppliers;
 
 import net.minecraft.world.entity.EntityType;
@@ -25,8 +26,9 @@ public class ZetaSpawnEggItem extends ForgeSpawnEggItem implements IZetaItem {
 		if(module == null) //auto registration below this line
 			return;
 
-		module.zeta().registry.registerItem(this, regname);
-		CreativeTabManager.addToCreativeTab(CreativeModeTabs.SPAWN_EGGS, this);
+		Zeta zeta = module.zeta();
+		zeta.registry.registerItem(this, regname);
+		zeta.creativeTabs.addToCreativeTab(CreativeModeTabs.SPAWN_EGGS, this);
 	}
 
 	@Override

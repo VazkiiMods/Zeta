@@ -17,8 +17,6 @@ import org.violetmoon.zeta.advancement.modifier.TwoByTwoModifier;
 import org.violetmoon.zeta.advancement.modifier.WaxModifier;
 import org.violetmoon.zeta.api.IAdvancementModifier;
 import org.violetmoon.zeta.api.IAdvancementModifierDelegate;
-import org.violetmoon.zeta.client.event.play.ZScreen;
-import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.bus.PlayEvent;
 import org.violetmoon.zeta.event.load.ZAddReloadListener;
 import org.violetmoon.zeta.event.load.ZGatherAdvancementModifiers;
@@ -53,7 +51,7 @@ public class AdvancementModifierRegistry {
 	}
 
 	public ManualTrigger registerManualTrigger(String resloc) {
-		ResourceLocation id = zeta.registry.newResourceLocation(resloc);
+		ResourceLocation id = zeta.makeId(resloc);
 		ManualTrigger trigger = new ManualTrigger(id);
 		CriteriaTriggers.register(trigger);
 		return trigger;
