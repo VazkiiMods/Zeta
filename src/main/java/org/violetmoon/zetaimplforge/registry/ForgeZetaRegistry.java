@@ -3,12 +3,16 @@ package org.violetmoon.zetaimplforge.registry;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraftforge.registries.RegisterEvent;
+import org.violetmoon.zeta.mod.ZetaMod;
 import org.violetmoon.zeta.registry.ZetaRegistry;
 import org.violetmoon.zetaimplforge.ForgeZeta;
+import org.violetmoon.zetaimplforge.event.load.ForgeZRegister;
 
 import java.util.Collection;
 import java.util.IdentityHashMap;
@@ -27,8 +31,6 @@ public class ForgeZetaRegistry extends ZetaRegistry {
 
     public ForgeZetaRegistry(ForgeZeta z) {
         super(z);
-
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onRegisterEvent);
     }
 
     //TODO: nuke
@@ -47,9 +49,22 @@ public class ForgeZetaRegistry extends ZetaRegistry {
         defers.put(registry.location(), () -> obj);
     }
 
-	//TODO: possibly nuke
-    private void onRegisterEvent(RegisterEvent event) {
+    //TODO: possibly nuke and register to registries directly
+    public void onRegisterEvent(RegisterEvent event) {
         var key = event.getRegistryKey();
+
+        //first event to fire
+        if (key == Registries.SOUND_EVENT) {
+			//zeta "object creation" phase.
+			//actual registration is done shortly after during appropriate events, hence the need for those shortly lived defers
+            z.loadBus.fire(new ForgeZRegister());
+            //TODO: maybe make this fired later on
+            z.loadBus.fire(new ForgeZRegister.Post());
+
+            completedReg = true;
+        }
+
+
         ResourceLocation registryRes = key.location();
         ResourceKey<Registry<Object>> keyGeneric = ResourceKey.createRegistryKey(registryRes);
 

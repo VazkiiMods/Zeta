@@ -161,19 +161,7 @@ public class ForgeZeta extends Zeta {
 
     //so register event fires one time PER registry!!
     public void onSoundsRegistering(RegisterEvent e) {
-        if (registerDone || firstRegEvent)
-            return;
-
-        firstRegEvent = true;
-
-        loadBus.fire(new ForgeZRegister());
-        //TODO: maybe make this fired on
-        loadBus.fire(new ForgeZRegister.Post());
-
-        ZetaMod.ZETA.registry.registerBlock(new Block(BlockBehaviour.Properties.of()),
-                ZetaMod.ZETA.makeId("test"));
-
-        registerDone = true;
+        ((ForgeZetaRegistry)registry).onRegisterEvent(e);
     }
 
 

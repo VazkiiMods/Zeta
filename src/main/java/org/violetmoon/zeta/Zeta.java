@@ -165,8 +165,6 @@ public abstract class Zeta implements IZeta {
         }
     }
 
-    public abstract boolean hasCompletedRegistration();
-
     // proxy madness
     protected ZetaCommonProxy createProxy(ZetaSide effectiveSide) {
         try {
