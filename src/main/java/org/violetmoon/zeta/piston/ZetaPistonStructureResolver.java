@@ -28,7 +28,6 @@ import java.util.function.Predicate;
 
 public class ZetaPistonStructureResolver extends PistonStructureResolver {
 
-    public static class GlobalSettings {
 	/**
 	 * The Zeta piston structure resolver is one of the few parts of Zeta that's truly static and affects everyone.
 	 * To that end, it's disabled by default. You can request it be enabled with this class.
