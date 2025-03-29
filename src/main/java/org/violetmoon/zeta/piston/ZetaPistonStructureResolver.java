@@ -124,7 +124,7 @@ public class ZetaPistonStructureResolver extends PistonStructureResolver {
             //}
             //we need to replace the stickiness logic with more complicated branching logic
             //i.e. a normal block needs to trigger addBranchingBlocks code if there is a Quark chain next to it.
-            //an indexed for is fine in vanilla since it never removes blocks from toPush (we do)
+            //an indexed for is fine in vanilla since it never removes blocks from toPush; we should also avoid that
 
 	          //noinspection ForLoopReplaceableByForEach //it isn't, we modify myToPush
 	          for(int i = 0; i < myToPush.size(); i++) {
