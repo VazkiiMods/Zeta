@@ -115,10 +115,23 @@ public class ZetaPistonStructureResolver extends PistonStructureResolver {
         } else if (!addBlockLine(blockToMove, moveDirection))
             return false;
         else {
-            for (BlockPos blockpos : myToPush) {
-                if (addBranchingBlocks(world, blockpos, isBlockBranching(world, blockpos)) == MoveResult.PREVENT)
-                    return false;
-            }
+            //vanilla does this
+            //for(int i = 0; i < this.toPush.size(); ++i) {
+            //  BlockPos blockpos = (BlockPos)this.toPush.get(i);
+            //  if (this.level.getBlockState(blockpos).isStickyBlock() && !this.addBranchingBlocks(blockpos)) {
+            //    return false;
+            //  }
+            //}
+            //we need to replace the stickiness logic with more complicated branching logic
+            //i.e. a normal block needs to trigger addBranchingBlocks code if there is a Quark chain next to it.
+            //an indexed for is fine in vanilla since it never removes blocks from toPush (we do)
+
+	          //noinspection ForLoopReplaceableByForEach //it isn't, we modify myToPush
+	          for(int i = 0; i < myToPush.size(); i++) {
+		            BlockPos blockpos = myToPush.get(i);
+		                if(addBranchingBlocks(world, blockpos, isBlockBranching(world, blockpos)) == MoveResult.PREVENT)
+			                  return false;
+	          }
 
             return true;
         }
@@ -222,7 +235,7 @@ public class ZetaPistonStructureResolver extends PistonStructureResolver {
 
                     if (state.getPistonPushReaction() == PushReaction.DESTROY) {
                         myToDestroy.add(currentPos);
-                        myToPush.remove(currentPos);
+//                        myToPush.remove(currentPos);
                         return true;
                     }
 
@@ -294,7 +307,6 @@ public class ZetaPistonStructureResolver extends PistonStructureResolver {
                 case BREAK:
                     if (PistonBaseBlock.isPushable(targetState, world, targetPos, moveDirection, true, moveDirection)) {
                         myToDestroy.add(targetPos);
-                        myToPush.remove(targetPos);
                         return MoveResult.BREAK;
                     }
 
