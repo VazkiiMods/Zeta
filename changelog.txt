@@ -1,0 +1,1 @@
+- Try and fix crashes related to ZetaPistonStructureResolver
