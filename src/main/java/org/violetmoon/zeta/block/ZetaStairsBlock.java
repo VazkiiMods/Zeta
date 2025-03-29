@@ -3,6 +3,7 @@ package org.violetmoon.zeta.block;
 import java.util.function.BooleanSupplier;
 
 import org.jetbrains.annotations.Nullable;
+import org.violetmoon.zeta.Zeta;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.registry.IZetaBlockColorProvider;
 import org.violetmoon.zeta.registry.IZetaItemColorProvider;
@@ -32,11 +33,11 @@ public class ZetaStairsBlock extends StairBlock implements IZetaBlock, IZetaBloc
 		ZetaModule module = parent.getModule();
 		if(module == null)
 			throw new IllegalArgumentException("Can only create ZetaStairsBlock with blocks belonging to a module"); //for various reasons
-
-		String resloc = module.zeta().registryUtil.inheritQuark(parent, "%s_stairs");
-		parent.getModule().zeta().registry.registerBlock(this, resloc, true);
-		parent.getModule().zeta().renderLayerRegistry.mock(this, parent.getBlock());
-		setCreativeTab(tab == null ? CreativeModeTabs.BUILDING_BLOCKS : tab, parent.getBlock(), false);
+		Zeta zeta = module.zeta();
+		String resloc = zeta.registryUtil.inheritQuark(parent, "%s_stairs");
+		zeta.registry.registerBlock(this, resloc, true);
+		zeta.renderLayerRegistry.mock(this, parent.getBlock());
+		zeta.creativeTabs.addToCreativeTabNextTo(tab == null ? CreativeModeTabs.BUILDING_BLOCKS : tab, this, parent.getBlock(), false);
 	}
 
 	@Override

@@ -71,8 +71,8 @@ public class ConfigEventDispatcher {
 		event.enqueueWork(() -> {
 			z.log.info("Common setup: Performing initial refresh of {}'s config on thread '{}'", z.modid, Thread.currentThread().getName());
 
-			z.configManager.onReload();
-			z.loadBus.fire(new ForgeZConfigChange());
+			//z.configManager.onReload();
+			//z.loadBus.fire(new ForgeZConfigChange());
 
 			int oldState;
 			if(z.side == ZetaSide.CLIENT) {
@@ -104,11 +104,6 @@ public class ConfigEventDispatcher {
 		String modid = z.modid;
 		if(!event.getConfig().getModId().equals(modid))
 			return;
-
-		if(z.configManager == null || z.configInternals == null) {
-			z.log.info("Ignoring request to refresh {}'s config WAY too early", z.modid);
-			return;
-		}
 
 		z.log.info("About to refresh {}'s config, looking for better thread than '{}'...", z.modid, Thread.currentThread().getName());
 		z.proxy.tryToExecuteOnMainThread(() -> {

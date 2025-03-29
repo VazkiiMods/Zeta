@@ -1,5 +1,6 @@
 package org.violetmoon.zeta.mod;
 
+import net.minecraft.resources.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.violetmoon.zeta.Zeta;
@@ -17,14 +18,10 @@ public class ZetaMod {
 	public ZetaMod(Zeta zeta) {
 		ZETA = zeta;
 
-		start();
+		ZetaModInternalNetwork.registerMessages(ZETA.network);
 	}
 
-	private void start() {
-		ZETA.start();
-		ZETA.loadModules(null, null, ZetaGeneralConfig.INSTANCE);
-
-		ZetaModInternalNetwork.init();
+	public static ResourceLocation id(String name) {
+		return new ResourceLocation(ZETA_ID, name);
 	}
-
 }

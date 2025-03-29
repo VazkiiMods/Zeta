@@ -30,7 +30,7 @@ import java.util.*;
 
 @JeiPlugin
 public class ZetaJeiPlugin implements IModPlugin {
-    private static final ResourceLocation UID = new ResourceLocation(ZetaMod.ZETA_ID, ZetaMod.ZETA_ID);
+    private static final ResourceLocation UID =  ZetaMod.id(ZetaMod.ZETA_ID);
 
     @NotNull
     @Override

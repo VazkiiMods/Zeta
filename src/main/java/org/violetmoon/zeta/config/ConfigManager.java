@@ -1,5 +1,6 @@
 package org.violetmoon.zeta.config;
 
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.zeta.Zeta;
 import org.violetmoon.zeta.event.load.ZGatherAdditionalFlags;
@@ -9,8 +10,12 @@ import org.violetmoon.zeta.module.ZetaModuleManager;
 
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class ConfigManager {
+    // encapsulate forge or fabric config internals
+    public IZetaConfigInternals internals;
+
     private final Zeta z;
     private final ConfigFlagManager cfm;
     private final SectionDefinition rootConfig;
@@ -32,7 +37,7 @@ public class ConfigManager {
     //state
     private final Set<ZetaCategory> enabledCategories = new HashSet<>();
 
-    public ConfigManager(Zeta z, Object rootPojo) {
+    public ConfigManager(Zeta z, Object rootPojo, Function<SectionDefinition, IZetaConfigInternals> internalsFactory) {
         this.z = z;
         this.cfm = new ConfigFlagManager(z);
         ZetaModuleManager modules = z.modules;
@@ -43,15 +48,7 @@ public class ConfigManager {
         SectionDefinition.Builder rootConfigBuilder = new SectionDefinition.Builder().name("");
 
         // "general" section
-        if (rootPojo == null)
-            generalSection = null;
-        else {
-            //TODO: where to put this lol
-            z.loadBus.subscribe(rootPojo).subscribe(rootPojo.getClass());
-            z.playBus.subscribe(rootPojo).subscribe(rootPojo.getClass());
-
-            generalSection = rootConfigBuilder.addSubsection(general -> ConfigObjectMapper.readInto(general.name("general"), rootPojo, databindings, cfm));
-        }
+        generalSection = rootConfigBuilder.addSubsection(general -> ConfigObjectMapper.readInto(general.name("general"), rootPojo, databindings, cfm));
 
         // "categories" section, holding the category enablement options
         rootConfigBuilder.addSubsection(categories -> {
@@ -124,7 +121,13 @@ public class ConfigManager {
         });
 
         this.rootConfig = rootConfigBuilder.build();
-        rootConfig.finish();
+        this.rootConfig.finish();
+
+        //The reason why there's a circular dependency between configManager and configInternals:
+        // - ConfigManager determines the shape and layout of the config file
+        // - The platform-specific configInternals loads the actual values, from the platform-specfic config file
+        // - Only then can ConfigManager do the initial config load
+        this.internals = internalsFactory.apply(rootConfig);
     }
 
     public SectionDefinition getRootConfig() {
@@ -171,21 +174,25 @@ public class ConfigManager {
         return enabledCategories.contains(cat);
     }
 
-    // ummm
-
     public ConfigFlagManager getConfigFlagManager() {
         return cfm;
     }
 
-    public void onReload() {
-        IZetaConfigInternals internals = z.configInternals;
-        databindings.forEach(c -> c.accept(internals));
+    //whats this for?
+    public void addOnReloadListener(String id, Consumer<IZetaConfigInternals> consumer) {
+        this.onReloadListeners.put(id, consumer);
+        consumer.accept(internals); //run it now as well
+    }
 
+
+    @ApiStatus.Internal
+    public void onReload() {
+        databindings.forEach(c -> c.accept(internals));
         onReloadListeners.values().forEach(r -> r.accept(internals));
     }
 
-    public void addOnReloadListener(String id, Consumer<IZetaConfigInternals> consumer) {
-        this.onReloadListeners.put(id, consumer);
-        consumer.accept(z.configInternals); //run it now as well
+    @ApiStatus.Internal
+    public void onZetaReady() {
+        internals.onZetaReady();
     }
 }

@@ -9,13 +9,11 @@ import org.violetmoon.zeta.network.message.S2CLoginFlag;
 import org.violetmoon.zeta.network.message.S2CUpdateFlag;
 
 public class ZetaModInternalNetwork {
-	
-	public static final int PROTOCOL_VERSION = 1;
 
-	public static void init() {
-		ZetaNetworkHandler network = ZetaMod.ZETA.createNetworkHandler(PROTOCOL_VERSION);
-		ZetaMod.ZETA.network = network;
-		
+	public static final int PROTOCOL = 2;
+
+	public static void registerMessages(ZetaNetworkHandler network) {
+
 		network.getSerializer().mapHandlers(BitSet.class, (buf, field) -> BitSet.valueOf(buf.readLongArray()), (buf, field, bitSet) -> buf.writeLongArray(bitSet.toLongArray()));
 		
 		// Flag Syncing
@@ -26,5 +24,6 @@ public class ZetaModInternalNetwork {
 		network.registerLogin(S2CLoginFlag.class, ZetaNetworkDirection.LOGIN_TO_CLIENT, 98, true, S2CLoginFlag::generateRegistryPackets);
 		network.registerLogin(C2SLoginFlag.class, ZetaNetworkDirection.LOGIN_TO_SERVER, 99, false, null);
 	}
-	
+
+
 }

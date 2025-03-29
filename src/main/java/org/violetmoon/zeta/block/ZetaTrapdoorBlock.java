@@ -4,7 +4,7 @@ import java.util.function.BooleanSupplier;
 
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.zeta.module.ZetaModule;
-import org.violetmoon.zeta.registry.CreativeTabManager;
+import org.violetmoon.zeta.registry.CreativeTabHandler;
 import org.violetmoon.zeta.registry.RenderLayerRegistry;
 import org.violetmoon.zeta.util.BooleanSuppliers;
 
@@ -30,8 +30,8 @@ public class ZetaTrapdoorBlock extends TrapDoorBlock implements IZetaBlock {
 
 		module.zeta().renderLayerRegistry.put(this, RenderLayerRegistry.Layer.CUTOUT);
 		module.zeta().registry.registerBlock(this, regname, true);
-		CreativeTabManager.addToCreativeTab(CreativeModeTabs.BUILDING_BLOCKS, this);
-		CreativeTabManager.addToCreativeTab(CreativeModeTabs.REDSTONE_BLOCKS, this);
+		module.zeta().creativeTabs.addToCreativeTab(CreativeModeTabs.BUILDING_BLOCKS, this);
+		module.zeta().creativeTabs.addToCreativeTab(CreativeModeTabs.REDSTONE_BLOCKS, this);
 	}
 
 	@Override

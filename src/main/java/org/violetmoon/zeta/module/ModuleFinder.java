@@ -7,4 +7,6 @@ public interface ModuleFinder extends Supplier<Stream<ZetaLoadModuleAnnotationDa
 	default ModuleFinder and(ModuleFinder other) {
 		return () -> Stream.concat(this.get(), other.get());
 	}
+
+	ModuleFinder EMPTY = Stream::empty;
 }

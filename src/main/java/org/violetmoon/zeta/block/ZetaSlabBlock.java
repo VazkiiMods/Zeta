@@ -3,7 +3,9 @@ package org.violetmoon.zeta.block;
 import java.util.function.BooleanSupplier;
 
 import org.jetbrains.annotations.Nullable;
+import org.violetmoon.zeta.Zeta;
 import org.violetmoon.zeta.module.ZetaModule;
+import org.violetmoon.zeta.registry.CreativeTabHandler;
 import org.violetmoon.zeta.registry.IZetaBlockColorProvider;
 import org.violetmoon.zeta.registry.IZetaItemColorProvider;
 import org.violetmoon.zeta.registry.VariantRegistry;
@@ -30,13 +32,16 @@ public class ZetaSlabBlock extends SlabBlock implements IZetaBlock, IZetaBlockCo
 		this.parent = parent;
 
 		ZetaModule module = parent.getModule();
-		if(module == null)
+		if(module == null) {
+			//TODO: what? which reasons?
 			throw new IllegalArgumentException("Can only create ZetaSlabBlock with blocks belonging to a module"); //for various reasons
-
-		String resloc = module.zeta().registryUtil.inheritQuark(parent, "%s_slab");
-		parent.getModule().zeta().registry.registerBlock(this, resloc, true);
-		parent.getModule().zeta().renderLayerRegistry.mock(this, parent.getBlock());
-		setCreativeTab(tab == null ? CreativeModeTabs.BUILDING_BLOCKS : tab, parent.getBlock(), false);
+		}
+		Zeta zeta = module.zeta();
+		String resloc = zeta.registryUtil.inheritQuark(parent, "%s_slab");
+		zeta.registry.registerBlock(this, resloc, true);
+		zeta.renderLayerRegistry.mock(this, parent.getBlock());
+		zeta.creativeTabs.addToCreativeTabNextTo(tab == null ? CreativeModeTabs.BUILDING_BLOCKS : tab,
+				parent.getBlock(), getBlock(), false);
 	}
 
 	@Override
