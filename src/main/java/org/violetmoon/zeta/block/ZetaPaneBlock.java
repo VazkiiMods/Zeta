@@ -22,9 +22,9 @@ public class ZetaPaneBlock extends IronBarsBlock implements IZetaBlock {
 		if(module == null) //auto registration below this line
 			return;
 
-		module.zeta.registry.registerBlock(this, name, true);
+		module.zeta().registry.registerBlock(this, name, true);
 		if(renderLayer != null)
-			module.zeta.renderLayerRegistry.put(this, renderLayer);
+			module.zeta().renderLayerRegistry.put(this, renderLayer);
 	}
 
 	@Nullable

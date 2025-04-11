@@ -4,37 +4,25 @@ import org.violetmoon.zeta.Zeta;
 import org.violetmoon.zeta.advancement.AdvancementModifierRegistry;
 import org.violetmoon.zeta.event.bus.IZetaLoadEvent;
 import org.violetmoon.zeta.registry.BrewingRegistry;
+import org.violetmoon.zeta.registry.CraftingExtensionsRegistry;
 import org.violetmoon.zeta.registry.RenderLayerRegistry;
 import org.violetmoon.zeta.registry.VariantRegistry;
 import org.violetmoon.zeta.registry.ZetaRegistry;
 
 @SuppressWarnings("ClassCanBeRecord")
-public class ZRegister implements IZetaLoadEvent {
-	public final Zeta zeta;
+public interface ZRegister extends IZetaLoadEvent {
 
-	public ZRegister(Zeta zeta) {
-		this.zeta = zeta;
-	}
+	ZetaRegistry getRegistry();
 
-	public ZetaRegistry getRegistry() {
-		return zeta.registry;
-	}
+	CraftingExtensionsRegistry getCraftingExtensionsRegistry();
 
-	public BrewingRegistry getBrewingRegistry() {
-		return zeta.brewingRegistry;
-	}
+	BrewingRegistry getBrewingRegistry();
 
-	public RenderLayerRegistry getRenderLayerRegistry() {
-		return zeta.renderLayerRegistry;
-	}
+	RenderLayerRegistry getRenderLayerRegistry();
 
-	public AdvancementModifierRegistry getAdvancementModifierRegistry() {
-		return zeta.advancementModifierRegistry;
-	}
+	AdvancementModifierRegistry getAdvancementModifierRegistry();
 
-	public VariantRegistry getVariantRegistry() {
-		return zeta.variantRegistry;
-	}
+	VariantRegistry getVariantRegistry();
 
-	public static class Post implements IZetaLoadEvent { }
+	interface Post extends IZetaLoadEvent { }
 }

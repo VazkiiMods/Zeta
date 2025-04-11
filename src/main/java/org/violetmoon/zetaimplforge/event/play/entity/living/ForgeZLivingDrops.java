@@ -9,7 +9,7 @@ import org.violetmoon.zeta.event.play.entity.living.ZLivingDrops;
 import java.util.Collection;
 
 public class ForgeZLivingDrops implements ZLivingDrops {
-	private final LivingDropsEvent e;
+	public final LivingDropsEvent e;
 
 	public ForgeZLivingDrops(LivingDropsEvent e) {
 		this.e = e;

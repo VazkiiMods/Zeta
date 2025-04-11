@@ -86,15 +86,12 @@ public class WorldGenHandler {
 			for(WeightedGenerator wgen : set) {
 				Generator gen = wgen.generator();
 
-				if(wgen.module().enabled && gen.canGenerate(region)) {
-
-					/* CONFIG FLAG
-					if (ZetaGeneralConfig.enableWorldgenWatchdog) {
+				if(wgen.module().isEnabled() && gen.canGenerate(region)) {
+					if(ZetaGeneralConfig.enableWorldgenWatchdog) {
 						final int finalStageNum = stageNum;
 						stageNum = watchdogRun(gen, () -> gen.generate(finalStageNum, seed, stage, region, generator, random, pos), 1, TimeUnit.MINUTES);
 					} else
-					 */
-					stageNum = gen.generate(stageNum, seed, stage, region, generator, random, pos);
+						stageNum = gen.generate(stageNum, seed, stage, region, generator, random, pos);
 				}
 			}
 		}

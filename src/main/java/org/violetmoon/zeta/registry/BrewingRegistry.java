@@ -99,10 +99,11 @@ public abstract class BrewingRegistry {
 
 	}
 
-	protected final Map<Potion, String> flaggedPotions = Maps.newHashMap();
+	// uglyyy
+	protected final Map<Potion, String> modPotionsToConfigFlag = Maps.newHashMap();
 
 	protected void addFlaggedRecipe(String flag, Potion potion, Item reagent, Potion to) {
-		flaggedPotions.put(to, flag);
+        modPotionsToConfigFlag.put(to, flag);
 		// Supplier<Ingredient> flagIngredientSupplier = () -> new FlagIngredient(reagent, flag, zeta.configManager.getConfigFlagManager(), zeta.configManager.getConfigFlagManager().flagIngredientSerializer);
 		if (zeta.configManager.getConfigFlagManager().getFlag(flag)) {
 			addBrewingRecipe(potion, reagent, to);
@@ -111,7 +112,8 @@ public abstract class BrewingRegistry {
 
 	protected Potion registerPotion(MobEffectInstance eff, String baseName, String name) {
 		Potion effect = new Potion(zeta.modid + "." + baseName, eff);
-		zeta.registry.register(effect, name, Registries.POTION);
+		zeta.registry.register(effect, name, Registries.POTION);'
+        modPotionsToConfigFlag.put(potion, configFlag);
 		return effect;
 	}
 

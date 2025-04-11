@@ -1,4 +1,4 @@
-package org.violetmoon.zetaimplforge.event.load;
+package org.violetmoon.zetaimplforge.event.play;
 
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import org.violetmoon.zeta.event.load.ZAddReloadListener;

@@ -12,6 +12,7 @@ import org.violetmoon.zeta.client.event.load.ZModel;
 import java.util.Map;
 
 public class ForgeZModel implements ZModel {
+
     public static class ModifyBakingResult extends ForgeZModel implements ZModel.ModifyBakingResult {
         private final ModelEvent.ModifyBakingResult e;
 

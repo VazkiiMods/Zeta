@@ -11,12 +11,7 @@ import org.violetmoon.zeta.event.play.ZItemTooltip;
 
 import java.util.List;
 
-public class ForgeZItemTooltip implements ZItemTooltip {
-	private final ItemTooltipEvent e;
-
-	public ForgeZItemTooltip(ItemTooltipEvent e) {
-		this.e = e;
-	}
+public record ForgeZItemTooltip(ItemTooltipEvent e) implements ZItemTooltip {
 
 	@Override
 	public TooltipFlag getFlags() {return e.getFlags();}

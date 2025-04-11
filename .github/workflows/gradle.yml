@@ -6,16 +6,14 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up JDK
-      uses: actions/setup-java@v2
-      with:
-        distribution: 'temurin'
-        java-version: '17'
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+    - name: Setup Java
+      run: echo "JAVA_HOME=$JAVA_HOME_17_X64" >> "$GITHUB_ENV"
     - name: Validate gradlew integrity
       uses: gradle/wrapper-validation-action@v1
     - name: Cache
-      uses: actions/cache@v2
+      uses: actions/cache@v4
       with:
         path: |
           ~/.gradle/caches
@@ -45,7 +43,7 @@ jobs:
         gpg --local-user "Violet Moon Signing Key" --armor \
           --detach-sign ${{ steps.calculate_artifact_names.outputs.forge }}
     - name: Archive Forge Artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: Forge
         path: |

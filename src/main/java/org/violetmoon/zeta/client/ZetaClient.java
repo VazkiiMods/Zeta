@@ -20,22 +20,18 @@ import org.violetmoon.zeta.util.zetalist.IZeta;
 import org.violetmoon.zeta.util.zetalist.ZetaClientList;
 
 public abstract class ZetaClient implements IZeta {
+
 	public ZetaClient(Zeta zeta) {
 		this.zeta = zeta;
 		this.loadBus = zeta.loadBus;
 		this.playBus = zeta.playBus;
 
-		this.ticker = createClientTicker();
 		this.clientConfigManager = createClientConfigManager();
-		this.topLayerTooltipHandler = createTopLayerTooltipHandler();
 		this.clientRegistryExtension = createClientRegistryExtension();
 
 		loadBus.subscribe(clientRegistryExtension)
 			.subscribe(clientConfigManager);
 
-		playBus.subscribe(ticker)
-			.subscribe(topLayerTooltipHandler);
-		
 		ZetaClientList.INSTANCE.register(this);
 	}
 
@@ -45,17 +41,19 @@ public abstract class ZetaClient implements IZeta {
 
 	public ResourceLocation generalIcons = ResourceLocation.fromNamespaceAndPath("zeta", "textures/gui/general_icons.png");
 
-	public final ClientTicker ticker;
 	public final ClientConfigManager clientConfigManager;
-	public final TopLayerTooltipHandler topLayerTooltipHandler;
 	public final ClientRegistryExtension clientRegistryExtension;
-
-	public ClientTicker createClientTicker() {
-		return new ClientTicker();
-	}
 
 	public ClientConfigManager createClientConfigManager() {
 		return new ClientConfigManager(this);
+	}
+
+	//ummm ??
+	public void sendToServer(IZetaMessage msg) {
+		if(Minecraft.getInstance().getConnection() == null)
+			return;
+
+		zeta.network.sendToServer(msg);
 	}
 
 	public TopLayerTooltipHandler createTopLayerTooltipHandler() {
@@ -76,8 +74,6 @@ public abstract class ZetaClient implements IZeta {
 	// The name is unwieldy on purpose, usages of this function should stick out.
 	public abstract @Nullable RegistryAccess hackilyGetCurrentClientLevelRegistryAccess();
 
-	public abstract void start();
-	
 	@Override
 	public Zeta asZeta() {
 		return zeta;

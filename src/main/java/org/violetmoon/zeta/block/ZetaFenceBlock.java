@@ -22,7 +22,7 @@ public class ZetaFenceBlock extends FenceBlock implements IZetaBlock {
 		if(module == null) //auto registration below this line
 			return;
 
-		module.zeta.registry.registerBlock(this, regname, true);
+		module.zeta().registry.registerBlock(this, regname, true);
 		CreativeTabManager.addToCreativeTab(CreativeModeTabs.BUILDING_BLOCKS, this);
 	}
 

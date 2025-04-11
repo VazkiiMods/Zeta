@@ -59,7 +59,7 @@ public class CreativeTabManager {
 		} else {
 			toAdd = new ItemSet(item);
 		}
-		
+
 		if(toAdd != null)
 			map.put(toAdd, target);
 
@@ -189,7 +189,7 @@ public class CreativeTabManager {
 
 	private static void acceptItem(BuildCreativeModeTabContentsEvent event, ItemLike item) {
 		if (!isItemEnabled(item)) return;
-		
+
 		if(item instanceof AppendsUniquely au)
 			event.acceptAll(au.appendItemsToCreativeTab());
 		else
@@ -197,10 +197,8 @@ public class CreativeTabManager {
 	}
 
 	private static void logVerbose(Supplier<String> s) {
-		/*
-		if(ZetaGeneralConfig.enableCreativeVerboseLogging) CONFIG FLAG
-			Zeta.GLOBAL_LOG.warn(s.get());
-		 */
+		if(ZetaGeneralConfig.enableCreativeVerboseLogging)
+			ZetaMod.LOGGER.warn(s.get());
 	}
 
 	private static class CreativeTabAdditions {

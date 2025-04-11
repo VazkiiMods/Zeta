@@ -67,6 +67,13 @@ repositories {
             includeGroup "curse.maven"
         }
     }
+    maven {
+        name "blamejared"
+        url "https://maven.blamejared.com"
+        content {
+            includeGroup "mezz.jei"
+        }
+    }
 
     maven {
         name "jitpack"

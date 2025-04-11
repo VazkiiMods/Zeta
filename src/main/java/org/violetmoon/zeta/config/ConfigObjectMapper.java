@@ -1,5 +1,10 @@
 package org.violetmoon.zeta.config;
 
+import org.apache.commons.lang3.text.WordUtils;
+import org.jetbrains.annotations.Nullable;
+import org.violetmoon.zeta.config.type.IConfigType;
+import org.violetmoon.zeta.module.ZetaModule;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -11,11 +16,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
-
-import org.apache.commons.lang3.text.WordUtils;
-import org.jetbrains.annotations.Nullable;
-import org.violetmoon.zeta.config.type.IConfigType;
-import org.violetmoon.zeta.module.ZetaModule;
 
 public class ConfigObjectMapper {
 	public static List<Field> walkModuleFields(Class<?> clazz) {
@@ -58,6 +58,11 @@ public class ConfigObjectMapper {
 	}
 
 	public static void readInto(SectionDefinition.Builder sect, Object obj, @Nullable ZetaModule enclosingModule, List<Consumer<IZetaConfigInternals>> databindings, ConfigFlagManager cfm) {
+		Config.RootComment rootComment = obj.getClass().getAnnotation(Config.RootComment.class);
+		if (rootComment != null) {
+			sect.comment(List.of(rootComment.value().split("\n")));
+		}
+
 		for(Field field : walkModuleFields(obj.getClass())) {
 			Config config = field.getAnnotation(Config.class);
 

@@ -8,13 +8,7 @@ import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import org.violetmoon.zeta.event.play.entity.ZEntityInteract;
 
-public class ForgeZEntityInteract implements ZEntityInteract {
-	private final PlayerInteractEvent.EntityInteract e;
-
-	public ForgeZEntityInteract(PlayerInteractEvent.EntityInteract e) {
-		this.e = e;
-	}
-
+public record ForgeZEntityInteract(PlayerInteractEvent.EntityInteract e) implements ZEntityInteract {
 	@Override
 	public Entity getTarget() {
 		return e.getTarget();

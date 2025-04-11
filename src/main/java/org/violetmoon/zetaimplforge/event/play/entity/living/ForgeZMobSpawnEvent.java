@@ -6,7 +6,7 @@ import net.neoforged.neoforge.event.entity.living.MobSpawnEvent;
 import org.violetmoon.zeta.event.play.entity.living.ZMobSpawnEvent;
 
 public class ForgeZMobSpawnEvent implements ZMobSpawnEvent {
-    private final MobSpawnEvent e;
+    public final MobSpawnEvent e;
 
     public ForgeZMobSpawnEvent(MobSpawnEvent e) {
         this.e = e;

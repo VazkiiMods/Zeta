@@ -24,3 +24,9 @@ file="META-INF/accesstransformer.cfg"
     versionRange="[21.0.10,)"
     ordering="AFTER"
     side="BOTH"
+
+[[dependencies.zeta]]
+    modId="quark"
+    mandatory=false
+    versionRange="[4.0-461,)"
+    side="BOTH"

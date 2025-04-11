@@ -66,7 +66,7 @@ public class ZetaConfigHomeScreen extends ZetaScreen {
 					b -> Minecraft.getInstance().setScreen(new SectionScreen(zc, this, changeSet, categorySection))));
 				Button checkButton = addRenderableWidget(new CheckboxButton(zc, x + bWidth, y, changeSet, categoryEnabled));
 
-				boolean active = category.requiredModsLoaded(z);
+				boolean active = category.requiredModsLoaded();
 				mainButton.active = active;
 				checkButton.active = active;
 			} else {
@@ -120,7 +120,7 @@ public class ZetaConfigHomeScreen extends ZetaScreen {
 
 	public void commit(Button button) {
 		changeSet.applyAllChanges();
-		returnToParent();
+		onClose();
 	}
 
 	@Override

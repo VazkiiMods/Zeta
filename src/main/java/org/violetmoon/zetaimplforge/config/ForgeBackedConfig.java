@@ -62,14 +62,8 @@ public class ForgeBackedConfig implements IZetaConfigInternals {
 
 	@Override
 	public void flush() {
-		debounceTime = 0; //force ConfigChangedEvent to not debounce this, it's important
-
 		//just pick one; they all point to the same FileConfig anyway
+		//this dispatches a forge ModConfigEvent.Reloading
 		definitionsToValues.values().iterator().next().save();
-	}
-
-	@Override
-	public long debounceTime() {
-		return debounceTime;
 	}
 }

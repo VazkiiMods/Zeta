@@ -39,9 +39,8 @@ public final class ConfigFlagManager {
 		//Note: These SHOULD be Quark-independent already, but hell if I know. Todo: Double check it.
 		ext.registerConditionSerializer(new FlagCondition.Serializer(this, ResourceLocation.fromNamespaceAndPath(zeta.modid, "flag")));
 		ext.registerConditionSerializer(new FlagCondition.Serializer(this, ResourceLocation.fromNamespaceAndPath(zeta.modid, "advancement_flag"), () -> ZetaGeneralConfig.enableModdedAdvancements));
-		*/
 		Registry.register(BuiltInRegistries.LOOT_CONDITION_TYPE, ResourceLocation.fromNamespaceAndPath(zeta.modid, "flag"), FLAG_CONDITION_TYPE);
-
+        */
 		// ext.registerIngredientSerializer(ResourceLocation.fromNamespaceAndPath(zeta.modid, "flag"), flagIngredientSerializer);
 		SyncedFlagHandler.setupFlagManager(this);
 	}
@@ -51,12 +50,14 @@ public final class ConfigFlagManager {
 	}
 
 	public void putFlag(ZetaModule module, String flag, boolean value) {
-		flags.put(flag, value && module.enabled);
-        allFlags.add(flag);
+		flags.put(flag, value && module.isEnabled());
+		if(!allFlags.contains(flag)) {
+			allFlags.add(flag);
+		}
 	}
 
 	public void putModuleFlag(ZetaModule module) {
-		putFlag(module, module.lowercaseName, true);
+		putFlag(module, module.lowerCaseName(), true);
 	}
 
 	public boolean isValidFlag(String flag) {

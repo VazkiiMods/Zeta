@@ -15,22 +15,18 @@ public class GatherAdvancementModifiersEvent extends Event implements ZGatherAdv
 		this.inner = inner;
 	}
 
-	public Zeta getZeta() {
-		return zeta;
-	}
-
-	public String getModid() {
-		return zeta.modid;
+	public ForgeZGatherAdvancementModifiers(ZGatherAdvancementModifiers inner) {
+		this.wrapped = inner;
 	}
 
 	@Override
 	public void register(IAdvancementModifier modifier) {
-		inner.register(modifier);
+		wrapped.register(modifier);
 	}
 
 	@Override
 	public IAdvancementModifierDelegate getDelegate() {
-		return inner.getDelegate();
+		return wrapped.getDelegate();
 	}
 
 	//Note there are a ton of default methods available in ZGatherAdvancementModifiers for you to call.

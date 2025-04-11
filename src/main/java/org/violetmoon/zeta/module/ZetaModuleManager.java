@@ -1,172 +1,217 @@
 package org.violetmoon.zeta.module;
 
-import java.lang.reflect.Constructor;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
 import org.violetmoon.zeta.Zeta;
-import org.violetmoon.zeta.event.load.ZModulesReady;
 import org.violetmoon.zeta.util.ZetaSide;
+import org.violetmoon.zetaimplforge.event.load.ForgeZModulesReady;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.*;
 
 /**
  * TODO: other forms of module discovery and replacement (like a Forge-only module, or other types of 'replacement' modules)
  */
 public class ZetaModuleManager {
-	private final Zeta z;
+    private final Zeta z;
 
-	private final Map<Class<? extends ZetaModule>, ZetaModule> modulesByKey = new LinkedHashMap<>();
-	private final Map<String, ZetaCategory> categoriesById = new LinkedHashMap<>();
-	private final Map<ZetaCategory, List<ZetaModule>> modulesInCategory = new HashMap<>();
+    private final Map<Class<? extends ZetaModule>, ZetaModule> modulesByKey = new LinkedHashMap<>();
+    private final Map<String, ZetaCategory> categoriesById = new LinkedHashMap<>();
+    private final Map<ZetaCategory, List<ZetaModule>> modulesInCategory = new HashMap<>();
 
-	public ZetaModuleManager(Zeta z) {
-		this.z = z;
-	}
+    public ZetaModuleManager(Zeta z) {
+        this.z = z;
+    }
 
-	// Modules //
+    // Modules //
 
-	public Collection<ZetaModule> getModules() {
-		return modulesByKey.values();
-	}
+    public Collection<ZetaModule> getModules() {
+        return modulesByKey.values();
+    }
 
-	//SAFETY: check how TentativeModule.keyClass is assigned.
-	// It's either set to the *same* class as the module implementation,
-	// or set to the target of a clientReplacementOf operation, which is
-	// checked to be assignableFrom the module implementation during loading.
-	@SuppressWarnings("unchecked")
-	public <M extends ZetaModule> M get(Class<M> keyClass) {
-		return (M) modulesByKey.get(keyClass);
-	}
+    //SAFETY: check how TentativeModule.keyClass is assigned.
+    // It's either set to the *same* class as the module implementation,
+    // or set to the target of a clientReplacementOf operation, which is
+    // checked to be assignableFrom the module implementation during loading.
+    @SuppressWarnings("unchecked")
+    public <M extends ZetaModule> M get(Class<M> keyClass) {
+        return (M) modulesByKey.get(keyClass);
+    }
 
-	public <M extends ZetaModule> Optional<M> getOptional(Class<M> keyClass) {
-		return Optional.ofNullable(get(keyClass));
-	}
+    public <M extends ZetaModule> Optional<M> getOptional(Class<M> keyClass) {
+        return Optional.ofNullable(get(keyClass));
+    }
 
-	public boolean isEnabled(Class<? extends ZetaModule> keyClass) {
-		return get(keyClass).enabled;
-	}
-	
-	public boolean isEnabledOrOverlapping(Class<? extends ZetaModule> keyClass) {
-		ZetaModule module = get(keyClass);
-		return module.enabled || module.disabledByOverlap;
-	}
+    public boolean isEnabled(Class<? extends ZetaModule> keyClass) {
+        return get(keyClass).isEnabled();
+    }
 
-	// Categories //
+    public boolean isEnabledOrOverlapping(Class<? extends ZetaModule> keyClass) {
+        ZetaModule module = get(keyClass);
+        return module.isEnabled() || module.disabledByOverlap();
+    }
 
-	public ZetaCategory getCategory(String id) {
-		if(id == null || id.isEmpty()) id = "Unknown";
+    // Categories //
 
-		return categoriesById.computeIfAbsent(id, ZetaCategory::unknownCategory);
-	}
+    public ZetaCategory getCategory(String id) {
+        if (id == null || id.isEmpty()) id = "Unknown";
 
-	public Collection<ZetaCategory> getCategories() {
-		return categoriesById.values();
-	}
+        return categoriesById.computeIfAbsent(id, ZetaCategory::unknownCategory);
+    }
 
-	public List<ZetaCategory> getInhabitedCategories() {
-		return categoriesById.values().stream()
-			.filter(c -> !modulesInCategory(c).isEmpty())
-			.toList();
-	}
+    public Collection<ZetaCategory> getCategories() {
+        return categoriesById.values();
+    }
 
-	public List<ZetaModule> modulesInCategory(ZetaCategory cat) {
-		return modulesInCategory.computeIfAbsent(cat, __ -> new ArrayList<>());
-	}
+    public List<ZetaCategory> getInhabitedCategories() {
+        return categoriesById.values().stream()
+                .filter(c -> !modulesInCategory(c).isEmpty())
+                .toList();
+    }
 
-	// Loading //
+    public List<ZetaModule> modulesInCategory(ZetaCategory cat) {
+        return modulesInCategory.computeIfAbsent(cat, __ -> new ArrayList<>());
+    }
 
-	//first call this
-	public void initCategories(Iterable<ZetaCategory> cats) {
-		for(ZetaCategory cat : cats) categoriesById.put(cat.name, cat);
-	}
+    // Loading //
 
-	//then call this
-	public void load(ModuleFinder finder) {
-		Collection<TentativeModule> tentative = finder.get()
-			.map(data -> TentativeModule.from(data, this::getCategory))
-			.filter(tm -> tm.appliesTo(z.side))
-			.sorted(Comparator.comparing(TentativeModule::loadPhase).thenComparing(TentativeModule::displayName))
-			.toList();
+    //first call this
+    public void initCategories(Iterable<ZetaCategory> cats) {
+        for (ZetaCategory cat : cats) categoriesById.put(cat.name, cat);
+    }
 
-		//this is the part where we handle "client replacement" modules !!
-		if(z.side == ZetaSide.CLIENT) {
-			Map<Class<? extends ZetaModule>, TentativeModule> byClazz = new LinkedHashMap<>();
+    //then call this
+    public void load(ModuleFinder finder) {
+        Collection<TentativeModule> tentative = finder.get()
+                .map(data -> TentativeModule.from(data, this::getCategory))
+                .filter(tm -> tm.appliesTo(z.side))
+                .sorted(Comparator.comparing(TentativeModule::loadPhase).thenComparing(TentativeModule::displayName))
+                .toList();
 
-			//first, lay down all modules that are not client replacements
-			for(TentativeModule tm : tentative)
-				if(!tm.clientReplacement())
-					byClazz.put(tm.clazz(), tm);
+        //this is the part where we handle "client replacement" modules !!
+        if (z.side == ZetaSide.CLIENT) {
+            Map<Class<? extends ZetaModule>, TentativeModule> byClazz = new LinkedHashMap<>();
 
-			//then overlay with the client replacements
-			for(TentativeModule tm : tentative) {
-				if(tm.clientReplacement()) {
-					//SAFETY: already checked isAssignableFrom in TentativeModule
-					@SuppressWarnings("unchecked")
-					Class<? extends ZetaModule> superclass = (Class<? extends ZetaModule>) tm.clazz().getSuperclass();
+            //first, lay down all modules that are not client replacements
+            for (TentativeModule tm : tentative)
+                if (!tm.clientReplacement())
+                    byClazz.put(tm.clazz(), tm);
 
-					TentativeModule existing = byClazz.get(superclass);
-					if(existing == null)
-						throw new RuntimeException("Module " + tm.clazz().getName() + " wants to replace " + superclass.getName() + ", but that module isn't registered");
+            //then overlay with the client replacements
+            for (TentativeModule tm : tentative) {
+                if (tm.clientReplacement()) {
+                    //SAFETY: already checked isAssignableFrom in TentativeModule
+                    @SuppressWarnings("unchecked")
+                    Class<? extends ZetaModule> superclass = (Class<? extends ZetaModule>) tm.clazz().getSuperclass();
 
-					byClazz.put(superclass, existing.replaceWith(tm));
-				}
-			}
+                    TentativeModule existing = byClazz.get(superclass);
+                    if (existing == null)
+                        throw new RuntimeException("Module " + tm.clazz().getName() + " wants to replace " + superclass.getName() + ", but that module isn't registered");
 
-			tentative = byClazz.values();
-		}
+                    byClazz.put(superclass, existing.replaceWith(tm));
+                }
+            }
 
-		z.log.info("Discovered " + tentative.size() + " modules to load.");
+            tentative = byClazz.values();
+        }
 
-		for(TentativeModule t : tentative)
-			modulesByKey.put(t.keyClass(), constructAndSetup(t));
+        z.log.info("Discovered " + tentative.size() + " modules to load.");
 
-		z.log.info("Constructed {} modules.", modulesByKey.size());
+        for (TentativeModule t : tentative)
+            modulesByKey.put(t.keyClass(), constructAndSetup(t));
 
-		z.loadBus.fire(new ZModulesReady());
-	}
+        z.log.info("Constructed {} modules.", modulesByKey.size());
 
-	private ZetaModule constructAndSetup(TentativeModule t) {
-		z.log.info("Constructing module {}...", t.displayName());
+        z.loadBus.fire(new ForgeZModulesReady());
+    }
 
-		//construct, set properties
-		ZetaModule module = construct(t.clazz());
 
-		module.zeta = z;
-		module.category = t.category();
+    public void doFinalize() {
+        for (var m : this.getModules()) {
+            m.finalized = true;
+            m.updateBusSubscriptions(z);
+        }
+    }
 
-		module.displayName = t.displayName();
-		module.lowercaseName = t.lowercaseName();
-		module.description = t.description();
+    private ZetaModule constructAndSetup(TentativeModule t) {
+        z.log.info("Constructing module {}...", t.displayName());
 
-		module.antiOverlap = t.antiOverlap();
+        //construct, set properties
+        ZetaModule module = construct(t.clazz());
 
-		module.enabledByDefault = t.enabledByDefault();
+        module.zeta = z;
+        module.category = t.category();
 
-		//event busses
-		module.setEnabled(z, t.enabledByDefault());
-		z.loadBus.subscribe(module.getClass()).subscribe(module);
+        module.displayName = t.displayName();
+        module.lowercaseName = t.lowercaseName();
+        module.description = t.description();
 
-		//category upkeep
-		modulesInCategory.computeIfAbsent(module.category, __ -> new ArrayList<>()).add(module);
+        module.antiOverlap = t.antiOverlap();
 
-		//post-construction callback
-		module.postConstruct();
+        module.enabledByDefault = t.enabledByDefault();
 
-		return module;
-	}
+        //event busses
+        module.setEnabled(z, t.enabledByDefault());
+        z.loadBus.subscribe(module.getClass()).subscribe(module);
 
-	private <Z extends ZetaModule> Z construct(Class<Z> clazz) {
-		try {
-			Constructor<Z> cons = clazz.getConstructor();
-			return cons.newInstance();
-		} catch (Exception e) {
-			throw new RuntimeException("Could not construct ZetaModule '" + clazz.getName() + "', does it have a public zero-argument constructor?", e);
-		}
-	}
+        //category upkeep
+        modulesInCategory.computeIfAbsent(module.category, __ -> new ArrayList<>()).add(module);
+
+        populateModuleInstanceField(module);
+
+        //post-construction callback
+        module.postConstruct();
+
+        return module;
+    }
+
+    // feel free to refactor
+    private static void populateModuleInstanceField(ZetaModule module) {
+        var clazz = module.getClass();
+
+
+        List<Field> fields = new ArrayList<>();
+        fields.addAll(Arrays.asList(clazz.getDeclaredFields()));
+
+        //if module is a client one, look at superclasstoo
+        if (module.getClass().isAnnotationPresent(ZetaLoadModule.class)) {
+            ZetaLoadModule annotation = module.getClass().getAnnotation(ZetaLoadModule.class);
+            if (annotation.clientReplacement()) {
+                fields.addAll(Arrays.asList(clazz.getSuperclass().getDeclaredFields()));
+            }
+        }
+
+        List<Field> targetFields = new ArrayList<>();
+
+        for (Field field : fields) {
+            if (field.isAnnotationPresent(ModuleInstance.class)) {
+                if (!Modifier.isStatic(field.getModifiers())) {
+                    throw new IllegalStateException("@ModuleInstance annotated field must be static");
+                }
+                //make sure the module class can be assigned to the fields
+                if (!field.getType().isAssignableFrom(clazz)) {
+                    throw new IllegalStateException("@ModuleInstance annotated field must be assignable from the module class. Expected: " + field.getType() + ", got: " + clazz);
+                }
+                targetFields.add(field);
+            }
+        }
+        for (Field targetField : targetFields) {
+            targetField.setAccessible(true);
+            try {
+                targetField.set(null, module);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    private <Z extends ZetaModule> Z construct(Class<Z> clazz) {
+        try {
+            Constructor<Z> cons = clazz.getConstructor();
+            return cons.newInstance();
+        } catch (Exception e) {
+            throw new RuntimeException("Could not construct ZetaModule '" + clazz.getName() + "', does it have a public zero-argument constructor?", e);
+        }
+    }
 
 }

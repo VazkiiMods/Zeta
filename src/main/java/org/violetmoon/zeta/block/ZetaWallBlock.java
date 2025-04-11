@@ -31,9 +31,9 @@ public class ZetaWallBlock extends WallBlock implements IZetaBlock, IZetaBlockCo
 		if(module == null)
 			throw new IllegalArgumentException("Can only create ZetaWallBlock with blocks belonging to a module"); //getBeaconColorMultiplierZeta
 
-		String resloc = module.zeta.registryUtil.inheritQuark(parent, "%s_wall");
-		parent.getModule().zeta.registry.registerBlock(this, resloc, true);
-		parent.getModule().zeta.renderLayerRegistry.mock(this, parent.getBlock());		
+		String resloc = module.zeta().registryUtil.inheritQuark(parent, "%s_wall");
+		parent.getModule().zeta().registry.registerBlock(this, resloc, true);
+		parent.getModule().zeta().renderLayerRegistry.mock(this, parent.getBlock());
 		setCreativeTab(tab == null ? CreativeModeTabs.BUILDING_BLOCKS : tab, parent.getBlock(), false);
 	}
 
@@ -57,7 +57,7 @@ public class ZetaWallBlock extends WallBlock implements IZetaBlock, IZetaBlockCo
 	@Override
 	public Integer getBeaconColorMultiplierZeta(BlockState state, LevelReader world, BlockPos pos, BlockPos beaconPos) {
 		BlockState parentState = parent.getBlock().defaultBlockState();
-		return parent.getModule().zeta.blockExtensions.get(parentState).getBeaconColorMultiplierZeta(parentState, world, pos, beaconPos);
+		return parent.getModule().zeta().blockExtensions.get(parentState).getBeaconColorMultiplierZeta(parentState, world, pos, beaconPos);
 	}
 
 	@Override

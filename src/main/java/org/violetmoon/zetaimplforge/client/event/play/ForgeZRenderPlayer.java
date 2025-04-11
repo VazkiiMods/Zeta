@@ -8,7 +8,7 @@ import net.neoforged.neoforge.client.event.RenderPlayerEvent;
 import org.violetmoon.zeta.client.event.play.ZRenderPlayer;
 
 public abstract class ForgeZRenderPlayer implements ZRenderPlayer {
-	private final RenderPlayerEvent e;
+	public final RenderPlayerEvent e;
 
 	public ForgeZRenderPlayer(RenderPlayerEvent e) {
 		this.e = e;
@@ -38,7 +38,8 @@ public abstract class ForgeZRenderPlayer implements ZRenderPlayer {
 		}
 	}
 
-	public static class Post extends ForgeZRenderPlayer implements ZRenderPlayer.Post {
+	public static class Post extends ForgeZRenderPlayer implements ZRenderPlayer.Post, IZetaPlayEvent {
+
 		public Post(RenderPlayerEvent.Post e) {
 			super(e);
 		}

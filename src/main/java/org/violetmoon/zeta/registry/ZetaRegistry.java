@@ -33,7 +33,9 @@ public abstract class ZetaRegistry {
 
 	// the keys of this are things like "minecraft:block", "minecraft:item" and so on
 	private final Multimap<ResourceLocation, Supplier<Object>> defers = ArrayListMultimap.create();
-	
+	// my registered entries
+	private final Map<ResourceKey<Registry<?>>, List<Holder<?>>> myRegisteredObjects = new HashMap<>();
+
 	// to support calling getRegistryName before the object actually gets registered for real
 	public final Map<Object, ResourceLocation> internalNames = new IdentityHashMap<>();
 	
@@ -137,14 +139,45 @@ public abstract class ZetaRegistry {
 		defers.removeAll(resourceLocation);
 	}
 
-	public void finalizeBlockColors(BiConsumer<Block, String> consumer) {
-		blocksToColorProviderName.forEach(consumer);
-		blocksToColorProviderName.clear();
+	@ApiStatus.Internal
+	public void assignBlockColor(String name, Consumer<Block> regFunc) {
+		boolean success = false;
+		var iterator = blocksToColorProviderName.entrySet().iterator();
+		while(iterator.hasNext()) {
+			var entry = iterator.next();
+			if(entry.getValue().equals(name)) {
+				success = true;
+				regFunc.accept(entry.getKey());
+				iterator.remove();
+			}
+		}
+		if (!success)
+			z.log.error("Unknown block color creator {} used on block", name);
 	}
 
-	public void finalizeItemColors(BiConsumer<Item, String> consumer) {
-		itemsToColorProviderName.forEach(consumer);
-		itemsToColorProviderName.clear();
+	@ApiStatus.Internal
+	public void assignItemColor(String name, Consumer<Item> regFunc) {
+		boolean success = false;
+		var iterator = itemsToColorProviderName.entrySet().iterator();
+		while(iterator.hasNext()) {
+			var entry = iterator.next();
+			if(entry.getValue().equals(name)) {
+				success = true;
+				regFunc.accept(entry.getKey());
+				iterator.remove();
+			}
+		}
+		if (!success)
+			z.log.error("Unknown item color creator {} used on item", name);
+	}
+
+	@ApiStatus.Internal
+	public void validateColorsProviders(){
+		if(!blocksToColorProviderName.isEmpty())
+			z.log.error("Block color providers {} were not assigned to any blocks", blocksToColorProviderName.values());
+		if(!itemsToColorProviderName.isEmpty())
+			z.log.error("Item color providers {} were not assigned to any items", itemsToColorProviderName.values());
+
 	}
 
 	/// performing registration (dynamic registry jank - for registering ConfiguredFeature etc through code) ///
@@ -236,5 +269,16 @@ public abstract class ZetaRegistry {
 			if(entry.lateBound != null)
 				entry.lateBound.bind(thing, writable);
 		});
+	}
+
+	protected <O> void trackRegisteredObject(ResourceKey<Registry<O>> keyGeneric, Holder<O> entry) {
+		myRegisteredObjects.computeIfAbsent((ResourceKey) keyGeneric, __ -> new ArrayList<>()).add(entry);
+	}
+
+	/**
+	 * Gets all the registered objects from this Zeta
+	 */
+	public <O> Collection<Holder<O>> getRegisteredObjects(ResourceKey<Registry<O>> registry) {
+		return (Collection<Holder<O>>) (Collection) myRegisteredObjects.getOrDefault((ResourceKey) registry, List.of());
 	}
 }

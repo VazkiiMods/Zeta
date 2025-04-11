@@ -20,9 +20,7 @@ public class ZetaItem extends Item implements IZetaItem, IZetaItemExtensions {
 		if(module == null) //auto registration below this line
 			return;
 
-		module.zeta.registry.registerItem(this, regname);
-		if(module.category.isAddon())
-			module.zeta.requiredModTooltipHandler.map(this, module.category.requiredMod);
+		module.zeta().registry.registerItem(this, regname);
 	}
 
 	@Override

@@ -22,8 +22,11 @@ public record FlagCondition(ConfigFlagManager cfm, String flag, ResourceLocation
 		if(flag.contains("%"))
 			throw new RuntimeException("Illegal flag: " + flag);
 
-		if(!cfm.isValidFlag(flag))
+		if(!cfm.isValidFlag(flag)) {
             cfm.zeta.log.warn("Non-existent flag {} being used", flag);
+			// return true for unknown flags
+			return true;
+		}
 
 		return extraCondition.getAsBoolean() && cfm.getFlag(flag);
 	}

@@ -6,7 +6,7 @@ import org.violetmoon.zeta.event.play.entity.player.ZPlayerTick;
 import net.minecraft.world.entity.player.Player;
 
 public abstract class ForgeZPlayerTick implements ZPlayerTick {
-	private final PlayerTickEvent e;
+    public final PlayerTickEvent e;
 
 	protected ForgeZPlayerTick(PlayerTickEvent e) {
 		this.e = e;

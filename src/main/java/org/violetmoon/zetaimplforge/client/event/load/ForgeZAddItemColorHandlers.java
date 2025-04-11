@@ -13,15 +13,9 @@ import java.util.function.Function;
 
 public class ForgeZAddItemColorHandlers implements ZAddItemColorHandlers {
 	protected final RegisterColorHandlersEvent.Item e;
-	protected final Map<String, Function<Item, ItemColor>> namedItemColors;
 
 	public ForgeZAddItemColorHandlers(RegisterColorHandlersEvent.Item e) {
-		this(e, new HashMap<>());
-	}
-
-	public ForgeZAddItemColorHandlers(RegisterColorHandlersEvent.Item e, Map<String, Function<Item, ItemColor>> namedItemColors) {
 		this.e = e;
-		this.namedItemColors = namedItemColors;
 	}
 
 	@Override
@@ -30,9 +24,10 @@ public class ForgeZAddItemColorHandlers implements ZAddItemColorHandlers {
 	}
 
 	@Override
-	public void registerNamed(Function<Item, ItemColor> c, String... names) {
-		for(String name : names)
-			namedItemColors.put(name, c);
+	public void registerNamed(Zeta myZeta, Function<Item, ItemColor> c, String... names) {
+		for (String name : names) {
+			myZeta.registry.assignItemColor(name, b -> register(c.apply(b), b));
+		}
 	}
 
 	@Override
@@ -40,19 +35,4 @@ public class ForgeZAddItemColorHandlers implements ZAddItemColorHandlers {
 		return e.getItemColors();
 	}
 
-	@Override
-	public Post makePostEvent() {
-		return new Post(e, namedItemColors);
-	}
-
-	public static class Post extends ForgeZAddItemColorHandlers implements ZAddItemColorHandlers.Post {
-		public Post(RegisterColorHandlersEvent.Item e, Map<String, Function<Item, ItemColor>> namedItemColors) {
-			super(e, namedItemColors);
-		}
-
-		@Override
-		public Map<String, Function<Item, ItemColor>> getNamedItemColors() {
-			return namedItemColors;
-		}
-	}
 }

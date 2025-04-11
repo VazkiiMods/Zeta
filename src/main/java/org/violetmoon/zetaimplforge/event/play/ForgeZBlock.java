@@ -32,7 +32,7 @@ public class ForgeZBlock implements ZBlock {
     }
 
     public static class Break extends ForgeZBlock implements ZBlock.Break {
-        private final BlockEvent.BreakEvent e;
+        public final BlockEvent.BreakEvent e;
 
         public Break(BlockEvent.BreakEvent e) {
             super(e);
@@ -46,7 +46,7 @@ public class ForgeZBlock implements ZBlock {
     }
 
     public static class EntityPlace extends ForgeZBlock implements ZBlock.EntityPlace {
-        private final BlockEvent.EntityPlaceEvent e;
+        public final BlockEvent.EntityPlaceEvent e;
 
         public EntityPlace(BlockEvent.EntityPlaceEvent e) {
             super(e);

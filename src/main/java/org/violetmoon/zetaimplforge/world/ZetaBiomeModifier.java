@@ -1,6 +1,14 @@
 package org.violetmoon.zetaimplforge.world;
 
-import com.mojang.serialization.MapCodec;
+import java.util.List;
+
+import org.violetmoon.zeta.Zeta;
+import org.violetmoon.zeta.mod.ZetaMod;
+import org.violetmoon.zeta.util.zetalist.ZetaList;
+import org.violetmoon.zeta.world.WorldGenHandler;
+
+import com.mojang.serialization.Codec;
+
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.biome.Biome;
@@ -23,7 +31,7 @@ import java.util.List;
 public class ZetaBiomeModifier implements BiomeModifier {
 
 	public static final ResourceLocation RESOURCE = ResourceLocation.fromNamespaceAndPath(Zeta.ZETA_ID, "biome_modifier");
-	private static final DeferredHolder<MapCodec<? extends BiomeModifier>, MapCodec<? extends BiomeModifier>> SERIALIZER = DeferredHolder.create(NeoForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS, RESOURCE);
+	private static final DeferredHolder<MapCodec<? extends BiomeModifier>, MapCodec<? extends BiomeModifier>> SERIALIZER = DeferredHolder.create(NeoForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS, ZetaMod.ZETA_ID);
 
 	@Override
 	public void modify(Holder<Biome> biome, Phase phase, ModifiableBiomeInfo.BiomeInfo.Builder builder) {
@@ -54,7 +62,7 @@ public class ZetaBiomeModifier implements BiomeModifier {
 	}
 	
 	public static void registerBiomeModifier(IEventBus bus) {
-		DeferredRegister<MapCodec<? extends BiomeModifier>> biomeModifiers = DeferredRegister.create(NeoForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS, Zeta.ZETA_ID);
+		DeferredRegister<MapCodec<? extends BiomeModifier>> biomeModifiers = DeferredRegister.create(NeoForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS, ZetaMod.ZETA_ID);
 		biomeModifiers.register(bus);
 		biomeModifiers.register(ZetaBiomeModifier.RESOURCE.getPath(), ZetaBiomeModifier::makeCodec);
 	}

@@ -28,8 +28,8 @@ public class ZetaTrapdoorBlock extends TrapDoorBlock implements IZetaBlock {
 		if(module == null) //auto registration below this line
 			throw new IllegalArgumentException("Must provide a module for ZetaTrapdoorBlock"); //isLadderZeta
 
-		module.zeta.renderLayerRegistry.put(this, RenderLayerRegistry.Layer.CUTOUT);
-		module.zeta.registry.registerBlock(this, regname, true);
+		module.zeta().renderLayerRegistry.put(this, RenderLayerRegistry.Layer.CUTOUT);
+		module.zeta().registry.registerBlock(this, regname, true);
 		CreativeTabManager.addToCreativeTab(CreativeModeTabs.BUILDING_BLOCKS, this);
 		CreativeTabManager.addToCreativeTab(CreativeModeTabs.REDSTONE_BLOCKS, this);
 	}
@@ -39,7 +39,7 @@ public class ZetaTrapdoorBlock extends TrapDoorBlock implements IZetaBlock {
 		if(state.getValue(OPEN)) {
 			BlockPos downPos = pos.below();
 			BlockState down = level.getBlockState(downPos);
-			return module.zeta.blockExtensions.get(down).makesOpenTrapdoorAboveClimbableZeta(down, level, downPos, state);
+			return module.zeta().blockExtensions.get(down).makesOpenTrapdoorAboveClimbableZeta(down, level, downPos, state);
 		} else return false;
 	}
 

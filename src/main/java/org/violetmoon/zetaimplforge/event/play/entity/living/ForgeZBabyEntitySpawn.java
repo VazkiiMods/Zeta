@@ -7,40 +7,40 @@ import net.neoforged.neoforge.event.entity.living.BabyEntitySpawnEvent;
 import org.violetmoon.zeta.event.play.entity.living.ZBabyEntitySpawn;
 
 public class ForgeZBabyEntitySpawn implements ZBabyEntitySpawn {
-    private final BabyEntitySpawnEvent e;
+    public final BabyEntitySpawnEvent wrapped;
 
     public ForgeZBabyEntitySpawn(BabyEntitySpawnEvent e) {
-        this.e = e;
+        this.wrapped = e;
     }
 
     @Override
     public Mob getParentA() {
-        return e.getParentA();
+        return wrapped.getParentA();
     }
 
     @Override
     public Mob getParentB() {
-        return e.getParentB();
+        return wrapped.getParentB();
     }
 
     @Override
     public Player getCausedByPlayer() {
-        return e.getCausedByPlayer();
+        return wrapped.getCausedByPlayer();
     }
 
     @Override
     public AgeableMob getChild() {
-        return e.getChild();
+        return wrapped.getChild();
     }
 
     @Override
     public void setChild(AgeableMob proposedChild) {
-        e.setChild(proposedChild);
+        wrapped.setChild(proposedChild);
     }
 
     public static class Lowest extends ForgeZBabyEntitySpawn implements ZBabyEntitySpawn.Lowest {
-        public Lowest(BabyEntitySpawnEvent e) {
-            super(e);
+        public Lowest(BabyEntitySpawnEvent wrapped) {
+            super(wrapped);
         }
     }
 }

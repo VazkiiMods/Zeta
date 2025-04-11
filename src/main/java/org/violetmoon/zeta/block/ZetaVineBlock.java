@@ -30,8 +30,8 @@ public class ZetaVineBlock extends VineBlock implements IZetaBlock {
 		if(module == null) //auto registration below this line
 			return;
 
-		module.zeta.registry.registerBlock(this, name, true);
-		module.zeta.renderLayerRegistry.put(this, RenderLayerRegistry.Layer.CUTOUT);
+		module.zeta().registry.registerBlock(this, name, true);
+		module.zeta().renderLayerRegistry.put(this, RenderLayerRegistry.Layer.CUTOUT);
 
 		if (creative) 
 			setCreativeTab(CreativeModeTabs.NATURAL_BLOCKS);

@@ -7,13 +7,12 @@ import net.minecraft.world.item.crafting.*;
 import org.jetbrains.annotations.ApiStatus;
 import org.violetmoon.zeta.Zeta;
 import org.violetmoon.zeta.event.bus.IZetaPlayEvent;
-import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.bus.PlayEvent;
 import org.violetmoon.zeta.event.load.ZAddReloadListener;
 import org.violetmoon.zeta.event.load.ZTagsUpdated;
 import org.violetmoon.zeta.event.play.ZRecipeCrawl;
 import org.violetmoon.zeta.event.play.ZServerTick;
-import org.violetmoon.zeta.util.zetalist.ZetaList;
+import org.violetmoon.zeta.mod.ZetaMod;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
@@ -38,7 +37,7 @@ public class RecipeCrawlHandler {
 	private static boolean needsCrawl = false;
 	private static boolean mayCrawl = false;
 
-	@LoadEvent
+	@PlayEvent
 	public static void addListener(ZAddReloadListener event) {
 		event.addListener(new SimplePreparableReloadListener<Void>() {
 			@Override
@@ -54,7 +53,7 @@ public class RecipeCrawlHandler {
 		});
 	}
 
-	@LoadEvent
+	@PlayEvent
 	public static void tagsHaveUpdated(ZTagsUpdated event) {
 		mayCrawl = true;
 	}
@@ -65,7 +64,7 @@ public class RecipeCrawlHandler {
 	}
 
 	private static void fire(IZetaPlayEvent event) {
-		ZetaList.INSTANCE.fireEvent(event);
+		ZetaMod.ZETA.playBus.fire(event);
 	}
 
 	@SuppressWarnings("ConstantValue")
@@ -89,17 +88,23 @@ public class RecipeCrawlHandler {
 					if (recipe.getResultItem(access) == null)
 						throw new IllegalStateException("Recipe getResultItem is null");
 
-					ZRecipeCrawl.Visit<?> event = switch (recipe) {
-                        case ShapedRecipe shaped -> new ZRecipeCrawl.Visit.Shaped((RecipeHolder<ShapedRecipe>) recipeHolder, access);
-                        case ShapelessRecipe shapeless -> new ZRecipeCrawl.Visit.Shapeless((RecipeHolder<ShapelessRecipe>) recipeHolder, access);
-                        case CustomRecipe custom -> new ZRecipeCrawl.Visit.Custom((RecipeHolder<CustomRecipe>) recipeHolder, access);
-                        case AbstractCookingRecipe cooking -> new ZRecipeCrawl.Visit.Cooking((RecipeHolder<ShapelessRecipe>) recipeHolder, access);
-                        default -> new ZRecipeCrawl.Visit.Misc((RecipeHolder<Recipe<?>>) recipeHolder, access);
-                    };
-
-                    //misc recipes could have custom logic that we cant make many assumptions on. For example FD cutting board recipes are lossy.
+					boolean isMisc = false;
+					IZetaPlayEvent event;
+					if (recipe instanceof ShapedRecipe sr)
+						event = new ZRecipeCrawl.Visit.Shaped(sr, access);
+					else if (recipe instanceof ShapelessRecipe sr)
+						event = new ZRecipeCrawl.Visit.Shapeless(sr, access);
+					else if (recipe instanceof CustomRecipe cr)
+						event = new ZRecipeCrawl.Visit.Custom(cr, access);
+					else if (recipe instanceof AbstractCookingRecipe acr)
+						event = new ZRecipeCrawl.Visit.Cooking(acr, access);
+					else {
+						event = new ZRecipeCrawl.Visit.Misc(recipe, access);
+						isMisc = true;
+					}
+					//misc recipes could have custom logic that we cant make many assumptions on. For example FD cutting board recipes are lossy.
 					//for instance a hanging sign can be cut into a plank. A hanging sign is magnetic but this does not mean planks are
-					if(!(event instanceof ZRecipeCrawl.Visit.Misc)) {
+					if(!isMisc) {
 						vanillaRecipesToLazyDigest.add(recipe);
 					}
 					fire(event);
@@ -145,7 +150,15 @@ public class RecipeCrawlHandler {
 		for (Ingredient ingredient : ingredients) {
 			for (ItemStack inStack : ingredient.getItems()) {
 				//don't include catalyst items. This includes partial ones like buckets and such
-				if (inStack.getCraftingRemainingItem().isEmpty()) {
+				ItemStack remaining = inStack.getCraftingRemainingItem();
+
+				if(remaining == null) {
+					//sigh. let's at least not make this into our problem
+					ZetaMod.LOGGER.error("Item {} returned NULL from getCraftingRemainingItem. This is wrong and will cause problems down the line", inStack.getItem());
+					continue;
+				}
+
+				if (remaining.isEmpty()) {
 					vanillaRecipeDigestion.put(inStack.getItem(), out);
 					backwardsVanillaDigestion.put(outItem, inStack);
 				}

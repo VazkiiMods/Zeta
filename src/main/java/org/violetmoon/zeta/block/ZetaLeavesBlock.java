@@ -39,8 +39,8 @@ public class ZetaLeavesBlock extends LeavesBlock implements IZetaBlock {
 		if(module == null) //auto registration below this line
 			return;
 
-		module.zeta.registry.registerBlock(this, name + "_leaves", true);
-		module.zeta.renderLayerRegistry.put(this, RenderLayerRegistry.Layer.CUTOUT_MIPPED);
+		module.zeta().registry.registerBlock(this, name + "_leaves", true);
+		module.zeta().renderLayerRegistry.put(this, RenderLayerRegistry.Layer.CUTOUT_MIPPED);
 		setCreativeTab(CreativeModeTabs.NATURAL_BLOCKS, Blocks.BROWN_MUSHROOM_BLOCK, true);
 	}
 	

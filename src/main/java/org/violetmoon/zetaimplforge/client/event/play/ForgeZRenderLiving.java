@@ -6,7 +6,7 @@ import net.neoforged.neoforge.client.event.RenderLivingEvent;
 import org.violetmoon.zeta.client.event.play.ZRenderLiving;
 
 public abstract class ForgeZRenderLiving implements ZRenderLiving {
-	protected final RenderLivingEvent<?, ?> e;
+	public final RenderLivingEvent<?, ?> e;
 
 	public ForgeZRenderLiving(RenderLivingEvent<?, ?> e) {
 		this.e = e;
