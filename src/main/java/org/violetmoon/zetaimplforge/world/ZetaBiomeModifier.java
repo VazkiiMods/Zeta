@@ -2,6 +2,7 @@ package org.violetmoon.zetaimplforge.world;
 
 import java.util.List;
 
+import com.mojang.serialization.MapCodec;
 import org.violetmoon.zeta.Zeta;
 import org.violetmoon.zeta.mod.ZetaMod;
 import org.violetmoon.zeta.util.zetalist.ZetaList;
@@ -30,8 +31,8 @@ import java.util.List;
 
 public class ZetaBiomeModifier implements BiomeModifier {
 
-	public static final ResourceLocation RESOURCE = ResourceLocation.fromNamespaceAndPath(Zeta.ZETA_ID, "biome_modifier");
-	private static final DeferredHolder<MapCodec<? extends BiomeModifier>, MapCodec<? extends BiomeModifier>> SERIALIZER = DeferredHolder.create(NeoForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS, ZetaMod.ZETA_ID);
+	public static final ResourceLocation RESOURCE = ResourceLocation.fromNamespaceAndPath(ZetaMod.ZETA_ID, "biome_modifier");
+	private static final DeferredHolder<MapCodec<? extends BiomeModifier>, MapCodec<? extends BiomeModifier>> SERIALIZER = DeferredHolder.create(NeoForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS, RESOURCE);
 
 	@Override
 	public void modify(Holder<Biome> biome, Phase phase, ModifiableBiomeInfo.BiomeInfo.Builder builder) {

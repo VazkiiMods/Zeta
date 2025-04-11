@@ -90,18 +90,16 @@ public class RecipeCrawlHandler {
 
 					boolean isMisc = false;
 					IZetaPlayEvent event;
-					if (recipe instanceof ShapedRecipe sr)
-						event = new ZRecipeCrawl.Visit.Shaped(sr, access);
-					else if (recipe instanceof ShapelessRecipe sr)
-						event = new ZRecipeCrawl.Visit.Shapeless(sr, access);
-					else if (recipe instanceof CustomRecipe cr)
-						event = new ZRecipeCrawl.Visit.Custom(cr, access);
-					else if (recipe instanceof AbstractCookingRecipe acr)
-						event = new ZRecipeCrawl.Visit.Cooking(acr, access);
-					else {
-						event = new ZRecipeCrawl.Visit.Misc(recipe, access);
-						isMisc = true;
-					}
+                    switch (recipe) {
+                        case ShapedRecipe sr -> event = new ZRecipeCrawl.Visit.Shaped((RecipeHolder<ShapedRecipe>) recipeHolder, access);
+                        case ShapelessRecipe sr -> event = new ZRecipeCrawl.Visit.Shapeless((RecipeHolder<ShapelessRecipe>) recipeHolder, access);
+                        case CustomRecipe cr -> event = new ZRecipeCrawl.Visit.Custom((RecipeHolder<CustomRecipe>) recipeHolder, access);
+                        case AbstractCookingRecipe acr -> event = new ZRecipeCrawl.Visit.Cooking((RecipeHolder<ShapelessRecipe>) recipeHolder, access);
+                        default -> {
+                            event = new ZRecipeCrawl.Visit.Misc((RecipeHolder<Recipe<?>>) recipeHolder, access);
+                            isMisc = true;
+                        }
+                    }
 					//misc recipes could have custom logic that we cant make many assumptions on. For example FD cutting board recipes are lossy.
 					//for instance a hanging sign can be cut into a plank. A hanging sign is magnetic but this does not mean planks are
 					if(!isMisc) {
@@ -110,9 +108,9 @@ public class RecipeCrawlHandler {
 					fire(event);
 				} catch (Exception e) {
 					if (recipeHolder == null)
-						Zeta.GLOBAL_LOG.error("Encountered null recipe in RecipeManager.getRecipes. This is not good");
+						ZetaMod.LOGGER.error("Encountered null recipe in RecipeManager.getRecipes. This is not good");
 					else
-                        Zeta.GLOBAL_LOG.error("Failed to scan recipe {}. This should be reported to {}!", recipeHolder.id(), recipeHolder.id().getNamespace(), e);
+						ZetaMod.LOGGER.error("Failed to scan recipe {}. This should be reported to {}!", recipeHolder.id(), recipeHolder.id().getNamespace(), e);
 				}
 			}
 		}

@@ -4,8 +4,6 @@ import net.neoforged.bus.api.IEventBus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.violetmoon.zeta.Zeta;
-import org.violetmoon.zeta.config.ZetaGeneralConfig;
-import org.violetmoon.zeta.network.ZetaModInternalNetwork;
 
 public class ZetaMod {
 

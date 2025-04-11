@@ -3,21 +3,20 @@ package org.violetmoon.zetaimplforge.mod;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
-import net.minecraftforge.event.entity.living.*;
-import net.minecraftforge.event.entity.player.ItemTooltipEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.level.BlockEvent;
-import net.minecraftforge.eventbus.api.Event;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.bus.api.Event;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
+import net.neoforged.neoforge.event.entity.living.BabyEntitySpawnEvent;
+import net.neoforged.neoforge.event.entity.living.LivingChangeTargetEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDropsEvent;
+import net.neoforged.neoforge.event.entity.living.MobSpawnEvent;
+import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.neoforged.neoforge.event.level.BlockEvent;
 import org.violetmoon.zeta.Zeta;
 import org.violetmoon.zeta.config.SyncedFlagHandler;
-import org.violetmoon.zeta.config.ZetaGeneralConfig;
 import org.violetmoon.zeta.event.bus.IZetaLoadEvent;
 import org.violetmoon.zeta.event.bus.IZetaPlayEvent;
 import org.violetmoon.zeta.event.load.*;
@@ -32,9 +31,6 @@ import org.violetmoon.zeta.util.handler.RecipeCrawlHandler;
 import org.violetmoon.zeta.util.handler.ToolInteractionHandler;
 import org.violetmoon.zeta.world.EntitySpawnHandler;
 import org.violetmoon.zeta.world.WorldGenHandler;
-import org.violetmoon.zetaimplforge.api.ForgeZGatherAdvancementModifiers;
-import org.violetmoon.zetaimplforge.capability.ForgeCapabilityManager;
-import org.violetmoon.zetaimplforge.config.ConfigEventDispatcher;
 import org.violetmoon.zetaimplforge.event.ForgeEventsRemapper;
 import org.violetmoon.zetaimplforge.event.load.*;
 import org.violetmoon.zetaimplforge.event.load.ForgeZGatherAdditionalFlags;
@@ -66,7 +62,7 @@ public class ZetaModCommonProxy {
                 .subscribe(SyncedFlagHandler.class);
 
 
-        MinecraftForge.EVENT_BUS.register(ToolInteractionHandler.class);
+        NeoForge.EVENT_BUS.register(ToolInteractionHandler.class);
         ZetaBiomeModifier.registerBiomeModifier(FMLJavaModLoadingContext.get().getModEventBus());
 
     }
@@ -174,24 +170,6 @@ public class ZetaModCommonProxy {
                 ForgeZLevelTick.End::new, w -> w.e);
         r.registerWrapper(ZLevelTick.Start.class, TickEvent.LevelTickEvent.class,
                 ForgeZLevelTick.Start::new, w -> w.e);
-
-
-        //this is ugly. generic events here
-        r.registerWrapperWithGeneric(ZAttachCapabilities.BlockEntityCaps.class,
-                ForgeZAttachCapabilities.BlockEntityCaps.class,
-                (Function<AttachCapabilitiesEvent<BlockEntity>, ForgeZAttachCapabilities.BlockEntityCaps>) inner ->
-                        new ForgeZAttachCapabilities.BlockEntityCaps(ForgeCapabilityManager.INSTANCE, inner),
-                BlockEntity.class);
-        r.registerWrapperWithGeneric(ZAttachCapabilities.ItemStackCaps.class,
-                ForgeZAttachCapabilities.ItemStackCaps.class,
-                (Function<AttachCapabilitiesEvent<ItemStack>, ForgeZAttachCapabilities.ItemStackCaps>) inner ->
-                        new ForgeZAttachCapabilities.ItemStackCaps(ForgeCapabilityManager.INSTANCE, inner),
-                ItemStack.class);
-        r.registerWrapperWithGeneric(ZAttachCapabilities.LevelCaps.class,
-                ForgeZAttachCapabilities.LevelCaps.class,
-                (Function<AttachCapabilitiesEvent<Level>, ForgeZAttachCapabilities.LevelCaps>) inner ->
-                        new ForgeZAttachCapabilities.LevelCaps(ForgeCapabilityManager.INSTANCE, inner),
-                Level.class);
 
         // zeta specific ones
 

@@ -1,6 +1,6 @@
 package org.violetmoon.zetaimplforge.client.event.play;
 
-import net.minecraftforge.eventbus.api.Event;
+import net.neoforged.bus.api.Event;
 import org.violetmoon.zeta.client.event.play.ZEarlyRender;
 
 import net.minecraft.client.Minecraft;

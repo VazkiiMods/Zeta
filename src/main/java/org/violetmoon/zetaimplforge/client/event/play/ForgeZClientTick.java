@@ -3,8 +3,6 @@ package org.violetmoon.zetaimplforge.client.event.play;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import org.violetmoon.zeta.client.event.play.ZClientTick;
 
-import net.minecraftforge.event.TickEvent.ClientTickEvent;
-
 public class ForgeZClientTick implements ZClientTick {
     public final ClientTickEvent e;
 

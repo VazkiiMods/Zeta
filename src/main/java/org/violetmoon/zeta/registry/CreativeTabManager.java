@@ -9,6 +9,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import org.violetmoon.zeta.Zeta;
+import org.violetmoon.zeta.mod.ZetaMod;
 import org.violetmoon.zeta.module.IDisableable;
 
 import java.util.*;
@@ -140,8 +141,8 @@ public class CreativeTabManager {
 		itemsMap.remove(itemsToAdd);
 
 		if(log) {
-			Zeta.GLOBAL_LOG.error("Creative tab loop found when adding {} next to {}", firstSetItem, target);
-			Zeta.GLOBAL_LOG.error("For more info enable Creative Verbose Logging in the Zeta config, or set Force Creative Tab Appends to true to disable this behavior");
+			ZetaMod.LOGGER.error("Creative tab loop found when adding {} next to {}", firstSetItem, target);
+			ZetaMod.LOGGER.error("For more info enable Creative Verbose Logging in the Zeta config, or set Force Creative Tab Appends to true to disable this behavior");
 		}
 
 		if (!isItemEnabled(firstSetItem) || target == null) return true;

@@ -112,13 +112,13 @@ public abstract class BrewingRegistry {
 
 	protected Potion registerPotion(MobEffectInstance eff, String baseName, String name) {
 		Potion effect = new Potion(zeta.modid + "." + baseName, eff);
-		zeta.registry.register(effect, name, Registries.POTION);'
-        modPotionsToConfigFlag.put(potion, configFlag);
+		zeta.registry.register(effect, name, Registries.POTION);
+        modPotionsToConfigFlag.put(effect, name);
 		return effect;
 	}
 
 	public boolean isEnabled(Potion potion) {
-		return !flaggedPotions.containsKey(potion) || zeta.configManager.getConfigFlagManager().getFlag(flaggedPotions.get(potion));
+		return !modPotionsToConfigFlag.containsKey(potion) || zeta.configManager.getConfigFlagManager().getFlag(modPotionsToConfigFlag.get(potion));
 	}
 
 	protected abstract void addBrewingRecipe(Potion input, Item reagentSupplier, Potion output);

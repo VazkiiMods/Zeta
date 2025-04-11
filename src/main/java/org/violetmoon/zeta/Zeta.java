@@ -107,7 +107,6 @@ public abstract class Zeta implements IZeta {
     public final VariantRegistry variantRegistry = new VariantRegistry(this);
 
     //extensions
-    public final ZetaCapabilityManager capabilityManager;
     public final BlockExtensionFactory blockExtensions;
     public final ItemExtensionFactory itemExtensions;
 
@@ -207,8 +206,6 @@ public abstract class Zeta implements IZeta {
     }
 
     public abstract PottedPlantRegistry createPottedPlantRegistry();
-
-    public abstract ZetaCapabilityManager createCapabilityManager();
 
     public BlockExtensionFactory createBlockExtensionFactory() {
         return BlockExtensionFactory.DEFAULT;

@@ -5,6 +5,7 @@ import net.minecraft.client.color.item.ItemColors;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
+import org.violetmoon.zeta.Zeta;
 import org.violetmoon.zeta.client.event.load.ZAddItemColorHandlers;
 
 import java.util.HashMap;

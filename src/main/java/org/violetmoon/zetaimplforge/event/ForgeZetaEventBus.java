@@ -2,16 +2,13 @@ package org.violetmoon.zetaimplforge.event;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.Util;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.Event;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.bus.api.Event;
+import net.neoforged.bus.api.IEventBus;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.zeta.Zeta;
 import org.violetmoon.zeta.event.bus.*;
-import org.violetmoon.zeta.event.play.loading.ZGatherAdditionalFlags;
 import org.violetmoon.zetaimplforge.mod.ZetaModForge;
 
 import java.lang.annotation.Annotation;

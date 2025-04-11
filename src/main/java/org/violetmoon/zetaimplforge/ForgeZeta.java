@@ -1,54 +1,22 @@
 package org.violetmoon.zetaimplforge;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FlowerPotBlock;
 import net.minecraft.world.phys.BlockHitResult;
+import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModList;
-import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.AddReloadListenerEvent;
-import net.neoforged.neoforge.event.AnvilUpdateEvent;
-import net.neoforged.neoforge.event.LootTableLoadEvent;
-import net.neoforged.neoforge.event.TagsUpdatedEvent;
 import net.neoforged.neoforge.event.entity.*;
 import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.entity.player.*;
-import net.neoforged.neoforge.event.furnace.FurnaceFuelBurnTimeEvent;
-import net.neoforged.neoforge.event.level.BlockEvent;
-import net.neoforged.neoforge.event.level.NoteBlockEvent;
-import net.neoforged.neoforge.event.tick.LevelTickEvent;
-import net.neoforged.neoforge.event.tick.PlayerTickEvent;
-import net.neoforged.neoforge.event.tick.ServerTickEvent;
-import net.neoforged.neoforge.event.village.VillagerTradesEvent;
-import net.neoforged.neoforge.event.village.WandererTradesEvent;
 import net.neoforged.neoforge.registries.RegisterEvent;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.FlowerPotBlock;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.eventbus.api.Event;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.loading.FMLEnvironment;
-import net.minecraftforge.registries.RegisterEvent;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.zeta.Zeta;
@@ -60,9 +28,6 @@ import org.violetmoon.zeta.event.play.*;
 import org.violetmoon.zeta.event.play.entity.*;
 import org.violetmoon.zeta.event.play.entity.living.*;
 import org.violetmoon.zeta.event.play.entity.player.*;
-import org.violetmoon.zeta.event.play.loading.ZLootTableLoad;
-import org.violetmoon.zeta.event.play.loading.ZVillagerTrades;
-import org.violetmoon.zeta.event.play.loading.ZWandererTrades;
 import org.violetmoon.zeta.event.bus.IZetaLoadEvent;
 import org.violetmoon.zeta.event.bus.IZetaPlayEvent;
 import org.violetmoon.zeta.event.bus.ZResult;
@@ -78,26 +43,16 @@ import org.violetmoon.zetaimplforge.block.IForgeBlockBlockExtensions;
 import org.violetmoon.zetaimplforge.config.ConfigEventDispatcher;
 import org.violetmoon.zetaimplforge.config.ForgeBackedConfig;
 import org.violetmoon.zetaimplforge.config.TerribleForgeConfigHackery;
-import org.violetmoon.zetaimplforge.event.load.ForgeZAddReloadListener;
-import org.violetmoon.zetaimplforge.event.load.ForgeZCommonSetup;
-import org.violetmoon.zetaimplforge.event.load.ForgeZEntityAttributeCreation;
-import org.violetmoon.zetaimplforge.event.load.ForgeZLoadComplete;
 import org.violetmoon.zetaimplforge.event.play.*;
 import org.violetmoon.zetaimplforge.event.play.entity.*;
 import org.violetmoon.zetaimplforge.event.play.entity.living.*;
 import org.violetmoon.zetaimplforge.event.play.entity.player.*;
-import org.violetmoon.zetaimplforge.event.play.loading.ForgeZLootTableLoad;
-import org.violetmoon.zetaimplforge.event.play.loading.ForgeZVillagerTrades;
-import org.violetmoon.zetaimplforge.event.play.loading.ForgeZWandererTrades;
 import org.violetmoon.zetaimplforge.event.ForgeZetaEventBus;
 import org.violetmoon.zetaimplforge.event.load.ForgeZRegister;
 import org.violetmoon.zetaimplforge.item.IForgeItemItemExtensions;
 import org.violetmoon.zetaimplforge.registry.ForgeBrewingRegistry;
 import org.violetmoon.zetaimplforge.registry.ForgeZetaRegistry;
 import org.violetmoon.zetaimplforge.util.ForgeRaytracingUtil;
-
-import java.util.Collection;
-import java.util.function.Supplier;
 
 /**
  * ideally do not touch quark from this package, it will later be split off
@@ -202,7 +157,7 @@ public class ForgeZeta extends Zeta {
         ConfigEventDispatcher configEventDispatcher = new ConfigEventDispatcher(this);
         modbus.addListener(configEventDispatcher::modConfigReloading);
         modbus.addListener(configEventDispatcher::commonSetup);
-        MinecraftForge.EVENT_BUS.addListener(configEventDispatcher::serverAboutToStart);
+        NeoForge.EVENT_BUS.addListener(configEventDispatcher::serverAboutToStart);
 
         //other stuff
         modbus.addListener(EventPriority.LOWEST, CreativeTabManager::buildContents);
@@ -226,20 +181,4 @@ public class ForgeZeta extends Zeta {
     //public void addReloadListener(AddReloadListenerEvent e) {
     //    loadBus.fire(new ForgeZAddReloadListener(e), ZAddReloadListener.class);
     //}
-
-    public static ZResult from(Event.Result r) {
-        return switch (r) {
-            case DENY -> ZResult.DENY;
-            case DEFAULT -> ZResult.DEFAULT;
-            case ALLOW -> ZResult.ALLOW;
-        };
-    }
-
-    public static Event.Result to(ZResult r) {
-        return switch (r) {
-            case DENY -> Event.Result.DENY;
-            case DEFAULT -> Event.Result.DEFAULT;
-            case ALLOW -> Event.Result.ALLOW;
-        };
-    }
 }

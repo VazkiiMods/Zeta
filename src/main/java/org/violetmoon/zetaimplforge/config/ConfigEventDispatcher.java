@@ -2,10 +2,9 @@ package org.violetmoon.zetaimplforge.config;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import net.minecraftforge.event.server.ServerAboutToStartEvent;
-import net.minecraftforge.fml.event.config.ModConfigEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.event.config.ModConfigEvent;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.event.server.ServerAboutToStartEvent;
 import org.violetmoon.zeta.Zeta;
 import org.violetmoon.zeta.util.ZetaSide;
 import org.violetmoon.zetaimplforge.event.load.ForgeZConfigChange;

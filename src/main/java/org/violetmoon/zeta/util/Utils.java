@@ -1,7 +1,9 @@
 package org.violetmoon.zeta.util;
 
+import net.neoforged.fml.ModList;
 import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.fml.loading.FMLPaths;
+import org.jetbrains.annotations.Nullable;
 
 import java.nio.file.Path;
 

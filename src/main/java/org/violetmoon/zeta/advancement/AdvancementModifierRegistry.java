@@ -40,8 +40,6 @@ import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
-import org.violetmoon.zetaimplforge.api.ForgeZGatherAdvancementModifiers;
-import org.violetmoon.zetaimplforge.client.event.play.ForgeZEarlyRender;
 
 //TODO: make this zeta-independent
 public class AdvancementModifierRegistry {

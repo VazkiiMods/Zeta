@@ -5,7 +5,6 @@ import org.jetbrains.annotations.ApiStatus;
 import org.violetmoon.zeta.client.event.play.ZClientTick;
 import org.violetmoon.zeta.client.event.play.ZRenderFrame;
 import org.violetmoon.zeta.event.bus.PlayEvent;
-import org.violetmoon.zeta.event.bus.ZPhase;
 
 //TODO: 1.21. replace with minecraft own ticker. Tbh this is legacy already and should be replaced with Minecraft.getPartialTicks()
 @Deprecated
@@ -26,7 +25,7 @@ public final class ClientTicker {
 
     @PlayEvent
 	public void onRenderTick(ZRenderFrame event) {
-        partialTicks = Minecraft.getInstance().getPartialTick();
+        partialTicks = Minecraft.getInstance().getTimer();
         delta = Minecraft.getInstance().getDeltaFrameTime();
         total = ticksInGame + partialTicks;
 	}
