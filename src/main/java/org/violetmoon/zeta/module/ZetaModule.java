@@ -12,30 +12,21 @@ import org.violetmoon.zeta.event.load.ZGatherHints;
 public class ZetaModule {
 
     //all these are just to notify that these will go package private soon. Should be read only! Cant make them final because module is initialized with reflections
-    @Deprecated(forRemoval = true)
-    public Zeta zeta;
-    @Deprecated(forRemoval = true)
-    public ZetaCategory category;
+    Zeta zeta;
+    ZetaCategory category;
 
     //package protected
-    @Deprecated(forRemoval = true)
-    public String displayName = "";
-    @Deprecated(forRemoval = true)
-    public String lowercaseName = "";
-    @Deprecated(forRemoval = true)
-    public String description = "";
+    String displayName = "";
+    String lowercaseName = "";
+    String description = "";
 
     //This gets dumped into a config comment; ordering must be consistent lest Forge complain the config file is "incorrect"
     protected SortedSet<String> antiOverlap = new TreeSet<>();
 
-    @Deprecated(forRemoval = true)
-    public boolean enabled = false;
-    @Deprecated(forRemoval = true)
-    public boolean enabledByDefault = false;
-    @Deprecated(forRemoval = true)
-    public boolean disabledByOverlap = false;
-    @Deprecated(forRemoval = true)
-    public boolean ignoreAntiOverlap = false;
+    boolean enabled = false;
+    boolean enabledByDefault = false;
+    boolean disabledByOverlap = false;
+    boolean ignoreAntiOverlap = false;
 
     //hack. Just needed so we can load this, then unload if need in configs and ONLY touch the bus when we know in which state we want to be
     boolean finalized = false;

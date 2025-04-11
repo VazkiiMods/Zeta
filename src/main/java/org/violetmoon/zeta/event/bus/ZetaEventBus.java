@@ -5,8 +5,6 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.zeta.Zeta;
-import org.violetmoon.zeta.client.ClientTicker;
-import org.violetmoon.zeta.mod.ZetaMod;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;

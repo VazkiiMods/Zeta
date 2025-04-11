@@ -19,14 +19,6 @@ public class ZetaFenceGateBlock extends FenceGateBlock implements IZetaBlock {
 	private final @Nullable ZetaModule module;
 	private BooleanSupplier enabledSupplier = BooleanSuppliers.TRUE;
 
-	/**
-	 * @deprecated Older versions didn't thread the WoodType/SoundEvent constructor parameters thru; do that pls
-	 */
-	@Deprecated
-	public ZetaFenceGateBlock(String regname, @Nullable ZetaModule module, Properties properties) {
-		this(regname, module, WoodType.OAK, properties);
-	}
-
 	public ZetaFenceGateBlock(String regname, @Nullable ZetaModule module, WoodType woodType, Properties properties) {
 		this(regname, module, woodType.fenceGateOpen(), woodType.fenceGateClose(), properties);
 	}

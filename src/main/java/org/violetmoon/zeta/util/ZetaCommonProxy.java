@@ -1,7 +1,7 @@
 package org.violetmoon.zeta.util;
 
 import net.minecraft.server.MinecraftServer;
-import net.minecraftforge.server.ServerLifecycleHooks;
+import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.violetmoon.zeta.Zeta;
 
 public class ZetaCommonProxy {

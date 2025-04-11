@@ -9,6 +9,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import org.violetmoon.zeta.Zeta;
+import org.violetmoon.zeta.config.ZetaGeneralConfig;
 import org.violetmoon.zeta.mod.ZetaMod;
 import org.violetmoon.zeta.module.IDisableable;
 

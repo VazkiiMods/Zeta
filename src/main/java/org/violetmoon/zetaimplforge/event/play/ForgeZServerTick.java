@@ -6,7 +6,7 @@ import org.violetmoon.zeta.event.play.ZServerTick;
 import net.minecraft.server.MinecraftServer;
 
 public class ForgeZServerTick implements ZServerTick {
-    private final ServerTickEvent e;
+    public final ServerTickEvent e;
 
     public ForgeZServerTick(ServerTickEvent e) {
         this.e = e;

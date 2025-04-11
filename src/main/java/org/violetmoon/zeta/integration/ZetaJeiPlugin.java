@@ -1,36 +1,8 @@
 package org.violetmoon.zeta.integration;
 
-import com.google.common.collect.Sets;
-import mezz.jei.api.IModPlugin;
-import mezz.jei.api.JeiPlugin;
-import mezz.jei.api.constants.VanillaTypes;
-import mezz.jei.api.registration.IRecipeRegistration;
-import mezz.jei.api.runtime.IJeiRuntime;
-import net.minecraft.client.Minecraft;
-import net.minecraft.core.NonNullList;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.PotionItem;
-import net.minecraft.world.item.TippedArrowItem;
-import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.world.item.alchemy.PotionUtils;
-import org.jetbrains.annotations.NotNull;
-import org.violetmoon.zeta.Zeta;
-import org.violetmoon.zeta.config.ZetaGeneralConfig;
-import org.violetmoon.zeta.event.load.ZGatherHints;
-import org.violetmoon.zeta.mod.ZetaMod;
-import org.violetmoon.zeta.util.RegistryUtil;
-import org.violetmoon.zeta.util.zetalist.ZetaList;
-
-import java.util.*;
-
-@JeiPlugin
-public class ZetaJeiPlugin implements IModPlugin {
-    private static final ResourceLocation UID = new ResourceLocation(ZetaMod.ZETA_ID, ZetaMod.ZETA_ID);
+//@JeiPlugin
+public class ZetaJeiPlugin /*implements IModPlugin*/ {
+    /*private static final ResourceLocation UID = new ResourceLocation(ZetaMod.ZETA_ID, ZetaMod.ZETA_ID);
 
     @NotNull
     @Override
@@ -94,7 +66,7 @@ public class ZetaJeiPlugin implements IModPlugin {
                 }
             }*/
 
-            if (!stacksToHide.isEmpty())
+           /* if (!stacksToHide.isEmpty())
                 Minecraft.getInstance().submitAsync(() -> jeiRuntime.getIngredientManager()
                         .removeIngredientsAtRuntime(VanillaTypes.ITEM_STACK, stacksToHide));
 
@@ -112,6 +84,6 @@ public class ZetaJeiPlugin implements IModPlugin {
         for (Zeta z : ZetaList.INSTANCE.getZetas()) {
             z.loadBus.fire(new JeiGatherHints(registration, z.modid, registryAccess, blacklist), ZGatherHints.class);
         }
-    }
+    }*/
 
 }

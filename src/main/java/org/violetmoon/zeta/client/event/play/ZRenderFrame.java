@@ -11,9 +11,9 @@ import org.violetmoon.zeta.event.bus.IZetaPlayEvent;
 public interface ZRenderFrame extends IZetaPlayEvent {
 	float getRenderTickTime();
 
-	interface Start extends ZRenderTick {
+	interface Start extends ZRenderFrame {
 	}
 
-	interface End extends ZRenderTick {
+	interface End extends ZRenderFrame {
 	}
 }

@@ -9,7 +9,6 @@ public record ForgeZRenderFrame(RenderFrameEvent e) implements ZRenderFrame {
 		return e.getPartialTick().getRealtimeDeltaTicks(); //todo: Test this
 	}
 
-	@Override
 	public boolean isEndPhase() {
 		return e instanceof RenderFrameEvent.Post;
 	}

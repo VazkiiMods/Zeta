@@ -1,7 +1,13 @@
 package org.violetmoon.zetaimplforge.event.play.entity.living;
 
+import com.mojang.datafixers.util.Either;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.level.BaseSpawner;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.neoforged.neoforge.event.entity.living.FinalizeSpawnEvent;
 import net.neoforged.neoforge.event.entity.living.MobSpawnEvent;
 import org.violetmoon.zeta.event.play.entity.living.ZMobSpawnEvent;
 
@@ -47,16 +53,16 @@ public class ForgeZMobSpawnEvent implements ZMobSpawnEvent {
         e.setResult(ForgeZeta.to(value));
     }*/
 
-    /*public static class FinalizeSpawn extends ForgeZMobSpawnEvent implements ZMobSpawnEvent.CheckSpawn {
-        private final MobSpawnEvent.FinalizeSpawn e;
+    public static class FinalizeSpawn extends ForgeZMobSpawnEvent implements ZMobSpawnEvent.CheckSpawn {
+        public final FinalizeSpawnEvent e;
 
-        public FinalizeSpawn(MobSpawnEvent.FinalizeSpawn e) {
+        public FinalizeSpawn(FinalizeSpawnEvent e) {
             super(e);
             this.e = e;
         }
 
         @Override
-        public BaseSpawner getSpawner() {
+        public Either<BlockEntity, Entity> getSpawner() {
             return e.getSpawner();
         }
 
@@ -66,9 +72,9 @@ public class ForgeZMobSpawnEvent implements ZMobSpawnEvent {
         }
 
         public static class Lowest extends FinalizeSpawn implements ZMobSpawnEvent.CheckSpawn.Lowest {
-            public Lowest(MobSpawnEvent.FinalizeSpawn e) {
+            public Lowest(FinalizeSpawnEvent e) {
                 super(e);
             }
         }
-    }*/
+    }
 }

@@ -5,16 +5,17 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
-import net.neoforged.neoforge.event.entity.living.BabyEntitySpawnEvent;
-import net.neoforged.neoforge.event.entity.living.LivingChangeTargetEvent;
-import net.neoforged.neoforge.event.entity.living.LivingDropsEvent;
-import net.neoforged.neoforge.event.entity.living.MobSpawnEvent;
+import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
+import net.neoforged.neoforge.event.tick.LevelTickEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import org.violetmoon.zeta.Zeta;
 import org.violetmoon.zeta.config.SyncedFlagHandler;
 import org.violetmoon.zeta.event.bus.IZetaLoadEvent;
@@ -26,7 +27,6 @@ import org.violetmoon.zeta.event.play.entity.*;
 import org.violetmoon.zeta.event.play.entity.living.*;
 import org.violetmoon.zeta.event.play.entity.player.*;
 import org.violetmoon.zeta.event.play.loading.*;
-import org.violetmoon.zeta.event.play.loading.ZGatherHints;
 import org.violetmoon.zeta.util.handler.RecipeCrawlHandler;
 import org.violetmoon.zeta.util.handler.ToolInteractionHandler;
 import org.violetmoon.zeta.world.EntitySpawnHandler;
@@ -39,7 +39,6 @@ import org.violetmoon.zetaimplforge.event.play.entity.*;
 import org.violetmoon.zetaimplforge.event.play.entity.living.*;
 import org.violetmoon.zetaimplforge.event.play.entity.player.*;
 import org.violetmoon.zetaimplforge.event.play.loading.*;
-import org.violetmoon.zetaimplforge.event.play.loading.ForgeZGatherHints;
 import org.violetmoon.zetaimplforge.world.ZetaBiomeModifier;
 
 import java.util.function.Function;
@@ -47,14 +46,14 @@ import java.util.function.Function;
 public class ZetaModCommonProxy {
 
     public void registerEvents(Zeta zeta) {
-        IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
+        IEventBus bus = ModLoadingContext.get().getActiveContainer().getEventBus();
 
         zeta.loadBus
                 .subscribe(RecipeCrawlHandler.class)
                 .subscribe(ToolInteractionHandler.class)
                 .subscribe(EntitySpawnHandler.class)
-                .subscribe(WorldGenHandler.class)
-                .subscribe(ZetaGeneralConfig.class);
+                .subscribe(WorldGenHandler.class);
+                //.subscribe(ZetaGeneralConfig.class)
 
         zeta.playBus
                 .subscribe(RecipeCrawlHandler.class)
@@ -63,7 +62,7 @@ public class ZetaModCommonProxy {
 
 
         NeoForge.EVENT_BUS.register(ToolInteractionHandler.class);
-        ZetaBiomeModifier.registerBiomeModifier(FMLJavaModLoadingContext.get().getModEventBus());
+        ZetaBiomeModifier.registerBiomeModifier(bus);
 
     }
 
@@ -83,7 +82,7 @@ public class ZetaModCommonProxy {
         r.registerWrapper(ZLoadComplete.class, ForgeZLoadComplete.class);
 
         //zeta own
-        r.registerWrapper(ZGatherAdvancementModifiers.class, ForgeZGatherAdvancementModifiers.class);
+        //r.registerWrapper(ZGatherAdvancementModifiers.class, ForgeZGatherAdvancementModifiers.class);
         r.registerWrapper(ZGatherAdditionalFlags.class, ForgeZGatherAdditionalFlags.class);
         r.registerWrapper(org.violetmoon.zeta.event.load.ZGatherHints.class, org.violetmoon.zetaimplforge.event.load.ForgeZGatherHints.class);
 
@@ -110,7 +109,7 @@ public class ZetaModCommonProxy {
         r.registerWrapper(ZEntityConstruct.class, ForgeZEntityConstruct.class);
         r.registerWrapper(ZEntityInteract.class, PlayerInteractEvent.EntityInteract.class,
                 ForgeZEntityInteract::new, ForgeZEntityInteract::e);
-        r.registerWrapper(ZEntityItemPickup.class, ForgeZEntityItemPickup.class);
+        r.registerWrapper(ZItemEntityPickup.class, ForgeZEntityItemPickup.class);
         r.registerWrapper(ZEntityJoinLevel.class, ForgeZEntityJoinLevel.class);
         r.registerWrapper(ZEntityMobGriefing.class, ForgeZEntityMobGriefing.class);
         r.registerWrapper(ZEntityTeleport.class, ForgeZEntityTeleport.class);
@@ -128,13 +127,12 @@ public class ZetaModCommonProxy {
         r.registerWrapper(ZLivingDrops.Lowest.class, LivingDropsEvent.class,
                 ForgeZLivingDrops.Lowest::new, w -> w.e);
         r.registerWrapper(ZLivingFall.class, ForgeZLivingFall.class);
-        r.registerWrapper(ZLivingTick.class, LivingEvent.LivingTickEvent.class,
-                ForgeZLivingTick::new, ForgeZLivingTick::e);
+        //r.registerWrapper(ZLivingTick.class, LivingEvent.LivingTickEvent.class, ForgeZLivingTick::new, ForgeZLivingTick::e);
         r.registerWrapper(ZMobSpawnEvent.class, MobSpawnEvent.class,
                 ForgeZMobSpawnEvent::new, w -> w.e);
-        r.registerWrapper(ZMobSpawnEvent.CheckSpawn.class, MobSpawnEvent.FinalizeSpawn.class,
+        r.registerWrapper(ZMobSpawnEvent.CheckSpawn.class, FinalizeSpawnEvent.class,
                 ForgeZMobSpawnEvent.FinalizeSpawn::new, w -> w.e);
-        r.registerWrapper(ZMobSpawnEvent.CheckSpawn.Lowest.class, MobSpawnEvent.FinalizeSpawn.class,
+        r.registerWrapper(ZMobSpawnEvent.CheckSpawn.Lowest.class, FinalizeSpawnEvent.class,
                 ForgeZMobSpawnEvent.FinalizeSpawn.Lowest::new, w -> w.e);
         r.registerWrapper(ZPlayNoteBlock.class, ForgeZPlayNoteBlock.class);
         r.registerWrapper(ZPlayer.BreakSpeed.class, ForgeZPlayer.BreakSpeed.class);
@@ -142,10 +140,10 @@ public class ZetaModCommonProxy {
         r.registerWrapper(ZPlayerDestroyItem.class, ForgeZPlayerDestroyItem.class);
         r.registerWrapper(ZPlayer.LoggedIn.class, ForgeZPlayer.LoggedIn.class);
         r.registerWrapper(ZPlayer.LoggedOut.class, ForgeZPlayer.LoggedOut.class);
-        r.registerWrapper(ZPlayerTick.Start.class, TickEvent.PlayerTickEvent.class,
-                ForgeZPlayerTick.Start::new, w -> w.e);
-        r.registerWrapper(ZPlayerTick.End.class, TickEvent.PlayerTickEvent.class,
-                ForgeZPlayerTick.End::new, w -> w.e);
+        r.registerWrapper(ZPlayerTick.Start.class, PlayerTickEvent.class,
+                ForgeZPlayerTick.Pre::new, w -> w.e);
+        r.registerWrapper(ZPlayerTick.End.class, PlayerTickEvent.class,
+                ForgeZPlayerTick.Post::new, w -> w.e);
         r.registerWrapper(ZPlayerInteract.class, ForgeZPlayerInteract.class);
         r.registerWrapper(ZPlayerInteract.EntityInteractSpecific.class, ForgeZPlayerInteract.EntityInteractSpecific.class);
         r.registerWrapper(ZPlayerInteract.EntityInteract.class, ForgeZPlayerInteract.EntityInteract.class);
@@ -158,21 +156,21 @@ public class ZetaModCommonProxy {
         r.registerWrapper(ZVillagerTrades.class, ForgeZVillagerTrades.class);
         r.registerWrapper(ZWandererTrades.class, ForgeZWandererTrades.class);
         r.registerWrapper(ZFurnaceFuelBurnTime.class, ForgeZFurnaceFuelBurnTime.class);
-        r.registerWrapper(ZServerTick.Start.class, TickEvent.ServerTickEvent.class,
-                ForgeZServerTick.Start::new, w -> w.e);
-        r.registerWrapper(ZServerTick.End.class, TickEvent.ServerTickEvent.class,
-                ForgeZServerTick.End::new, w -> w.e);
+        r.registerWrapper(ZServerTick.Start.class, ServerTickEvent.class,
+                ForgeZServerTick.Pre::new, w -> w.e);
+        r.registerWrapper(ZServerTick.End.class, ServerTickEvent.class,
+                ForgeZServerTick.Post::new, w -> w.e);
         r.registerWrapper(ZAddReloadListener.class, ForgeZAddReloadListener.class);
-        r.registerWrapper(ZGatherHints.class, ForgeZGatherHints.class);
-        r.registerWrapper(ZSleepingLocationCheck.class, ForgeZSleepingLocationCheck.class);
+        //r.registerWrapper(ZGatherHints.class, ForgeZGatherHints.class);
+        //r.registerWrapper(ZSleepingLocationCheck.class, ForgeZSleepingLocationCheck.class);
         r.registerWrapper(ZAnimalTame.class, ForgeZAnimalTame.class);
-        r.registerWrapper(ZLevelTick.End.class, TickEvent.LevelTickEvent.class,
+        r.registerWrapper(ZLevelTick.End.class, LevelTickEvent.class,
                 ForgeZLevelTick.End::new, w -> w.e);
-        r.registerWrapper(ZLevelTick.Start.class, TickEvent.LevelTickEvent.class,
+        r.registerWrapper(ZLevelTick.Start.class, LevelTickEvent.class,
                 ForgeZLevelTick.Start::new, w -> w.e);
 
         // zeta specific ones
-
+/*
         r.registerWrapper(ZRecipeCrawl.Digest.class, ForgeZRecipeCrawl.Digest.class,
                 ForgeZRecipeCrawl::get, ForgeZRecipeCrawl.Digest::new);
         r.registerWrapper(ZRecipeCrawl.Reset.class, ForgeZRecipeCrawl.Reset.class,
@@ -190,8 +188,10 @@ public class ZetaModCommonProxy {
         r.registerWrapper(ZRecipeCrawl.Visit.Shapeless.class, ForgeZRecipeCrawl.Visit.Shapeless.class,
                 ForgeZRecipeCrawl::get, ForgeZRecipeCrawl.Visit.Shapeless::new);
 
-        r.registerWrapper(org.violetmoon.zeta.event.play.loading.ZGatherAdditionalFlags.class,
-                org.violetmoon.zetaimplforge.event.play.loading.ForgeZGatherAdditionalFlags.class);
+ */
+
+        //r.registerWrapper(org.violetmoon.zeta.event.play.loading.ZGatherAdditionalFlags.class,
+        //        org.violetmoon.zetaimplforge.event.play.loading.ForgeZGatherAdditionalFlags.class);
 
 
     }

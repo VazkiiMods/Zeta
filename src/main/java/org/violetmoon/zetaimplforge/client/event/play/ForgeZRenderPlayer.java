@@ -6,6 +6,7 @@ import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.client.event.RenderPlayerEvent;
 import org.violetmoon.zeta.client.event.play.ZRenderPlayer;
+import org.violetmoon.zeta.event.bus.IZetaPlayEvent;
 
 public abstract class ForgeZRenderPlayer implements ZRenderPlayer {
 	public final RenderPlayerEvent e;

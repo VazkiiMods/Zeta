@@ -1,7 +1,7 @@
 package org.violetmoon.zetaimplforge.event.play;
 
 import net.minecraft.world.item.crafting.Recipe;
-import net.minecraftforge.eventbus.api.Event;
+import net.neoforged.bus.api.Event;
 import org.violetmoon.zeta.event.bus.IZetaPlayEvent;
 import org.violetmoon.zeta.event.play.ZRecipeCrawl;
 
@@ -35,8 +35,8 @@ public class ForgeZRecipeCrawl<W extends ZRecipeCrawl> extends Event implements 
         }
     }
 
-    public static class Visit<T extends Recipe<?>> extends ForgeZRecipeCrawl<ZRecipeCrawl.Visit<T>> {
-        public Visit(ZRecipeCrawl.Visit<T> wrapped) {
+    public static class Visit<T extends Recipe<?>> extends ForgeZRecipeCrawl<ZRecipeCrawl.Visit> {
+        public Visit(ZRecipeCrawl.Visit wrapped) {
             super(wrapped);
         }
 

@@ -6,27 +6,25 @@ import org.violetmoon.zeta.api.IAdvancementModifier;
 import org.violetmoon.zeta.api.IAdvancementModifierDelegate;
 import org.violetmoon.zeta.event.load.ZGatherAdvancementModifiers;
 
-public class GatherAdvancementModifiersEvent extends Event implements ZGatherAdvancementModifiers {
-	private final Zeta zeta;
+public class ForgeZGatherAdvancementModifiers extends Event implements ZGatherAdvancementModifiers {
 	private final ZGatherAdvancementModifiers inner;
 
-	public GatherAdvancementModifiersEvent(Zeta zeta, ZGatherAdvancementModifiers inner) {
-		this.zeta = zeta;
+	public ForgeZGatherAdvancementModifiers(Zeta zeta, ZGatherAdvancementModifiers inner) {
 		this.inner = inner;
 	}
 
 	public ForgeZGatherAdvancementModifiers(ZGatherAdvancementModifiers inner) {
-		this.wrapped = inner;
+		this.inner = inner;
 	}
 
 	@Override
 	public void register(IAdvancementModifier modifier) {
-		wrapped.register(modifier);
+		inner.register(modifier);
 	}
 
 	@Override
 	public IAdvancementModifierDelegate getDelegate() {
-		return wrapped.getDelegate();
+		return inner.getDelegate();
 	}
 
 	//Note there are a ton of default methods available in ZGatherAdvancementModifiers for you to call.

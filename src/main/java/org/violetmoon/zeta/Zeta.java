@@ -7,13 +7,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.phys.BlockHitResult;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
-import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.zeta.advancement.AdvancementModifierRegistry;
@@ -24,7 +17,6 @@ import org.violetmoon.zeta.config.SectionDefinition;
 import org.violetmoon.zeta.event.bus.IZetaLoadEvent;
 import org.violetmoon.zeta.event.bus.IZetaPlayEvent;
 import org.violetmoon.zeta.event.bus.ZetaEventBus;
-import org.violetmoon.zeta.event.bus.*;
 import org.violetmoon.zeta.item.ext.ItemExtensionFactory;
 import org.violetmoon.zeta.module.ModuleFinder;
 import org.violetmoon.zeta.module.ZetaCategory;
@@ -39,8 +31,6 @@ import org.violetmoon.zeta.util.handler.FuelHandler;
 import org.violetmoon.zeta.util.zetalist.IZeta;
 import org.violetmoon.zeta.util.zetalist.ZetaList;
 import org.violetmoon.zeta.world.EntitySpawnHandler;
-
-import java.util.function.Supplier;
 
 /**
  * do not touch forge OR quark from this package, it will later be split off
@@ -59,7 +49,7 @@ public abstract class Zeta implements IZeta {
         this.registry = createRegistry();
         this.renderLayerRegistry = createRenderLayerRegistry();
         this.dyeables = createDyeablesRegistry();
-        this.craftingExtensions = createCraftingExtensionsRegistry();
+        //this.craftingExtensions = createCraftingExtensionsRegistry();
         this.brewingRegistry = createBrewingRegistry();
         this.advancementModifierRegistry = createAdvancementModifierRegistry();
         this.pottedPlantRegistry = createPottedPlantRegistry();
@@ -100,7 +90,7 @@ public abstract class Zeta implements IZeta {
     public final RegistryUtil registryUtil = new RegistryUtil(this); //TODO: !!Delete this, only needed cause there's no way to get early registry names.
     public final RenderLayerRegistry renderLayerRegistry;
     public final DyeablesRegistry dyeables;
-    public final CraftingExtensionsRegistry craftingExtensions;
+    //public final CraftingExtensionsRegistry craftingExtensions;
     public final BrewingRegistry brewingRegistry;
     public final AdvancementModifierRegistry advancementModifierRegistry;
     public final PottedPlantRegistry pottedPlantRegistry;
@@ -120,7 +110,7 @@ public abstract class Zeta implements IZeta {
     public IZetaConfigInternals configInternals;
 
     //network (which isn't set in the constructor b/c it has a user-specified protocol version TODO this isnt good api design, imo)
-    public ZetaNetworkHandler network;
+    //public ZetaNetworkHandler network;
 
     // worldgen
     public EntitySpawnHandler entitySpawn;
@@ -193,7 +183,7 @@ public abstract class Zeta implements IZeta {
         return new RenderLayerRegistry();
     }
 
-    public abstract CraftingExtensionsRegistry createCraftingExtensionsRegistry();
+    //public abstract CraftingExtensionsRegistry createCraftingExtensionsRegistry();
 
     public DyeablesRegistry createDyeablesRegistry() {
         return new DyeablesRegistry();
@@ -227,14 +217,14 @@ public abstract class Zeta implements IZeta {
         return new EntitySpawnHandler(this);
     }
 
-    public abstract ZetaNetworkHandler createNetworkHandler(int protocolVersion);
+    //public abstract ZetaNetworkHandler createNetworkHandler(int protocolVersion);
 
     // ummmmmm why is this here??
     public abstract boolean fireRightClickBlock(Player player, InteractionHand hand, BlockPos pos, BlockHitResult bhr);
 
     // Let's Jump
     public void start(){
-        loadBus.subscribe(craftingExtensions)
+        loadBus//.subscribe(craftingExtensions)
                 .subscribe(dyeables)
                 .subscribe(brewingRegistry)
                 .subscribe(fuel)

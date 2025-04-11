@@ -10,6 +10,7 @@ import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModList;
+import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import net.neoforged.neoforge.common.NeoForge;
@@ -101,10 +102,10 @@ public class ForgeZeta extends Zeta {
         return new ForgeZetaRegistry(this);
     }
 
-    @Override
+    /*@Override
     public CraftingExtensionsRegistry createCraftingExtensionsRegistry() {
         return new ForgeCraftingExtensionsRegistry();
-    }
+    }*/
 
     @Override
     public BrewingRegistry createBrewingRegistry() {
@@ -136,14 +137,14 @@ public class ForgeZeta extends Zeta {
         return new ForgeRaytracingUtil();
     }
 
-    @Override
+    /*@Override
     public ZetaNetworkHandler createNetworkHandler(int protocolVersion) {
         return new ForgeZetaNetworkHandler(this, protocolVersion);
-    }
+    }*/
 
     @Override
     public boolean fireRightClickBlock(Player player, InteractionHand hand, BlockPos pos, BlockHitResult bhr) {
-        return NeoForge.EVENT_BUS.post(new PlayerInteractEvent.RightClickBlock(player, hand, pos, bhr));
+        return NeoForge.EVENT_BUS.post(new PlayerInteractEvent.RightClickBlock(player, hand, pos, bhr)).getUseBlock().isTrue();
     }
 
     @SuppressWarnings("duplicates")
@@ -151,7 +152,7 @@ public class ForgeZeta extends Zeta {
     public void start() {
         super.start();
         //load
-        IEventBus modbus = FMLJavaModLoadingContext.get().getModEventBus();
+        IEventBus modbus = ModLoadingContext.get().getActiveContainer().getEventBus();
 
         //hook up config events
         ConfigEventDispatcher configEventDispatcher = new ConfigEventDispatcher(this);

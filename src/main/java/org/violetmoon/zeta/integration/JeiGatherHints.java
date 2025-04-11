@@ -1,30 +1,9 @@
 package org.violetmoon.zeta.integration;
 
-import mezz.jei.api.registration.IRecipeRegistration;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.TagKey;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.ItemLike;
-import org.violetmoon.zeta.config.ConfigFlagManager;
-import org.violetmoon.zeta.config.ConfigObjectMapper;
 import org.violetmoon.zeta.event.load.ZGatherHints;
-import org.violetmoon.zeta.module.ZetaModule;
-import org.violetmoon.zeta.util.Hint;
-import org.violetmoon.zeta.util.RegistryUtil;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-class JeiGatherHints implements ZGatherHints {
-
+class JeiGatherHints  /* implements ZGatherHints*/ {
+/*
 	private final IRecipeRegistration registration;
 	private final String modId;
 	private final RegistryAccess registryAccess;
@@ -173,5 +152,5 @@ class JeiGatherHints implements ZGatherHints {
 	@Override
 	public RegistryAccess getRegistryAccess() {
 		return registryAccess;
-	}
+	}*/
 }

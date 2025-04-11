@@ -1,7 +1,7 @@
 package org.violetmoon.zetaimplforge.event.load;
 
 import net.minecraft.core.RegistryAccess;
-import net.minecraftforge.event.TagsUpdatedEvent;
+import net.neoforged.neoforge.event.TagsUpdatedEvent;
 import org.violetmoon.zeta.event.load.ZTagsUpdated;
 
 public record ForgeZTagsUpdated(TagsUpdatedEvent event) implements ZTagsUpdated {

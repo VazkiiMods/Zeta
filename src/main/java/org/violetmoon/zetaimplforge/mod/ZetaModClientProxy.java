@@ -1,17 +1,14 @@
 package org.violetmoon.zetaimplforge.mod;
 
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.neoforge.client.event.RenderGuiLayerEvent;
-import net.neoforged.neoforge.client.event.RenderLivingEvent;
-import net.neoforged.neoforge.client.event.RenderPlayerEvent;
-import net.neoforged.neoforge.client.event.ScreenEvent;
+import net.neoforged.neoforge.client.event.*;
 import net.neoforged.neoforge.common.NeoForge;
 import org.violetmoon.zeta.Zeta;
 import org.violetmoon.zeta.block.IZetaBlock;
-import org.violetmoon.zeta.client.ClientTicker;
 import org.violetmoon.zeta.client.event.load.*;
 import org.violetmoon.zeta.client.event.play.*;
 import org.violetmoon.zeta.event.bus.IZetaLoadEvent;
@@ -33,8 +30,7 @@ public class ZetaModClientProxy extends ZetaModCommonProxy {
     @Override
     public void registerEvents(Zeta zeta){
         super.registerEvents(zeta);
-        zeta.playBus.subscribe(ClientTicker.INSTANCE)
-                .subscribe(this);
+        //zeta.playBus.subscribe(ClientTicker.INSTANCE).subscribe(this);
 
         NeoForge.EVENT_BUS.register(this);
     }
@@ -45,7 +41,7 @@ public class ZetaModClientProxy extends ZetaModCommonProxy {
     boolean clientTicked = false;
 
     @SubscribeEvent
-    public void clientTick(TickEvent.ClientTickEvent e) {
+    public void clientTick(ClientTickEvent e) {
         if (!clientTicked) {
             ZetaList.INSTANCE.fireLoadEvent(new ForgeZFirstClientTick());
             clientTicked = true;
@@ -94,9 +90,9 @@ public class ZetaModClientProxy extends ZetaModCommonProxy {
     public void addKnownZetaPlayEvents(ForgeEventsRemapper<IZetaPlayEvent, Event> r) {
         super.addKnownZetaPlayEvents(r);
 
-        r.registerWrapper(ZClientTick.End.class, TickEvent.ClientTickEvent.class,
+        r.registerWrapper(ZClientTick.End.class, ClientTickEvent.class,
                 ForgeZClientTick.End::new, w -> w.e);
-        r.registerWrapper(ZClientTick.Start.class, TickEvent.ClientTickEvent.class,
+        r.registerWrapper(ZClientTick.Start.class, ClientTickEvent.class,
                 ForgeZClientTick.Start::new, w -> w.e);
         r.registerWrapper(ZGatherTooltipComponents.class, ForgeZGatherTooltipComponents.class);
         r.registerWrapper(ZHighlightBlock.class, ForgeZHighlightBlock.class);
@@ -113,10 +109,6 @@ public class ZetaModClientProxy extends ZetaModCommonProxy {
                 ForgeZRenderPlayer.Post::new, w -> w.e);
         r.registerWrapper(ZRenderPlayer.Pre.class, RenderPlayerEvent.Pre.class,
                 ForgeZRenderPlayer.Pre::new, w -> w.e);
-        r.registerWrapper(ZRenderTick.End.class, TickEvent.RenderTickEvent.class,
-                ForgeZRenderTick.End::new, w -> w.e);
-        r.registerWrapper(ZRenderTick.Start.class, TickEvent.RenderTickEvent.class,
-                ForgeZRenderTick.Start::new, w -> w.e);
         r.registerWrapper(ZRenderTooltip.GatherComponents.class, ForgeZRenderTooltip.GatherComponents.class);
         r.registerWrapper(ZRenderTooltip.GatherComponents.Low.class, ForgeZRenderTooltip.GatherComponents.Low.class);
         r.registerWrapper(ZScreen.Opening.class, ForgeZScreen.Opening.class);

@@ -4,6 +4,8 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.Util;
 import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModLoadingContext;
+import net.neoforged.neoforge.common.NeoForge;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -44,14 +46,14 @@ public class ForgeZetaEventBus<Z, F extends Event> extends ZetaEventBus<Z> {
     public static ForgeZetaEventBus<IZetaLoadEvent, Event> ofLoadBus(@Nullable Logger logSpam, Zeta ofZeta) {
         return new ForgeZetaEventBus<>(
                 LoadEvent.class, IZetaLoadEvent.class,
-                logSpam, FMLJavaModLoadingContext.get().getModEventBus(), Event.class,
+                logSpam, ModLoadingContext.get().getActiveContainer().getEventBus(), Event.class,
                 ofZeta, DEFAULT_LOAD_EVENTS_REMAPPER);
     }
 
     public static ForgeZetaEventBus<IZetaPlayEvent, Event> ofPlayBus(@Nullable Logger logSpam, Zeta ofZeta) {
         return new ForgeZetaEventBus<>(
                 PlayEvent.class, IZetaPlayEvent.class,
-                logSpam, MinecraftForge.EVENT_BUS, Event.class,
+                logSpam, NeoForge.EVENT_BUS, Event.class,
                 ofZeta, DEFAULT_PLAY_EVENTS_REMAPPER);
     }
 

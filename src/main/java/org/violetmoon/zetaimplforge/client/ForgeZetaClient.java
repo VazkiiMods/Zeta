@@ -8,6 +8,7 @@ import net.minecraft.client.color.item.ItemColors;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
@@ -30,16 +31,12 @@ public class ForgeZetaClient extends ZetaClient {
 
     @Override
     public @Nullable BlockColor getBlockColor(BlockColors bcs, Block block) {
-        return ForgeRegistries.BLOCKS.getDelegate(block)
-                .map(ref -> ((AccessorBlockColors) bcs).zeta$getBlockColors().get(ref))
-                .orElse(null);
+        return ((AccessorBlockColors) bcs).zeta$getBlockColors().get(block);
     }
 
     @Override
     public @Nullable ItemColor getItemColor(ItemColors ics, ItemLike itemlike) {
-        return ForgeRegistries.ITEMS.getDelegate(itemlike.asItem())
-                .map(ref -> ((AccessorItemColors) ics).zeta$getItemColors().get(ref))
-                .orElse(null);
+        return ((AccessorItemColors) ics).zeta$getItemColors().get(itemlike);
     }
 
     @Override

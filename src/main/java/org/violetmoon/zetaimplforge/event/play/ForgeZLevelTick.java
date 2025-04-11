@@ -7,7 +7,7 @@ import org.violetmoon.zeta.event.play.ZLevelTick;
 import net.minecraft.world.level.Level;
 
 public class ForgeZLevelTick implements ZLevelTick {
-    private final LevelTickEvent e;
+    public final LevelTickEvent e;
 
     public ForgeZLevelTick(LevelTickEvent e) {
         this.e = e;
