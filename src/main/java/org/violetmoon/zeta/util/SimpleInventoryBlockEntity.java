@@ -114,8 +114,7 @@ public abstract class SimpleInventoryBlockEntity extends ZetaBlockEntity impleme
 		return getLevel().getBlockEntity(getBlockPos()) == this && entityplayer.distanceToSqr(worldPosition.getX() + 0.5D, worldPosition.getY() + 0.5D, worldPosition.getZ() + 0.5D) <= 64;
 	}
 
-	// TODO: REMOVE?
-	/*
+	/* TODO: Need to use ICapabilityProvider in registration (?)
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> capability, Direction facing) {
