@@ -1,0 +1,1 @@
+- Work around broken mods that *throw exceptions* in getCraftingRemainingItem bringing down RecipeCrawlHandler as collateral damage
