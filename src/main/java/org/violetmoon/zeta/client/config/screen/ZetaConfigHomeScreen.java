@@ -1,8 +1,13 @@
 package org.violetmoon.zeta.client.config.screen;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import org.apache.commons.lang3.text.WordUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -14,128 +19,124 @@ import org.violetmoon.zeta.config.SectionDefinition;
 import org.violetmoon.zeta.config.ValueDefinition;
 import org.violetmoon.zeta.module.ZetaCategory;
 
-import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.resources.language.I18n;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ZetaConfigHomeScreen extends ZetaScreen {
-	public ZetaConfigHomeScreen(ZetaClient zc, Screen parent) {
-		super(zc, parent);
-		changeSet = new ChangeSet(z.configInternals);
-	}
 
 	protected final ChangeSet changeSet;
 	protected Button saveButton;
 
-	@Override
-	protected void init() {
-		super.init();
+    public ZetaConfigHomeScreen(ZetaClient zc, Screen parent) {
+        super(zc, parent);
+        this.changeSet = new ChangeSet(z.configManager.internals);
+    }
 
-		List<ZetaCategory> categories = z.modules.getInhabitedCategories();
-		@Nullable SectionDefinition generalSection = z.configManager.getGeneralSection();
 
-		int buttonCount = categories.size();
-		if(generalSection != null)
-			buttonCount++;
+    @Override
+    protected void init() {
+        super.init();
 
-		final int perLine = 3;
-		List<Integer> categoryButtonXPositions = new ArrayList<>(buttonCount);
-		for(int i = 0; i < buttonCount; i += perLine)
-			categoryButtonXPositions.addAll(centeredRow(width / 2, 120, 10, Math.min(buttonCount - i, perLine)));
+        List<ZetaCategory> categories = z.modules.getInhabitedCategories();
+        @Nullable SectionDefinition generalSection = z.configManager.getGeneralSection();
 
-		for(int i = 0; i < buttonCount; i++) {
-			int row = i / perLine;
+        int buttonCount = categories.size();
+        if (generalSection != null)
+            buttonCount++;
 
-			int x = categoryButtonXPositions.get(i);
-			int y = 70 + row * 23;
-			int bWidth = 120;
+        final int perLine = 3;
+        List<Integer> categoryButtonXPositions = new ArrayList<>(buttonCount);
+        for (int i = 0; i < buttonCount; i += perLine)
+            categoryButtonXPositions.addAll(centeredRow(width / 2, 120, 10, Math.min(buttonCount - i, perLine)));
 
-			if(i < categories.size()) {
-				//a category button
-				ZetaCategory category = categories.get(i);
-				ValueDefinition<Boolean> categoryEnabled = z.configManager.getCategoryEnabledOption(category);
-				SectionDefinition categorySection = z.configManager.getCategorySection(category);
+        for (int i = 0; i < buttonCount; i++) {
+            int row = i / perLine;
 
-				bWidth -= 20; //room for the checkbox
-				Button mainButton = addRenderableWidget(new CategoryButton(x, y, bWidth, 20, componentFor(categorySection), category.icon.get(),
-					b -> Minecraft.getInstance().setScreen(new SectionScreen(zc, this, changeSet, categorySection))));
-				Button checkButton = addRenderableWidget(new CheckboxButton(zc, x + bWidth, y, changeSet, categoryEnabled));
+            int x = categoryButtonXPositions.get(i);
+            int y = 70 + row * 23;
+            int bWidth = 120;
 
-				boolean active = category.requiredModsLoaded();
-				mainButton.active = active;
-				checkButton.active = active;
-			} else {
-				assert generalSection != null;
-				addRenderableWidget(new Button.Builder(componentFor(generalSection),
-					b -> Minecraft.getInstance().setScreen(new SectionScreen(zc, this, changeSet, generalSection)))
-						.size(bWidth, 20).pos(x, y).build());
-			}
-		}
+            if (i < categories.size()) {
+                //a category button
+                ZetaCategory category = categories.get(i);
+                ValueDefinition<Boolean> categoryEnabled = z.configManager.getCategoryEnabledOption(category);
+                SectionDefinition categorySection = z.configManager.getCategorySection(category);
 
-		//save
-		saveButton = addRenderableWidget(new Button.Builder(componentForSaveButton(), this::commit).size(200, 20).pos(width / 2 - 100, height - 30).build());
-	}
+                bWidth -= 20; //room for the checkbox
+                Button mainButton = addRenderableWidget(new CategoryButton(x, y, bWidth, 20, componentFor(categorySection), category.icon.get(),
+                        b -> Minecraft.getInstance().setScreen(new SectionScreen(zc, this, changeSet, categorySection))));
+                Button checkButton = addRenderableWidget(new CheckboxButton(zc, x + bWidth, y, changeSet, categoryEnabled));
 
-	public List<Integer> centeredRow(int centerX, int buttonWidth, int hpad, int count) {
-		// https://i.imgur.com/ozRA3xw.png
+                boolean active = category.requiredModsLoaded();
+                mainButton.active = active;
+                checkButton.active = active;
+            } else {
+                assert generalSection != null;
+                addRenderableWidget(new Button.Builder(componentFor(generalSection),
+                        b -> Minecraft.getInstance().setScreen(new SectionScreen(zc, this, changeSet, generalSection)))
+                        .size(bWidth, 20).pos(x, y).build());
+            }
+        }
 
-		int slop = (count % 2 == 0 ? hpad : buttonWidth) / 2;
-		int fullButtonsLeftOfCenter = count / 2; //rounds down
-		int fullPaddingsLeftOfCenter = Math.max(0, (count - 1) / 2); //rounds down
-		int startX = centerX - slop - (fullButtonsLeftOfCenter * buttonWidth) - (fullPaddingsLeftOfCenter * hpad);
+        //save
+        saveButton = addRenderableWidget(new Button.Builder(componentForSaveButton(), this::commit).size(200, 20).pos(width / 2 - 100, height - 30).build());
+    }
 
-		List<Integer> result = new ArrayList<>(count);
-		int x = startX;
-		for(int i = 0; i < count; i++) {
-			result.add(x);
-			x += buttonWidth + hpad;
-		}
-		return result;
-	}
+    public List<Integer> centeredRow(int centerX, int buttonWidth, int hpad, int count) {
+        // https://i.imgur.com/ozRA3xw.png
 
-	private Component componentFor(SectionDefinition section) {
-		MutableComponent comp = Component.translatable(z.modid + ".category." + section.name);
+        int slop = (count % 2 == 0 ? hpad : buttonWidth) / 2;
+        int fullButtonsLeftOfCenter = count / 2; //rounds down
+        int fullPaddingsLeftOfCenter = Math.max(0, (count - 1) / 2); //rounds down
+        int startX = centerX - slop - (fullButtonsLeftOfCenter * buttonWidth) - (fullPaddingsLeftOfCenter * hpad);
 
-		if(changeSet.isDirty(section))
-			comp.append(Component.literal("*").withStyle(ChatFormatting.GOLD));
+        List<Integer> result = new ArrayList<>(count);
+        int x = startX;
+        for (int i = 0; i < count; i++) {
+            result.add(x);
+            x += buttonWidth + hpad;
+        }
+        return result;
+    }
 
-		return comp;
-	}
+    private Component componentFor(SectionDefinition section) {
+        MutableComponent comp = Component.translatable(z.modid + ".category." + section.name);
 
-	private Component componentForSaveButton() {
-		MutableComponent comp = Component.translatable("quark.gui.config.save");
-		int changeCount = changeSet.changeCount();
-		if(changeCount > 0)
-			comp.append(" (")
-				.append(Component.literal(String.valueOf(changeCount)).withStyle(ChatFormatting.GOLD))
-				.append(")");
+        if (changeSet.isDirty(section))
+            comp.append(Component.literal("*").withStyle(ChatFormatting.GOLD));
 
-		return comp;
-	}
+        return comp;
+    }
 
-	public void commit(Button button) {
-		changeSet.applyAllChanges();
-		onClose();
-	}
+    private Component componentForSaveButton() {
+        MutableComponent comp = Component.translatable("quark.gui.config.save");
+        int changeCount = changeSet.changeCount();
+        if (changeCount > 0)
+            comp.append(" (")
+                    .append(Component.literal(String.valueOf(changeCount)).withStyle(ChatFormatting.GOLD))
+                    .append(")");
 
-	@Override
-	public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-		renderBackground(guiGraphics);
+        return comp;
+    }
 
-		super.render(guiGraphics, mouseX, mouseY, partialTicks);
-		guiGraphics.drawCenteredString(font, ChatFormatting.BOLD + I18n.get("quark.gui.config.header", WordUtils.capitalizeFully(z.modid)), width / 2, 15, 0x48ddbc);
-	}
+    public void commit(Button button) {
+        changeSet.applyAllChanges();
+        onClose();
+    }
 
-	@Override
-	public void tick() {
-		super.tick();
+    @Override
+    public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+        renderBackground(guiGraphics);
 
-		//done here (instead of in init()), mainly so pressing a category checkbox will update the state of the button
-		saveButton.setMessage(componentForSaveButton());
-	}
+        super.render(guiGraphics, mouseX, mouseY, partialTicks);
+        guiGraphics.drawCenteredString(font, ChatFormatting.BOLD + I18n.get("quark.gui.config.header", WordUtils.capitalizeFully(z.modid)), width / 2, 15, 0x48ddbc);
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+
+        //done here (instead of in init()), mainly so pressing a category checkbox will update the state of the button
+        saveButton.setMessage(componentForSaveButton());
+    }
 }

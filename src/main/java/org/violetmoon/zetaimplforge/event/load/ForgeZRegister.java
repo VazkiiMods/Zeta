@@ -9,41 +9,14 @@ import org.violetmoon.zeta.registry.*;
 
 public class ForgeZRegister extends Event implements ZRegister, IModBusEvent {
 
-    private final Zeta zeta;
-
-    public ForgeZRegister(Zeta zeta) {
-        this.zeta = zeta;
+    public ForgeZRegister() {
     }
 
-    @Override
-    public ZetaRegistry getRegistry() {
-        return zeta.registry;
-    }
+    // same as registry but runs right after (our own event ONLY! Don't expect other mod stuff to be ready here)
+    // dont extend or we'll match all its subscriptions. Ideally these 2 should have been 2 subclasses
+    public static class Post extends Event implements ZRegister.Post, IModBusEvent {
 
-    @Override
-    public CraftingExtensionsRegistry getCraftingExtensionsRegistry() {
-        return zeta.craftingExtensions;
+        public Post() {
+        }
     }
-
-    @Override
-    public BrewingRegistry getBrewingRegistry() {
-        return zeta.brewingRegistry;
-    }
-
-    @Override
-    public RenderLayerRegistry getRenderLayerRegistry() {
-        return zeta.renderLayerRegistry;
-    }
-
-    @Override
-    public AdvancementModifierRegistry getAdvancementModifierRegistry() {
-        return zeta.advancementModifierRegistry;
-    }
-
-    @Override
-    public VariantRegistry getVariantRegistry() {
-        return zeta.variantRegistry;
-    }
-
-    public static class Post extends Event implements ZRegister.Post, IModBusEvent { }
 }

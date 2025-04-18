@@ -7,11 +7,13 @@ import java.util.TreeSet;
 import java.util.function.Function;
 
 import org.apache.commons.lang3.text.WordUtils;
+import org.jetbrains.annotations.ApiStatus;
 import org.violetmoon.zeta.util.ZetaSide;
 
 /**
  * performs some common data-munging of the data straight off a ZetaLoadModule annotation
  */
+@ApiStatus.Internal
 public record TentativeModule(
         Class<? extends ZetaModule> clazz,
         Class<? extends ZetaModule> keyClass,

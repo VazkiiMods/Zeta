@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BooleanSupplier;
 
+import org.violetmoon.zeta.Zeta;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.load.ZRegister;
 import org.violetmoon.zeta.module.ZetaModule;
@@ -32,14 +33,19 @@ import net.minecraft.world.level.block.state.BlockState;
  */
 public class DyeablesRegistry {
 
+	private final Zeta z;
 	public final Map<Item, BooleanSupplier> dyeableConditions = new HashMap<>();
-	public final DyeableLeatherItem SURROGATE = new DyeableLeatherItem() {}; //Simply an accessor for various DyeableLeatherItem default methods
+	public final DyeableLeatherItem surrogate = new DyeableLeatherItem() {}; //Simply an accessor for various DyeableLeatherItem default methods
+
+	public DyeablesRegistry(Zeta z){
+		this.z = z;
+	}
 
 	@LoadEvent
 	public void register(ZRegister event) {
-		ResourceLocation id = event.getRegistry().newResourceLocation("dye_item");
+		ResourceLocation id = z.makeId("dye_item");
 		ZetaDyeRecipe recipe = new ZetaDyeRecipe(id, CraftingBookCategory.EQUIPMENT, this);
-		event.getRegistry().register(recipe.getSerializer(), id, Registries.RECIPE_SERIALIZER);
+		z.registry.register(recipe.getSerializer(), id, Registries.RECIPE_SERIALIZER);
 	}
 
 	@LoadEvent
@@ -57,7 +63,7 @@ public class DyeablesRegistry {
 				return InteractionResult.PASS;
 
 			if(!level.isClientSide) {
-				SURROGATE.clearColor(stack);
+				surrogate.clearColor(stack);
 				//player.awardStat(Stats.CLEAN_ARMOR);
 				LayeredCauldronBlock.lowerFillLevel(state, level, pos);
 			}
@@ -84,20 +90,20 @@ public class DyeablesRegistry {
 	}
 
 	public boolean isDyed(ItemStack stack) {
-		return isDyeable(stack) && SURROGATE.hasCustomColor(stack);
+		return isDyeable(stack) && surrogate.hasCustomColor(stack);
 	}
 
 	public int getDye(ItemStack stack) {
-		return SURROGATE.getColor(stack);
+		return surrogate.getColor(stack);
 	}
 
 	public void applyDye(ItemStack stack, int color) {
 		if(isDyeable(stack))
-			SURROGATE.setColor(stack, color);
+			surrogate.setColor(stack, color);
 	}
 
 	public int getColor(ItemStack stack) {
-		return isDyed(stack) ? SURROGATE.getColor(stack) : 0xFF_FF_FF;
+		return isDyed(stack) ? surrogate.getColor(stack) : 0xFF_FF_FF;
 	}
 
 	// Copy of DyeableLeatherItem
@@ -110,8 +116,8 @@ public class DyeablesRegistry {
 		if(isDyeable(stack)) {
 			itemstack = stack.copy();
 			itemstack.setCount(1);
-			if(SURROGATE.hasCustomColor(stack)) {
-				int k = SURROGATE.getColor(itemstack);
+			if(surrogate.hasCustomColor(stack)) {
+				int k = surrogate.getColor(itemstack);
 				float f = (float) (k >> 16 & 255) / 255.0F;
 				float f1 = (float) (k >> 8 & 255) / 255.0F;
 				float f2 = (float) (k & 255) / 255.0F;
@@ -144,7 +150,7 @@ public class DyeablesRegistry {
 			l1 = (int) ((float) l1 * f3 / f4);
 			int j2 = (j1 << 8) + k1;
 			j2 = (j2 << 8) + l1;
-			SURROGATE.setColor(itemstack, j2);
+			surrogate.setColor(itemstack, j2);
 
 			return itemstack;
 		}

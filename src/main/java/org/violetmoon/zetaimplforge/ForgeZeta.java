@@ -1,14 +1,10 @@
 package org.violetmoon.zetaimplforge;
 
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FlowerPotBlock;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -28,19 +24,18 @@ import org.violetmoon.zeta.event.bus.IZetaPlayEvent;
 import org.violetmoon.zeta.event.bus.ZResult;
 import org.violetmoon.zeta.event.bus.ZetaEventBus;
 import org.violetmoon.zeta.item.ext.ItemExtensionFactory;
+import org.violetmoon.zeta.mod.ZetaMod;
+import org.violetmoon.zeta.module.ModuleFinder;
+import org.violetmoon.zeta.module.ZetaCategory;
 import org.violetmoon.zeta.network.ZetaNetworkHandler;
-import org.violetmoon.zeta.registry.BrewingRegistry;
-import org.violetmoon.zeta.registry.CraftingExtensionsRegistry;
-import org.violetmoon.zeta.registry.CreativeTabManager;
-import org.violetmoon.zeta.registry.PottedPlantRegistry;
-import org.violetmoon.zeta.registry.ZetaRegistry;
+import org.violetmoon.zeta.registry.*;
 import org.violetmoon.zeta.util.RaytracingUtil;
 import org.violetmoon.zeta.util.ZetaSide;
+import org.violetmoon.zeta.util.handler.LoaderSpecificEventsHandler;
 import org.violetmoon.zetaimplforge.block.IForgeBlockBlockExtensions;
 import org.violetmoon.zetaimplforge.capability.ForgeCapabilityManager;
 import org.violetmoon.zetaimplforge.config.ConfigEventDispatcher;
 import org.violetmoon.zetaimplforge.config.ForgeBackedConfig;
-import org.violetmoon.zetaimplforge.config.TerribleForgeConfigHackery;
 import org.violetmoon.zetaimplforge.event.ForgeZetaEventBus;
 import org.violetmoon.zetaimplforge.event.load.ForgeZRegister;
 import org.violetmoon.zetaimplforge.item.IForgeItemItemExtensions;
@@ -48,20 +43,40 @@ import org.violetmoon.zetaimplforge.network.ForgeZetaNetworkHandler;
 import org.violetmoon.zetaimplforge.registry.ForgeBrewingRegistry;
 import org.violetmoon.zetaimplforge.registry.ForgeCraftingExtensionsRegistry;
 import org.violetmoon.zetaimplforge.registry.ForgeZetaRegistry;
+import org.violetmoon.zetaimplforge.util.ForgeCreativeTabHandler;
+import org.violetmoon.zetaimplforge.util.ForgeLoaderSpecificEventsHandler;
 import org.violetmoon.zetaimplforge.util.ForgeRaytracingUtil;
+
+import java.util.List;
 
 /**
  * ideally do not touch quark from this package, it will later be split off
  */
 public class ForgeZeta extends Zeta {
-    public ForgeZeta(String modid, Logger log) {
-        super(modid, log, ZetaSide.fromClient(FMLEnvironment.dist.isClient()), FMLEnvironment.production);
+
+    private boolean firstRegEvent = false;
+
+    public ForgeZeta(String modid, Logger log, Object config,
+                     ModuleFinder finder, List<ZetaCategory> categories, int networkProtocol) {
+        super(modid, log, ZetaSide.fromClient(FMLEnvironment.dist.isClient()), FMLEnvironment.production,
+                config, finder, categories, networkProtocol);
+
+        IEventBus modbus = FMLJavaModLoadingContext.get().getModEventBus();
+
+        //hook up config events
+        ConfigEventDispatcher configEventDispatcher = new ConfigEventDispatcher(this);
+        modbus.addListener(configEventDispatcher::modConfigReloading);
+        modbus.addListener(configEventDispatcher::commonSetup);
+        MinecraftForge.EVENT_BUS.addListener(configEventDispatcher::serverAboutToStart);
+
+        //other stuff
+        modbus.addListener(EventPriority.HIGHEST, this::onSoundsRegistering);
     }
 
     @Override
     protected ZetaEventBus<IZetaLoadEvent> createLoadBus() {
         //return new StandaloneZetaEventBus<>(LoadEvent.class, IZetaLoadEvent.class, log);
-        return ForgeZetaEventBus.ofLoadBus( log, this);
+        return ForgeZetaEventBus.ofLoadBus(log, this);
     }
 
     @Override
@@ -82,95 +97,71 @@ public class ForgeZeta extends Zeta {
     }
 
     @Override
-    public IZetaConfigInternals makeConfigInternals(SectionDefinition rootSection) {
-        ForgeConfigSpec.Builder bob = new ForgeConfigSpec.Builder();
-        ForgeBackedConfig forge = new ForgeBackedConfig(rootSection, bob);
-        ForgeConfigSpec spec = bob.build();
-
-        TerribleForgeConfigHackery.registerAndLoadConfigEarlierThanUsual(spec);
-
-        return forge;
+    protected IZetaConfigInternals createConfigInternals(SectionDefinition rootSection) {
+        var forgeConfigWrapper = new ForgeBackedConfig(rootSection);
+        this.asZeta().log.info("Early loading configs for " + this.modid);
+        forgeConfigWrapper.hackilyLoadEarly();
+        return forgeConfigWrapper;
     }
 
     @Override
-    public ZetaRegistry createRegistry() {
+    protected ZetaRegistry createRegistry() {
         return new ForgeZetaRegistry(this);
     }
 
     @Override
-    public CraftingExtensionsRegistry createCraftingExtensionsRegistry() {
+    protected LoaderSpecificEventsHandler createLoaderEventsHandler() {
+        return new ForgeLoaderSpecificEventsHandler();
+    }
+
+    @Override
+    protected CreativeTabHandler createCreativeTabHandler() {
+        return new ForgeCreativeTabHandler();
+    }
+
+    @Override
+    protected CraftingExtensionsRegistry createCraftingExtensionsRegistry() {
         return new ForgeCraftingExtensionsRegistry();
     }
 
     @Override
-    public BrewingRegistry createBrewingRegistry() {
+    protected BrewingRegistry createBrewingRegistry() {
         return new ForgeBrewingRegistry(this);
     }
 
     @Override
-    public PottedPlantRegistry createPottedPlantRegistry() {
+    protected PottedPlantRegistry createPottedPlantRegistry() {
         return (resloc, potted) -> ((FlowerPotBlock) Blocks.FLOWER_POT).addPlant(resloc, () -> potted);
     }
 
     @Override
-    public ZetaCapabilityManager createCapabilityManager() {
+    protected ZetaCapabilityManager createCapabilityManager() {
         return ForgeCapabilityManager.INSTANCE;
     }
 
     @Override
-    public BlockExtensionFactory createBlockExtensionFactory() {
+    protected BlockExtensionFactory createBlockExtensionFactory() {
         return block -> IForgeBlockBlockExtensions.INSTANCE;
     }
 
     @Override
-    public ItemExtensionFactory createItemExtensionFactory() {
+    protected ItemExtensionFactory createItemExtensionFactory() {
         return stack -> IForgeItemItemExtensions.INSTANCE;
     }
 
     @Override
-    public RaytracingUtil createRaytracingUtil() {
+    protected RaytracingUtil createRaytracingUtil() {
         return new ForgeRaytracingUtil();
     }
 
     @Override
-    public ZetaNetworkHandler createNetworkHandler(int protocolVersion) {
+    protected ZetaNetworkHandler createNetworkHandler(int protocolVersion) {
         return new ForgeZetaNetworkHandler(this, protocolVersion);
     }
 
-    @Override
-    public boolean fireRightClickBlock(Player player, InteractionHand hand, BlockPos pos, BlockHitResult bhr) {
-        return MinecraftForge.EVENT_BUS.post(new PlayerInteractEvent.RightClickBlock(player, hand, pos, bhr));
-    }
-
-    @SuppressWarnings("duplicates")
-    @Override
-    public void start() {
-        super.start();
-        //load
-        IEventBus modbus = FMLJavaModLoadingContext.get().getModEventBus();
-
-        //hook up config events
-        ConfigEventDispatcher configEventDispatcher = new ConfigEventDispatcher(this);
-        modbus.addListener(configEventDispatcher::modConfigReloading);
-        modbus.addListener(configEventDispatcher::commonSetup);
-        MinecraftForge.EVENT_BUS.addListener(configEventDispatcher::serverAboutToStart);
-
-        //other stuff
-        modbus.addListener(EventPriority.LOWEST, CreativeTabManager::buildContents);
-        modbus.addListener(EventPriority.HIGHEST, this::registerHighest);
-    }
-
-    private boolean registerDone = false;
-
-    public void registerHighest(RegisterEvent e) {
-        if (registerDone)
-            return;
-
-        registerDone = true; // do this *before* actually registering to prevent weird ??race conditions?? or something?
-        //idk whats going on, all i know is i started the game, got a log with 136 "duplicate criterion id" errors, and i don't want to see that again
-
-        loadBus.fire(new ForgeZRegister(this));
-        loadBus.fire(new ForgeZRegister.Post());
+    //so register event fires one time PER registry!!
+    public void onSoundsRegistering(RegisterEvent e) {
+        ((ForgeZetaRegistry)registry).onRegisterEvent(e);
     }
 
 

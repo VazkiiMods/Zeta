@@ -1,5 +1,7 @@
 package org.violetmoon.zeta.module;
 
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Nullable;
 import org.violetmoon.zeta.Zeta;
 import org.violetmoon.zeta.util.ZetaSide;
 import org.violetmoon.zetaimplforge.event.load.ForgeZModulesReady;
@@ -75,13 +77,17 @@ public class ZetaModuleManager {
 
     // Loading //
 
-    //first call this
-    public void initCategories(Iterable<ZetaCategory> cats) {
+    @ApiStatus.Internal
+    public final void initialize( ModuleFinder finder, Iterable<ZetaCategory> categories) {
+        initCategories(categories);
+        findModules(finder);
+    }
+
+    protected void initCategories(Iterable<ZetaCategory> cats) {
         for (ZetaCategory cat : cats) categoriesById.put(cat.name, cat);
     }
 
-    //then call this
-    public void load(ModuleFinder finder) {
+    protected void findModules(ModuleFinder finder) {
         Collection<TentativeModule> tentative = finder.get()
                 .map(data -> TentativeModule.from(data, this::getCategory))
                 .filter(tm -> tm.appliesTo(z.side))
@@ -117,8 +123,9 @@ public class ZetaModuleManager {
 
         z.log.info("Discovered " + tentative.size() + " modules to load.");
 
-        for (TentativeModule t : tentative)
-            modulesByKey.put(t.keyClass(), constructAndSetup(t));
+        for (TentativeModule t : tentative) {
+            modulesByKey.put(t.keyClass(), constructModuleAndSetup(t));
+        }
 
         z.log.info("Constructed {} modules.", modulesByKey.size());
 
@@ -126,14 +133,14 @@ public class ZetaModuleManager {
     }
 
 
-    public void doFinalize() {
+    public void setupBusSubscriptions() {
         for (var m : this.getModules()) {
             m.finalized = true;
-            m.updateBusSubscriptions(z);
+            m.updatePlayBusSubscriptions();
         }
     }
 
-    private ZetaModule constructAndSetup(TentativeModule t) {
+    private ZetaModule constructModuleAndSetup(TentativeModule t) {
         z.log.info("Constructing module {}...", t.displayName());
 
         //construct, set properties
@@ -166,7 +173,7 @@ public class ZetaModuleManager {
     }
 
     // feel free to refactor
-    private static void populateModuleInstanceField(ZetaModule module) {
+    private void populateModuleInstanceField(ZetaModule module) {
         var clazz = module.getClass();
 
 

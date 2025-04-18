@@ -4,8 +4,8 @@ import java.util.function.BooleanSupplier;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.violetmoon.zeta.Zeta;
 import org.violetmoon.zeta.module.ZetaModule;
-import org.violetmoon.zeta.registry.CreativeTabManager;
 import org.violetmoon.zeta.util.BooleanSuppliers;
 
 import net.minecraft.sounds.SoundEvent;
@@ -30,8 +30,10 @@ public abstract class ZetaButtonBlock extends ButtonBlock implements IZetaBlock 
 		if(module == null) //auto registration below this line
 			return;
 
-		module.zeta().registry.registerBlock(this, regname, true);
-		CreativeTabManager.addToCreativeTabNextTo(CreativeModeTabs.REDSTONE_BLOCKS, this, Blocks.STONE_BUTTON, false);
+		Zeta zeta = module.zeta();
+
+		zeta.registry.registerBlock(this, regname, true);
+		zeta.creativeTabs.addToCreativeTabNextTo(CreativeModeTabs.REDSTONE_BLOCKS, this, Blocks.STONE_BUTTON, false);
 	}
 
 	@NotNull

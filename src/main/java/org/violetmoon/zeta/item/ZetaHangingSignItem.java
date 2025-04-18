@@ -3,8 +3,9 @@ package org.violetmoon.zeta.item;
 import java.util.function.BooleanSupplier;
 
 import org.jetbrains.annotations.Nullable;
+import org.violetmoon.zeta.Zeta;
 import org.violetmoon.zeta.module.ZetaModule;
-import org.violetmoon.zeta.registry.CreativeTabManager;
+import org.violetmoon.zeta.registry.CreativeTabHandler;
 import org.violetmoon.zeta.util.BooleanSuppliers;
 
 import net.minecraft.world.item.CreativeModeTabs;
@@ -25,9 +26,10 @@ public class ZetaHangingSignItem extends HangingSignItem implements IZetaItem {
         if(module == null) //auto registration below this line
             return;
 
-        String resloc = module.zeta().registryUtil.inherit(sign, "%s");
-        module.zeta().registry.registerItem(this, resloc);
-        CreativeTabManager.addToCreativeTabNextTo(CreativeModeTabs.FUNCTIONAL_BLOCKS, this, Items.CHEST, true);
+        Zeta zeta = module.zeta();
+        String resloc = zeta.registryUtil.inherit(sign, "%s");
+        zeta.registry.registerItem(this, resloc);
+        zeta.creativeTabs.addToCreativeTabNextTo(CreativeModeTabs.FUNCTIONAL_BLOCKS, this, Items.CHEST, true);
     }
 
     @Override

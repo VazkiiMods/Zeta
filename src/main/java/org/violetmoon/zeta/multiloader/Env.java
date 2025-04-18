@@ -6,6 +6,7 @@ import org.jetbrains.annotations.ApiStatus;
 
 import java.util.function.Supplier;
 
+//TODO: merge into ZetaSide
 public enum Env {
     CLIENT, SERVER;
 
