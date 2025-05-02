@@ -5,6 +5,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
 
+import com.google.common.collect.Multimaps;
+import it.unimi.dsi.fastutil.Hash;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectOpenCustomHashSet;
+import net.minecraft.world.item.ItemStackLinkedSet;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.zeta.event.bus.IZetaPlayEvent;
@@ -15,7 +20,6 @@ import org.violetmoon.zeta.event.play.ZRecipeCrawl;
 import org.violetmoon.zeta.event.play.ZServerTick;
 import org.violetmoon.zeta.mod.ZetaMod;
 
-import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
 import net.minecraft.core.NonNullList;
@@ -38,8 +42,19 @@ public class RecipeCrawlHandler {
 
 	// this just includes vanilla recipe types. Custom recipes could have some conversion scheme that we can't predict
 	private static final List<Recipe<?>> vanillaRecipesToLazyDigest = new ArrayList<>();
-	private static final Multimap<Item, ItemStack> vanillaRecipeDigestion = HashMultimap.create();
-	private static final Multimap<Item, ItemStack> backwardsVanillaDigestion = HashMultimap.create();
+	private static final Multimap<Item, ItemStack> vanillaRecipeDigestion = Multimaps.newListMultimap(new Object2ObjectOpenHashMap<>(), ArrayList::new);
+	private static final Multimap<Item, ItemStack> backwardsVanillaDigestion = Multimaps.newListMultimap(new Object2ObjectOpenHashMap<>(), ArrayList::new);
+	private static final ObjectOpenCustomHashSet<ItemStack> deduplicatedDigestedItemStacks = new ObjectOpenCustomHashSet<>(new Hash.Strategy<>() {
+		@Override
+		public int hashCode(ItemStack o) {
+			return ItemStackLinkedSet.TYPE_AND_TAG.hashCode(o);
+		}
+
+		@Override
+		public boolean equals(ItemStack a, ItemStack b) {
+			return ItemStackLinkedSet.TYPE_AND_TAG.equals(a, b) && (a == null || a.getCount() == b.getCount());
+		}
+	});
 
 	private static final Object mutex = new Object();
 	private static boolean needsCrawl = false;
@@ -84,6 +99,7 @@ public class RecipeCrawlHandler {
 			vanillaRecipesToLazyDigest.clear();
 			vanillaRecipeDigestion.clear();
 			backwardsVanillaDigestion.clear();
+			deduplicatedDigestedItemStacks.clear();
 
 			for (Recipe<?> recipe : manager.getRecipes()) {
 				try {
@@ -142,6 +158,9 @@ public class RecipeCrawlHandler {
 					digest(recipe, tick.getServer().registryAccess());
 
 				vanillaRecipesToLazyDigest.clear();
+				deduplicatedDigestedItemStacks.clear();
+				deduplicatedDigestedItemStacks.trim();
+
 				fire(new ZRecipeCrawl.Digest(vanillaRecipeDigestion, backwardsVanillaDigestion));
 			}
 		}
@@ -172,8 +191,8 @@ public class RecipeCrawlHandler {
 				}
 
 				if (remaining.isEmpty()) {
-					vanillaRecipeDigestion.put(inStack.getItem(), out);
-					backwardsVanillaDigestion.put(outItem, inStack);
+					vanillaRecipeDigestion.put(inStack.getItem(), deduplicatedDigestedItemStacks.addOrGet(out));
+					backwardsVanillaDigestion.put(outItem, deduplicatedDigestedItemStacks.addOrGet(inStack));
 				}
 			}
 		}
