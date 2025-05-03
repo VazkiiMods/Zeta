@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
 
+import com.google.common.collect.ArrayListMultimap;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.zeta.event.bus.IZetaPlayEvent;
@@ -142,7 +143,9 @@ public class RecipeCrawlHandler {
 					digest(recipe, tick.getServer().registryAccess());
 
 				vanillaRecipesToLazyDigest.clear();
-				fire(new ZRecipeCrawl.Digest(vanillaRecipeDigestion, backwardsVanillaDigestion));
+				fire(new ZRecipeCrawl.Digest(ArrayListMultimap.create(vanillaRecipeDigestion), ArrayListMultimap.create(backwardsVanillaDigestion)));
+				vanillaRecipeDigestion.clear();
+				backwardsVanillaDigestion.clear();
 			}
 		}
 	}
