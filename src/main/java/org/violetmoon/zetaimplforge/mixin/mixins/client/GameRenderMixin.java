@@ -15,7 +15,7 @@ import org.violetmoon.zetaimplforge.client.event.play.ForgeZEarlyRender;
 public class GameRenderMixin {
 
     @Inject(method = "render", at = @At(target = "Lnet/minecraft/util/profiling/ProfilerFiller;popPush(Ljava/lang/String;)V", value = "INVOKE", shift = At.Shift.AFTER))
-    private void quark$renderEvent(float v, long l, boolean b, CallbackInfo ci) {
+    private void quark$renderEvent(DeltaTracker p_348648_, boolean p_109096_, CallbackInfo ci) {
         ZetaMod.ZETA.playBus.fire(new ForgeZEarlyRender(), ZEarlyRender.class);
     }
 }

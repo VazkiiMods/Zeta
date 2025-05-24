@@ -61,7 +61,7 @@ public class ZetaModCommonProxy {
                 .subscribe(SyncedFlagHandler.class);
 
 
-        NeoForge.EVENT_BUS.register(ToolInteractionHandler.class);
+        //NeoForge.EVENT_BUS.register(ToolInteractionHandler.class);
         ZetaBiomeModifier.registerBiomeModifier(bus);
 
     }
@@ -156,9 +156,9 @@ public class ZetaModCommonProxy {
         r.registerWrapper(ZVillagerTrades.class, ForgeZVillagerTrades.class);
         r.registerWrapper(ZWandererTrades.class, ForgeZWandererTrades.class);
         r.registerWrapper(ZFurnaceFuelBurnTime.class, ForgeZFurnaceFuelBurnTime.class);
-        r.registerWrapper(ZServerTick.Start.class, ServerTickEvent.class,
+        r.registerWrapper(ZServerTick.Start.class, ServerTickEvent.Pre.class,
                 ForgeZServerTick.Pre::new, w -> w.e);
-        r.registerWrapper(ZServerTick.End.class, ServerTickEvent.class,
+        r.registerWrapper(ZServerTick.End.class, ServerTickEvent.Post.class,
                 ForgeZServerTick.Post::new, w -> w.e);
         r.registerWrapper(ZAddReloadListener.class, ForgeZAddReloadListener.class);
         //r.registerWrapper(ZGatherHints.class, ForgeZGatherHints.class);
@@ -170,7 +170,7 @@ public class ZetaModCommonProxy {
                 ForgeZLevelTick.Start::new, w -> w.e);
 
         // zeta specific ones
-/*
+
         r.registerWrapper(ZRecipeCrawl.Digest.class, ForgeZRecipeCrawl.Digest.class,
                 ForgeZRecipeCrawl::get, ForgeZRecipeCrawl.Digest::new);
         r.registerWrapper(ZRecipeCrawl.Reset.class, ForgeZRecipeCrawl.Reset.class,
@@ -188,7 +188,6 @@ public class ZetaModCommonProxy {
         r.registerWrapper(ZRecipeCrawl.Visit.Shapeless.class, ForgeZRecipeCrawl.Visit.Shapeless.class,
                 ForgeZRecipeCrawl::get, ForgeZRecipeCrawl.Visit.Shapeless::new);
 
- */
 
         //r.registerWrapper(org.violetmoon.zeta.event.play.loading.ZGatherAdditionalFlags.class,
         //        org.violetmoon.zetaimplforge.event.play.loading.ForgeZGatherAdditionalFlags.class);

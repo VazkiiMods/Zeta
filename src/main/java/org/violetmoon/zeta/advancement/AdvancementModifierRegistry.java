@@ -67,8 +67,8 @@ public class AdvancementModifierRegistry {
 	@PlayEvent
 	public void addListeners(ZAddReloadListener event) {
 		if(!gatheredAddons) {
-			IAdvancementModifierDelegate delegateImpl = new DelegateImpl();
-			zeta.loadBus.fire(new ZGatherAdvancementModifiers() {
+			//IAdvancementModifierDelegate delegateImpl = new DelegateImpl();
+			/*zeta.loadBus.fire(new ZGatherAdvancementModifiers() {
 				@Override
 				public void register(IAdvancementModifier modifier) {
 					addModifier(modifier);
@@ -78,7 +78,7 @@ public class AdvancementModifierRegistry {
 				public IAdvancementModifierDelegate getDelegate() {
 					return delegateImpl;
 				}
-			}, ZGatherAdvancementModifiers.class);
+			}, ZGatherAdvancementModifiers.class);*/
 
 			gatheredAddons = true;
 		}
@@ -112,7 +112,7 @@ public class AdvancementModifierRegistry {
 		}
 	}
 
-	private static class DelegateImpl implements IAdvancementModifierDelegate {
+	/*private static class DelegateImpl implements IAdvancementModifierDelegate {
 
 		@Override
 		public IAdvancementModifier createAdventuringTimeMod(Set<ResourceKey<Biome>> locations) {
@@ -164,6 +164,6 @@ public class AdvancementModifierRegistry {
 			return new GlowAndBeholdModifier(null, signs);
 		}
 
-	}
+	}*/
 
 }

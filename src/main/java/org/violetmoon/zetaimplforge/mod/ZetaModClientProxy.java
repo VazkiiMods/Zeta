@@ -41,7 +41,7 @@ public class ZetaModClientProxy extends ZetaModCommonProxy {
     boolean clientTicked = false;
 
     @SubscribeEvent
-    public void clientTick(ClientTickEvent e) {
+    public void clientTick(ClientTickEvent.Pre e) {
         if (!clientTicked) {
             ZetaList.INSTANCE.fireLoadEvent(new ForgeZFirstClientTick());
             clientTicked = true;
@@ -90,9 +90,9 @@ public class ZetaModClientProxy extends ZetaModCommonProxy {
     public void addKnownZetaPlayEvents(ForgeEventsRemapper<IZetaPlayEvent, Event> r) {
         super.addKnownZetaPlayEvents(r);
 
-        r.registerWrapper(ZClientTick.End.class, ClientTickEvent.class,
+        r.registerWrapper(ZClientTick.End.class, ClientTickEvent.Post.class,
                 ForgeZClientTick.End::new, w -> w.e);
-        r.registerWrapper(ZClientTick.Start.class, ClientTickEvent.class,
+        r.registerWrapper(ZClientTick.Start.class, ClientTickEvent.Pre.class,
                 ForgeZClientTick.Start::new, w -> w.e);
         r.registerWrapper(ZGatherTooltipComponents.class, ForgeZGatherTooltipComponents.class);
         r.registerWrapper(ZHighlightBlock.class, ForgeZHighlightBlock.class);
