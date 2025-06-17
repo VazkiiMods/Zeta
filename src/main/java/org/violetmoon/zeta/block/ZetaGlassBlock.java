@@ -52,7 +52,7 @@ public class ZetaGlassBlock extends ZetaBlock {
 	}
 
 	@Override
-	public boolean propagatesSkylightDown(@NotNull BlockState state, @NotNull BlockGetter reader, @NotNull BlockPos pos) {
+	protected boolean propagatesSkylightDown(BlockState p_320652_) {
 		return true;
 	}
 

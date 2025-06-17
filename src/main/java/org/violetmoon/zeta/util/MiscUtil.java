@@ -156,7 +156,7 @@ public class MiscUtil {
 
 	public static boolean validSpawnLocation(@NotNull EntityType<? extends Mob> type, @NotNull LevelAccessor world, MobSpawnType reason, BlockPos pos) {
 		BlockPos below = pos.below();
-		if(reason == MobSpawnType.SPAWNER)
+		if (reason == MobSpawnType.SPAWNER)
 			return true;
 		BlockState state = world.getBlockState(below);
 		return BlockUtils.isStoneBased(state, world, below) && state.isValidSpawn(world, below, type);

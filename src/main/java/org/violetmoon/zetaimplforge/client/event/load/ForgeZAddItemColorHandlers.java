@@ -1,7 +1,5 @@
 package org.violetmoon.zetaimplforge.client.event.load;
 
-import net.minecraft.client.color.item.ItemColor;
-import net.minecraft.client.color.item.ItemColors;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;

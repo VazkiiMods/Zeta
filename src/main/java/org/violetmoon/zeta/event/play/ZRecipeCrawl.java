@@ -38,7 +38,7 @@ public abstract class ZRecipeCrawl implements IZetaPlayEvent {
 		public Visit(RecipeHolder<?> recipeHolder, RegistryAccess access) {
 			this.recipeHolder = recipeHolder;
 			this.recipe = recipeHolder.value();
-			this.recipeID = recipeHolder.id();
+			this.recipeID = recipeHolder.id().location();
 			this.output = recipeHolder.value().getResultItem(access);
 			this.ingredients = recipeHolder.value().getIngredients();
 		}

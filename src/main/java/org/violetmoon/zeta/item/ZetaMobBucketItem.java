@@ -1,18 +1,18 @@
 package org.violetmoon.zeta.item;
 
-import java.util.function.BooleanSupplier;
-
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.item.CreativeModeTabs;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.MobBucketItem;
+import net.minecraft.world.level.material.Fluid;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.registry.CreativeTabManager;
 import org.violetmoon.zeta.util.BooleanSuppliers;
 
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.item.CreativeModeTabs;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.MobBucketItem;
-import net.minecraft.world.level.material.Fluid;
+import java.util.function.BooleanSupplier;
 
 public class ZetaMobBucketItem extends MobBucketItem implements IZetaItem {
 
@@ -20,7 +20,7 @@ public class ZetaMobBucketItem extends MobBucketItem implements IZetaItem {
 
 	private BooleanSupplier enabledSupplier = BooleanSuppliers.TRUE;
 
-	public ZetaMobBucketItem(EntityType<?> entity, Fluid fluid, SoundEvent sound, String name, @Nullable ZetaModule module) {
+	public ZetaMobBucketItem(EntityType<? extends Mob> entity, Fluid fluid, SoundEvent sound, String name, @Nullable ZetaModule module) {
 		super(entity, fluid, sound, (new Properties()).stacksTo(1));
 
 		this.module = module;

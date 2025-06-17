@@ -1,6 +1,5 @@
 package org.violetmoon.zetaimplforge.event.play;
 
-import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import org.violetmoon.zeta.event.load.ZAddReloadListener;
 
 import net.minecraft.core.RegistryAccess;

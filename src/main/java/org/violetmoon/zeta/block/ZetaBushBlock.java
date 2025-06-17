@@ -1,19 +1,20 @@
 package org.violetmoon.zeta.block;
 
-import java.util.function.BooleanSupplier;
-
 import com.mojang.serialization.MapCodec;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.level.block.BushBlock;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.registry.RenderLayerRegistry;
 import org.violetmoon.zeta.util.BooleanSuppliers;
 
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.level.block.BushBlock;
+import java.util.function.BooleanSupplier;
 
 public class ZetaBushBlock extends BushBlock implements IZetaBlock {
-
+	public static final MapCodec<BushBlock> CODEC = simpleCodec(BushBlock::new);
+	
 	private final @Nullable ZetaModule module;
 	private BooleanSupplier enabledSupplier = BooleanSuppliers.TRUE;
 
@@ -48,7 +49,7 @@ public class ZetaBushBlock extends BushBlock implements IZetaBlock {
 	}
 
 	@Override
-	protected MapCodec<? extends BushBlock> codec() {
-		return null; //Might cause issues but it should be overriden by any children classes. Maybe make this abstract?
+	public @NotNull MapCodec<BushBlock> codec() {
+		return CODEC;
 	}
 }

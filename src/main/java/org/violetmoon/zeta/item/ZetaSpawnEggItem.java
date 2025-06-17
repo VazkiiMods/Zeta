@@ -3,22 +3,21 @@ package org.violetmoon.zeta.item;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.CreativeModeTabs;
-import net.neoforged.neoforge.common.DeferredSpawnEggItem;
+import net.minecraft.world.item.SpawnEggItem;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.zeta.module.ZetaModule;
 import org.violetmoon.zeta.registry.CreativeTabManager;
 import org.violetmoon.zeta.util.BooleanSuppliers;
 
 import java.util.function.BooleanSupplier;
-import java.util.function.Supplier;
 
-public class ZetaSpawnEggItem extends DeferredSpawnEggItem implements IZetaItem {
+public class ZetaSpawnEggItem extends SpawnEggItem implements IZetaItem {
 
 	private final @Nullable ZetaModule module;
 	private BooleanSupplier enabledSupplier = BooleanSuppliers.TRUE;
 
-	public ZetaSpawnEggItem(Supplier<EntityType<? extends Mob>> type, int primaryColor, int secondaryColor, String regname, @Nullable ZetaModule module, Properties properties) {
-		super(type, primaryColor, secondaryColor, properties);
+	public ZetaSpawnEggItem(EntityType<? extends Mob> type, String regname, @Nullable ZetaModule module, Properties properties) {
+		super(type, properties);
 		this.module = module;
 
 		if(module == null) //auto registration below this line

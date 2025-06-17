@@ -42,7 +42,7 @@ public class EntitySpawnHandler {
 	}
 
 	public void addEgg(EntityType<? extends Mob> entityType, int color1, int color2, ZetaModule module, BooleanSupplier enabledSupplier) {
-		new ZetaSpawnEggItem(() -> entityType, color1, color2, zeta.registry.getRegistryName(entityType, BuiltInRegistries.ENTITY_TYPE) + "_spawn_egg", module,
+		new ZetaSpawnEggItem(entityType,zeta.registry.getRegistryName(entityType, BuiltInRegistries.ENTITY_TYPE) + "_spawn_egg", module,
 				new Item.Properties())
 				.setCondition(enabledSupplier);
 	}
