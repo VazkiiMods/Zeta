@@ -19,7 +19,8 @@ version = "${config.version}-${config.build_number}"
 group = "org.violetmoon.${config.mod_id}" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = config.mod_name
 
-compileJava.options.compilerArgs << "-Xlint:all,-classfile,-processing,-deprecation"
+compileJava.options.compilerArgs << "-Xlint:all,-classfile,-processing,-deprecation" 
+compileJava.options.compilerArgs << "-Xmaxerrs" << "1000"
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
@@ -55,7 +56,7 @@ runs {
 
     server {
         workingDirectory project.file('runServer')
-        programArgument '--nogui'
+        arguments '--nogui'
     }
 }
 
