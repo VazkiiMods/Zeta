@@ -141,7 +141,7 @@ public abstract class SimpleInventoryBlockEntity extends ZetaBlockEntity impleme
 		inventorySlots = NonNullList.withSize(getContainerSize(), ItemStack.EMPTY);
 	}
 
-	abstract void inventoryChanged(int i);
+	public abstract void inventoryChanged(int i);
 
 	public boolean isAutomationEnabled() {
 		return true;
