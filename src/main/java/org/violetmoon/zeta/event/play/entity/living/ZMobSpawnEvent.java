@@ -7,8 +7,8 @@ import org.violetmoon.zeta.event.bus.IZetaPlayEvent;
 
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobSpawnType;
-import net.minecraft.world.level.BaseSpawner;
 import net.minecraft.world.level.ServerLevelAccessor;
+import org.violetmoon.zeta.event.bus.Resultable;
 
 public interface ZMobSpawnEvent extends IZetaPlayEvent /*, Resultable*/ {
     Mob getEntity();
@@ -16,7 +16,7 @@ public interface ZMobSpawnEvent extends IZetaPlayEvent /*, Resultable*/ {
     double getX();
     double getY();
     double getZ();
-    interface CheckSpawn extends ZMobSpawnEvent {
+    interface CheckSpawn extends ZMobSpawnEvent, Resultable {
         Either<BlockEntity, Entity> getSpawner();
         MobSpawnType getSpawnType();
 

@@ -4,11 +4,11 @@ import com.mojang.datafixers.util.Either;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobSpawnType;
-import net.minecraft.world.level.BaseSpawner;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.event.entity.living.FinalizeSpawnEvent;
 import net.neoforged.neoforge.event.entity.living.MobSpawnEvent;
+import org.violetmoon.zeta.event.bus.ZResult;
 import org.violetmoon.zeta.event.play.entity.living.ZMobSpawnEvent;
 
 public class ForgeZMobSpawnEvent implements ZMobSpawnEvent {
@@ -69,6 +69,16 @@ public class ForgeZMobSpawnEvent implements ZMobSpawnEvent {
         @Override
         public MobSpawnType getSpawnType() {
             return e.getSpawnType();
+        }
+
+        @Override
+        public boolean getResult() {
+            return !e.isSpawnCancelled();
+        }
+
+        @Override
+        public void setResult(ZResult value) {
+            e.setSpawnCancelled(!value.equals(ZResult.DENY));
         }
 
         public static class Lowest extends FinalizeSpawn implements ZMobSpawnEvent.CheckSpawn.Lowest {
