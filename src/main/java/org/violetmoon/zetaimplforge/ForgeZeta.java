@@ -66,7 +66,7 @@ public class ForgeZeta extends Zeta {
     @Override
     protected ZetaEventBus<IZetaLoadEvent> createLoadBus() {
         //return new StandaloneZetaEventBus<>(LoadEvent.class, IZetaLoadEvent.class, log);
-        return ForgeZetaEventBus.ofLoadBus( log, this);
+        return ForgeZetaEventBus.ofLoadBus(log, this);
     }
 
     @Override

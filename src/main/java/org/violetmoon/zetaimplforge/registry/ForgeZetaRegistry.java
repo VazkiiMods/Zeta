@@ -3,6 +3,7 @@ package org.violetmoon.zetaimplforge.registry;
 import java.util.Collection;
 import java.util.function.Supplier;
 
+import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.neoforge.registries.RegisterEvent;
 import org.violetmoon.zeta.registry.ZetaRegistry;
@@ -19,6 +20,7 @@ public class ForgeZetaRegistry extends ZetaRegistry {
 		ModLoadingContext.get().getActiveContainer().getEventBus().addListener(this::onRegisterEvent);
 	}
 
+	@SubscribeEvent
 	private void onRegisterEvent(RegisterEvent event) {
 		var key = event.getRegistryKey();
 		ResourceLocation registryRes = key.location();

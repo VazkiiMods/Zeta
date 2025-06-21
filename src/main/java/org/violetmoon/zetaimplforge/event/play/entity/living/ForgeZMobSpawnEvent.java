@@ -78,7 +78,7 @@ public class ForgeZMobSpawnEvent implements ZMobSpawnEvent {
 
         @Override
         public void setResult(ZResult value) {
-            e.setSpawnCancelled(!value.equals(ZResult.DENY));
+            e.setSpawnCancelled(value.equals(ZResult.DENY));
         }
 
         public static class Lowest extends FinalizeSpawn implements ZMobSpawnEvent.CheckSpawn.Lowest {
