@@ -92,7 +92,8 @@ public class ForgeZeta extends Zeta {
 		ForgeBackedConfig forge = new ForgeBackedConfig(rootSection, bob);
 		ModConfigSpec spec = bob.build();
 
-        TerribleForgeConfigHackery.registerAndLoadConfigEarlierThanUsual(spec);
+
+        TerribleForgeConfigHackery.registerAndLoadConfigEarlierThanUsual(spec, modid);
 
         return forge;
     }
