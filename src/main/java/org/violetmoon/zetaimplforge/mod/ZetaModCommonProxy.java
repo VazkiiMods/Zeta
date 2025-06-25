@@ -140,9 +140,9 @@ public class ZetaModCommonProxy {
         r.registerWrapper(ZPlayerDestroyItem.class, ForgeZPlayerDestroyItem.class);
         r.registerWrapper(ZPlayer.LoggedIn.class, ForgeZPlayer.LoggedIn.class);
         r.registerWrapper(ZPlayer.LoggedOut.class, ForgeZPlayer.LoggedOut.class);
-        r.registerWrapper(ZPlayerTick.Start.class, PlayerTickEvent.class,
+        r.registerWrapper(ZPlayerTick.Start.class, PlayerTickEvent.Pre.class,
                 ForgeZPlayerTick.Pre::new, w -> w.e);
-        r.registerWrapper(ZPlayerTick.End.class, PlayerTickEvent.class,
+        r.registerWrapper(ZPlayerTick.End.class, PlayerTickEvent.Post.class,
                 ForgeZPlayerTick.Post::new, w -> w.e);
         r.registerWrapper(ZPlayerInteract.class, ForgeZPlayerInteract.class);
         r.registerWrapper(ZPlayerInteract.EntityInteractSpecific.class, ForgeZPlayerInteract.EntityInteractSpecific.class);

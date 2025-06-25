@@ -5,9 +5,9 @@ import org.violetmoon.zeta.client.event.play.ZInput;
 
 public class ForgeZInput implements ZInput {
 	public static class MouseButton extends ForgeZInput implements ZInput.MouseButton {
-		private final InputEvent.MouseButton e;
+		private final InputEvent.MouseButton.Post e;
 
-		public MouseButton(InputEvent.MouseButton e) {
+		public MouseButton(InputEvent.MouseButton.Post e) {
 			this.e = e;
 		}
 
