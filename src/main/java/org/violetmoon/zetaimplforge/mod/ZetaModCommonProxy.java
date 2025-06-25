@@ -13,6 +13,7 @@ import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
+import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
@@ -127,7 +128,7 @@ public class ZetaModCommonProxy {
         r.registerWrapper(ZLivingDrops.Lowest.class, LivingDropsEvent.class,
                 ForgeZLivingDrops.Lowest::new, w -> w.e);
         r.registerWrapper(ZLivingFall.class, ForgeZLivingFall.class);
-        //r.registerWrapper(ZLivingTick.class, LivingEvent.LivingTickEvent.class, ForgeZLivingTick::new, ForgeZLivingTick::e);
+        r.registerWrapper(ZLivingTick.class, EntityTickEvent.Post.class, ForgeZLivingTick::new, ForgeZLivingTick::e);
         r.registerWrapper(ZMobSpawnEvent.class, MobSpawnEvent.class,
                 ForgeZMobSpawnEvent::new, w -> w.e);
         r.registerWrapper(ZMobSpawnEvent.CheckSpawn.class, FinalizeSpawnEvent.class,
