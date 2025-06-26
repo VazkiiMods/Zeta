@@ -6,7 +6,7 @@ import org.violetmoon.zeta.event.play.ZLevelTick;
 
 import net.minecraft.world.level.Level;
 
-public class ForgeZLevelTick implements ZLevelTick {
+public abstract class ForgeZLevelTick implements ZLevelTick {
     public final LevelTickEvent e;
 
     public ForgeZLevelTick(LevelTickEvent e) {
@@ -19,13 +19,13 @@ public class ForgeZLevelTick implements ZLevelTick {
     }
 
     public static class Start extends ForgeZLevelTick implements ZLevelTick.Start {
-        public Start(LevelTickEvent e) {
+        public Start(LevelTickEvent.Pre e) {
             super(e);
         }
     }
 
     public static class End extends ForgeZLevelTick implements ZLevelTick.End {
-        public End(LevelTickEvent e) {
+        public End(LevelTickEvent.Post e) {
             super(e);
         }
     }

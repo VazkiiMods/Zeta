@@ -165,9 +165,9 @@ public class ZetaModCommonProxy {
         //r.registerWrapper(ZGatherHints.class, ForgeZGatherHints.class);
         //r.registerWrapper(ZSleepingLocationCheck.class, ForgeZSleepingLocationCheck.class);
         r.registerWrapper(ZAnimalTame.class, ForgeZAnimalTame.class);
-        r.registerWrapper(ZLevelTick.End.class, LevelTickEvent.class,
+        r.registerWrapper(ZLevelTick.End.class, LevelTickEvent.Post.class,
                 ForgeZLevelTick.End::new, w -> w.e);
-        r.registerWrapper(ZLevelTick.Start.class, LevelTickEvent.class,
+        r.registerWrapper(ZLevelTick.Start.class, LevelTickEvent.Pre.class,
                 ForgeZLevelTick.Start::new, w -> w.e);
 
         // zeta specific ones

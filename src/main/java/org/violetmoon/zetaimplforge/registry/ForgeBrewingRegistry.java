@@ -43,7 +43,7 @@ public class ForgeBrewingRegistry extends BrewingRegistry {
 	public void commonSetup(ZCommonSetup event) {
 		event.enqueueWork(() -> {
 			okToRegisterImmediately = true;
-			delayedPotions.forEach(DelayedPotion::register);
+			if (delayedPotions != null) delayedPotions.forEach(DelayedPotion::register);
 			delayedPotions = null;
 		});
 	}

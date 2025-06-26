@@ -39,15 +39,19 @@ public class RenderLayerRegistry {
 
 	public void finalize(BiConsumer<Block, Layer> action) {
 		//Note: only handles one layer of inheritances
-		for(Block b : inheritances.keySet()) {
-			Block inheritFrom = inheritances.get(b);
-			Layer layer = mapping.get(inheritFrom);
+		if (inheritances != null) {
+			for (Block b : inheritances.keySet()) {
+				Block inheritFrom = inheritances.get(b);
+				Layer layer = mapping.get(inheritFrom);
 
-			if(layer != null)
-				mapping.put(b, layer);
+				if (layer != null)
+					mapping.put(b, layer);
+			}
 		}
 
-		mapping.forEach(action);
+		if (mapping != null) {
+			mapping.forEach(action);
+		}
 
 		//and we're done
 		mapping = null;
