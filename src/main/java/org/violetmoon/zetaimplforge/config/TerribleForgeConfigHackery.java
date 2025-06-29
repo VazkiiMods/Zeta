@@ -1,13 +1,11 @@
 package org.violetmoon.zetaimplforge.config;
 
-import com.electronwill.nightconfig.core.CommentedConfig;
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.electronwill.nightconfig.core.io.WritingMode;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.config.ConfigTracker;
 import net.neoforged.fml.config.ModConfig;
-import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.fml.util.ObfuscationReflectionHelper;
 import net.neoforged.neoforge.common.ModConfigSpec;
@@ -15,27 +13,30 @@ import net.neoforged.neoforge.common.ModConfigSpec;
 import java.io.Serial;
 import java.lang.reflect.Method;
 import java.nio.file.Path;
-import java.util.function.Function;
 
 public class TerribleForgeConfigHackery {
+
 	private static boolean pleaseWorkPleaseImBegging = false;
 	//private static final Method SET_CONFIG_DATA = ObfuscationReflectionHelper.findMethod(ModConfig.class, "setConfigData", Function.class, CommentedConfig.class) ;
 	// private static final Method SET_CONFIG_DATA = ObfuscationReflectionHelper.findMethod(ModConfig.class, "setConfig", LoadedConfig.class, FunctionalInterface.class);
 	private static final Method SETUP_CONFIG_FILE = ObfuscationReflectionHelper.findMethod(ConfigTracker.class, "setupConfigFile", ModConfig.class, Path.class);
+	private static final Method OPEN_CONFIG_FILE = ObfuscationReflectionHelper.findMethod(ConfigTracker.class, "openConfig", ModConfig.class, Path.class, Path.class);
 
 	// TODO: Replace the name string + not 100% sure about this
 	public static void registerAndLoadConfigEarlierThanUsual(ModConfigSpec spec, String modID) {
 		ModContainer container = ModLoadingContext.get().getActiveContainer();
 		ModConfig modConfig = ConfigTracker.INSTANCE.registerConfig(ModConfig.Type.COMMON, spec, container);
 
-		ConfigTracker.INSTANCE.loadConfigs(ModConfig.Type.COMMON, Path.of(modConfig.getFileName()));
+		try {
+			OPEN_CONFIG_FILE.invoke(ConfigTracker.INSTANCE, modConfig, FMLPaths.CONFIGDIR.get(), null);
+		} catch (Exception e) {
+			throw new ConfigLoadingException(modConfig, e);
+		}
 
 		//same stuff that forge config tracker does
 		//read config without setting file watcher which could cause resets. forge will load it later
-		CommentedFileConfig configData = readConfig(ConfigTracker.INSTANCE, FMLPaths.CONFIGDIR.get(), modConfig);
-		//CommentedFileConfig configData = handler.reader(FMLPaths.CONFIGDIR.get()).apply( modConfig);
-
-		container.acceptEvent(new ModConfigEvent.Loading(modConfig));
+		CommentedFileConfig configData = readConfig(ConfigTracker.INSTANCE, FMLPaths.CONFIGDIR.get(), modConfig).apply(modID);
+		// CommentedFileConfig configData = handler.reader(FMLPaths.CONFIGDIR.get()).apply( modConfig);
 
 		/*
 		SET_CONFIG_DATA.setAccessible(true);
@@ -43,10 +44,8 @@ public class TerribleForgeConfigHackery {
 			SET_CONFIG_DATA.invoke(modConfig, new LoadedConfig(configData, modConfig.getFullPath(), modConfig), ModConfigEvent.Loading::new);
 		} catch (Exception ignored) {}
 		//container.dispatchConfigEvent(IConfigEvent.loading(this.config));
-
-		 */
-			configData.save();
-
+		*/
+		// configData.save();
 	}
 
 	//we need this so we dont add a second file watcher. Same as handler::reader
