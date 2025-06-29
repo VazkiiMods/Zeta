@@ -1,8 +1,12 @@
 package org.violetmoon.zeta.advancement.modifier;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.BooleanSupplier;
 
+import net.minecraft.advancements.CriterionTriggerInstance;
 import net.minecraft.advancements.critereon.MobEffectsPredicate;
 import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
@@ -40,12 +44,20 @@ public class FuriousCocktailModifier extends AdvancementModifier {
 	@Override
 	public boolean apply(ResourceLocation res, IMutableAdvancement adv, RegistryAccess registry) {
 		if (!isPotion.getAsBoolean() && res.equals(TARGET_AP)) return false;
-		
+
 		Criterion<?> crit = adv.getCriterion("all_effects");
 		if (crit != null && crit.triggerInstance() instanceof EffectsChangedTrigger.TriggerInstance ect && ect.effects().isPresent()) {
+			Map<Holder<MobEffect>, MobEffectsPredicate.MobEffectInstancePredicate> replacementMobEffectsMap = new HashMap<>();
+			replacementMobEffectsMap.putAll(ect.effects().get().effectMap());
+
 			for(Holder<MobEffect> e : effects) {
-				ect.effects().get().effectMap().put(e, new MobEffectsPredicate.MobEffectInstancePredicate());
+				replacementMobEffectsMap.put(e, new MobEffectsPredicate.MobEffectInstancePredicate());
 			}
+
+			MobEffectsPredicate replacementPredicate = new MobEffectsPredicate(replacementMobEffectsMap);
+
+			Criterion<?> replacementCrit = new Criterion(crit.trigger(), new EffectsChangedTrigger.TriggerInstance(ect.player(), Optional.of(replacementPredicate), ect.source()));
+			adv.replaceCriterion("all_effects", replacementCrit);
 			return true;
 		}
 		return false;

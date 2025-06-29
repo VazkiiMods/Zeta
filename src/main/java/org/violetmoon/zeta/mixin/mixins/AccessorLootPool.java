@@ -3,6 +3,7 @@ package org.violetmoon.zeta.mixin.mixins;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
 import java.util.List;
@@ -14,5 +15,6 @@ public interface AccessorLootPool {
     List<LootPoolEntryContainer> zeta$getLootPoolEntries();
 
     @Accessor("entries")
+    @Mutable
     void zeta$setLootPoolEntries(List<LootPoolEntryContainer> entries);
 }

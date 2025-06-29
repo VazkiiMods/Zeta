@@ -3,6 +3,7 @@ package org.violetmoon.zeta.mixin.mixins;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.world.level.storage.loot.LootContext;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
 import java.util.function.Predicate;
@@ -14,5 +15,6 @@ public interface AccessorContextAwarePredicate {
     Predicate<LootContext> zeta$getCompositePredicates();
 
     @Accessor("compositePredicates")
+    @Mutable
     void zeta$setCompositePredicates(Predicate<LootContext> predicate);
 }

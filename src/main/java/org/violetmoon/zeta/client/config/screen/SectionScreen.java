@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import net.minecraft.client.gui.components.Renderable;
 import org.apache.commons.lang3.text.WordUtils;
 import org.jetbrains.annotations.NotNull;
 import org.violetmoon.zeta.client.ZetaClient;
@@ -74,8 +75,13 @@ public class SectionScreen extends ZetaScreen {
 	public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
 		renderBackground(guiGraphics, mouseX, mouseY, partialTicks);
 
+		//super.render(guiGraphics, mouseX, mouseY, partialTicks);
 		list.render(guiGraphics, mouseX, mouseY, partialTicks);
-		super.render(guiGraphics, mouseX, mouseY, partialTicks);
+		
+		for(Renderable renderable : this.renderables) {
+			renderable.render(guiGraphics, mouseX, mouseY, partialTicks);
+		}
+
 		list.reenableVisibleWidgets();
 
 		int left = 20;

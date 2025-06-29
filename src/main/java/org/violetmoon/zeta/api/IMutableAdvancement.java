@@ -8,5 +8,9 @@ public interface IMutableAdvancement {
 
     void addOrCriterion(String name, Criterion<?> criterion);
 
+    void removeCriterion(String name);
+
+    void replaceCriterion(String name, Criterion<?> criterion);
+
     Criterion<?> getCriterion(String title);
 }

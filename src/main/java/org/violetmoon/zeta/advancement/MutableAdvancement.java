@@ -14,7 +14,7 @@ import java.util.Map;
 
 public class MutableAdvancement implements IMutableAdvancement {
 	
-	final Advancement advancement;
+	Advancement advancement;
 	
 	public Map<String, Criterion<?>> criteria;
 	public List<List<String>> requirements;
@@ -37,6 +37,16 @@ public class MutableAdvancement implements IMutableAdvancement {
 	}
 
 	@Override
+	public void removeCriterion(String name) {
+		criteria.remove(name);
+	}
+
+	@Override
+	public void replaceCriterion(String name, Criterion<?> criterion) {
+		criteria.replace(name, criterion);
+	}
+
+	@Override
 	public Criterion<?> getCriterion(String title) {
 		return criteria.get(title);
 	}
@@ -49,8 +59,9 @@ public class MutableAdvancement implements IMutableAdvancement {
 	}
 	
 	public void commit() {
-		advancement.criteria().clear();
-		advancement.criteria().putAll(ImmutableMap.copyOf(criteria));
-		advancement.requirements().requirements().addAll(requirements);
+		advancement = new Advancement(advancement.parent(), advancement.display(), advancement.rewards(), ImmutableMap.copyOf(criteria), new AdvancementRequirements(requirements), advancement.sendsTelemetryEvent(), advancement.name());
+		//advancement.criteria().clear();
+		//advancement.criteria().putAll(ImmutableMap.copyOf(criteria));
+		//advancement.requirements().requirements().addAll(requirements);
 	}
 }
