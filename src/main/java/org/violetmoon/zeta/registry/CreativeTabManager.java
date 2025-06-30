@@ -101,7 +101,6 @@ public class CreativeTabManager {
 					acceptItem(event, item);
 				}
 
-				/* CONFIG FLAG
 				if(ZetaGeneralConfig.forceCreativeTabAppends) {
 					for(ItemSet itemset : add.appendInFront.keySet())
 						for(ItemLike item : itemset.items)
@@ -112,7 +111,6 @@ public class CreativeTabManager {
 							acceptItem(event, item);
 					return;
 				}
-				 */
 
 				Map<ItemSet, ItemLike> front = new LinkedHashMap<>(add.appendInFront);
 				Map<ItemSet, ItemLike> behind = new LinkedHashMap<>(add.appendBehind);

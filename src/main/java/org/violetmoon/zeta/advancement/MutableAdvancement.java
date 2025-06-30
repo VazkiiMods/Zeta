@@ -55,7 +55,12 @@ public class MutableAdvancement implements IMutableAdvancement {
 		this.criteria = Maps.newHashMap(advancement.criteria());
 		this.requirements = new ArrayList<>();
 		AdvancementRequirements advReq = advancement.requirements();
-        this.requirements.addAll(advReq.requirements());
+		for (List<String> requirement : advReq.requirements()) {
+			List<String> replcRequirement = new ArrayList<>();
+			replcRequirement.addAll(requirement);
+			this.requirements.add(replcRequirement);
+		}
+        //this.requirements.addAll(advReq.requirements());
 	}
 	
 	public void commit() {

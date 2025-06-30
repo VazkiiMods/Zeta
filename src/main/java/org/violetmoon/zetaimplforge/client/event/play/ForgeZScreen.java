@@ -5,7 +5,6 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.neoforged.neoforge.client.event.ScreenEvent;
 import org.violetmoon.zeta.client.event.play.ZScreen;
-import org.violetmoon.zetaimplforge.mixin.mixins.AccessorEvent;
 
 import java.util.List;
 
@@ -123,12 +122,12 @@ public class ForgeZScreen implements ZScreen {
             
             @Override
             public boolean isCanceled() {
-                return ((AccessorEvent)e).zeta$isCanceled();
+                return ((ScreenEvent.MouseButtonPressed.Pre)e).isCanceled();
             }
 
             @Override
             public void setCanceled(boolean canceled) {
-                ((AccessorEvent)e).zeta$setCanceled(canceled);
+                ((ScreenEvent.MouseButtonPressed.Pre)e).setCanceled(canceled);
             }
         }
 
@@ -139,8 +138,8 @@ public class ForgeZScreen implements ZScreen {
         }
     }
 
-    public static class MouseScrolled extends ForgeZScreen implements ZScreen.MouseScrolled {
-        private final ScreenEvent.MouseScrolled e;
+    public abstract static class MouseScrolled extends ForgeZScreen implements ZScreen.MouseScrolled {
+        final ScreenEvent.MouseScrolled e;
 
         public MouseScrolled(ScreenEvent.MouseScrolled e) {
             super(e);
@@ -157,19 +156,19 @@ public class ForgeZScreen implements ZScreen {
             return e.getScrollDeltaY();
         }
 
-        @Override
-        public boolean isCanceled() {
-            return ((AccessorEvent)e).zeta$isCanceled();
-        }
-
-        @Override
-        public void setCanceled(boolean cancel) {
-            ((AccessorEvent)e).zeta$setCanceled(cancel);
-        }
-
         public static class Pre extends ForgeZScreen.MouseScrolled implements ZScreen.MouseScrolled.Pre {
             public Pre(ScreenEvent.MouseScrolled.Pre e) {
                 super(e);
+            }
+
+            @Override
+            public boolean isCanceled() {
+                return ((ScreenEvent.MouseScrolled.Pre)e).isCanceled();
+            }
+
+            @Override
+            public void setCanceled(boolean cancel) {
+                ((ScreenEvent.MouseScrolled.Pre)e).setCanceled(cancel);
             }
         }
 
@@ -177,11 +176,21 @@ public class ForgeZScreen implements ZScreen {
             public Post(ScreenEvent.MouseScrolled.Post e) {
                 super(e);
             }
+
+            @Override
+            public boolean isCanceled() {
+                return false;
+            }
+
+            @Override
+            public void setCanceled(boolean cancel) {
+                //NO OP
+            }
         }
     }
 
-    public static class KeyPressed extends ForgeZScreen implements ZScreen.KeyPressed {
-        private final ScreenEvent.KeyPressed e;
+    public static abstract class KeyPressed extends ForgeZScreen implements ZScreen.KeyPressed {
+        final ScreenEvent.KeyPressed e;
 
         public KeyPressed(ScreenEvent.KeyPressed e) {
             super(e);
@@ -203,19 +212,19 @@ public class ForgeZScreen implements ZScreen {
             return e.getModifiers();
         }
 
-        @Override
-        public boolean isCanceled() {
-            return ((AccessorEvent)e).zeta$isCanceled();
-        }
-
-        @Override
-        public void setCanceled(boolean cancel) {
-            ((AccessorEvent)e).zeta$setCanceled(cancel);
-        }
-
         public static class Pre extends ForgeZScreen.KeyPressed implements ZScreen.KeyPressed.Pre {
             public Pre(ScreenEvent.KeyPressed.Pre e) {
                 super(e);
+            }
+
+            @Override
+            public boolean isCanceled() {
+                return ((ScreenEvent.KeyPressed.Pre)e).isCanceled();
+            }
+
+            @Override
+            public void setCanceled(boolean cancel) {
+                ((ScreenEvent.KeyPressed.Pre)e).setCanceled(cancel);
             }
         }
 
@@ -223,11 +232,21 @@ public class ForgeZScreen implements ZScreen {
             public Post(ScreenEvent.KeyPressed.Post e) {
                 super(e);
             }
+
+            @Override
+            public boolean isCanceled() {
+                return ((ScreenEvent.KeyPressed.Post)e).isCanceled();
+            }
+
+            @Override
+            public void setCanceled(boolean cancel) {
+                ((ScreenEvent.KeyPressed.Post)e).setCanceled(cancel);
+            }
         }
     }
 
-    public static class CharacterTyped extends ForgeZScreen implements ZScreen.CharacterTyped {
-        private final ScreenEvent.CharacterTyped e;
+    public static abstract class CharacterTyped extends ForgeZScreen implements ZScreen.CharacterTyped {
+        final ScreenEvent.CharacterTyped e;
 
         public CharacterTyped(ScreenEvent.CharacterTyped e) {
             super(e);
@@ -244,25 +263,35 @@ public class ForgeZScreen implements ZScreen {
             return e.getModifiers();
         }
 
-        @Override
-        public boolean isCanceled() {
-            return ((AccessorEvent)e).zeta$isCanceled();
-        }
-
-        @Override
-        public void setCanceled(boolean cancel) {
-            ((AccessorEvent)e).zeta$setCanceled(cancel);
-        }
-
         public static class Pre extends ForgeZScreen.CharacterTyped implements ZScreen.CharacterTyped.Pre {
             public Pre(ScreenEvent.CharacterTyped.Pre e) {
                 super(e);
+            }
+
+            @Override
+            public boolean isCanceled() {
+                return ((ScreenEvent.CharacterTyped.Pre)e).isCanceled();
+            }
+
+            @Override
+            public void setCanceled(boolean cancel) {
+                ((ScreenEvent.CharacterTyped.Pre)e).setCanceled(cancel);
             }
         }
 
         public static class Post extends ForgeZScreen.CharacterTyped implements ZScreen.CharacterTyped.Post {
             public Post(ScreenEvent.CharacterTyped.Post e) {
                 super(e);
+            }
+
+            @Override
+            public boolean isCanceled() {
+                return false;
+            }
+
+            @Override
+            public void setCanceled(boolean cancel) {
+                // NOTHING TO BE CANCELED
             }
         }
     }

@@ -3,6 +3,7 @@ package org.violetmoon.zeta.item.ext;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -64,8 +65,9 @@ public interface IZetaItemExtensions {
 		return itemenchantments.getLevel(enchantment);
 	}
 
+	@Deprecated
 	default ItemEnchantments getAllEnchantmentsZeta(ItemStack stack, HolderLookup.RegistryLookup<Enchantment> lookup) {
-		return stack.getAllEnchantments(lookup);
+		return stack.get(DataComponents.ENCHANTMENTS);
 	}
 
 	default boolean shouldCauseReequipAnimationZeta(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
