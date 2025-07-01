@@ -59,6 +59,10 @@ import org.violetmoon.zetaimplforge.util.ForgeRaytracingUtil;
  * ideally do not touch quark from this package, it will later be split off
  */
 public class ForgeZeta extends Zeta {
+    public boolean lmfaoWhat = false;
+    public static boolean lmfaoHuh = false;
+
+
     public ForgeZeta(String modid, Logger log) {
         super(modid, log, ZetaSide.fromClient(FMLEnvironment.dist.isClient()), FMLEnvironment.production);
     }
@@ -162,7 +166,10 @@ public class ForgeZeta extends Zeta {
         NeoForge.EVENT_BUS.addListener(configEventDispatcher::serverAboutToStart);
 
         //other stuff
-        modbus.addListener(EventPriority.LOWEST, CreativeTabManager::buildContents);
+        if (!lmfaoHuh) {
+            modbus.addListener(EventPriority.LOWEST, CreativeTabManager::buildContents);
+            lmfaoHuh = true;
+        }
         modbus.addListener(EventPriority.HIGHEST, this::registerHighest);
     }
 
