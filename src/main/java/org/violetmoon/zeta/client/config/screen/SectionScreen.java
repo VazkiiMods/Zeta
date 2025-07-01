@@ -77,7 +77,7 @@ public class SectionScreen extends ZetaScreen {
 
 		//super.render(guiGraphics, mouseX, mouseY, partialTicks);
 		list.render(guiGraphics, mouseX, mouseY, partialTicks);
-		
+
 		for(Renderable renderable : this.renderables) {
 			renderable.render(guiGraphics, mouseX, mouseY, partialTicks);
 		}
@@ -118,11 +118,12 @@ public class SectionScreen extends ZetaScreen {
 			this.def = def;
 
 			this.ext = zc.clientConfigManager.getExt(def);
-			ext.addWidgets(zc, SectionScreen.this, changes, def, this::addScrollingWidget);
+			this.ext.addWidgets(zc, SectionScreen.this, changes, def, this::addScrollingWidget);
 		}
 
+
 		@Override
-		public void render(@NotNull GuiGraphics guiGraphics, int index, int rowTop, int rowLeft, int rowWidth, int rowHeight, int mouseX, int mouseY, boolean hovered, float partialTicks) {
+		public void renderBack(@NotNull GuiGraphics guiGraphics, int index, int rowTop, int rowLeft, int rowWidth, int rowHeight, int mouseX, int mouseY, boolean hovered, float partialTicks) {
 			assert minecraft != null; //thank you intellij, always lookin out for me
 
 			int left = rowLeft + 10;
@@ -131,9 +132,8 @@ public class SectionScreen extends ZetaScreen {
 			int effIndex = index + 1;
 			if(def instanceof SectionDefinition)
 				effIndex--; // compensate for the divider
-			drawBackground(guiGraphics, effIndex, rowTop, rowLeft, rowWidth, rowHeight, mouseX, mouseY, hovered);
+			//drawBackground(guiGraphics, effIndex, rowTop, rowLeft, rowWidth, rowHeight, mouseX, mouseY, hovered);
 
-			super.render(guiGraphics, index, rowTop, rowLeft, rowWidth, rowHeight, mouseX, mouseY, hovered, partialTicks);
 
 			String name = def.getTranslatedDisplayName(I18n::get);
 			if(changes.isDirty(def))
@@ -153,9 +153,9 @@ public class SectionScreen extends ZetaScreen {
 			}
 
 			List<Component> tooltip = def.getTranslatedComment(I18n::get)
-				.stream()
-				.map(Component::literal) //TODO: return a TranslatableComponent from this api instead?
-				.collect(Collectors.toList());
+					.stream()
+					.map(Component::literal) //TODO: return a TranslatableComponent from this api instead?
+					.collect(Collectors.toList());
 
 			if(originalName != null) {
 				if(tooltip.isEmpty()) {
@@ -178,6 +178,13 @@ public class SectionScreen extends ZetaScreen {
 			guiGraphics.drawString(minecraft.font, name, left, top, 0xFFFFFF, true);
 			if(ext != null)
 				guiGraphics.drawString(minecraft.font, ext.getSubtitle(changes, def), left, top + 10, 0x999999, true);
+		}
+
+
+
+		@Override
+		public void render(@NotNull GuiGraphics guiGraphics, int index, int rowTop, int rowLeft, int rowWidth, int rowHeight, int mouseX, int mouseY, boolean hovered, float partialTicks) {
+			super.render(guiGraphics, index, rowTop, rowLeft, rowWidth, rowHeight, mouseX, mouseY, hovered, partialTicks);
 		}
 
 		@Override

@@ -21,7 +21,7 @@ public class CheckboxButton extends Button {
 	private final ChangeSet changes;
 
 	public CheckboxButton(ResourceLocation iconsTexture, int x, int y, ChangeSet changes, ValueDefinition<Boolean> value) {
-		super(new Button.Builder(Component.literal(""), CheckboxButton::toggle).pos(x, y).size(20, 20));
+		super(new Button.Builder(Component.literal(""), Button::onPress).pos(x, y).size(20, 20));
 		this.iconsTexture = iconsTexture;
 		this.value = value;
 		this.changes = changes;
@@ -31,10 +31,10 @@ public class CheckboxButton extends Button {
 		this(zc.generalIcons, x, y, changes, value);
 	}
 
-	private static void toggle(Button press) {
-		if(press instanceof CheckboxButton checkbox) {
-			checkbox.changes.toggle(checkbox.value);
-		}
+
+	@Override
+	public void onPress() {
+		this.changes.toggle(this.value);
 	}
 
 	@Override

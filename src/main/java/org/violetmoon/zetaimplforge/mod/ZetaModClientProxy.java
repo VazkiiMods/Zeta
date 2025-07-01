@@ -26,7 +26,6 @@ import org.violetmoon.zetaimplforge.event.load.ForgeZRegisterClientReloadListene
 import org.violetmoon.zetaimplforge.event.play.ForgeZScreenshot;
 
 public class ZetaModClientProxy extends ZetaModCommonProxy {
-
     @Override
     public void registerEvents(Zeta zeta){
         super.registerEvents(zeta);

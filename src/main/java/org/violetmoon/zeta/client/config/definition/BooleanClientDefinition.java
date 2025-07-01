@@ -18,6 +18,8 @@ public class BooleanClientDefinition implements ClientDefinitionExt<ValueDefinit
 
 	@Override
 	public void addWidgets(ZetaClient zc, Screen parent, ChangeSet changes, ValueDefinition<Boolean> def, Consumer<AbstractWidget> widgets) {
-		widgets.accept(new CheckboxButton(zc, 230, 3, changes, def));
+		CheckboxButton button = new CheckboxButton(zc, 230, 3, changes, def);
+
+		widgets.accept(button);
 	}
 }

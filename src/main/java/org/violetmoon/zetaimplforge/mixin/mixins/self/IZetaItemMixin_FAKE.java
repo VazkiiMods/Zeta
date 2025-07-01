@@ -3,6 +3,7 @@ package org.violetmoon.zetaimplforge.mixin.mixins.self;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -60,7 +61,12 @@ public class IZetaItemMixin_FAKE implements IItemExtension, IZetaItemExtensions 
 
 	@Override
 	public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
-		return stack.isBookEnchantable(book);
+		boolean canEnchant = true;
+		for (Holder<Enchantment> enchantment : book.get(DataComponents.ENCHANTMENTS).keySet()) {
+			canEnchant = enchantment.value().canEnchant(stack);
+			if (!canEnchant) break;
+		}
+		return canEnchant;
 	}
 
 	@Override

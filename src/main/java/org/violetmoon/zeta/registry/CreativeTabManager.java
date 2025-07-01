@@ -95,7 +95,7 @@ public class CreativeTabManager {
 			ResourceKey<CreativeModeTab> tabKey = event.getTabKey();
 			
 			if(additions.containsKey(tabKey)) {
-				CreativeTabAdditions add = additions.get(tabKey);
+				CreativeTabAdditions add = additions.remove(tabKey);
 
 				for(ItemLike item : add.appendToEnd) {
 					acceptItem(event, item);

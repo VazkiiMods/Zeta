@@ -1,8 +1,39 @@
 package org.violetmoon.zeta.integration;
 
-//@JeiPlugin
-public class ZetaJeiPlugin /*implements IModPlugin*/ {
-    /*private static final ResourceLocation UID = new ResourceLocation(ZetaMod.ZETA_ID, ZetaMod.ZETA_ID);
+import com.google.common.collect.Sets;
+import mezz.jei.api.IModPlugin;
+import mezz.jei.api.JeiPlugin;
+import mezz.jei.api.constants.VanillaTypes;
+import mezz.jei.api.registration.IRecipeRegistration;
+import mezz.jei.api.runtime.IJeiRuntime;
+import net.minecraft.client.Minecraft;
+import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.PotionItem;
+import net.minecraft.world.item.TippedArrowItem;
+import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionContents;
+import org.jetbrains.annotations.NotNull;
+import org.violetmoon.zeta.Zeta;
+import org.violetmoon.zeta.config.ZetaGeneralConfig;
+import org.violetmoon.zeta.event.load.ZGatherHints;
+import org.violetmoon.zeta.mod.ZetaMod;
+import org.violetmoon.zeta.module.IDisableable;
+import org.violetmoon.zeta.util.RegistryUtil;
+import org.violetmoon.zeta.util.zetalist.ZetaList;
+
+import java.util.List;
+import java.util.Set;
+
+@JeiPlugin
+public class ZetaJeiPlugin implements IModPlugin {
+    private static final ResourceLocation UID = ResourceLocation.fromNamespaceAndPath(ZetaMod.ZETA_ID, ZetaMod.ZETA_ID);
 
     @NotNull
     @Override
@@ -28,10 +59,10 @@ public class ZetaJeiPlugin /*implements IModPlugin*/ {
 
             //needed?
 
-            // List<ItemStack> disabledItems = ZetaMod.ZETA.requiredModTooltipHandler.disabledItems();
-            // if (!disabledItems.isEmpty())
-            //   jeiRuntime.getIngredientManager().removeIngredientsAtRuntime(VanillaTypes.ITEM_STACK, disabledItems);
-
+            /*List<ItemStack> disabledItems = ZetaMod.ZETA..disabledItems();
+            if (!disabledItems.isEmpty())
+                jeiRuntime.getIngredientManager().removeIngredientsAtRuntime(VanillaTypes.ITEM_STACK, disabledItems);
+            */
 
             if (!ZetaGeneralConfig.hideDisabledContent)
                 return;
@@ -43,8 +74,8 @@ public class ZetaJeiPlugin /*implements IModPlugin*/ {
             //we need to manually hide potions derivative items as these are vanilla and will be populated automatically
 
             for (var h : z.registry.getRegisteredObjects(Registries.POTION)) {
-                if (!ZetaMod.ZETA.brewingRegistry.isEnabled(h.get())) {
-                    hidePotions.add(h.get());
+                if (!ZetaMod.ZETA.brewingRegistry.isEnabled(h.value())) {
+                    hidePotions.add(h.value());
                 }
             }
 
@@ -52,21 +83,23 @@ public class ZetaJeiPlugin /*implements IModPlugin*/ {
                 for (Item item : BuiltInRegistries.ITEM) {
                     if (item instanceof PotionItem || item instanceof TippedArrowItem) {
                         NonNullList<ItemStack> potionStacks = NonNullList.create();
-                        potionStacks.stream().filter(it -> hidePotions.contains(PotionUtils.getPotion(it))).forEach(stacksToHide::add);
+                        potionStacks.stream().filter(it -> {
+                            if (it.has(DataComponents.POTION_CONTENTS)) return hidePotions.contains(it.get(DataComponents.POTION_CONTENTS).potion().get());
+                            return false;
+                        }).forEach(stacksToHide::add);
                     }
                 }
             }
 
             //TODO: remove? I have no clue if this should be added or not
-            /*
             for (var h : z.registry.getRegisteredObjects(Registries.ITEM)) {
-                if (!IDisableable.isEnabled(h.get())) {
+                if (!IDisableable.isEnabled(h.value())) {
                     //TODO 1.20: this just enumerated the item's variants
                     //item.fillItemCategory(CreativeModeTab.TAB_SEARCH, stacksToHide);
                 }
-            }*/
+            }
 
-           /* if (!stacksToHide.isEmpty())
+            if (!stacksToHide.isEmpty())
                 Minecraft.getInstance().submitAsync(() -> jeiRuntime.getIngredientManager()
                         .removeIngredientsAtRuntime(VanillaTypes.ITEM_STACK, stacksToHide));
 
@@ -84,6 +117,6 @@ public class ZetaJeiPlugin /*implements IModPlugin*/ {
         for (Zeta z : ZetaList.INSTANCE.getZetas()) {
             z.loadBus.fire(new JeiGatherHints(registration, z.modid, registryAccess, blacklist), ZGatherHints.class);
         }
-    }*/
+    }
 
 }
