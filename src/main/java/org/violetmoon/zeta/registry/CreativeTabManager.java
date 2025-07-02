@@ -52,7 +52,7 @@ public class CreativeTabManager {
 		Map<ItemSet, ItemLike> map = (behind ? additions.appendBehind : additions.appendInFront);
 		ItemSet toAdd = null;
 		
-		if(daisyChainMode) {
+		if (daisyChainMode) {
 			boolean newSet = daisyChainedSet == null;
 			ItemSet set = addToDaisyChain(item);
 
@@ -93,7 +93,8 @@ public class CreativeTabManager {
 		synchronized(MUTEX) {
 
 			ResourceKey<CreativeModeTab> tabKey = event.getTabKey();
-			
+
+
 			if(additions.containsKey(tabKey)) {
 				CreativeTabAdditions add = additions.get(tabKey);
 
@@ -118,13 +119,15 @@ public class CreativeTabManager {
 				final int logThreshold = maxFails - 10;
 				int failedAttempts = 0;
 
-                while ((!front.isEmpty() && !behind.isEmpty()) && failedAttempts < 100) {
+                while ((!front.isEmpty() && !behind.isEmpty()) || failedAttempts < 100) {
 					if (!front.isEmpty()) {
 						failedAttempts = addItems(event, front, false, failedAttempts > logThreshold) ? failedAttempts : failedAttempts + 1;
 					}
 					if (!behind.isEmpty()) {
 						failedAttempts = addItems(event, behind, true, failedAttempts > logThreshold) ? failedAttempts : failedAttempts + 1;
 					}
+
+					if (front.isEmpty() && behind.isEmpty()) return;
                 }
 			}
 		}
