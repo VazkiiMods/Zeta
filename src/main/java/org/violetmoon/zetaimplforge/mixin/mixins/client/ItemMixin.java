@@ -13,6 +13,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.violetmoon.zeta.client.HumanoidArmorModelGetter;
 import org.violetmoon.zetaimplforge.client.IZetaForgeItemStuff;
 
+//todo: Yeah this mixin doesnt work.
 @Mixin(Item.class)
 public class ItemMixin implements IZetaForgeItemStuff {
 

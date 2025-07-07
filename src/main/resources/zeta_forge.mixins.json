@@ -8,8 +8,8 @@
   "mixins": [
     "AccessorPotionBrewing",
     "WeatheringCopperMixin",
-    "self.IZetaBlockMixin_FAKE",
-    "self.IZetaItemMixin_FAKE"
+    "self.IZetaBlockMixin",
+    "self.IZetaItemMixin"
   ],
   "client": [
     "client.AccessorBlockColors",

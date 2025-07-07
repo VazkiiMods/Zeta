@@ -25,8 +25,8 @@ public class DefaultDiscardDone {
 		int left = (screen.width - (bWidth + pad) * 3) / 2;
 		int vStart = screen.height - 30;
 
-		this.resetToDefault = new Button.Builder(Component.translatable("quark.gui.config.default"), this::resetToDefault).size(bWidth, 20).pos(left, vStart).build();
-		this.discard = new Button.Builder(Component.translatable("quark.gui.config.discard"), this::discard).size(bWidth, 20).pos(left + bWidth + pad, vStart).build();
+		this.resetToDefault = new Button.Builder(Component.translatable("zeta.gui.config.default"), this::resetToDefault).size(bWidth, 20).pos(left, vStart).build();
+		this.discard = new Button.Builder(Component.translatable("zeta.gui.config.discard"), this::discard).size(bWidth, 20).pos(left + bWidth + pad, vStart).build();
 		this.done = new Button.Builder(Component.translatable("gui.done"), this::done).size(bWidth, 20).pos(left + (bWidth + pad) * 2, vStart).build();
 
 		this.screen = screen;

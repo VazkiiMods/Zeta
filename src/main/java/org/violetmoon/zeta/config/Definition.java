@@ -66,7 +66,7 @@ public abstract class Definition {
 		((ArrayList<?>) path).trimToSize();
 
 		//translation keys
-		String stem = "quark.config." + String.join(".", path);
+		String stem = "zeta.config." + String.join(".", path);
 		configNameKey = stem + ".name";
 		configDescKey = stem + ".desc";
 	}

@@ -24,7 +24,7 @@ public class CategoryButton extends Button {
 		super.renderWidget(guiGraphics, mouseX, mouseY, partialTicks);
 
 		if(!active)
-			setTooltip(Tooltip.create(Component.translatable("quark.gui.config.missingaddon"))); // todo: QUARK REFERENCE
+			setTooltip(Tooltip.create(Component.translatable("zeta.gui.config.missingaddon")));
 
 		Minecraft mc = Minecraft.getInstance();
 		guiGraphics.renderFakeItem(icon, getX() + 5, getY() + 2);

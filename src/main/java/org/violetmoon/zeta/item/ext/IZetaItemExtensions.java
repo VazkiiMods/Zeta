@@ -53,7 +53,7 @@ public interface IZetaItemExtensions {
 	}
 
 	default int getEnchantmentValueZeta(ItemStack stack) {
-		return this.self().getEnchantmentValue();
+		return stack.getEnchantmentValue();
 	}
 
 	default boolean canShearZeta(ItemStack stack) { //canPerformAction
@@ -76,7 +76,7 @@ public interface IZetaItemExtensions {
 
 	// IItemExtension#getBurnTime is annotated as OverrideOnly for some reason, hardcode to be safe for now
 	default int getBurnTimeZeta(ItemStack stack, @Nullable RecipeType<?> recipeType) {
-		FurnaceFuel furnaceFuel = this.self().builtInRegistryHolder().getData(NeoForgeDataMaps.FURNACE_FUELS);
+		FurnaceFuel furnaceFuel = stack.getItem().builtInRegistryHolder().getData(NeoForgeDataMaps.FURNACE_FUELS);
 		return furnaceFuel == null ? 0 : furnaceFuel.burnTime();
 	}
 

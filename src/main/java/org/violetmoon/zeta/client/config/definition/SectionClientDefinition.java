@@ -18,7 +18,7 @@ public class SectionClientDefinition implements ClientDefinitionExt<SectionDefin
 	public String getSubtitle(ChangeSet changes, SectionDefinition def) {
 		//TODO: expose both numbers in the UI, not just one (needs more strings)
 		int size = def.getSubsections().size() + def.getValues().size();
-		return (size == 1 ? I18n.get("quark.gui.config.onechild") : I18n.get("quark.gui.config.nchildren", size));
+		return (size == 1 ? I18n.get("zeta.gui.config.onechild") : I18n.get("zeta.gui.config.nchildren", size));
 	}
 
 	@Override

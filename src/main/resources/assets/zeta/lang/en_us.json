@@ -1,5 +1,15 @@
 {
   "zeta.misc.mod_disabled": "Disabled. Install %s to enable.",
-  "zeta.jei.hint_preamble": "[Zeta]\n"
+  "zeta.jei.hint_preamble": "[Zeta]\n",
+
+  "zeta.gui.config.save": "Save Changes",
+  "zeta.gui.config.header": "%s Configuration",
+  "zeta.gui.config.default": "Set to Default",
+  "zeta.gui.config.discard": "Discard Changes",
+  "zeta.gui.config.subcategories": "------- Sub Categories -------",
+  "zeta.gui.config.onechild": "1 child",
+  "zeta.gui.config.nchildren": "%d children",
+  "zeta.gui.config.defaultvalue": "Default: %s",
+  "zeta.gui.config.missingaddon": "You're missing the necessary addon mod for this category"
 }
 

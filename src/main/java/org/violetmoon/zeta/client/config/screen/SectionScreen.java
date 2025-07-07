@@ -59,9 +59,9 @@ public class SectionScreen extends ZetaScreen {
 				list.addEntry(new SectionDefinitionEntry(changes, subsection));
 		}
 
-		addWidget(list);
 		list.addChildWidgets(this::addRenderableWidget, this::addWidget);
 		list.setScrollAmount(previousScrollAmount);
+		addWidget(list); // List needs to be added AFTER the child widgets and scroll, as otherwise the buttons are not clickable.
 
 		defaultDiscardDone.discard.active = changes.isDirty(section);
 	}
@@ -87,7 +87,7 @@ public class SectionScreen extends ZetaScreen {
 		int left = 20;
 
 		String modName = WordUtils.capitalizeFully(z.modid);
-		guiGraphics.drawString(font, ChatFormatting.BOLD + I18n.get("quark.gui.config.header", modName), left, 10, 0x48ddbc); //todo: QUARK REFERENCE
+		guiGraphics.drawString(font, ChatFormatting.BOLD + I18n.get("zeta.gui.config.header", modName), left, 10, 0x48ddbc);
 		guiGraphics.drawString(font, breadcrumbs, left, 20, 0xFFFFFF);
 	}
 
@@ -98,7 +98,7 @@ public class SectionScreen extends ZetaScreen {
 		public void render(@NotNull GuiGraphics guiGraphics, int index, int rowTop, int rowLeft, int rowWidth, int rowHeight, int mouseX, int mouseY, boolean hovered, float partialTicks) {
 			assert minecraft != null;
 
-			String s = I18n.get("quark.gui.config.subcategories"); //todo: QUARK REFERENCE
+			String s = I18n.get("zeta.gui.config.subcategories");
 			guiGraphics.drawString(minecraft.font, s, rowLeft + (float) (rowWidth / 2 - minecraft.font.width(s) / 2), rowTop + 7, 0x6666FF, true);
 		}
 
