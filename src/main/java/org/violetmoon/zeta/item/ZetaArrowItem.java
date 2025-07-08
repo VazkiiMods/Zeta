@@ -1,19 +1,21 @@
 package org.violetmoon.zeta.item;
 
-import java.util.function.BooleanSupplier;
-
-import org.jetbrains.annotations.Nullable;
-import org.violetmoon.zeta.module.ZetaModule;
-import org.violetmoon.zeta.registry.CreativeTabManager;
-import org.violetmoon.zeta.util.BooleanSuppliers;
-
+import net.minecraft.core.Direction;
+import net.minecraft.core.Position;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ArrowItem;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
+import org.violetmoon.zeta.module.ZetaModule;
+import org.violetmoon.zeta.registry.CreativeTabManager;
+import org.violetmoon.zeta.util.BooleanSuppliers;
+
+import java.util.function.BooleanSupplier;
 
 public abstract class ZetaArrowItem extends ArrowItem implements IZetaItem {
 
@@ -51,22 +53,31 @@ public abstract class ZetaArrowItem extends ArrowItem implements IZetaItem {
 	
 	public static class Impl extends ZetaArrowItem {
 
-		private final ArrowCreator creator;
-		
-		public Impl(String name, ZetaModule module, ArrowCreator creator) {
+		private final ArrowItemCreator itemCreator;
+		private final ArrowProjectileCreator projectileCreator;
+
+		public Impl(String name, ZetaModule module, ArrowItemCreator itemCreator, ArrowProjectileCreator projectileCreator) {
 			super(name, module);
-			this.creator = creator;
+			this.itemCreator = itemCreator;
+			this.projectileCreator = projectileCreator;
 		}
-		
+
 		@Override
-		public AbstractArrow createArrow(Level level, ItemStack arrowStack, LivingEntity entity, @javax.annotation.Nullable ItemStack weaponStack) {
-			return creator.createArrow(level, arrowStack, entity, weaponStack);
+		public AbstractArrow createArrow(Level level, ItemStack pickupStack, LivingEntity shooter, @Nullable ItemStack weapon) {
+			return itemCreator.createArrow(level, shooter, pickupStack, weapon);
 		}
-		
-		public interface ArrowCreator {
-			AbstractArrow createArrow(Level level, ItemStack stack, LivingEntity living, @javax.annotation.Nullable ItemStack weaponStack);
+
+		@Override
+		public Projectile asProjectile(Level level, Position position, @Nullable ItemStack pickupStack, Direction direction) {
+			return projectileCreator.createProjectile(level, position.x(), position.y(), position.z(), pickupStack, null);
 		}
-		
+
+		public interface ArrowItemCreator {
+			AbstractArrow createArrow(Level level, LivingEntity shooter, ItemStack pickupStack, @Nullable ItemStack weapon);
+		}
+
+		public interface ArrowProjectileCreator {
+			Projectile createProjectile(Level level, double x, double y, double z, ItemStack pickupStack, @Nullable ItemStack weapon);
+		}
 	}
-	
 }
