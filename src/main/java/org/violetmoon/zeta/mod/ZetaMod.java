@@ -1,6 +1,5 @@
 package org.violetmoon.zeta.mod;
 
-import net.neoforged.bus.api.IEventBus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.violetmoon.zeta.Zeta;

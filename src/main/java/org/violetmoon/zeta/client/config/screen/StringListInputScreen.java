@@ -32,7 +32,6 @@ public class StringListInputScreen extends AbstractInputScreen<List<String>> {
 		super.init();
 
 		list = new ScrollableWidgetList<>(this);
-		addWidget(list);
 
 		forceUpdateWidgetsTo(get());
 	}
@@ -40,25 +39,27 @@ public class StringListInputScreen extends AbstractInputScreen<List<String>> {
 	@Override
 	protected void forceUpdateWidgetsTo(List<String> value) {
 		//out with the old
+		removeWidget(list);
 		list.removeChildWidgets(this::removeWidget);
 
 		//in with the new
 		list.replaceEntries(IntStream.range(0, value.size() + 1).mapToObj(Entry::new).toList());
-		list.addChildWidgets(this::addRenderableWidget, this::addWidget);
 
 		//re-clamp the scrollbar so when you remove an element, you aren't scrolled past the end
 		//setScrollAmount has a clamp() call in it
 		list.setScrollAmount(list.getScrollAmount());
 
+		list.addChildWidgets(this::addRenderableWidget, this::addWidget);
 		updateButtonStatus(def.validate(value));
+		addWidget(list);
 	}
 
 	@Override
 	public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-		renderBackground(guiGraphics, mouseX, mouseY, partialTicks);
+		//renderBackground(guiGraphics, mouseX, mouseY, partialTicks);
 
-		list.render(guiGraphics, mouseX, mouseY, partialTicks);
 		super.render(guiGraphics, mouseX, mouseY, partialTicks);
+		list.render(guiGraphics, mouseX, mouseY, partialTicks);
 		list.reenableVisibleWidgets();
 
 		guiGraphics.drawCenteredString(font, Component.literal(def.getTranslatedDisplayName(I18n::get)).withStyle(ChatFormatting.BOLD), width / 2, 20, 0xFFFFFF);

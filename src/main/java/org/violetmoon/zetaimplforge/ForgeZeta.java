@@ -19,6 +19,7 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.zeta.Zeta;
 import org.violetmoon.zeta.block.ext.BlockExtensionFactory;
+import org.violetmoon.zeta.config.FlagCondition;
 import org.violetmoon.zeta.config.IZetaConfigInternals;
 import org.violetmoon.zeta.config.SectionDefinition;
 import org.violetmoon.zeta.event.bus.IZetaLoadEvent;
@@ -154,6 +155,7 @@ public class ForgeZeta extends Zeta {
 
         //other stuff
         if (!lmfaoHuh) {
+            modbus.addListener(FlagCondition::doEventReal);
             modbus.addListener(EventPriority.LOWEST, CreativeTabManager::buildContents);
             lmfaoHuh = true;
         }

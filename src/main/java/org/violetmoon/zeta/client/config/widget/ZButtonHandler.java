@@ -44,7 +44,7 @@ public class ZButtonHandler {
             return Set.of("fml.menu.mods.title", "fml.menu.mods"); // Mods (idk which one is used)
 
         if(gui instanceof PauseScreen)
-            return Set.of("menu.options"); // Options...
+            return Set.of("menu.shareToLan"); // Options...
         return null;
     }
 }

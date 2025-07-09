@@ -1,26 +1,54 @@
 package org.violetmoon.zeta.config;
 
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.common.conditions.ICondition;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
+import net.neoforged.neoforge.registries.RegisterEvent;
+import org.violetmoon.zeta.Zeta;
+import org.violetmoon.zeta.event.bus.LoadEvent;
+import org.violetmoon.zeta.event.load.ZRegister;
+import org.violetmoon.zeta.mod.ZetaMod;
 import org.violetmoon.zeta.recipe.IZetaCondition;
 
+import java.util.Optional;
 import java.util.function.BooleanSupplier;
 
 /**
  * @author WireSegal
  *         Created at 1:23 PM on 8/24/19.
  */
-public record FlagCondition(ConfigFlagManager cfm, String flag, ResourceLocation loc, BooleanSupplier extraCondition) implements IZetaCondition {
+
+
+public record FlagCondition(String flag, ResourceLocation loc, Optional<Boolean> extraCondition) implements ICondition {
+	public static final MapCodec<FlagCondition> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
+			Codec.STRING.fieldOf("flag").forGetter(FlagCondition::flag),
+			ResourceLocation.CODEC.fieldOf("location").forGetter(FlagCondition::loc),
+			Codec.BOOL.optionalFieldOf("extraCondition").forGetter(flagCondition -> flagCondition.extraCondition)
+	).apply(inst, FlagCondition::new));
+
+	public static void doEventReal(RegisterEvent event) {
+		if (event.getRegistry().equals(NeoForgeRegistries.CONDITION_SERIALIZERS)) {
+			Registry.register(NeoForgeRegistries.CONDITION_SERIALIZERS, ResourceLocation.fromNamespaceAndPath(ZetaMod.ZETA.modid, "flag"), CODEC);
+		}
+	}
+
 
 	@Override
-	public MapCodec<? extends IZetaCondition> codec() {
-		return null;
+	public MapCodec<? extends ICondition> codec() {
+		return CODEC;
 	}
 
 	@Override
 	public boolean test(IContext context) {
 		if(flag.contains("%"))
 			throw new RuntimeException("Illegal flag: " + flag);
+		ConfigFlagManager cfm = ZetaMod.ZETA.configManager.getConfigFlagManager();
 
 		if(!cfm.isValidFlag(flag)) {
             cfm.zeta.log.warn("Non-existent flag {} being used", flag);
@@ -28,7 +56,11 @@ public record FlagCondition(ConfigFlagManager cfm, String flag, ResourceLocation
 			return true;
 		}
 
-		return extraCondition.getAsBoolean() && cfm.getFlag(flag);
+		boolean cond = true;
+		if (extraCondition().isPresent())
+			cond = extraCondition.get();
+
+		return cond && cfm.getFlag(flag);
 	}
 
 	/*
