@@ -16,7 +16,9 @@ import org.violetmoon.zeta.event.load.ZRegister;
 import org.violetmoon.zeta.mod.ZetaMod;
 import org.violetmoon.zeta.recipe.IZetaCondition;
 
+import java.util.Iterator;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.BooleanSupplier;
 
 /**
@@ -25,10 +27,9 @@ import java.util.function.BooleanSupplier;
  */
 
 
-public record FlagCondition(String flag, ResourceLocation loc, Optional<Boolean> extraCondition) implements ICondition {
+public record FlagCondition(String flag, Optional<Boolean> extraCondition) implements ICondition {
 	public static final MapCodec<FlagCondition> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
 			Codec.STRING.fieldOf("flag").forGetter(FlagCondition::flag),
-			ResourceLocation.CODEC.fieldOf("location").forGetter(FlagCondition::loc),
 			Codec.BOOL.optionalFieldOf("extraCondition").forGetter(flagCondition -> flagCondition.extraCondition)
 	).apply(inst, FlagCondition::new));
 
@@ -44,23 +45,33 @@ public record FlagCondition(String flag, ResourceLocation loc, Optional<Boolean>
 		return CODEC;
 	}
 
+	//todo: I hate it I hate it I hate it I hate it I hate it I hate it
 	@Override
 	public boolean test(IContext context) {
 		if(flag.contains("%"))
 			throw new RuntimeException("Illegal flag: " + flag);
-		ConfigFlagManager cfm = ZetaMod.ZETA.configManager.getConfigFlagManager();
 
-		if(!cfm.isValidFlag(flag)) {
-            cfm.zeta.log.warn("Non-existent flag {} being used", flag);
-			// return true for unknown flags
-			return true;
-		}
+		Set<ConfigManager> iHateThis = ConfigManager.EVIL_CONFIG_STORAGE_THAT_I_NEED;
+        for (Iterator<ConfigManager> iterator = iHateThis.iterator(); iterator.hasNext(); ) {
+            ConfigManager configManager = iterator.next();
+            ConfigFlagManager cfm = configManager.getConfigFlagManager();
 
-		boolean cond = true;
-		if (extraCondition().isPresent())
-			cond = extraCondition.get();
+            if (!cfm.isValidFlag(flag)) {
+                if (iterator.hasNext())
+					continue;
 
-		return cond && cfm.getFlag(flag);
+				cfm.zeta.log.warn("Non-existent flag {} being used", flag);
+                // return true for unknown flags
+                return true;
+            }
+
+            boolean cond = true;
+            if (extraCondition().isPresent())
+                cond = extraCondition.get();
+
+            return cond && cfm.getFlag(flag);
+        }
+		return true;
 	}
 
 	/*

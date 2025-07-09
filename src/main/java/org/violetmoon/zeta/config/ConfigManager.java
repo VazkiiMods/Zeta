@@ -11,6 +11,8 @@ import java.util.*;
 import java.util.function.Consumer;
 
 public class ConfigManager {
+    public static Set<ConfigManager> EVIL_CONFIG_STORAGE_THAT_I_NEED = new HashSet<>();
+
     private final Zeta z;
     private final ConfigFlagManager cfm;
     private final SectionDefinition rootConfig;
@@ -125,6 +127,7 @@ public class ConfigManager {
 
         this.rootConfig = rootConfigBuilder.build();
         rootConfig.finish();
+        EVIL_CONFIG_STORAGE_THAT_I_NEED.add(this);
     }
 
     public SectionDefinition getRootConfig() {
