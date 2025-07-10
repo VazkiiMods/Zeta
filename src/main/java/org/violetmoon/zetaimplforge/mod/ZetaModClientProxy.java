@@ -76,6 +76,7 @@ public class ZetaModClientProxy extends ZetaModCommonProxy {
         r.registerWrapper(ZModel.RegisterAdditional.class, ForgeZModel.RegisterAdditional.class);
         r.registerWrapper(ZModel.BakingCompleted.class, ForgeZModel.BakingCompleted.class);
         r.registerWrapper(ZModel.ModifyBakingResult.class, ForgeZModel.ModifyBakingResult.class);
+        r.registerWrapper(ZRegisterClientExtension.class, ForgeZRegisterClientExtension.class);
         r.registerWrapper(ZRegisterLayerDefinitions.class, ForgeZRegisterLayerDefinitions.class);
         r.registerWrapper(ZTooltipComponents.class, ForgeZTooltipComponents.class);
         r.registerWrapper(ZRegisterClientReloadListener.class, ForgeZRegisterClientReloadListener.class);

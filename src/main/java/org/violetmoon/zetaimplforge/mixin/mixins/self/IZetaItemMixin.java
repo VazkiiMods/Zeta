@@ -52,7 +52,7 @@ public interface IZetaItemMixin extends IItemExtension, IZetaItemExtensions {
 
     @Override
     default boolean canEquip(ItemStack stack, EquipmentSlot armorType, LivingEntity entity) {
-        return stack.canEquip(armorType, entity);
+        return canEquipZeta(stack, armorType, entity);
     }
 
     @Override
