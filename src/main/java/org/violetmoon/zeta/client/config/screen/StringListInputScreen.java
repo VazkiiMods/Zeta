@@ -59,8 +59,8 @@ public class StringListInputScreen extends AbstractInputScreen<List<String>> {
 		//renderBackground(guiGraphics, mouseX, mouseY, partialTicks);
 
 		super.render(guiGraphics, mouseX, mouseY, partialTicks);
-		list.render(guiGraphics, mouseX, mouseY, partialTicks);
 		list.reenableVisibleWidgets();
+		list.render(guiGraphics, mouseX, mouseY, partialTicks);
 
 		guiGraphics.drawCenteredString(font, Component.literal(def.getTranslatedDisplayName(I18n::get)).withStyle(ChatFormatting.BOLD), width / 2, 20, 0xFFFFFF);
 	}

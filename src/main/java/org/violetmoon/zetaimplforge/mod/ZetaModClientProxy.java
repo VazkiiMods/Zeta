@@ -126,34 +126,10 @@ public class ZetaModClientProxy extends ZetaModCommonProxy {
                 ForgeZScreen.Render.Post::new, w -> w.e);
         r.registerWrapper(ZScreen.Render.Pre.class, ScreenEvent.Render.Pre.class,
                 ForgeZScreen.Render.Pre::new, w -> w.e);
-        r.registerWrapper(ZRenderGuiOverlay.ArmorLevel.Pre.class, RenderGuiLayerEvent.Pre.class,
-                ForgeZRenderGuiOverlay.ArmorLevel.Pre::new, w -> w.e);
-        r.registerWrapper(ZRenderGuiOverlay.ArmorLevel.Post.class, RenderGuiLayerEvent.Post.class,
-                ForgeZRenderGuiOverlay.ArmorLevel.Post::new, w -> w.e);
-        r.registerWrapper(ZRenderGuiOverlay.Crosshair.Post.class, RenderGuiLayerEvent.Post.class,
-                ForgeZRenderGuiOverlay.Crosshair.Post::new, w -> w.e);
-        r.registerWrapper(ZRenderGuiOverlay.Crosshair.Pre.class, RenderGuiLayerEvent.Pre.class,
-                ForgeZRenderGuiOverlay.Crosshair.Pre::new, w -> w.e);
-        r.registerWrapper(ZRenderGuiOverlay.DebugText.Pre.class, RenderGuiLayerEvent.Pre.class,
-                ForgeZRenderGuiOverlay.DebugText.Pre::new, w -> w.e);
-        r.registerWrapper(ZRenderGuiOverlay.DebugText.Post.class, RenderGuiLayerEvent.Post.class,
-                ForgeZRenderGuiOverlay.DebugText.Post::new, w -> w.e);
-        r.registerWrapper(ZRenderGuiOverlay.Hotbar.Pre.class, RenderGuiLayerEvent.Pre.class,
-                ForgeZRenderGuiOverlay.Hotbar.Pre::new, w -> w.e);
-        r.registerWrapper(ZRenderGuiOverlay.Hotbar.Post.class, RenderGuiLayerEvent.Post.class,
-                ForgeZRenderGuiOverlay.Hotbar.Post::new, w -> w.e);
-        r.registerWrapper(ZRenderGuiOverlay.PlayerHealth.Pre.class, RenderGuiLayerEvent.Pre.class,
-                ForgeZRenderGuiOverlay.PlayerHealth.Pre::new, w -> w.e);
-        r.registerWrapper(ZRenderGuiOverlay.PlayerHealth.Post.class, RenderGuiLayerEvent.Post.class,
-                ForgeZRenderGuiOverlay.PlayerHealth.Post::new, w -> w.e);
-        r.registerWrapper(ZRenderGuiOverlay.PotionIcons.Pre.class, RenderGuiLayerEvent.Pre.class,
-                ForgeZRenderGuiOverlay.PotionIcons.Pre::new, w -> w.e);
-        r.registerWrapper(ZRenderGuiOverlay.PotionIcons.Post.class, RenderGuiLayerEvent.Post.class,
-                ForgeZRenderGuiOverlay.PotionIcons.Post::new, w -> w.e);
-        r.registerWrapper(ZRenderGuiOverlay.ChatPanel.Pre.class, RenderGuiLayerEvent.Pre.class,
-                ForgeZRenderGuiOverlay.ChatPanel.Pre::new, w -> w.e);
-        r.registerWrapper(ZRenderGuiOverlay.ChatPanel.Post.class, RenderGuiLayerEvent.Post.class,
-                ForgeZRenderGuiOverlay.ChatPanel.Post::new, w -> w.e);
+        r.registerWrapper(ZRenderGuiOverlay.Pre.class, RenderGuiLayerEvent.Pre.class,
+                ForgeZRenderGuiOverlay.Pre::new, w -> w.e);
+        r.registerWrapper(ZRenderGuiOverlay.Post.class, RenderGuiLayerEvent.Post.class,
+                ForgeZRenderGuiOverlay.Post::new, w -> w.e);
         // zeta own event
         r.registerWrapper(ZScreenshot.class, ForgeZScreenshot.class);
         r.registerWrapper(ZEarlyRender.class, ForgeZEarlyRender.class);
