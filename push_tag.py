@@ -2,18 +2,24 @@ import os
 import re
 from jproperties import Properties
 
-def main():
-	build = Properties()
-	with open('build.properties', 'rb') as f:
-	    build.load(f , "utf-8")
+def increment_patch(version: str) -> str:
+    parts = version.strip().split('.')
+    if len(parts) != 3:
+        raise ValueError(f"Version must be in x.y.z format!!! Not the following: {version}")
+    major, minor, patch = map(int, parts)
+    patch += 1
+    return f"{major}.{minor}.{patch}"
 
-	mc_version, mcv_meta = build['mc_version']
-	version, v_meta = build['version']
-	build_number, bn_meta = build['build_number']
+def main():
+	properties = Properties()
+	with open('gradle.properties', 'rb') as f:
+	    properties.load(f , "utf-8")
+
+	mc_version, mcv_meta = properties['minecraft_version']
+	version, v_meta = properties['mod_version']
 
 	print('MC Version:', mc_version)
 	print('Version:', version)
-	print('Build Number', build_number)
 
 	changelog = ''
 	with open('changelog.txt', 'r') as f:
@@ -23,7 +29,7 @@ def main():
 		for line in lines:
 			changelog = changelog + '-m "'+line+'" '
 
-	tag_success = os.system('git tag -a release-{}-{}-{} {}'.format(mc_version, version, build_number, changelog))
+	tag_success = os.system('git tag -a release-{}-{} {}'.format(mc_version, version, build_number, changelog))
 
 	if tag_success != 0:
 		print('Failed to create tag')
@@ -31,12 +37,15 @@ def main():
 	else :
 		print('Created tag')
 
-	build['build_number'] = str(int(build_number) + 1)
-	with open("build.properties", "wb") as f:
-	    build.store(f, encoding="utf-8")
+    new_version = increment_patch(version)
+    build['mod_version'] = new_version
+        
+
+	with open("gradle.properties.properties", "wb") as f:
+	    properties.store(f, encoding="utf-8")
 
 	os.system('git commit -a -m build')
-	os.system('git push origin main release-{}-{}-{}'.format(mc_version, version, build_number))
+	os.system('git push origin main release-{}-{}'.format(mc_version, version))
 
 if __name__ == '__main__':
 	main()
