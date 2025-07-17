@@ -35,7 +35,7 @@ jobs:
       - name: Calculate artifact names
         id: calculate_artifact_names
         run: |
-          VERSION=$(awk -F '=' '/^version/ { print $2; }' gradle.properties)
+          VERSION=$(awk -F '=' '/^mod_version/ { print $2; }' gradle.properties)
           echo "forge=build/libs/Zeta-${VERSION}.jar" >> "$GITHUB_OUTPUT"
       - name: Sign jars
         env:
