@@ -2,13 +2,12 @@ import os
 import re
 from jproperties import Properties
 
-def increment_patch(version: str) -> str:
-    parts = version.strip().split('.')
-    if len(parts) != 3:
-        raise ValueError(f"Version must be in x.y.z format!!! Not the following: {version}")
-    major, minor, patch = map(int, parts)
-    patch += 1
-    return f"{major}.{minor}.{patch}"
+def increment_build_ver(version: str) -> str:
+    if '-' not in version:
+        raise ValueError(f"Invalid version, wanted x.y-z but got: {version}")
+    base, patch = version.strip().split('-')
+    new_patch = int(patch) + 1
+    return f"{base}-{new_patch}"
 
 def main():
 	properties = Properties()
@@ -37,7 +36,7 @@ def main():
 	else :
 		print('Created tag')
 
-    new_version = increment_patch(version)
+    new_version = increment_build_ver(version)
     build['mod_version'] = new_version
         
 
