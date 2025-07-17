@@ -9,7 +9,7 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
 version = mod_version
 group = mod_group_id
-base.archivesName = mod_id
+base.archivesName = mod_name
 
 neoForge {
     version = neoforge_version
