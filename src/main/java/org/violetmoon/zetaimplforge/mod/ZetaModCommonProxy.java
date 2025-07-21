@@ -169,6 +169,7 @@ public class ZetaModCommonProxy {
                 ForgeZLevelTick.End::new, w -> w.e);
         r.registerWrapper(ZLevelTick.Start.class, LevelTickEvent.Pre.class,
                 ForgeZLevelTick.Start::new, w -> w.e);
+        r.registerWrapper(ZSkipAttributeTooltip.class, ForgeZSkipAttributeTooltip.class);
 
         // zeta specific ones
 
