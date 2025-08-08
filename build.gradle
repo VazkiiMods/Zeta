@@ -11,6 +11,10 @@ version = mod_version
 group = mod_group_id
 base.archivesName = mod_name
 
+if (System.getenv('BUILD_NUMBER') != null) {
+    version += "." + System.getenv('BUILD_NUMBER')
+}
+
 neoForge {
     version = neoforge_version
 
@@ -99,6 +103,7 @@ publishing {
     publications {
         register("mavenJava", MavenPublication) {
             from components.java
+            artifactId = mod_name
         }
     }
     repositories {
