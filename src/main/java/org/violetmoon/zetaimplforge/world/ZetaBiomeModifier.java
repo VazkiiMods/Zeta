@@ -8,8 +8,6 @@ import org.violetmoon.zeta.mod.ZetaMod;
 import org.violetmoon.zeta.util.zetalist.ZetaList;
 import org.violetmoon.zeta.world.WorldGenHandler;
 
-import com.mojang.serialization.Codec;
-
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.biome.Biome;
@@ -23,11 +21,6 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import org.jetbrains.annotations.NotNull;
-import org.violetmoon.zeta.Zeta;
-import org.violetmoon.zeta.util.zetalist.ZetaList;
-import org.violetmoon.zeta.world.WorldGenHandler;
-
-import java.util.List;
 
 public class ZetaBiomeModifier implements BiomeModifier {
 

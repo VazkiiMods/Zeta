@@ -47,7 +47,6 @@ import org.violetmoon.zetaimplforge.util.ForgeRaytracingUtil;
  * ideally do not touch quark from this package, it will later be split off
  */
 public class ForgeZeta extends Zeta {
-    public boolean lmfaoWhat = false;
     public static boolean lmfaoHuh = false;
 
 

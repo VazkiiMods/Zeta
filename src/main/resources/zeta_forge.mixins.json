@@ -14,8 +14,7 @@
   "client": [
     "client.AccessorBlockColors",
     "client.AccessorItemColors",
-    "client.GameRenderMixin",
-    "client.ItemMixin"
+    "client.GameRenderMixin"
   ],
   "injectors": {
     "defaultRequire": 1
