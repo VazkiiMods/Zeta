@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
+import net.minecraft.client.gui.components.Renderable;
 import org.jetbrains.annotations.NotNull;
 import org.violetmoon.zeta.client.ZetaClient;
 import org.violetmoon.zeta.client.config.widget.ScrollableWidgetList;
@@ -58,9 +59,16 @@ public class StringListInputScreen extends AbstractInputScreen<List<String>> {
 	public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
 		//renderBackground(guiGraphics, mouseX, mouseY, partialTicks);
 
-		super.render(guiGraphics, mouseX, mouseY, partialTicks);
-		list.reenableVisibleWidgets();
-		list.render(guiGraphics, mouseX, mouseY, partialTicks);
+        renderBackground(guiGraphics, mouseX, mouseY, partialTicks);
+
+        //super.render(guiGraphics, mouseX, mouseY, partialTicks);
+        list.render(guiGraphics, mouseX, mouseY, partialTicks);
+
+        for(Renderable renderable : this.renderables) {
+            renderable.render(guiGraphics, mouseX, mouseY, partialTicks);
+        }
+
+        list.reenableVisibleWidgets();
 
 		guiGraphics.drawCenteredString(font, Component.literal(def.getTranslatedDisplayName(I18n::get)).withStyle(ChatFormatting.BOLD), width / 2, 20, 0xFFFFFF);
 	}
