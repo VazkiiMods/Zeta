@@ -46,6 +46,7 @@ public class StringListInputScreen extends AbstractInputScreen<List<String>> {
 		//in with the new
 		list.replaceEntries( IntStream.range(0, value.size() + 1).mapToObj(Entry::new).toList());
 
+
 		//re-clamp the scrollbar so when you remove an element, you aren't scrolled past the end
 		//setScrollAmount has a clamp() call in it
 		list.setScrollAmount(list.getScrollAmount());
