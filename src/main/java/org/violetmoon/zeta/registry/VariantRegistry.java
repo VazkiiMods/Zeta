@@ -1,7 +1,6 @@
 package org.violetmoon.zeta.registry;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.function.Function;
 
 import org.jetbrains.annotations.Nullable;
@@ -30,9 +29,9 @@ public class VariantRegistry {
 		this.zeta = zeta;
 	}
 
-	public final List<Block> slabs = new LinkedList<>();
-	public final List<Block> stairs = new LinkedList<>();
-	public final List<Block> walls = new LinkedList<>();
+	public final Map<IZetaBlock, Block> slabs = new LinkedHashMap<>();
+    public final Map<IZetaBlock, Block> stairs = new LinkedHashMap<>();
+    public final Map<IZetaBlock, Block> walls = new LinkedHashMap<>();
 
 	// ALl @Nullables below will defer to BUILDING_BLOCKS for simplicity sake
 	
@@ -49,17 +48,17 @@ public class VariantRegistry {
 	}
 
 	public IZetaBlock addSlab(IZetaBlock block, @Nullable ResourceKey<CreativeModeTab> tab) {
-		slabs.add(new ZetaSlabBlock(block, tab).setCondition(block::doesConditionApply));
+		slabs.put(block, new ZetaSlabBlock(block, tab).setCondition(block::doesConditionApply));
 		return block;
 	}
 
 	public IZetaBlock addStairs(IZetaBlock block, @Nullable ResourceKey<CreativeModeTab> tab) {
-		stairs.add(new ZetaStairsBlock(block, tab).setCondition(block::doesConditionApply));
+		stairs.put(block, new ZetaStairsBlock(block, tab).setCondition(block::doesConditionApply));
 		return block;
 	}
 
 	public IZetaBlock addWall(IZetaBlock block, @Nullable ResourceKey<CreativeModeTab> tab) {
-		walls.add(new ZetaWallBlock(block, tab).setCondition(block::doesConditionApply));
+		walls.put(block, new ZetaWallBlock(block, tab).setCondition(block::doesConditionApply));
 		return block;
 	}
 
@@ -79,7 +78,7 @@ public class VariantRegistry {
 		return potted;
 	}
 
-	public static BlockBehaviour.Properties realStateCopy(IZetaBlock parent) {
+    public static BlockBehaviour.Properties realStateCopy(IZetaBlock parent) {
 		BlockBehaviour.Properties props = BlockBehaviour.Properties.ofFullCopy(parent.getBlock());
 		if(parent instanceof IVariantsShouldBeEmissive)
 			props = props.emissiveRendering((s, r, p) -> true);

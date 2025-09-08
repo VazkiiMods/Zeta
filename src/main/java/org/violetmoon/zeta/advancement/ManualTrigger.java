@@ -2,6 +2,7 @@ package org.violetmoon.zeta.advancement;
 
 import com.mojang.serialization.Codec;
 
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.resources.ResourceLocation;
@@ -11,7 +12,6 @@ import java.util.Optional;
 
 //todo: Check if this works
 public class ManualTrigger extends SimpleCriterionTrigger<ManualTrigger.Instance> {
-
 	final ResourceLocation id;
 
 	public ManualTrigger(ResourceLocation id) {
@@ -24,17 +24,14 @@ public class ManualTrigger extends SimpleCriterionTrigger<ManualTrigger.Instance
 
 	@Override
 	public Codec<Instance> codec() {
-		return null;
+		return Instance.CODEC;
 	}
 
-	public static class Instance implements SimpleCriterionTrigger.SimpleInstance {
-
-		public Instance(ResourceLocation id, ContextAwarePredicate contextAwarePredicate) {}
-
-		@Override
-		public Optional<ContextAwarePredicate> player() {
-			return Optional.empty();
-		}
+	public record Instance(Optional<ContextAwarePredicate> player) implements SimpleCriterionTrigger.SimpleInstance {
+        public static final Codec<ManualTrigger.Instance> CODEC = RecordCodecBuilder.create(
+            instanceInstance -> instanceInstance.group(
+                    ContextAwarePredicate.CODEC.optionalFieldOf("predicate").forGetter(Instance::player)
+            ).apply(instanceInstance, Instance::new)
+        );
 	}
-
 }

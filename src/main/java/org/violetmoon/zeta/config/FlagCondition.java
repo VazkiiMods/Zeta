@@ -36,7 +36,8 @@ public record FlagCondition(String flag, Optional<Boolean> extraCondition) imple
 	public static void doEventReal(RegisterEvent event) {
 		if (event.getRegistry().equals(NeoForgeRegistries.CONDITION_SERIALIZERS)) {
 			Registry.register(NeoForgeRegistries.CONDITION_SERIALIZERS, ResourceLocation.fromNamespaceAndPath(ZetaMod.ZETA.modid, "flag"), CODEC);
-		}
+            //Registry.register(NeoForgeRegistries.CONDITION_SERIALIZERS, ResourceLocation.fromNamespaceAndPath(ZetaMod.ZETA.modid, "advancement_flag"), CODEC);
+        }
 	}
 
 
