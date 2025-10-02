@@ -25,7 +25,7 @@ public class ZetaModForge extends ZetaMod {
 		if(!ZETA.isProduction) {
 			ZETA.loadBus.subscribe(EventTest.class);
 			ZETA.playBus.subscribe(EventTest.class);
-			if (FMLEnvironment.dist == Dist.CLIENT) ZETA.playBus.subscribe(ZButtonHandler.class);
+			//if (FMLEnvironment.dist == Dist.CLIENT && !FMLEnvironment.production) ZETA.playBus.subscribe(ZButtonHandler.class);
 		}
 	}
 
