@@ -66,7 +66,7 @@ public class IForgeItemItemExtensions implements IZetaItemExtensions {
 
 	@Override
 	public int getEnchantmentLevelZeta(ItemStack stack, Holder<Enchantment> enchantment) {
-		return stack.getItem().getEnchantmentValue(stack);
+		return stack.getItem().getEnchantmentLevel(stack, enchantment);
 	}
 
 	@Override

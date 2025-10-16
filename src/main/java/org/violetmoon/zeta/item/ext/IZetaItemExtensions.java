@@ -53,7 +53,7 @@ public interface IZetaItemExtensions {
 	}
 
 	default int getEnchantmentValueZeta(ItemStack stack) {
-		return stack.getEnchantmentValue();
+		return 0;
 	}
 
 	default boolean canShearZeta(ItemStack stack) { //canPerformAction
