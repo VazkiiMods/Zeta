@@ -80,7 +80,7 @@ public abstract class BrewingRegistry {
 		addFlaggedRecipe(flag, Potions.WATER.value(), reagent, Potions.MUNDANE.value());
 
 		if (hasStrong)
-			addFlaggedRecipe(flag, normalType, Items.GLOWSTONE, strongType);
+			addFlaggedRecipe(flag, normalType, Items.GLOWSTONE_DUST, strongType);
 		addFlaggedRecipe(flag, normalType, Items.REDSTONE, longType);
 	}
 

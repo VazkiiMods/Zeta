@@ -31,7 +31,7 @@ public abstract class ZetaButtonBlock extends ButtonBlock implements IZetaBlock 
 			return;
 
 		module.zeta().registry.registerBlock(this, regname, true);
-		CreativeTabManager.addToCreativeTabNextTo(CreativeModeTabs.REDSTONE_BLOCKS, this, Blocks.STONE_BUTTON, false);
+		CreativeTabManager.addNextToItem(CreativeModeTabs.REDSTONE_BLOCKS, this, Blocks.STONE_BUTTON, false);
 	}
 
 	@NotNull

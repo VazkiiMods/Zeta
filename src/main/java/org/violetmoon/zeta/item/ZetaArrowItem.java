@@ -31,7 +31,7 @@ public abstract class ZetaArrowItem extends ArrowItem implements IZetaItem {
 			return;
 
 		module.zeta().registry.registerItem(this, name);
-		CreativeTabManager.addToCreativeTab(CreativeModeTabs.COMBAT, this);
+		CreativeTabManager.addToTab(CreativeModeTabs.COMBAT, this);
 	}
 
 	@Override

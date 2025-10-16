@@ -145,9 +145,9 @@ public class DyeablesRegistry {
 			j1 = (int) ((float) j1 * f3 / f4);
 			k1 = (int) ((float) k1 * f3 / f4);
 			l1 = (int) ((float) l1 * f3 / f4);
-			int j2 = (j1 << 8) + k1;
-			j2 = (j2 << 8) + l1;
-			stack.set(DataComponents.DYED_COLOR, new DyedItemColor(j2, false));
+			int rgb = (j1 << 8) + k1;
+			rgb = (rgb << 8) + l1;
+			stack.set(DataComponents.DYED_COLOR, new DyedItemColor(rgb, false));
 
 			return itemstack;
 		}

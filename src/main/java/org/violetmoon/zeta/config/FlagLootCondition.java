@@ -7,6 +7,7 @@ import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 import org.jetbrains.annotations.NotNull;
+import org.violetmoon.zeta.mod.ZetaMod;
 
 import static org.violetmoon.zeta.config.ConfigFlagManager.FLAG_CONDITION_TYPE;
 
@@ -22,8 +23,7 @@ public record FlagLootCondition(String flag) implements LootItemCondition {
 
 	@Override
 	public boolean test(LootContext lootContext) {
-		// return ZetaMod.ZETA.configManager.getConfigFlagManager().getFlag(flag); CONFIG FLAG
-		return true;
+        return ZetaMod.ZETA.configManager.getConfigFlagManager().getFlag(flag);
 	}
 
 	@NotNull

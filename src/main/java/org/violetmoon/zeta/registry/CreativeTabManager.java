@@ -1,17 +1,22 @@
 package org.violetmoon.zeta.registry;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.Multimap;
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
+import net.neoforged.neoforge.common.util.DataComponentUtil;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
-import org.violetmoon.zeta.Zeta;
-import org.violetmoon.zeta.config.ZetaGeneralConfig;
 import org.violetmoon.zeta.mod.ZetaMod;
 import org.violetmoon.zeta.module.IDisableable;
 
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class CreativeTabManager {
     private static final Object MUTEX = new Object();
@@ -21,7 +26,7 @@ public class CreativeTabManager {
     private static final boolean ignChaining = false;
 
 
-    public static void startChain(ResourceKey<CreativeModeTab> tab, boolean reversed, boolean behindParent, @Nullable ItemLike appendParent) {
+    public synchronized static void startChain(ResourceKey<CreativeModeTab> tab, boolean reversed, boolean behindParent, @Nullable ItemLike appendParent) {
         if (chain != null) {
             ZetaMod.LOGGER.error("CHAIN WAS STARTED WITHOUT FINISHING IT! DO NOT DO THIS!!! Ending chain now.");
             endChain();
@@ -34,7 +39,7 @@ public class CreativeTabManager {
         return chain;
     }
 
-    public static void endChain() {
+    public synchronized static void endChain() {
         for (ItemLike itemFromChain : chain.chainedItems) {
             CreativeTabAdditions tabAdditions = getForTab(chain.getTab());
             if (chain.appendParent == null) {
@@ -87,8 +92,6 @@ public class CreativeTabManager {
                     acceptItem(event, item);
                 }
 
-
-
                 /*for (Map.Entry<ItemLike, List<ItemLike>> entry : tabAdditions.appendInFront.entrySet()) {
                     ItemLike parent = entry.getKey();
                     for (ItemLike item : entry.getValue()) {
@@ -103,43 +106,51 @@ public class CreativeTabManager {
                     }
                 }*/
 
-                //I hate this I hate this I hate this I hate this I hate this I hate this I hate this I hate this I hate this
-                Map<ItemLike, Map<Boolean, List<ItemLike>>> additionsAtAllItems = new HashMap<>();
+                AtomicInteger firstTryIdiots = new AtomicInteger(0);
+                AtomicInteger inOnSecond = new AtomicInteger(0);
+                AtomicInteger failedBoth = new AtomicInteger(0);
+                AtomicInteger doubleJeopardy = new AtomicInteger(0);
+                AtomicInteger dailyDouble = new AtomicInteger(0);
 
-                // Merge the items together. Needs to be done in a way where entries can have either in front or behind
-                for (Map.Entry<ItemLike, List<ItemLike>> additionEntry : tabAdditions.appendInFront.entrySet()) {
-                    Map<Boolean, List<ItemLike>> hell = new HashMap<>();
-                    hell.put(false, additionEntry.getValue());
-                    additionsAtAllItems.put(additionEntry.getKey(), hell);
-                }
-                for (Map.Entry<ItemLike, List<ItemLike>> additionEntry : tabAdditions.appendBehind.entrySet()) {
-                    if (additionsAtAllItems.containsKey(additionEntry.getKey())) {
-                        additionsAtAllItems.get(additionEntry.getKey()).put(true, additionEntry.getValue());
+                Multimap<ItemLike, Pair<Boolean, ItemLike>> additionsAtAllItems = LinkedHashMultimap.create();
+
+                tabAdditions.appendInFront.forEach((parent, child) -> {
+                    additionsAtAllItems.put(parent, new Pair<>(false, child));
+                });
+                tabAdditions.appendBehind.forEach((parent, child) -> {
+                    additionsAtAllItems.put(parent, new Pair<>(true, child));
+                });
+
+                Multimap<ItemLike, Pair<Boolean, ItemLike>> round2 = LinkedHashMultimap.create();
+
+                additionsAtAllItems.forEach((parent, childPair) -> {
+                    if (!isItemEnabled(parent)) {
+                        acceptItem(event, childPair.getSecond());
+                    } else if (!event.getParentEntries().contains(parent.asItem().getDefaultInstance())) {
+                        round2.put(parent, childPair);
+                    } else if (event.getParentEntries().contains(childPair.getSecond().asItem().getDefaultInstance())) {
+                        ZetaMod.LOGGER.debug("DOUBLE JEOPARDY FOR " + childPair.getSecond().asItem().getDefaultInstance().getDisplayName().getString());
+                        doubleJeopardy.getAndIncrement();
                     } else {
-                        Map<Boolean, List<ItemLike>> hell = new HashMap<>();
-                        hell.put(true, additionEntry.getValue());
-                        additionsAtAllItems.put(additionEntry.getKey(), hell);
+                        acceptItemAtParent(event, childPair.getSecond(), parent, childPair.getFirst());
+                        firstTryIdiots.getAndIncrement();
                     }
-                }
+                });
 
-                for (Map.Entry<ItemLike, Map<Boolean, List<ItemLike>>> additionsAtItem : additionsAtAllItems.entrySet()) {
-                    ItemLike parent = additionsAtItem.getKey();
-
-                    if (event.getParentEntries().contains(parent.asItem().getDefaultInstance()) && isItemEnabled(parent)) {
-                        for (Map.Entry<Boolean, List<ItemLike>> addedItemEntry : additionsAtItem.getValue().entrySet()) {
-                            for (ItemLike addedItem : addedItemEntry.getValue()) {
-                                acceptItemAtParent(event, addedItem, parent, addedItemEntry.getKey());
-                            }
-                        }
+                round2.forEach((parent, childPair) -> {
+                    if (event.getParentEntries().contains(childPair.getSecond().asItem().getDefaultInstance())) {
+                        ZetaMod.LOGGER.debug("HOLY SHIT DAILY DOUBLE?!?! FOR " + childPair.getSecond().asItem().getDefaultInstance().getDisplayName().getString());
+                        dailyDouble.getAndIncrement();
+                    } else if (event.getParentEntries().contains(parent.asItem().getDefaultInstance())) {
+                        acceptItemAtParent(event, childPair.getSecond(), parent, childPair.getFirst());
+                        inOnSecond.getAndIncrement();
                     } else {
-                        for (Map.Entry<Boolean, List<ItemLike>> addedItemEntry : additionsAtItem.getValue().entrySet()) {
-                            for (ItemLike addedItem : addedItemEntry.getValue()) {
-                                ZetaMod.LOGGER.debug("IT FAILED FOR " + addedItem.asItem().getDefaultInstance().getDisplayName());
-                                acceptItem(event, addedItem);
-                            }
-                        }
+                        acceptItem(event, childPair.getSecond());
+                        failedBoth.getAndIncrement();
                     }
-                }
+                });
+
+                ZetaMod.LOGGER.debug(tabKey.location() + " - " + firstTryIdiots + "/" + inOnSecond + "/" + failedBoth + " - " + doubleJeopardy + "/" + dailyDouble);
             }
         }
     }
@@ -178,6 +189,21 @@ public class CreativeTabManager {
                 event.insertAfter(parentStack, itemStack, CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
             }
         }
+    }
+
+    /**
+     * Note: This will only return one tab. If Item is in multiple, it is what it is. <br>
+     * Defaults to Building Blocks if one could not be found <br>
+     * This might not contain all items in it either. Have fun ;)
+     * @return The tab.
+     */
+    public static ResourceKey<CreativeModeTab> getTabOfItem(ItemLike itemLike) {
+        for (Map.Entry<ResourceKey<CreativeModeTab>, CreativeTabAdditions> entry : additions.entrySet()) {
+            if (entry.getValue().addedItems.contains(itemLike)) {
+                return entry.getKey();
+            }
+        }
+        return CreativeModeTabs.BUILDING_BLOCKS;
     }
 
     public static class DaisyChain {
@@ -219,30 +245,20 @@ public class CreativeTabManager {
 
     private static class CreativeTabAdditions {
         private final List<ItemLike> appendToEnd = new ArrayList<>();
-        private final Map<ItemLike, List<ItemLike>> appendBehind = new LinkedHashMap<>();
-        private final Map<ItemLike, List<ItemLike>> appendInFront = new LinkedHashMap<>();
+        private final Multimap<ItemLike, ItemLike> appendBehind = LinkedHashMultimap.create();
+        private final Multimap<ItemLike, ItemLike> appendInFront = LinkedHashMultimap.create();
         private List<ItemLike> addedItems = new ArrayList<>();
 
         private void addBehind(ItemLike item, ItemLike parent, boolean addFirst) {
             if (!validateItem(item)) return;
 
-            if (!appendBehind.containsKey(parent)) {
-                appendBehind.put(parent, new LinkedList<>());
-            }
-
-            if (!addFirst) appendBehind.get(parent).add(item);
-            else appendBehind.get(parent).addFirst(item);
+            appendBehind.put(parent, item);
         }
 
         private void addInFront(ItemLike item, ItemLike parent, boolean addFirst) {
             if (!validateItem(item)) return;
 
-            if (!appendInFront.containsKey(parent)) {
-                appendInFront.put(parent, new LinkedList<>());
-            }
-
-            if (!addFirst) appendInFront.get(parent).add(item);
-            else appendInFront.get(parent).addFirst(item);
+            appendInFront.put(parent, item);
         }
 
         private void addAtEnd(ItemLike item) {

@@ -15,16 +15,16 @@ public interface IZetaItem extends IDisableable<IZetaItem> {
 	}
 
 	default Item setCreativeTab(ResourceKey<CreativeModeTab> tab) {
-		Item i = getItem();
-		CreativeTabManager.addToCreativeTab(tab, i);
-		return i;
+		Item item = getItem();
+		CreativeTabManager.addToTab(tab, item);
+		return item;
 	}
 	
     default Item setCreativeTab(ResourceKey<CreativeModeTab> tab, ItemLike parent, boolean behindParent) {
-    	Item i = getItem();
-    	CreativeTabManager.addToCreativeTabNextTo(tab, i, parent, behindParent);
+    	Item item = getItem();
+    	CreativeTabManager.addNextToItem(tab, item, parent, behindParent);
     	
-    	return i;
+    	return item;
     }
 
 }

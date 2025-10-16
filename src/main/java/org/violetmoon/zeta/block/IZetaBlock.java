@@ -29,13 +29,13 @@ public interface IZetaBlock extends IZetaBlockExtensions, IDisableable<IZetaBloc
 
     default Block setCreativeTab(ResourceKey<CreativeModeTab> tab) {
     	Block b = getBlock();
-    	CreativeTabManager.addToCreativeTab(tab, b);
+    	CreativeTabManager.addToTab(tab, b);
     	return b;
     }
     
     default Block setCreativeTab(ResourceKey<CreativeModeTab> tab, ItemLike parent, boolean behindParent) {
     	Block b = getBlock();
-    	CreativeTabManager.addToCreativeTabNextTo(tab, b, parent, behindParent);
+    	CreativeTabManager.addNextToItem(tab, b, parent, behindParent);
     	
     	return b;
     }

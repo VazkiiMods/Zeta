@@ -30,8 +30,8 @@ public class ZetaTrapdoorBlock extends TrapDoorBlock implements IZetaBlock {
 
 		module.zeta().renderLayerRegistry.put(this, RenderLayerRegistry.Layer.CUTOUT);
 		module.zeta().registry.registerBlock(this, regname, true);
-		CreativeTabManager.addToCreativeTab(CreativeModeTabs.BUILDING_BLOCKS, this);
-		CreativeTabManager.addToCreativeTab(CreativeModeTabs.REDSTONE_BLOCKS, this);
+		CreativeTabManager.addToTab(CreativeModeTabs.BUILDING_BLOCKS, this);
+		CreativeTabManager.addToTab(CreativeModeTabs.REDSTONE_BLOCKS, this);
 	}
 
 	@Override

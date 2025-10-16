@@ -23,7 +23,7 @@ public class ZetaFenceBlock extends FenceBlock implements IZetaBlock {
 			return;
 
 		module.zeta().registry.registerBlock(this, regname, true);
-		CreativeTabManager.addToCreativeTab(CreativeModeTabs.BUILDING_BLOCKS, this);
+		CreativeTabManager.addToTab(CreativeModeTabs.BUILDING_BLOCKS, this);
 	}
 
 	@Override

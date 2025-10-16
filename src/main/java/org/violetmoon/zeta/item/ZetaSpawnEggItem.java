@@ -25,7 +25,7 @@ public class ZetaSpawnEggItem extends DeferredSpawnEggItem implements IZetaItem 
 			return;
 
 		module.zeta().registry.registerItem(this, regname);
-		CreativeTabManager.addToCreativeTab(CreativeModeTabs.SPAWN_EGGS, this);
+		CreativeTabManager.addToTab(CreativeModeTabs.SPAWN_EGGS, this);
 	}
 
 	@Override
