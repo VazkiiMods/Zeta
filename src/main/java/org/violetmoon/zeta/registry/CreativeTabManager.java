@@ -54,7 +54,7 @@ public class CreativeTabManager {
         if (chain != null && chain.getTab().equals(tab) && !ignChaining) {
             chain.addToChain(item);
         } else {
-            getForTab(tab).appendToEnd.add(item);
+            getForTab(tab).addAtEnd(item);
         }
     }
 
@@ -87,47 +87,26 @@ public class CreativeTabManager {
                     acceptItem(event, item);
                 }
 
-                // Kinda just slaps it at the end because yeah
-                if (ZetaGeneralConfig.forceCreativeTabAppends) {
-                    for (List<ItemLike> itemList : tabAdditions.appendInFront.values()) {
-                        for (ItemLike item : itemList) {
-                            acceptItem(event, item);
-                        }
-                    }
 
-                    for (List<ItemLike> itemList : tabAdditions.appendBehind.values()) {
-                        for (ItemLike item : itemList) {
-                            acceptItem(event, item);
-                        }
-                    }
-                } else {
-                    // Need to merge them so that we can add at the same time.
-                    Map<ItemLike, Map.Entry<Boolean, List<ItemLike>>> additionsAtAllItems = new HashMap<>();
 
-                    for (Map.Entry<ItemLike, List<ItemLike>> additionEntry : tabAdditions.appendInFront.entrySet()) {
-                        additionsAtAllItems.put(additionEntry.getKey(), Map.entry(false, additionEntry.getValue()));
-                    }
-                    for (Map.Entry<ItemLike, List<ItemLike>> additionEntry : tabAdditions.appendBehind.entrySet()) {
-                        additionsAtAllItems.put(additionEntry.getKey(), Map.entry(true, additionEntry.getValue()));
-                    }
-
-                    for (Map.Entry<ItemLike, Map.Entry<Boolean, List<ItemLike>>> additionsAtItem : additionsAtAllItems.entrySet()) {
-                        ItemLike parent = additionsAtItem.getKey();
-                        try {
-                            if (event.getTab().contains(parent.asItem().getDefaultInstance()) && isItemEnabled(parent)) {
-                                for (ItemLike addedItem : additionsAtItem.getValue().getValue()) {
-                                    acceptItemAtParent(event, addedItem, parent, additionsAtItem.getValue().getKey());
-                                }
-                            } else {
-                                for (ItemLike addedItem : additionsAtItem.getValue().getValue()) {
-                                    acceptItem(event, addedItem);
-                                }
-                            }
-                        } catch (IllegalStateException e) {
-                            ZetaMod.LOGGER.debug("ILLEGAL STATE, ignoring for now lmfao");
-                        }
+                /*for (Map.Entry<ItemLike, List<ItemLike>> entry : tabAdditions.appendInFront.entrySet()) {
+                    ItemLike parent = entry.getKey();
+                    for (ItemLike item : entry.getValue()) {
+                        acceptItemAtParent(event, item, parent, false);
                     }
                 }
+
+                for (Map.Entry<ItemLike, List<ItemLike>> entry : tabAdditions.appendBehind.entrySet()) {
+                    ItemLike parent = entry.getKey();
+                    for (ItemLike item : entry.getValue()) {
+                        acceptItemAtParent(event, item, parent, true);
+                    }
+                }*/
+
+                //I hate this I hate this I hate this I hate this I hate this I hate this I hate this I hate this I hate this
+                Map<ItemLike, Map<Boolean, List<ItemLike>>> additionsAtAllItems = new HashMap<>();
+
+                // Merge the items together. Needs to be done in a way where entries can have either in front or behind
             }
         }
     }
@@ -209,8 +188,11 @@ public class CreativeTabManager {
         private final List<ItemLike> appendToEnd = new ArrayList<>();
         private final Map<ItemLike, List<ItemLike>> appendBehind = new LinkedHashMap<>();
         private final Map<ItemLike, List<ItemLike>> appendInFront = new LinkedHashMap<>();
+        private List<ItemLike> addedItems = new ArrayList<>();
 
         private void addBehind(ItemLike item, ItemLike parent, boolean addFirst) {
+            if (!validateItem(item)) return;
+
             if (!appendBehind.containsKey(parent)) {
                 appendBehind.put(parent, new LinkedList<>());
             }
@@ -220,6 +202,8 @@ public class CreativeTabManager {
         }
 
         private void addInFront(ItemLike item, ItemLike parent, boolean addFirst) {
+            if (!validateItem(item)) return;
+
             if (!appendInFront.containsKey(parent)) {
                 appendInFront.put(parent, new LinkedList<>());
             }
@@ -229,7 +213,19 @@ public class CreativeTabManager {
         }
 
         private void addAtEnd(ItemLike item) {
+            if (!validateItem(item)) return;
+
             appendToEnd.add(item);
+        }
+
+        public boolean validateItem(ItemLike item) {
+            if (addedItems.contains(item)) {
+                ZetaMod.LOGGER.debug("DUPLICATED ITEM IN TAB - " + item.asItem().getDefaultInstance().getDisplayName().tryCollapseToString());
+                return false;
+            }
+
+            addedItems.add(item);
+            return true;
         }
     }
 
