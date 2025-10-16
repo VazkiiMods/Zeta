@@ -107,6 +107,39 @@ public class CreativeTabManager {
                 Map<ItemLike, Map<Boolean, List<ItemLike>>> additionsAtAllItems = new HashMap<>();
 
                 // Merge the items together. Needs to be done in a way where entries can have either in front or behind
+                for (Map.Entry<ItemLike, List<ItemLike>> additionEntry : tabAdditions.appendInFront.entrySet()) {
+                    Map<Boolean, List<ItemLike>> hell = new HashMap<>();
+                    hell.put(false, additionEntry.getValue());
+                    additionsAtAllItems.put(additionEntry.getKey(), hell);
+                }
+                for (Map.Entry<ItemLike, List<ItemLike>> additionEntry : tabAdditions.appendBehind.entrySet()) {
+                    if (additionsAtAllItems.containsKey(additionEntry.getKey())) {
+                        additionsAtAllItems.get(additionEntry.getKey()).put(true, additionEntry.getValue());
+                    } else {
+                        Map<Boolean, List<ItemLike>> hell = new HashMap<>();
+                        hell.put(true, additionEntry.getValue());
+                        additionsAtAllItems.put(additionEntry.getKey(), hell);
+                    }
+                }
+
+                for (Map.Entry<ItemLike, Map<Boolean, List<ItemLike>>> additionsAtItem : additionsAtAllItems.entrySet()) {
+                    ItemLike parent = additionsAtItem.getKey();
+
+                    if (event.getParentEntries().contains(parent.asItem().getDefaultInstance()) && isItemEnabled(parent)) {
+                        for (Map.Entry<Boolean, List<ItemLike>> addedItemEntry : additionsAtItem.getValue().entrySet()) {
+                            for (ItemLike addedItem : addedItemEntry.getValue()) {
+                                acceptItemAtParent(event, addedItem, parent, addedItemEntry.getKey());
+                            }
+                        }
+                    } else {
+                        for (Map.Entry<Boolean, List<ItemLike>> addedItemEntry : additionsAtItem.getValue().entrySet()) {
+                            for (ItemLike addedItem : addedItemEntry.getValue()) {
+                                ZetaMod.LOGGER.debug("IT FAILED FOR " + addedItem.asItem().getDefaultInstance().getDisplayName());
+                                acceptItem(event, addedItem);
+                            }
+                        }
+                    }
+                }
             }
         }
     }
