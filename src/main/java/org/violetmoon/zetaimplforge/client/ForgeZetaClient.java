@@ -50,16 +50,4 @@ public class ForgeZetaClient extends ZetaClient {
         ((IZetaForgeItemStuff) item).zeta$setHumanoidArmorModel(modelGetter);
     }
 
-    @Override
-    public RegistryAccess hackilyGetCurrentClientLevelRegistryAccess() {
-		if (ServerLifecycleHooks.getCurrentServer() == null) {
-			if (FMLLoader.getDist().isClient() && Minecraft.getInstance().level != null) {
-				return Minecraft.getInstance().level.registryAccess();
-			}
-		} else {
-			return ServerLifecycleHooks.getCurrentServer().registryAccess();
-		}
-		return null;
-    }
-
 }

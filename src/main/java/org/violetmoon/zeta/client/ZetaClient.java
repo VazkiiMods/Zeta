@@ -71,10 +71,6 @@ public abstract class ZetaClient implements IZeta {
 	public abstract void setBlockEntityWithoutLevelRenderer(Item item, BlockEntityWithoutLevelRenderer bewlr);
 	public abstract void setHumanoidArmorModel(Item item, HumanoidArmorModelGetter modelGetter);
 
-	//TODO: CAREFULLY evaluate usages of this function, do not use it willy nilly. Sometimes it is necessary though.
-	// The name is unwieldy on purpose, usages of this function should stick out.
-	public abstract @Nullable RegistryAccess hackilyGetCurrentClientLevelRegistryAccess();
-
 	@Override
 	public Zeta asZeta() {
 		return zeta;

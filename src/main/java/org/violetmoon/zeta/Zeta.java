@@ -4,6 +4,7 @@ import java.util.function.Supplier;
 
 import com.google.common.base.Stopwatch;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.BlockHitResult;
@@ -221,6 +222,10 @@ public abstract class Zeta implements IZeta {
 
     // ummmmmm why is this here??
     public abstract boolean fireRightClickBlock(Player player, InteractionHand hand, BlockPos pos, BlockHitResult bhr);
+
+    //TODO: CAREFULLY evaluate usages of this function, do not use it willy nilly. Sometimes it is necessary though.
+    // The name is unwieldy on purpose, usages of this function should stick out.
+    public abstract @Nullable RegistryAccess hackilyGetCurrentLevelRegistryAccess();
 
     // Let's Jump
     public void start(){

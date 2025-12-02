@@ -1,6 +1,8 @@
 package org.violetmoon.zetaimplforge;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Blocks;
@@ -11,10 +13,12 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.loading.FMLEnvironment;
+import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.player.*;
 import net.neoforged.neoforge.registries.RegisterEvent;
+import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.zeta.Zeta;
@@ -137,6 +141,18 @@ public class ForgeZeta extends Zeta {
     @Override
     public boolean fireRightClickBlock(Player player, InteractionHand hand, BlockPos pos, BlockHitResult bhr) {
         return NeoForge.EVENT_BUS.post(new PlayerInteractEvent.RightClickBlock(player, hand, pos, bhr)).getUseBlock().isTrue();
+    }
+
+    @Override
+    public RegistryAccess hackilyGetCurrentLevelRegistryAccess() {
+        if (ServerLifecycleHooks.getCurrentServer() == null) {
+            if (FMLLoader.getDist().isClient() && Minecraft.getInstance().level != null) {
+                return Minecraft.getInstance().level.registryAccess();
+            }
+        } else {
+            return ServerLifecycleHooks.getCurrentServer().registryAccess();
+        }
+        return null;
     }
 
     @SuppressWarnings("duplicates")
