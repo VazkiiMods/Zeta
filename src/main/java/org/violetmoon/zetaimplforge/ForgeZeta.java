@@ -15,7 +15,6 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
-import net.minecraftforge.registries.RegisterEvent;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.zeta.Zeta;
@@ -42,7 +41,6 @@ import org.violetmoon.zetaimplforge.config.ConfigEventDispatcher;
 import org.violetmoon.zetaimplforge.config.ForgeBackedConfig;
 import org.violetmoon.zetaimplforge.config.TerribleForgeConfigHackery;
 import org.violetmoon.zetaimplforge.event.ForgeZetaEventBus;
-import org.violetmoon.zetaimplforge.event.load.ForgeZRegister;
 import org.violetmoon.zetaimplforge.item.IForgeItemItemExtensions;
 import org.violetmoon.zetaimplforge.network.ForgeZetaNetworkHandler;
 import org.violetmoon.zetaimplforge.registry.ForgeBrewingRegistry;
@@ -157,22 +155,7 @@ public class ForgeZeta extends Zeta {
 
         //other stuff
         modbus.addListener(EventPriority.LOWEST, CreativeTabManager::buildContents);
-        modbus.addListener(EventPriority.HIGHEST, this::registerHighest);
     }
-
-    private boolean registerDone = false;
-
-    public void registerHighest(RegisterEvent e) {
-        if (registerDone)
-            return;
-
-        registerDone = true; // do this *before* actually registering to prevent weird ??race conditions?? or something?
-        //idk whats going on, all i know is i started the game, got a log with 136 "duplicate criterion id" errors, and i don't want to see that again
-
-        loadBus.fire(new ForgeZRegister(this));
-        loadBus.fire(new ForgeZRegister.Post());
-    }
-
 
     //public void addReloadListener(AddReloadListenerEvent e) {
     //    loadBus.fire(new ForgeZAddReloadListener(e), ZAddReloadListener.class);
