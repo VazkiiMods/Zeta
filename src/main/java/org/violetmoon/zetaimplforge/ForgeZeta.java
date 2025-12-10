@@ -3,6 +3,7 @@ package org.violetmoon.zetaimplforge;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Blocks;
@@ -145,12 +146,14 @@ public class ForgeZeta extends Zeta {
 
     @Override
     public RegistryAccess hackilyGetCurrentLevelRegistryAccess() {
-        if (ServerLifecycleHooks.getCurrentServer() == null) {
-            if (FMLLoader.getDist().isClient() && Minecraft.getInstance().level != null) {
+        if (FMLLoader.getDist().isClient()) {
+            if (Minecraft.getInstance().getConnection() != null) {
+                return Minecraft.getInstance().getConnection().registryAccess();
+            } else if (Minecraft.getInstance().level != null) {
                 return Minecraft.getInstance().level.registryAccess();
             }
-        } else {
-            return ServerLifecycleHooks.getCurrentServer().registryAccess();
+        } else if (ServerLifecycleHooks.getCurrentServer() != null) {
+            return ServerLifecycleHooks.getCurrentServer().getAllLevels().iterator().next().registryAccess(); // Nicer way I say.
         }
         return null;
     }

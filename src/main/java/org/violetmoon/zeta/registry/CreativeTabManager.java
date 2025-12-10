@@ -1,15 +1,14 @@
 package org.violetmoon.zeta.registry;
 
-import com.google.common.collect.HashMultimap;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.mojang.datafixers.util.Pair;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
-import net.neoforged.neoforge.common.util.DataComponentUtil;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import org.violetmoon.zeta.mod.ZetaMod;
 import org.violetmoon.zeta.module.IDisableable;
@@ -163,7 +162,7 @@ public class CreativeTabManager {
         if (!isItemEnabled(item)) return;
 
         if(item instanceof CreativeTabManager.AppendsUniquely au)
-            event.acceptAll(au.appendItemsToCreativeTab());
+            event.acceptAll(au.appendItemsToCreativeTab(getRegistryAccessFromEventEvilly(event)));
         else
             event.accept(item, CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
     }
@@ -173,8 +172,10 @@ public class CreativeTabManager {
 
         ItemStack parentStack = parent.asItem().getDefaultInstance();
 
+
+
         if (item instanceof AppendsUniquely au)
-            for (ItemStack uniques : au.appendItemsToCreativeTab()) {
+            for (ItemStack uniques : au.appendItemsToCreativeTab(getRegistryAccessFromEventEvilly(event))) {
                 if (behind) {
                     event.insertBefore(parentStack, uniques, CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
                 } else {
@@ -204,6 +205,21 @@ public class CreativeTabManager {
             }
         }
         return CreativeModeTabs.BUILDING_BLOCKS;
+    }
+
+
+    // This is a hacky way to get around the fact that CC Tweaked builds the creative mode tabs a bit too early.
+    // Honestly, grabbing RegistryAccess from the event guaranteed would be nice, but you can't be 100% certain. After all, HolderLookup.Provider DOES have children other than RegistryAccess
+    // Specific line is here: https://github.com/cc-tweaked/CC-Tweaked/blob/mc-1.21.x/projects/common/src/main/java/dan200/computercraft/shared/CommonHooks.java#L97
+    // Yes thats why the RegistryAccess is called cecilia
+    private static RegistryAccess getRegistryAccessFromEventEvilly(BuildCreativeModeTabContentsEvent event) {
+        RegistryAccess cecilia;
+        if (event.getParameters().holders() instanceof RegistryAccess registryAccess) {
+            cecilia = registryAccess;
+        } else {
+            cecilia = ZetaMod.ZETA.hackilyGetCurrentLevelRegistryAccess();
+        }
+        return cecilia;
     }
 
     public static class DaisyChain {
@@ -279,6 +295,6 @@ public class CreativeTabManager {
     }
 
     public interface AppendsUniquely extends ItemLike {
-        List<ItemStack> appendItemsToCreativeTab();
+        List<ItemStack> appendItemsToCreativeTab(RegistryAccess access);
     }
 }
