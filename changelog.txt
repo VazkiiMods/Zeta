@@ -1,1 +1,5 @@
-Nothing yet!
+* Potentially fix rare startup crash caused by a race condition.
+* Might also fix problems with NoFog.
+* See https://github.com/VazkiiMods/Zeta/pull/75
+* Contributed by JustBogdanOff.
+
