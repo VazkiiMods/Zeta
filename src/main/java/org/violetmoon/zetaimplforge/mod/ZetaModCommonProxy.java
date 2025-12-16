@@ -116,6 +116,8 @@ public class ZetaModCommonProxy {
         r.registerWrapper(ZEntityTeleport.class, ForgeZEntityTeleport.class);
         r.registerWrapper(ZItemTooltip.class, ItemTooltipEvent.class,
                 ForgeZItemTooltip::new, ForgeZItemTooltip::e);
+        r.registerWrapper(ZEquipmentChange.class, LivingEquipmentChangeEvent.class,
+                ForgeZEquipmentChange::new, ForgeZEquipmentChange::event);
         r.registerWrapper(ZLivingChangeTarget.class, LivingChangeTargetEvent.class,
                 ForgeZLivingChangeTarget::new, ForgeZLivingChangeTarget::e);
         r.registerWrapper(ZLivingConversion.class, ForgeZLivingConversion.class);
