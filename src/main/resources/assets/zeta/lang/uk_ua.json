@@ -1,0 +1,14 @@
+{
+  "zeta.misc.mod_disabled": "Вимкнено. Установіть %s, аби ввімкнути.",
+  "zeta.jei.hint_preamble": "[Zeta]\n",
+
+  "zeta.gui.config.save": "Зберегти зміни",
+  "zeta.gui.config.header": "Налаштування %s",
+  "zeta.gui.config.default": "Скинути до усталеного",
+  "zeta.gui.config.discard": "Відхилити зміни",
+  "zeta.gui.config.subcategories": "------- Підкатегорії -------",
+  "zeta.gui.config.onechild": "1 дочірній",
+  "zeta.gui.config.nchildren": "%d дочірніх",
+  "zeta.gui.config.defaultvalue": "Усталено: %s",
+  "zeta.gui.config.missingaddon": "Вам бракує доповнення для цієї категорії"
+}
