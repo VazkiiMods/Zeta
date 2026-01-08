@@ -3,7 +3,6 @@ package org.violetmoon.zetaimplforge;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.RegistryAccess;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Blocks;
@@ -11,8 +10,11 @@ import net.minecraft.world.level.block.FlowerPotBlock;
 import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.ModLoadingContext;
+import net.neoforged.fml.config.ConfigTracker;
+import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.common.ModConfigSpec;
@@ -40,7 +42,6 @@ import org.violetmoon.zeta.util.ZetaSide;
 import org.violetmoon.zetaimplforge.block.IForgeBlockBlockExtensions;
 import org.violetmoon.zetaimplforge.config.ConfigEventDispatcher;
 import org.violetmoon.zetaimplforge.config.ForgeBackedConfig;
-import org.violetmoon.zetaimplforge.config.TerribleForgeConfigHackery;
 import org.violetmoon.zetaimplforge.event.ForgeZetaEventBus;
 import org.violetmoon.zetaimplforge.event.load.ForgeZRegister;
 import org.violetmoon.zetaimplforge.item.IForgeItemItemExtensions;
@@ -87,9 +88,8 @@ public class ForgeZeta extends Zeta {
 		ModConfigSpec.Builder bob = new ModConfigSpec.Builder();
 		ForgeBackedConfig forge = new ForgeBackedConfig(rootSection, bob);
 		ModConfigSpec spec = bob.build();
-
-
-        TerribleForgeConfigHackery.registerAndLoadConfigEarlierThanUsual(spec, modid);
+        ModConfig config = ConfigTracker.INSTANCE.registerConfig(ModConfig.Type.STARTUP, spec, ModLoadingContext.get().getActiveContainer());
+        forge.setModConfig(config);
 
         return forge;
     }
