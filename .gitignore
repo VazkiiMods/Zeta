@@ -67,3 +67,6 @@ Temporary Items
 # Python cache
 __pycache__
 *.pyc
+/run/
+/runServer/
+/runs/
