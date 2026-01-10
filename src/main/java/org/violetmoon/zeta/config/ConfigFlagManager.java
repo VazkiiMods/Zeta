@@ -1,15 +1,15 @@
 package org.violetmoon.zeta.config;
 
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 import org.violetmoon.zeta.Zeta;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.load.ZRegister;
 import org.violetmoon.zeta.module.ZetaModule;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public final class ConfigFlagManager {
 
@@ -18,7 +18,6 @@ public final class ConfigFlagManager {
 	private final Set<String> allFlags = new HashSet<>();
 	private final Map<String, Boolean> flags = new HashMap<>();
 
-	// TODO augh; needed for BrewingRegistry
 	// public final FlagIngredient.Serializer flagIngredientSerializer = new FlagIngredient.Serializer(this);
 
 	public static final LootItemConditionType FLAG_CONDITION_TYPE = new LootItemConditionType(FlagLootCondition.CODEC);

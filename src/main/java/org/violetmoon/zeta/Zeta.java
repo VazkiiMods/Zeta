@@ -1,7 +1,5 @@
 package org.violetmoon.zeta;
 
-import java.util.function.Supplier;
-
 import com.google.common.base.Stopwatch;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.RegistryAccess;
@@ -23,15 +21,13 @@ import org.violetmoon.zeta.module.ModuleFinder;
 import org.violetmoon.zeta.module.ZetaCategory;
 import org.violetmoon.zeta.module.ZetaModuleManager;
 import org.violetmoon.zeta.registry.*;
-import org.violetmoon.zeta.util.NameChanger;
-import org.violetmoon.zeta.util.RaytracingUtil;
-import org.violetmoon.zeta.util.RegistryUtil;
-import org.violetmoon.zeta.util.ZetaCommonProxy;
-import org.violetmoon.zeta.util.ZetaSide;
+import org.violetmoon.zeta.util.*;
 import org.violetmoon.zeta.util.handler.FuelHandler;
 import org.violetmoon.zeta.util.zetalist.IZeta;
 import org.violetmoon.zeta.util.zetalist.ZetaList;
 import org.violetmoon.zeta.world.EntitySpawnHandler;
+
+import java.util.function.Supplier;
 
 /**
  * do not touch forge OR quark from this package, it will later be split off
@@ -51,7 +47,6 @@ public abstract class Zeta implements IZeta {
         this.renderLayerRegistry = createRenderLayerRegistry();
         this.dyeables = createDyeablesRegistry();
         //this.craftingExtensions = createCraftingExtensionsRegistry();
-        this.brewingRegistry = createBrewingRegistry();
         this.advancementModifierRegistry = createAdvancementModifierRegistry();
         this.pottedPlantRegistry = createPottedPlantRegistry();
 
@@ -92,7 +87,6 @@ public abstract class Zeta implements IZeta {
     public final RenderLayerRegistry renderLayerRegistry;
     public final DyeablesRegistry dyeables;
     //public final CraftingExtensionsRegistry craftingExtensions;
-    public final BrewingRegistry brewingRegistry;
     public final AdvancementModifierRegistry advancementModifierRegistry;
     public final PottedPlantRegistry pottedPlantRegistry;
     public final VariantRegistry variantRegistry = new VariantRegistry(this);
@@ -190,8 +184,6 @@ public abstract class Zeta implements IZeta {
         return new DyeablesRegistry();
     }
 
-    public abstract BrewingRegistry createBrewingRegistry();
-
     public AdvancementModifierRegistry createAdvancementModifierRegistry() {
         return new AdvancementModifierRegistry(this);
     }
@@ -231,7 +223,6 @@ public abstract class Zeta implements IZeta {
     public void start(){
         loadBus//.subscribe(craftingExtensions)
                 .subscribe(dyeables)
-                .subscribe(brewingRegistry)
                 .subscribe(fuel)
                 .subscribe(entitySpawn);
 

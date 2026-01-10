@@ -4,7 +4,6 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.loading.FMLEnvironment;
-import org.violetmoon.zeta.Zeta;
 import org.violetmoon.zeta.client.config.widget.ZButtonHandler;
 import org.violetmoon.zeta.mod.ZetaMod;
 import org.violetmoon.zetaimplforge.EventTest;
@@ -28,6 +27,4 @@ public class ZetaModForge extends ZetaMod {
 			if (FMLEnvironment.dist == Dist.CLIENT && !FMLEnvironment.production) ZETA.playBus.subscribe(ZButtonHandler.class);
 		}
 	}
-
-	
 }

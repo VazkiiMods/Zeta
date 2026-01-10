@@ -1,23 +1,10 @@
 package org.violetmoon.zeta.registry;
 
-import java.util.*;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Supplier;
-
-import net.minecraft.core.RegistrationInfo;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.Nullable;
-import org.violetmoon.zeta.Zeta;
-import org.violetmoon.zeta.item.ZetaBlockItem;
-import org.violetmoon.zeta.util.RegisterDynamicUtil;
-
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.mojang.serialization.Lifecycle;
-
 import net.minecraft.core.Holder;
+import net.minecraft.core.RegistrationInfo;
 import net.minecraft.core.Registry;
 import net.minecraft.core.WritableRegistry;
 import net.minecraft.core.registries.Registries;
@@ -27,6 +14,16 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Nullable;
+import org.violetmoon.zeta.Zeta;
+import org.violetmoon.zeta.item.ZetaBlockItem;
+import org.violetmoon.zeta.util.RegisterDynamicUtil;
+
+import java.util.*;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 //Mash of arl's RegistryHelper and its ModData innerclass.
 //You're expected to create one of these per modid instead, avoiding a dependency on Forge's "current mod id" notion.

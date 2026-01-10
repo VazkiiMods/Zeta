@@ -18,7 +18,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.PotionItem;
 import net.minecraft.world.item.TippedArrowItem;
 import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.world.item.alchemy.PotionContents;
 import org.jetbrains.annotations.NotNull;
 import org.violetmoon.zeta.Zeta;
 import org.violetmoon.zeta.config.ZetaGeneralConfig;
@@ -72,12 +71,6 @@ public class ZetaJeiPlugin implements IModPlugin {
             NonNullList<ItemStack> stacksToHide = NonNullList.create();
 
             //we need to manually hide potions derivative items as these are vanilla and will be populated automatically
-
-            for (var h : z.registry.getRegisteredObjects(Registries.POTION)) {
-                if (!ZetaMod.ZETA.brewingRegistry.isEnabled(h.value())) {
-                    hidePotions.add(h.value());
-                }
-            }
 
             if (!hidePotions.isEmpty()) {
                 for (Item item : BuiltInRegistries.ITEM) {

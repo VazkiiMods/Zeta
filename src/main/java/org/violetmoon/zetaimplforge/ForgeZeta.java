@@ -10,7 +10,6 @@ import net.minecraft.world.level.block.FlowerPotBlock;
 import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.config.ConfigTracker;
@@ -19,7 +18,7 @@ import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.entity.player.*;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.registries.RegisterEvent;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.apache.logging.log4j.Logger;
@@ -33,7 +32,6 @@ import org.violetmoon.zeta.event.bus.IZetaLoadEvent;
 import org.violetmoon.zeta.event.bus.IZetaPlayEvent;
 import org.violetmoon.zeta.event.bus.ZetaEventBus;
 import org.violetmoon.zeta.item.ext.ItemExtensionFactory;
-import org.violetmoon.zeta.registry.BrewingRegistry;
 import org.violetmoon.zeta.registry.CreativeTabManager;
 import org.violetmoon.zeta.registry.PottedPlantRegistry;
 import org.violetmoon.zeta.registry.ZetaRegistry;
@@ -45,7 +43,6 @@ import org.violetmoon.zetaimplforge.config.ForgeBackedConfig;
 import org.violetmoon.zetaimplforge.event.ForgeZetaEventBus;
 import org.violetmoon.zetaimplforge.event.load.ForgeZRegister;
 import org.violetmoon.zetaimplforge.item.IForgeItemItemExtensions;
-import org.violetmoon.zetaimplforge.registry.ForgeBrewingRegistry;
 import org.violetmoon.zetaimplforge.registry.ForgeZetaRegistry;
 import org.violetmoon.zetaimplforge.util.ForgeRaytracingUtil;
 
@@ -103,11 +100,6 @@ public class ForgeZeta extends Zeta {
     public CraftingExtensionsRegistry createCraftingExtensionsRegistry() {
         return new ForgeCraftingExtensionsRegistry();
     }*/
-
-    @Override
-    public BrewingRegistry createBrewingRegistry() {
-        return new ForgeBrewingRegistry(this);
-    }
 
     @Override
     public PottedPlantRegistry createPottedPlantRegistry() {

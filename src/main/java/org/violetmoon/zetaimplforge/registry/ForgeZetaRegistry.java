@@ -1,17 +1,16 @@
 package org.violetmoon.zetaimplforge.registry;
 
-import java.util.Collection;
-import java.util.function.Supplier;
-
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.neoforge.registries.RegisterEvent;
 import org.violetmoon.zeta.registry.ZetaRegistry;
 import org.violetmoon.zetaimplforge.ForgeZeta;
 
-import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import java.util.Collection;
+import java.util.function.Supplier;
 
 public class ForgeZetaRegistry extends ZetaRegistry {
 	public ForgeZetaRegistry(ForgeZeta z) {
@@ -34,13 +33,10 @@ public class ForgeZetaRegistry extends ZetaRegistry {
 				ResourceLocation name = internalNames.get(entry);
                 z.log.debug("Registering to {} - {}", registryRes, name);
 				event.register(keyGeneric, e-> e.register(name, entry));
-
 				//trackRegisteredObject(keyGeneric, event.getRegistry().wrapAsHolder(entry));
 			}
 
 			clearDeferCache(registryRes);
 		}
 	}
-
-
 }
