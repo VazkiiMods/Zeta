@@ -11,6 +11,7 @@
     "AccessorLootPool",
     "AccessorLootTable",
     "AccessorPistonStructureResolver",
+    "CreativeModeTabsMixin",
     "InvokerBlockBehavior",
     "InvokerSpawnPlacements",
     "PistonBaseBlockMixin",

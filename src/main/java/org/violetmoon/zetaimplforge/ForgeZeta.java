@@ -46,6 +46,8 @@ import org.violetmoon.zetaimplforge.item.IForgeItemItemExtensions;
 import org.violetmoon.zetaimplforge.registry.ForgeZetaRegistry;
 import org.violetmoon.zetaimplforge.util.ForgeRaytracingUtil;
 
+import java.util.Locale;
+
 /**
  * ideally do not touch quark from this package, it will later be split off
  */
@@ -85,7 +87,7 @@ public class ForgeZeta extends Zeta {
 		ModConfigSpec.Builder bob = new ModConfigSpec.Builder();
 		ForgeBackedConfig forge = new ForgeBackedConfig(rootSection, bob);
 		ModConfigSpec spec = bob.build();
-        ModConfig config = ConfigTracker.INSTANCE.registerConfig(ModConfig.Type.STARTUP, spec, ModLoadingContext.get().getActiveContainer());
+        ModConfig config = ConfigTracker.INSTANCE.registerConfig(ModConfig.Type.STARTUP, spec, ModLoadingContext.get().getActiveContainer(), String.format(Locale.ROOT, "%s-common.toml", super.modid));
         forge.setModConfig(config);
 
         return forge;
