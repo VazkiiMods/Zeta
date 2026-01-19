@@ -1,7 +1,7 @@
 package org.violetmoon.zetaimplforge.event;
 
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.Util;
+import java.util.concurrent.ConcurrentHashMap;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -25,7 +25,8 @@ import java.util.function.Function;
 public class ForgeZetaEventBus<Z, F extends Event> extends ZetaEventBus<Z> {
 
     // needed so we can unregister later
-    private final Map<ForgeZetaEventBus.Key, Object> convertedHandlers = new Object2ObjectOpenHashMap<>();
+    // FIX: Use ConcurrentHashMap to prevent race condition during mod loading (GitHub issue #52)
+    private final Map<ForgeZetaEventBus.Key, Object> convertedHandlers = new ConcurrentHashMap<>();
 
     private final IEventBus forgeBus;
     private final Class<F> forgeEventRoot; //probably not needed can be replaced with Event
