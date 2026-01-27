@@ -62,6 +62,6 @@ public abstract class ZetaBlockEntity extends BlockEntity {
 	@Override
 	public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket packet, HolderLookup.Provider provider) {
 		super.onDataPacket(net, packet, provider);
-        readSharedNBT(packet.getTag(), provider);
+        //readSharedNBT(packet.getTag(), provider);
 	}
 }
