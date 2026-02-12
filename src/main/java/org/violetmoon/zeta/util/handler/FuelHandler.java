@@ -21,7 +21,7 @@ import net.minecraft.world.level.block.SlabBlock;
 
 public class FuelHandler {
 
-	private final Map<Item, Integer> fuelValues = new HashMap<>();
+	public final Map<Item, Integer> fuelValues = new HashMap<>();
 	private final Zeta zeta;
 	
 	public FuelHandler(Zeta zeta) {
