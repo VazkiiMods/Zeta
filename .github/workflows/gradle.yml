@@ -7,19 +7,26 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - name: Setup Java 21
-        run: echo "JAVA_HOME=$JAVA_HOME_21_X64" >> "$GITHUB_ENV"
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
       - name: Cache
         uses: actions/cache@v4
         with:
           path: |
             ~/.gradle/caches
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/build.gradle', '**/gradle-wrapper.properties') }}
+
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
           cache-disabled: false
           cache-read-only: false
+
       - name: Build with Gradle
         run: |
           RELEASE_MODE=${{false}} \
@@ -31,15 +38,18 @@ jobs:
       #      if: failure()
       #      with:
       #        path: '**/reports/pmd/main.xml'
+
       - name: Stop Gradle
         run: |
           ./gradlew --stop
+
       - name: Calculate artifact names
         id: calculate_artifact_names
         run: |
           VERSION=$(awk -F ' = ' '/^mod_version/ { print $2; }' gradle.properties)
           echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
-          echo "neoforge=build/libs/Zeta-${VERSION}.jar" >> "$GITHUB_OUTPUT"
+          echo "neoforge=build/libs/Zeta-${VERSION}-SNAPSHOT.jar" >> "$GITHUB_OUTPUT"
+
       - name: Sign jars
         env:
           SIGNING_KEY: ${{ secrets.VIOLET_MOON_SIGNING_KEY }}
@@ -48,6 +58,7 @@ jobs:
           echo "${SIGNING_KEY}" | gpg --import -
           gpg --local-user "Violet Moon Signing Key" --armor \
             --detach-sign ${{ steps.calculate_artifact_names.outputs.neoforge }}
+
       - name: Archive Neoforge Artifacts
         uses: actions/upload-artifact@v4
         with:

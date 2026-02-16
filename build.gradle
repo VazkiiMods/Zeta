@@ -11,7 +11,7 @@ version = mod_version
 group = mod_group_id
 base.archivesName = mod_name
 
-if (System.getenv().RELEASE_MODE == null) {
+if (System.getenv().RELEASE_MODE != "true") {
     version += '-SNAPSHOT'
 }
 
