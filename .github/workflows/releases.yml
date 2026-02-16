@@ -46,7 +46,7 @@ jobs:
       - name: Archive Neoforge Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: Zeta-Neoforge-${{VERSION}}-RELEASE
+          name: Zeta-Neoforge-${{ steps.calculate_artifact_names.outputs.version }}-RELEASE
           path: |
             ${{ steps.calculate_artifact_names.outputs.neoforge }}
             ${{ steps.calculate_artifact_names.outputs.neoforge }}.asc

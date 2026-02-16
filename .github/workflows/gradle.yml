@@ -38,6 +38,7 @@ jobs:
         id: calculate_artifact_names
         run: |
           VERSION=$(awk -F ' = ' '/^mod_version/ { print $2; }' gradle.properties)
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
           echo "neoforge=build/libs/Zeta-${VERSION}.jar" >> "$GITHUB_OUTPUT"
       - name: Sign jars
         env:
@@ -50,7 +51,7 @@ jobs:
       - name: Archive Neoforge Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: Zeta-Neoforge-${{VERSION}}-SNAPSHOT
+          name: Zeta-Neoforge-${{ steps.calculate_artifact_names.outputs.version }}-SNAPSHOT
           path: |
             ${{ steps.calculate_artifact_names.outputs.neoforge }}
             ${{ steps.calculate_artifact_names.outputs.neoforge }}.asc
