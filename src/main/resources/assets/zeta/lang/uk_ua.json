@@ -1,5 +1,5 @@
 {
-  "zeta.misc.mod_disabled": "Вимкнено. Установіть %s, щоби ввімкнути.",
+  "zeta.misc.mod_disabled": "Вимкнено. Установіть %s, щоб увімкнути.",
   "zeta.jei.hint_preamble": "[Zeta]\n",
 
   "zeta.gui.config.save": "Зберегти зміни",
