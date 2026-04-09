@@ -18,7 +18,7 @@ public class ServiceLoaderModuleFinder implements ModuleFinder {
 
 	@Override
 	public Stream<ZetaLoadModuleAnnotationData> get() {
-		return ServiceLoader.load(ZetaModule.class)
+		return ServiceLoader.load(ZetaModule.class, ZetaModule.class.getClassLoader())
 			.stream()
 			.map(provider -> {
 				ZetaLoadModule annotation = provider.type().getAnnotation(ZetaLoadModule.class);
