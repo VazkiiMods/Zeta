@@ -112,7 +112,7 @@ public class ForgeEventsRemapper<Z, F extends Event> {
         }
 
         //hack for tick events
-        Phase phase = Phase.guessFromClassName(zetaEventBaseClass, forgeEventClass);
+        /*Phase phase = Phase.guessFromClassName(zetaEventBaseClass, forgeEventClass);
         if (phase != Phase.NONE) {
             return event -> {
                 try {
@@ -124,7 +124,7 @@ public class ForgeEventsRemapper<Z, F extends Event> {
                     throw new RuntimeException(e);
                 }
             };
-        }
+        }*/
 
         return event -> {
             try {
