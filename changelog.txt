@@ -1,1 +1,6 @@
-Nothing yet!
+Zeta 1.1-40 for NeoForge 1.21.1
+
+Tryna fix #88
+
+unfinished fixes:
+- #88: [1.21.1] DeferredFeature is registered as ConfiguredFeature(feature, null); vanilla nested-feature walker NPEs on it — silently kills Quark's own fairy rings and makes grass bonemeal a server crash
