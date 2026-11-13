@@ -1,7 +1,13 @@
 package org.violetmoon.zeta.world.generator;
 
+import java.util.function.BooleanSupplier;
+
+import org.violetmoon.zeta.config.type.DimensionConfig;
+import org.violetmoon.zeta.util.BooleanSuppliers;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.QuartPos;
 import net.minecraft.server.level.WorldGenRegion;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.LevelAccessor;
@@ -10,11 +16,6 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.WorldgenRandom;
-
-import org.violetmoon.zeta.config.type.DimensionConfig;
-import org.violetmoon.zeta.util.BooleanSuppliers;
-
-import java.util.function.BooleanSupplier;
 
 public abstract class Generator {
 
@@ -47,7 +48,7 @@ public abstract class Generator {
 		// mod-added underground biomes
 
 		BlockPos testPos = offset ? new BlockPos(pos.getX(), world.getMaxBuildHeight() - 1, pos.getZ()) : pos;
-		return world.getBiomeManager().getBiome(testPos);
+		return world.getUncachedNoiseBiome(QuartPos.fromBlock(testPos.getX()), QuartPos.fromBlock(testPos.getY()), QuartPos.fromBlock(testPos.getZ()));	
 	}
 
 	protected boolean isNether(LevelAccessor world) {
