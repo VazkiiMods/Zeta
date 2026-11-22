@@ -49,7 +49,7 @@ public class WorldGenHandler {
 			String name = "deferred_feature_" + stage.name().toLowerCase(Locale.ROOT);
 			ZetaMod.ZETA.registry.register(deferredFeature, name, Registries.FEATURE);
 
-			ConfiguredFeature<?, ?> feature = new ConfiguredFeature<>(deferredFeature, FeatureConfiguration.NONE);
+			ConfiguredFeature<?, ?> feature = new ConfiguredFeature<>(deferredFeature, NoneFeatureConfiguration.INSTANCE);
 
 			Holder<ConfiguredFeature<?, ?>> featureHolder = Holder.direct(feature);
 
